@@ -18,18 +18,15 @@ knitr::opts_chunk$set(
   message = FALSE,
   warning = FALSE,
   collapse = TRUE,
-  comment = "#>",
+  echo=FALSE,
+  comment = "",
   fig.height = 4,
   fig.width = 8,
   fig.align = "center",
   cache = FALSE
 )
-library(ggplot2)
-library(tidyr)
-library(dplyr)
-library(lubridate)
-library(scales)
-library(readr)
+library(tidyverse)
+library(gridExtra)
 ```
 
 # Welcome to Semester 2 2017!
@@ -56,6 +53,55 @@ library(readr)
 - What can we do if we have good data handling skills?
     - __Insert lots of examples here__
 - Why R?
+
+---
+# Music
+
+- Read in a wave file
+- Digitise it as time and amplitude
+- Plot
+- Compare with other sounds
+
+```{r}
+library(tuneR)
+m1 <- readWave("data/data3.wav")
+m1 <- extractWave(m1, from = 25000, to = 75000)
+m1_df <- data.frame(t=1:length(m1@left), 
+                    left=m1@left, 
+                    right=m1@right)
+p1 <- ggplot(m1_df, aes(x=t, y=left)) + geom_line() 
+m2 <- readWave("data/statistics1.wav")
+m2 <- extractWave(m2, from = 25000, to = 75000)
+m2_df <- data.frame(t=1:length(m2@left), 
+                    left=m2@left, 
+                    right=m2@right)
+p2 <- ggplot(m2_df, aes(x=t, y=left)) + geom_line()
+grid.arrange(p1, p2, ncol=1)
+```
+
+---
+# Education
+
+---
+# Tennis
+
+---
+# Politics
+
+---
+# Pedestrian sensors
+
+---
+# Google maps
+
+---
+# Airline traffic
+
+---
+# Exchange rates
+
+---
+# Text
 
 ---
 # R is ...
