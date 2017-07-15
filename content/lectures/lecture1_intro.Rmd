@@ -1,0 +1,51 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+subtitle: 'Lecture 1: Introduction'
+author: "Di Cook (dicook@monash.edu, @visnut)"
+date: "7/25/2017"
+output:
+  xaringan::moon_reader:
+    css: ["default", "myremark.css"]
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r, echo = FALSE, warning = FALSE, message=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  fig.height = 4,
+  fig.width = 8,
+  fig.align = "center",
+  cache = FALSE
+)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(lubridate)
+library(scales)
+library(readr)
+```
+
+# Welcome to Semester 2 2017!
+
+- __Lecturers__: [Professor Di Cook](http://dicook.org) and [Dr David Frazier](http://monash.edu/research/explore/en/persons/david-frazier(b3a84d85-75f7-4ce8-8732-f7efcc5d772c).html)
+- __Tutors__: Puwasala Gamakumara, Mitch O'Hara-Wild, Yeasmin Mahbuba
+--
+
+- __Unit guide__: Objectives, tentative schedule, grading
+--
+
+- __Textbook__: [R for Data Science](http://r4ds.had.co.nz), Garret Grolemund and Hadley Wickham
+--
+
+- __Computing__: R and RStudio
+--
+
+- __Materials__: Moodle for grades, online quizzes; [course web site](https://dmac.netlify.com) for lecture and lab materials
+
