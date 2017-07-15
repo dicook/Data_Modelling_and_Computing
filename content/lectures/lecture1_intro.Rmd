@@ -56,3 +56,80 @@ library(readr)
 - What can we do if we have good data handling skills?
     - __Insert lots of examples here__
 - Why R?
+
+---
+# R is ...
+
+* Most commonly used data science software [kdnuggets](http://www.kdnuggets.com/2017/05/poll-analytics-data-science-machine-learning-software-leaders.html)
+* __Free__ to use, __open source__ so you can see what code is doing to your data
+* __Extensible__: Over 11000 user contributed add-on packages currently on CRAN! Bioconductor has more than 1300 packages, and many researchers provide packages through github.
+* __Powerful__: With the right tools, get more work done, faster, better.
+* __Flexible__: Not a question of _can_, but _how_.
+
+```{r, eval = FALSE, echo = FALSE}
+# devtools::install_github("metacran/crandb")
+# pkgs <- crandb::list_packages(limit = 999999)
+# length(pkgs)
+# [1] 11075
+```
+
+---
+# RStudio is ...
+
+[From Julie Lowndes](http://jules32.github.io/resources/RStudio_intro/):  
+
+<blockquote>
+<b>If R were an airplane, RStudio would be the airport</b>, providing many, many supporting services that make it easier for you, the pilot, to take off and go to awesome places. Sure, you can fly an airplane without an airport, but having those runways and supporting infrastructure is a game-changer.
+</blockquote>
+
+---
+# The RStudio IDE
+
+- Source editor: Docking station for multiple files, Useful shortcuts ("Knit"), Highlighting/Tab-completion, Code-checking (R, HTML, JS), Debugging features  
+- Console window: Highlighting/Tab-completion, Search recent commands
+- Other tabs/panes: Graphics, R documentation, Environment pane, File system navigation/access, Tools for package development, git, etc
+
+---
+# Installing packages
+
+From CRAN
+
+```{r eval=FALSE}
+install.packages("ggenealogy")
+```
+
+
+From bioconductor
+
+```{r eval=FALSE}
+source("https://bioconductor.org/biocLite.R")
+biocLite("ggbio")
+```
+
+From github repos
+
+```{r eval=FALSE}
+devtools::install_github("heike/gglogo")
+devtools::install_github("haleyjeppson/ggmosaic")
+```
+
+---
+# What is R Markdown?
+
+From the [R Markdown home page](http://rmarkdown.rstudio.com/):
+- R Markdown is an authoring format that enables easy creation of dynamic documents, presentations, and reports from R. 
+- It combines the core syntax of __markdown__ (an easy-to-write plain text format) __with embedded R code chunks__ that are run so their output can be included in the final document. 
+- R Markdown documents are fully reproducible (they can be automatically regenerated whenever underlying R code or data changes).
+
+---
+# Follow along during class
+
+- __These slides__ are made in rmarkdown, using styling from the [xaringan](https://github.com/yihui/xaringan) package. 
+- If you download the `Rmd` file of lecture notes ahead of, or during class, you can run the code chunks as I talk and check my calculations or models.
+
+
+---
+# Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+
