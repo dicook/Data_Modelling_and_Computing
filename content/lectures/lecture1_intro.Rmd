@@ -49,3 +49,10 @@ library(readr)
 
 - __Materials__: Moodle for grades, online quizzes; [course web site](https://dmac.netlify.com) for lecture and lab materials
 
+---
+# Outline
+
+- What is data? 
+- What can we do if we have good data handling skills?
+    - __Insert lots of examples here__
+- Why R?
