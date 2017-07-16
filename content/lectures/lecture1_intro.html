@@ -55,12 +55,79 @@ class: center, middle, inverse, title-slide
 - Compare with other sounds
 
 &lt;img src="lecture1_intro_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+---
+# Compare left and right channels
+
+&lt;img src="lecture1_intro_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+Oh, same sound is on both channels! A tad drab.
+
+---
+# Compute statistics
+
+
+```
+# A tibble: 2 x 5
+        word           m        s    mx     mn
+       &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+1       data 0.004059919 1602.577  8393 -15386
+2 statistics 0.009019820 1506.626  6601 -11026
+```
+
+---
+# My music - don't laugh
+
+&lt;img src="lecture1_intro_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="lecture1_intro_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+Abba is just different from everyone else!
 
 ---
 # Education
 
+- OECD PISA survey is the world's global metric for quality, equity and efficiency in school education.
+- Workforce readiness of 15-year old students
+- 14530 students tested in Australia in 2015
+- How many schools?
+- Math, reading and science tests, surveys on school and home environment, 921 variables
+- Data available from 
+
+
+
+
+---
+# Gender differences
+
+
+```
+# A tibble: 2 x 4
+  ST004D01T     math     read      sci
+     &lt;fctr&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1     girls 491.1820 518.4506 509.0075
+2      boys 496.5699 486.9064 511.4427
+```
+
+&lt;img src="lecture1_intro_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+
+On average reading scores are most different, with girls scoring substantially higher. There is more variability from individual to individual than from boys to girls. 
+
+---
+class: inverse middle 
+# Your turn
+
+Point out a couple more things that you see in terms of differences between girls and boys?
+
 ---
 # Tennis
+
+Statistics for grand slam and top tournament matches are available through the ATP and WTA web sites. By web scraping these web sites we can pull data together to explore characteristics of different players, surfaces, ... These are compiled into the R package `deuce`. 
+
+&lt;img src="lecture1_intro_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+[Yes, there are 47 year olds playing Grand Slams!](http://www.nytimes.com/2004/06/21/sports/tennis/navratilova-47-wins-at-wimbledon.html)
 
 ---
 # Politics
@@ -79,6 +146,9 @@ class: center, middle, inverse, title-slide
 
 ---
 # Text
+
+---
+# Climate change
 
 ---
 # R is ...

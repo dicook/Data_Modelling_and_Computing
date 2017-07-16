@@ -78,12 +78,128 @@ m2_df <- data.frame(t=1:length(m2@left),
 p2 <- ggplot(m2_df, aes(x=t, y=left)) + geom_line()
 grid.arrange(p1, p2, ncol=1)
 ```
+---
+# Compare left and right channels
+
+```{r}
+p1 <- ggplot(m1_df, aes(x=left, y=right)) + 
+  geom_point() + theme(aspect.ratio=1)
+p2 <- ggplot(m2_df, aes(x=left, y=right)) + 
+  geom_point() + theme(aspect.ratio=1)
+grid.arrange(p1, p2, ncol=2)
+```
+
+Oh, same sound is on both channels! A tad drab.
+
+---
+# Compute statistics
+
+```{r}
+m1_df <- m1_df %>% gather(channel, value, left, right) %>%
+  mutate(word="data")
+m2_df <- m2_df %>% gather(channel, value, left, right) %>%
+  mutate(word="statistics")
+m_df <- bind_rows(m1_df, m2_df)
+m_df %>% filter(channel == "left") %>%
+  group_by(word) %>%
+  summarise(m = mean(value), s = sd(value), 
+            mx = max(value), mn = min(value))
+```
+
+---
+# My music - don't laugh
+
+```{r}
+music <- read.csv("data/music-sub.csv", 
+                  row.names=1, stringsAsFactors = FALSE)
+ggplot(music, aes(x=artist, y=lave)) + geom_boxplot() +
+  xlab("") + ylab("Average amplitude")
+```
+
+---
+
+```{r fig.height=6, fig.weight=6}
+ggplot(music, aes(x=lvar, y=lave, colour=artist)) + 
+  geom_point(size=5, alpha=0.5) +
+  scale_colour_brewer(palette="Dark2") +
+  xlab("Std amplitude") + ylab("Average amplitude") +
+  theme(aspect.ratio = 1)
+```
+
+Abba is just different from everyone else!
 
 ---
 # Education
 
+- OECD PISA survey is the world's global metric for quality, equity and efficiency in school education.
+- Workforce readiness of 15-year old students
+- 14530 students tested in Australia in 2015
+- How many schools?
+- Math, reading and science tests, surveys on school and home environment, 921 variables
+- Data available from 
+
+```{r eval=FALSE}
+pisa_2015 <- read_sav(file.choose()) # The SPSS format zip file
+pisa_au <- pisa_2015 %>% filter(CNT == "AUS")
+save(pisa_au, file="data/pisa_au.rda")
+```
+
+
+---
+# Gender differences
+
+```{r}
+load("data/pisa_au.rda")
+pisa_au <- pisa_au %>% 
+  mutate(ST004D01T = factor(ST004D01T, 
+                            levels=c(1,2), 
+                            labels=c("girls", "boys"))) 
+pisa_au %>%
+  group_by(ST004D01T) %>%
+  summarise(math=weighted.mean(PV1MATH, SENWT), 
+            read=weighted.mean(PV1READ, SENWT), 
+            sci=weighted.mean(PV1SCIE, SENWT))
+p1 <- ggplot(pisa_au, aes(x=ST004D01T, y=PV1MATH, 
+                          fill=ST004D01T)) +
+  geom_boxplot() + xlab("") + theme(legend.position="none")
+p2 <- ggplot(pisa_au, aes(x=ST004D01T, y=PV1READ, 
+                          fill=ST004D01T)) +
+  geom_boxplot() + xlab("") + theme(legend.position="none")
+p3 <- ggplot(pisa_au, aes(x=ST004D01T, y=PV1SCIE, 
+                          fill=ST004D01T)) +
+  geom_boxplot() + xlab("") + theme(legend.position="none")
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+On average reading scores are most different, with girls scoring substantially higher. There is more variability from individual to individual than from boys to girls. 
+
+---
+class: inverse middle 
+# Your turn
+
+Point out a couple more things that you see in terms of differences between girls and boys?
+
 ---
 # Tennis
+
+Statistics for grand slam and top tournament matches are available through the ATP and WTA web sites. By web scraping these web sites we can pull data together to explore characteristics of different players, surfaces, ... These are compiled into the R package `deuce`. 
+
+```{r}
+# devtools::install_github("skoval/deuce")
+library(deuce)
+data(wta_matches)
+ggplot(filter(wta_matches, tourney_level == "Grand Slams"),
+       aes(x=year, y=winner_age)) + 
+  geom_point(alpha=0.3) + geom_smooth()
+#data(atp_matches)
+#ggplot(atp_matches, aes(x=year, y=winner_age)) + 
+#  geom_point(alpha=0.3) + geom_smooth()
+#wta_matches %>% group_by(tourney_level) %>% tally()
+#wta_matches %>% filter(tourney_level == "Grand Slams") %>% select(tourney_name, winner_name, winner_age, year) %>% filter(!is.na(winner_age)) %>% filter(winner_age > 40) %>% arrange(desc(winner_age))
+#wta_matches %>% filter(winner_name == "Katerina Bohmova")
+```
+
+[Yes, there are 47 year olds playing Grand Slams!](http://www.nytimes.com/2004/06/21/sports/tennis/navratilova-47-wins-at-wimbledon.html)
 
 ---
 # Politics
@@ -102,6 +218,9 @@ grid.arrange(p1, p2, ncol=1)
 
 ---
 # Text
+
+---
+# Climate change
 
 ---
 # R is ...
