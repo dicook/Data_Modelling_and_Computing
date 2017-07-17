@@ -307,8 +307,43 @@ embed_vimeo("167367369")
 ---
 # Pedestrian sensors
 
+```{r fig.width=10, fig.height=3}
+ped_june <- read_csv("http://www.pedestrian.melbourne.vic.gov.au/datadownload/June_2017.csv")
+ped_june_m <- ped_june %>% 
+  mutate(Date = dmy(Date)) %>%
+  select(Date, Hour, `Melbourne Central`, `Flinders St Station Underpass`, `Birrarung Marr`) %>%
+  gather(location, count, `Melbourne Central`, `Flinders St Station Underpass`, `Birrarung Marr`) %>%
+    mutate(wday=wday(Date, label=TRUE), mday=mday(Date),
+           wk=week(Date)) #%>%
+    #mutate(wday=recode_factor(wday,
+    #    levels=c("Mon","Tues","Wed","Thurs","Fri","Sat","Sun")))
+ggplot(ped_june_m, aes(x=Hour, y=count, 
+                       colour=location, 
+                       group=interaction(Date, location))) +
+  scale_colour_brewer(palette="Dark2") +
+  facet_wrap(~wday, ncol=7) +
+  geom_line() + theme(legend.position="bottom")
+```
+
+---
+# Each day of June
+
+```{r fig.height=7}
+ggplot(ped_june_m, aes(x=Hour, y=count, 
+                       colour=location)) +
+  scale_colour_brewer(palette="Dark2") +
+  facet_grid(wk~wday) +
+  geom_line() + theme(legend.position="bottom")
+```
+
 ---
 # Google maps
+
+Pull a google map and see where the sensors are located.
+
+```{r}
+locations <- read_csv("data/Pedestrian_sensor_locations.csv")
+```
 
 ---
 # Airline traffic
