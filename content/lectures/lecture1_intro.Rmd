@@ -27,11 +27,13 @@ knitr::opts_chunk$set(
 )
 library(tidyverse)
 library(gridExtra)
+library(plotly)
+library(ggthemes)
 ```
 
 # Welcome to Semester 2 2017!
 
-- __Lecturers__: [Professor Di Cook](http://dicook.org) and [Dr David Frazier](http://monash.edu/research/explore/en/persons/david-frazier(b3a84d85-75f7-4ce8-8732-f7efcc5d772c).html)
+- __Lecturers__: [Professor Di Cook](http://dicook.org) and [Dr David Frazier](http://monash.edu/research/explore/en/persons/david-frazier(b3a84d85-75f7-4ce8-8732-f7efcc5d772c.html)
 - __Tutors__: Puwasala Gamakumara, Mitch O'Hara-Wild, Yeasmin Mahbuba
 --
 
@@ -136,7 +138,7 @@ Abba is just different from everyone else!
 - 14530 students tested in Australia in 2015
 - How many schools?
 - Math, reading and science tests, surveys on school and home environment, 921 variables
-- Data available from 
+- Data available from [http://www.oecd.org/pisa/data/](http://www.oecd.org/pisa/data/)
 
 ```{r eval=FALSE}
 pisa_2015 <- read_sav(file.choose()) # The SPSS format zip file
@@ -182,27 +184,125 @@ Point out a couple more things that you see in terms of differences between girl
 ---
 # Tennis
 
-Statistics for grand slam and top tournament matches are available through the ATP and WTA web sites. By web scraping these web sites we can pull data together to explore characteristics of different players, surfaces, ... These are compiled into the R package `deuce`. 
+Statistics for grand slam and top tournament matches are available through the ATP and WTA web sites. By web scraping these web sites we can pull data together to explore characteristics of different players, surfaces, ... These are compiled into the R package deuce. 
 
 ```{r}
 # devtools::install_github("skoval/deuce")
 library(deuce)
 data(wta_matches)
-ggplot(filter(wta_matches, tourney_level == "Grand Slams"),
-       aes(x=year, y=winner_age)) + 
-  geom_point(alpha=0.3) + geom_smooth()
-#data(atp_matches)
-#ggplot(atp_matches, aes(x=year, y=winner_age)) + 
-#  geom_point(alpha=0.3) + geom_smooth()
-#wta_matches %>% group_by(tourney_level) %>% tally()
-#wta_matches %>% filter(tourney_level == "Grand Slams") %>% select(tourney_name, winner_name, winner_age, year) %>% filter(!is.na(winner_age)) %>% filter(winner_age > 40) %>% arrange(desc(winner_age))
-#wta_matches %>% filter(winner_name == "Katerina Bohmova")
+grand_slams <- filter(wta_matches, 
+                      tourney_level == "Grand Slams", 
+                      year>1983)
+p <- ggplot(grand_slams, aes(x=factor(year), y=winner_age)) + 
+  geom_boxplot() + 
+  scale_x_discrete(breaks=c("1990", "2000", "2010", "2020")) + 
+  xlab("") + ylab("winner age") 
+p <- p +
+  geom_point(mapping=aes(text=winner_name), 
+             data=filter(grand_slams, winner_age > 35), 
+             alpha=0.5, colour="red", size=3) 
+ggplotly(p)
 ```
 
-[Yes, there are 47 year olds playing Grand Slams!](http://www.nytimes.com/2004/06/21/sports/tennis/navratilova-47-wins-at-wimbledon.html)
+Yes, there are 47 year olds playing Grand Slams! [See NYTimes, 2004](http://www.nytimes.com/2004/06/21/sports/tennis/navratilova-47-wins-at-wimbledon.html)
+
 
 ---
 # Politics
+
+The [Australian Electoral Commission](http://www.aec.gov.au/elections/federal_elections/2016/downloads.htm) provides Federal election results, and the electoral map. 
+
+```{r fig.width=5, fig.height=4}
+library(eechidna)
+who_won <- aec2016_2pp_electorate %>% 
+  group_by(PartyNm) %>% 
+  tally() %>% 
+  arrange(desc(n)) 
+
+# plot
+library(ggplot2)
+library(scales)
+who_won <- aec2016_2pp_electorate %>% 
+  group_by(PartyNm) %>% 
+  tally() %>% 
+  arrange(desc(n)) 
+
+# plot
+ggplot(who_won, 
+       aes(reorder(PartyNm, n), 
+           n)) +
+  geom_point(size = 3) + 
+  coord_flip() + 
+  scale_y_continuous(labels = comma) +
+  theme_bw() +
+  ylab("Total number of electorates") +
+  xlab("") +
+  theme(text = element_text(size=10))
+```
+
+---
+# Map it!
+
+```{r fig.width=7, fig.height=5}
+data(nat_data_2016_cart)
+data(nat_map_2016)
+data(aec2016_fp_electorate)
+map.winners <- aec2016_fp_electorate %>% filter(Elected == "Y") %>% 
+  select(Electorate, PartyNm) %>% 
+  merge(nat_map_2016, by.x="Electorate", by.y="Elect_div")
+
+# Grouping different Lib/Nats togethers
+map.winners$PartyNm <- as.character(map.winners$PartyNm)
+coalition <- c("Country Liberals (NT)", "Liberal", 
+               "Liberal National Party of Queensland", "The Nationals")
+map.winners.grouped <- mutate(map.winners, 
+    PartyNm = ifelse(as.character(PartyNm) %in% coalition,
+       "Liberal National Coalition", PartyNm))
+map.winners.grouped <- map.winners.grouped %>% arrange(group, order)
+
+# Colour cells to match that parties colours
+# Order = Australian Labor Party, Independent, Katters, Lib/Nats Coalition, Palmer, The Greens
+partycolours = c("#FF0033", "#000000", "#CC3300", "#0066CC", "#FFFF00", "#009900")
+
+ggplot(data=map.winners.grouped) + 
+  geom_polygon(aes(x=long, y=lat, group=group, order=order, fill=PartyNm)) +
+  scale_fill_manual(name="Politcal Party", values=partycolours) +
+  theme_map() + coord_equal() + theme(legend.position="bottom")
+```
+
+---
+# Cartogram it!
+
+```{r fig.width=7, fig.height=5}
+# Load election results
+cart.winners <- aec2016_fp_electorate %>% filter(Elected == "Y") %>% 
+  select(Electorate, PartyNm) %>% 
+  merge(nat_data_2016_cart, by.x="Electorate", by.y="ELECT_DIV")
+
+# Grouping different Lib/Nats togethers
+cart.winners$PartyNm <- as.character(cart.winners$PartyNm)
+coalition <- c("Country Liberals (NT)", "Liberal", "Liberal National Party of Queensland",
+               "The Nationals")
+cart.winners.grouped <- mutate(cart.winners, 
+  PartyNm = ifelse(as.character(PartyNm) %in% coalition, 
+                   "Liberal National Coalition", PartyNm))
+
+# Plot it
+ggplot(data=nat_map_2016) +
+  geom_polygon(aes(x=long, y=lat, group=group, order=order),
+               fill="grey90", colour="white") +
+  geom_point(data=cart.winners.grouped, aes(x=x, y=y, colour=PartyNm), size=2, alpha=0.8) +
+  scale_colour_manual(name="Political Party", values=partycolours) +
+  theme_map() + coord_equal() + theme(legend.position="bottom")
+```
+
+---
+# Combine with Census data
+
+```{r}
+library(vembedr)
+embed_vimeo("167367369")
+```
 
 ---
 # Pedestrian sensors
@@ -218,6 +318,61 @@ ggplot(filter(wta_matches, tourney_level == "Grand Slams"),
 
 ---
 # Text
+
+Is it possible to distinguish tweets coming from Donald Trump's phone vs his staff's phone? With a twitter api you can collect all tweets between certain times, from different people, with different hashtags, ... David Robinson wrote a [post](http://varianceexplained.org/r/trump-tweets/) during last year's US election cycle doing just this. Here's a re-creation of his analysis.
+
+Tweets from @realDonaldTrump were collected and passed through a sentiment analysis.
+
+```{r}
+load(url("http://varianceexplained.org/files/trump_tweets_df.rda"))
+tweets <- trump_tweets_df %>%
+  select(id, statusSource, text, created) %>%
+  extract(statusSource, "source", "Twitter for (.*?)<") %>%
+  filter(source %in% c("iPhone", "Android"))
+tweets %>%
+  count(source, hour = hour(with_tz(created, "EST"))) %>%
+  mutate(percent = n / sum(n)*100) %>%
+  ggplot(aes(hour, percent, color = source)) +
+  geom_line() +
+  labs(x = "Hour of day (EST)",
+       y = "% of tweets",
+       color = "")
+```
+
+---
+# Common words between devices
+
+```{r fig.height=7}
+library(tidytext)
+library(stringr)
+
+reg <- "([^A-Za-z\\d#@']|'(?![A-Za-z\\d#@]))"
+tweet_words <- tweets %>%
+  filter(!str_detect(text, '^"')) %>%
+  mutate(text = str_replace_all(text, "https://t.co/[A-Za-z\\d]+|&amp;", "")) %>%
+  unnest_tokens(word, text, token = "regex", pattern = reg) %>%
+  filter(!word %in% stop_words$word,
+         str_detect(word, "[a-z]"))
+android_iphone_ratios <- tweet_words %>%
+  count(word, source) %>%
+  filter(sum(n) >= 5) %>%
+  spread(source, n, fill = 0) %>%
+  mutate_at(vars(Android, iPhone), 
+            funs((. + 1) / sum(. + 1))) %>%
+  mutate(logratio = log2(Android / iPhone)) %>%
+  arrange(desc(logratio))
+android_iphone_ratios %>%
+  group_by(logratio > 0) %>%
+  top_n(15, abs(logratio)) %>%
+  ungroup() %>%
+  mutate(word = reorder(word, logratio)) %>%
+  ggplot(aes(word, logratio, fill = logratio < 0)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  ylab("Android / iPhone log ratio") +
+  scale_fill_manual(name = "", labels = c("Android", "iPhone"),
+                    values = c("red", "lightblue"))
+```
 
 ---
 # Climate change
@@ -272,7 +427,7 @@ grid.arrange(p1, p2, ncol=2)
 
 ---
 
-```{r CO2-map, fig.width=4.5, fig.height=2.5, warning=FALSE, message=FALSE, echo=FALSE, cache=FALSE}
+```{r CO2-map, fig.width=4.5, fig.height=2.5}
 world <- map_data("world")
 worldmap <- ggplot(world, aes(x=long, y=lat, group=group)) +
   geom_path(color="grey80", size=0.5) + xlab("") + ylab("") +
@@ -285,7 +440,7 @@ worldmap + geom_point(data=CO2.all.loc, aes(x=lon, y=lat, group=1), colour="red"
             colour="orange", size=5)
 ```
 
-- CO$_2$ is increasing, and it looks like it is exponential increase. 
+- CO2 is increasing, and it looks like it is exponential increase. 
 - The same trend is seen at every location - REALLY? Need some physics to understand this.
 - Some stations show seasonal pattern - actually the more north the more seasonality - WHY?
 
@@ -326,22 +481,22 @@ worldmap + geom_point(data=CO2.all.loc, aes(x=lon, y=lat, group=1), colour="red"
 
 From CRAN
 
-```{r eval=FALSE}
-install.packages("ggenealogy")
+```{r eval=FALSE, echo=TRUE}
+install.packages("learnr")
 ```
 
 
 From bioconductor
 
-```{r eval=FALSE}
+```{r eval=FALSE, echo=TRUE}
 source("https://bioconductor.org/biocLite.R")
 biocLite("ggbio")
 ```
 
 From github repos
 
-```{r eval=FALSE}
-devtools::install_github("heike/gglogo")
+```{r eval=FALSE, echo=TRUE}
+devtools::install_github("earowang/sugrrants")
 devtools::install_github("haleyjeppson/ggmosaic")
 ```
 
@@ -361,6 +516,15 @@ From the [R Markdown home page](http://rmarkdown.rstudio.com/):
 - Combined with a knowledge of mathematics and statistics empowers each of us to contribute to understand and improve our world
 
 ---
+# This course
+
+__Data preparation accounts for about 80% of the work of data scientists__
+
+[Gil Press, Forbes, 2016](https://www.forbes.com/sites/gilpress/2016/03/23/data-preparation-most-time-consuming-least-enjoyable-data-science-task-survey-says/#47cbbbf46f63)
+
+This is one of the least taught parts of data science, and business analytics, and yet it is what data scientists spend most of their time on. By the end of this semester, we hope that you will have the tools to be more efficient and effective in this area, so that you have more time to spend on your mining and modeling.
+
+---
 # Follow along during class
 
 - __These slides__ are made in rmarkdown, using styling from the [xaringan](https://github.com/yihui/xaringan) package. 
@@ -368,6 +532,7 @@ From the [R Markdown home page](http://rmarkdown.rstudio.com/):
 
 
 ---
+class: inverse middle 
 # Share and share alike
 
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
