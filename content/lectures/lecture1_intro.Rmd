@@ -375,6 +375,49 @@ android_iphone_ratios %>%
 ```
 
 ---
+# Sentiment analysis
+
+Poisson test of the differences between whether it is mode likely to emerge from the Android.
+
+```{r results='hide'}
+nrc <- sentiments %>%
+  filter(lexicon == "nrc") %>%
+  dplyr::select(word, sentiment)
+
+sources <- tweet_words %>%
+  group_by(source) %>%
+  mutate(total_words = n()) %>%
+  ungroup() %>%
+  distinct(id, source, total_words)
+
+by_source_sentiment <- tweet_words %>%
+  inner_join(nrc, by = "word") %>%
+  count(sentiment, id) %>%
+  ungroup() %>%
+  complete(sentiment, id, fill = list(n = 0)) %>%
+  inner_join(sources) %>%
+  group_by(source, sentiment, total_words) %>%
+  summarize(words = sum(n)) %>%
+  ungroup()
+
+library(broom)
+sentiment_differences <- by_source_sentiment %>%
+  group_by(sentiment) %>%
+  do(tidy(poisson.test(.$words, .$total_words))) %>%
+  ungroup() %>%
+  mutate(sentiment = reorder(sentiment, estimate))
+```
+
+```{r fig.width=6, fig.height=5}
+ggplot(sentiment_differences, aes(x=sentiment, y=estimate)) + 
+  geom_hline(yintercept=1, colour="white", size=3) +
+  geom_point() + 
+  geom_errorbar(aes(x=sentiment, ymin=conf.low, ymax=conf.high)) +
+  scale_y_continuous(breaks=seq(0.7, 2.2, 0.1)) + 
+  coord_flip()
+```
+
+---
 # Climate change
 
 - Data is collected at a number of locations world wide. 
