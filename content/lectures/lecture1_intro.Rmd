@@ -343,6 +343,12 @@ Pull a google map and see where the sensors are located.
 
 ```{r}
 locations <- read_csv("data/Pedestrian_sensor_locations.csv")
+library(ggmap)
+ctr <- locations %>% 
+  summarise(lat=mean(Latitude), lon=mean(Longitude))
+map <- get_map(c(ctr$lon, ctr$lat), zoom=14)
+#ggmap(map) + geom_point(data=locations, 
+ #                       mapping=aes(x=Longitude, y=Latitude))
 ```
 
 ---
