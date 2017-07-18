@@ -6,7 +6,7 @@ date: "7/25/2017"
 output:
   xaringan::moon_reader:
     css: ["default", "myremark.css"]
-    self_contained: false
+    self_contained: true
     nature:
       highlightStyle: github
       highlightLines: true

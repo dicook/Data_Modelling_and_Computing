@@ -13,7 +13,7 @@ title: Home
 
 ## Lecture notes
 
-- Week 1: [Motivation, background examples](lectures/lecture1_intro.html)
+- Week 1: [Motivation, background examples](lectures/lecture1_intro.html)[(pdf)](lectures/lecture1_intro.pdf)[(Rmd)](lectures/lecture1_intro.Rmd)
 - Week 2: Tidy data principles
 - Week 3: Data cleaning, rearranging and transformation
 - Week 4: Basic visualisation
