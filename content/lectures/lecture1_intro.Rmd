@@ -347,8 +347,9 @@ library(ggmap)
 ctr <- locations %>% 
   summarise(lat=mean(Latitude), lon=mean(Longitude))
 map <- get_map(c(ctr$lon, ctr$lat), zoom=14)
-#ggmap(map) + geom_point(data=locations, 
- #                       mapping=aes(x=Longitude, y=Latitude))
+ggmap(map) + geom_point(data=locations, 
+                        mapping=aes(x=Longitude, y=Latitude)) +
+  theme_map()
 ```
 
 ---
