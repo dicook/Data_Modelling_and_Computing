@@ -342,6 +342,7 @@ ggplot(ped_june_m, aes(x=Hour, y=count,
 Pull a google map and see where the sensors are located.
 
 ```{r}
+# devtools::install_github("dkahle/ggmap")
 locations <- read_csv("data/Pedestrian_sensor_locations.csv")
 library(ggmap)
 ctr <- locations %>% 
