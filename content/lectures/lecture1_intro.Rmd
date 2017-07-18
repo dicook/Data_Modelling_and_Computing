@@ -6,7 +6,7 @@ date: "7/25/2017"
 output:
   xaringan::moon_reader:
     css: ["default", "myremark.css"]
-    self_contained: true
+    self_contained: false
     nature:
       highlightStyle: github
       highlightLines: true
@@ -359,8 +359,43 @@ ggmap(map) + geom_point(data=locations,
 ---
 # Exchange rates
 
+Pull historical exchange rates from [http://openexchangerates.org/api/historical/](http://openexchangerates.org/api/historical/). 
+
+```{r}
+library(jsonlite)
+```
+
+```{r eval=FALSE}
+ru <- NULL
+dt <- as.Date("2017-06-20")
+for (i in 3:27) {
+  cat(i,"\n")
+  url <- paste("http://openexchangerates.org/api/historical/",dt,".json?app_id=XXXX", sep="")
+  x <- fromJSON(url)
+  x <- x$rates
+  if (length(x) == 171) 
+    x <- x[-c(164,166)]
+  ru <- rbind(ru, data.frame(date=dt, x))
+  dt <- dt + days(1)
+}
+rownames(ru) <- ru$date
+write_csv(ru, path="data/rates.csv")
+```
+
+```{r}
+rates <- read_csv("data/rates.csv")
+p1 <- ggplot(rates, aes(date, AUD)) + geom_line()
+p2 <- ggplot(rates, aes(AUD, NZD)) + 
+  geom_point() + geom_line() +
+  theme(aspect.ratio=1)
+p3 <- ggplot(rates, aes(AUD, GBP)) + 
+  geom_point() + geom_line() +
+  theme(aspect.ratio=1)
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
 ---
-# Text
+# Analysing tweets
 
 Is it possible to distinguish tweets coming from Donald Trump's phone vs his staff's phone? With a twitter api you can collect all tweets between certain times, from different people, with different hashtags, ... David Robinson wrote a [post](http://varianceexplained.org/r/trump-tweets/) during last year's US election cycle doing just this. Here's a re-creation of his analysis.
 
