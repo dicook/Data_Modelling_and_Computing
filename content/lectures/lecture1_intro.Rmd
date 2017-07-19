@@ -382,6 +382,64 @@ The web site [https://www.transtats.bts.gov](https://www.transtats.bts.gov) keep
 ```
 
 ---
+# Where did my plane fly?
+
+```{r eval=FALSE}
+air <- read_csv("data/901848483_T_ONTIME.csv")
+
+dfw_dsm <- air %>%
+  filter(CARRIER == "AA", FL_DATE == "2017-05-06",
+         ORIGIN == "DFW", DEST == "DSM")
+dfw_dsm %>%
+  select(CRS_DEP_TIME, TAIL_NUM)
+
+plane_N4YRAA <- air %>% filter(TAIL_NUM == "N4YRAA") %>%
+  select(FL_DATE, CARRIER, FL_NUM, ORIGIN, DEST, DEP_TIME, ARR_TIME, DISTANCE)
+save(plane_N4YRAA, file="data/plane_N4YRAA.rda")
+```
+
+```{r fig.width=10, fig.height=6}
+load("data/plane_N4YRAA.rda")
+airport <- read_csv("data/airports.csv")
+airport <- airport %>%
+  select(AIRPORT, LATITUDE, LONGITUDE, AIRPORT_IS_LATEST) %>%
+  filter(AIRPORT_IS_LATEST == 1) %>%
+  select(-AIRPORT_IS_LATEST)
+
+N4YRAA_latlon <- left_join(plane_N4YRAA, airport,
+                           by = c("ORIGIN"="AIRPORT")) %>%
+  rename("ORIGIN_LATITUDE"="LATITUDE",
+         "ORIGIN_LONGITUDE"="LONGITUDE")
+
+N4YRAA_latlon <- left_join(N4YRAA_latlon, airport,
+                           by = c("DEST"="AIRPORT")) %>%
+  rename("DEST_LATITUDE"="LATITUDE",
+         "DEST_LONGITUDE"="LONGITUDE")
+
+N4YRAA_latlon <- N4YRAA_latlon %>% arrange(FL_DATE, DEP_TIME)
+
+map <- get_map(c(lon=-92.20562, lat=36.20259), zoom=4)
+ggmap(map) +
+  geom_segment(data=filter(N4YRAA_latlon,
+                           FL_DATE < ymd("2017-05-15")),
+               aes(x=ORIGIN_LONGITUDE, xend=DEST_LONGITUDE,
+                   y=ORIGIN_LATITUDE, yend=DEST_LATITUDE),
+               color="navyblue") +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE < ymd("2017-05-15")),
+             aes(x=ORIGIN_LONGITUDE,
+                 y=ORIGIN_LATITUDE), color="orange",
+             alpha=0.3, size=3) +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE < ymd("2017-05-15")),
+             aes(x=DEST_LONGITUDE,
+                 y=DEST_LATITUDE), color="red",
+             alpha=0.3, size=1) +
+  facet_wrap(~FL_DATE, ncol=7) + xlab("") + ylab("") +
+  theme_map()
+```
+
+---
 # Cross-rates relative to USD
 
 Pull historical exchange rates from [http://openexchangerates.org/api/historical/](http://openexchangerates.org/api/historical/). 
