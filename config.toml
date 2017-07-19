@@ -4,7 +4,7 @@ title = "ETC1010: Data Modelling and Computing"
 theme = "hugo-xmin"
 googleAnalytics = ""
 disqusShortname = ""
-ignoreFiles = ["\\.Rmd$", "_files$", "_cache$"]
+ignoreFiles = ["\\.Rmd$", "_cache$"]
 preserveTaxonomyNames = true
 footnotereturnlinkcontents = "↩"
 
