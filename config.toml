@@ -20,6 +20,10 @@ footnotereturnlinkcontents = "↩"
     name = "Moodle"
     url = "http://moodle.vle.monash.edu/course/view.php?id=38489"
     weight = 2
+[[menu.main]]
+    name = "Textbook"
+    url = "http://r4ds.had.co.nz"
+    weight = 2
 
 [params]
     description = "A website built through Hugo and blogdown."

@@ -302,7 +302,7 @@ ggplot(data=nat_map_2016) +
 ```{r}
 # devtools::install_github("ijlyttle/vembedr")
 library(vembedr)
-embed_vimeo("167367369", width=800, height=600)
+embed_vimeo("167367369", width=800, height=500)
 ```
 
 Video link: [https://vimeo.com/167367369](https://vimeo.com/167367369)
@@ -398,11 +398,11 @@ plane_N4YRAA <- air %>% filter(TAIL_NUM == "N4YRAA") %>%
 save(plane_N4YRAA, file="data/plane_N4YRAA.rda")
 ```
 
-```{r fig.width=10, fig.height=6}
+```{r fig.width=6, fig.height=6}
 load("data/plane_N4YRAA.rda")
 airport <- read_csv("data/airports.csv")
 airport <- airport %>%
-  select(AIRPORT, LATITUDE, LONGITUDE, AIRPORT_IS_LATEST) %>%
+  select(AIRPORT, LATITUDE, LONGITUDE, AIRPORT_IS_LATEST, DISPLAY_AIRPORT_NAME) %>%
   filter(AIRPORT_IS_LATEST == 1) %>%
   select(-AIRPORT_IS_LATEST)
 
@@ -418,6 +418,30 @@ N4YRAA_latlon <- left_join(N4YRAA_latlon, airport,
 
 N4YRAA_latlon <- N4YRAA_latlon %>% arrange(FL_DATE, DEP_TIME)
 
+map <- get_map(c(lon=-92.20562, lat=36.20259), zoom=5)
+ggmap(map) +
+  geom_segment(data=filter(N4YRAA_latlon,
+                           FL_DATE == ymd("2017-05-06")),
+               aes(x=ORIGIN_LONGITUDE, xend=DEST_LONGITUDE,
+                   y=ORIGIN_LATITUDE, yend=DEST_LATITUDE),
+               color="navyblue") +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE == ymd("2017-05-06")),
+             aes(x=ORIGIN_LONGITUDE,
+                 y=ORIGIN_LATITUDE), color="orange",
+             alpha=0.3, size=3) +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE == ymd("2017-05-06")),
+             aes(x=DEST_LONGITUDE,
+                 y=DEST_LATITUDE), color="red",
+             alpha=0.3, size=1) +
+   theme_map()
+```
+
+---
+# and in the rest of the month ...
+
+```{r fig.width=10, fig.height=6}
 map <- get_map(c(lon=-92.20562, lat=36.20259), zoom=4)
 ggmap(map) +
   geom_segment(data=filter(N4YRAA_latlon,
@@ -435,8 +459,19 @@ ggmap(map) +
              aes(x=DEST_LONGITUDE,
                  y=DEST_LATITUDE), color="red",
              alpha=0.3, size=1) +
-  facet_wrap(~FL_DATE, ncol=7) + xlab("") + ylab("") +
+  facet_wrap(~FL_DATE, ncol=7) + 
   theme_map()
+```
+---
+# What airports are these
+
+```{r}
+library(knitr)
+origin_airports <- N4YRAA_latlon %>% 
+  select(ORIGIN) %>%
+  distinct() 
+airport %>% filter(AIRPORT %in% origin_airports$ORIGIN) %>%
+  select(AIRPORT, DISPLAY_AIRPORT_NAME) %>% kable()
 ```
 
 ---
@@ -468,7 +503,7 @@ rates_m <- rates %>% select(date, AUD, NZD, GBP) %>%
   mutate_at(vars(AUD, NZD, GBP), scale) %>%
   gather(currency, rate, -date)
 p1 <- ggplot(rates_m, aes(x=date, y=rate, colour=currency)) + 
-  geom_line() + xlab("Standardised rates")
+  geom_line() + xlab("Standardised rates") +
   scale_colour_brewer(palette="Dark2") 
 p2 <- ggplot(rates, aes(AUD, NZD)) + 
   geom_point() + #geom_line() +
