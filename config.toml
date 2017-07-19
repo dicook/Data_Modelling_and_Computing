@@ -1,4 +1,4 @@
-baseurl = "/"
+baseurl = "https://dmac.netlify.com"
 languageCode = "en-us"
 title = "ETC1010: Data Modelling and Computing"
 theme = "hugo-xmin"
