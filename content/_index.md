@@ -11,6 +11,11 @@ title: Home
 - Lecturers: Professor Di Cook and Dr David Frazier
 - Tutors: Puwasala Gamakumara, Mitch O'Hara-Wild, Yeasmin Mahbuba
 
+## Schedule
+
+- Lectures: Tu 10-11 (H1), W 11-12 (H5)
+- Tutorials: W 9:30-11 (E163), 12-1:30 (E163), 1:30-3 (E163); Th 11-12:30 (E163), 12:30-2 (E163)
+
 ## Lecture notes
 
 - Week 1: [Motivation, background examples](lectures/lecture1_intro.html) [(pdf)](lectures/lecture1_intro.pdf) [(Rmd)](lectures/lecture1_intro.Rmd); Reading: __I Explore__, Sections 2, 3.1-3.3, 4, 5.1-5.2, 6, 7.1-7.3
