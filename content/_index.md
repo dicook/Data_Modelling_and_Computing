@@ -26,7 +26,7 @@ title: Home
 ## Lecture notes
 
 - Week 1: [Motivation, background examples](lectures/lecture1_intro.html) [(pdf)](lectures/lecture1_intro.pdf) [(Rmd)](lectures/lecture1_intro.Rmd); Reading: __I Explore__, Sections 2, 3.1-3.3, 4, 5.1-5.2, 6, 7.1-7.3
-- Week 2: [Tidy data principles](lectures/lecture2_tidydata.html)  [(Rmd)](lectures/lecture2_tidydata.Rmd)
+- Week 2: [Tidy data principles](lectures/lecture2_tidydata.html)  [(pdf)](lectures/lecture2_tidydata.pdf) [(Rmd)](lectures/lecture2_tidydata.Rmd)
 - Week 3: Data cleaning, rearranging and transformation
 - Week 4: Basic visualisation
 - Week 5: Advanced visualisation
