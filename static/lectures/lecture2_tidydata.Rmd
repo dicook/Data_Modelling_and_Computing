@@ -1,0 +1,496 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+subtitle: 'Lecture 2: Tidy data'
+author: "Di Cook (dicook@monash.edu, @visnut)"
+date: "Week 2"
+output:
+  xaringan::moon_reader:
+    css: ["default", "myremark.css"]
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r, echo = FALSE, warning = FALSE, message=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  collapse = TRUE,
+  echo=FALSE,
+  comment = "",
+  fig.height = 4,
+  fig.width = 8,
+  fig.align = "center",
+  cache = FALSE
+)
+library(tidyverse)
+library(gridExtra)
+library(plotly)
+library(ggthemes)
+```
+
+# Overview
+
+- Terminology of statistical data exploration
+- Process of exploring data
+- Making basic plots
+- Different forms of data and making them tidy
+
+---
+# Exploratory data analysis
+
+"Data science is an exciting discipline that allows you to turn raw data into understanding, insight, and knowledge." [Grolemund and Wickham](http://r4ds.had.co.nz/introduction.html) 
+
+Exploratory data analysis is the stage in the analysis where the analyst "plays in the sand" with their data to see what it has to tell them. It allows us to find the unexpected, and come to some understanding of the information that the data contains. [Cook and Swayne](http://www.ggobi.org/book/)
+
+---
+# Exploring your data, stages
+
+- import
+- tidy
+- transform/wrangle/clean
+- visualise
+- model
+- communicate
+
+---
+# Rectangular data
+
+- Variables are in the columns
+  - A __variable__ is a quantity, quality, or property that you can measure.
+  - A value is the state of a variable when you measure it. The value of a variable may change from measurement to measurement.
+- Observations are in the rows: An __observation__ is a set of measurements made under similar conditions (you usually make all of the measurements in an observation at the same time and on the same object). An observation will contain several values, each associated with a different variable. I’ll sometimes refer to an observation as a data point.
+- __Tabular data__ is a set of values, each associated with a variable and an observation. Tabular data is __tidy__ if each value is placed in its own "cell", each variable in its own column, and each observation in its own row.
+
+---
+# Fundamental questions
+
+- What type of variation occurs within my variables?
+- What type of covariation occurs between my variables?
+
+---
+# Visualising distributions
+
+```{r echo=TRUE, fig.height=3, fig.width=4}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut))
+```
+
+`Cut` is a categorical variable, show we display it using a bar chart. Height of the bar shows the number in each category. What is the most common diamond cut? 
+
+---
+class: inverse middle 
+# Your turn
+
+In the previous plot:
+
+- What is the variable? 
+- What are the observations?
+
+---
+# Under the hood
+
+The counts for the bar chart were automatically calculated, prior to plotting:
+
+```{r echo=TRUE}
+diamonds %>% 
+  count(cut)
+```
+
+---
+# Visualising distributions
+
+A variable is continuous if it can take any of an infinite set of ordered values.  To examine the distribution of a continuous variable, use a histogram:
+
+```{r echo=TRUE, fig.height=3, fig.width=4}
+ggplot(data = diamonds) +
+  geom_histogram(mapping = aes(x = carat), binwidth = 0.5)
+```
+
+Carat ranges from 0 to 5 centered at 0.5, and has a right-skewed shape. This means that most diamonds are around 0.5-1 carat, and there are very few large diamonds.
+
+---
+# Focus
+
+Because most of the information about carats of most diamonds is actually in the smaller range, zoom in to this domain to see detail.
+
+```{r echoTRUE, fig.height=4, fig.width=6}
+smaller <- diamonds %>% 
+  filter(carat < 3)
+  
+ggplot(data = smaller, mapping = aes(x = carat)) +
+  geom_histogram(binwidth = 0.1)
+```
+
+---
+class: inverse middle 
+# Your turn
+
+The distribution for diamonds smaller than 3 carats is multi-modal, at this 0.1 binwidth resolution. There are peaks at 0.5, 1, 1.5 and 2 carats. What might this mean? 
+
+---
+# Covariation
+
+If we examine price of the diamond relative to carat, we might expect the price increases with carat. A scatterplot is a way to explore this covariation. 
+
+```{r echo=TRUE, fig.height=3.5, fig.width=5}
+ggplot(diamonds, aes(x=carat, y=price)) + geom_point(alpha=0.5)
+```
+
+There is a positive association between the two variables, but it is also nonlinear, and there are a few outliers, very large and not so expensive diamonds. We can also see concentrations of points at fixed values, 1, 1.5, 2, ... The variation is not uniform for all values of carat, as carat increases so does the variation. This is called heteroskedastic. 
+
+---
+# Linearise
+
+Nonlinear relationships are harder to model, so at this point it can be helpful to transform one or more of the variables. Here we have put price on a square root scale, which makes the relationship more linear.
+
+```{r echo=TRUE, fig.height=4, fig.width=6}
+ggplot(diamonds, aes(x=carat, y=price)) + geom_point(alpha=0.5) + scale_y_sqrt()
+```
+
+---
+# Covariation
+
+The reason that the larger diamonds don't bring relatively larger prices might be related to quality. Incorporating this into the plot may help tease the variation apart.
+
+```{r echo=TRUE, fig.height=4, fig.width=6}
+ggplot(diamonds, aes(x=carat, y=price, colour=clarity)) + 
+  geom_point(alpha=0.1) + 
+  geom_smooth(se=FALSE, method="lm") + scale_y_sqrt()
+```
+
+---
+# Tidying data
+
+Here are a bunch of examples data sets that have come across my desk. We are going to work out what are the variables and what are the observations, to know what form we need to rearrange the data to get it into tidy form.
+
+---
+# Example 1
+
+What are the variables? Observations?
+
+```{r}
+grad <- read_csv("data/graduate-programs.csv")
+head(grad[c(2,3,4,6)])
+```
+
+Is it in tidy form?
+
+---
+# Example 2 
+
+What are the variables? Observations?
+
+```{r}
+genes <- read_csv("data/genes.csv")
+head(genes)
+```
+
+---
+# Example 3
+
+What are the variables? Observations?
+
+```{r}
+melbtemp <- read.fwf("data/ASN00086282.dly", 
+   c(11, 4, 2, 4, rep(c(5, 1, 1, 1), 31)), fill=T)
+head(melbtemp[,c(1,2,3,4,seq(5,100,4))])
+```
+
+---
+# Example 4
+
+What are the variables? Observations?
+
+```{r}
+tb <- read_csv("data/tb.csv")
+tail(tb)
+```
+
+---
+# Example 5
+
+```{r}
+pew <- read.delim(
+  file = "http://stat405.had.co.nz/data/pew.txt",
+  header = TRUE,
+  stringsAsFactors = FALSE,
+  check.names = F
+)
+pew[1:5, 1:5]
+```
+
+---
+# Example 6
+
+10 week sensory experiment, 12 individuals assessed taste of french fries on several scales (how potato-y, buttery, grassy, rancid, paint-y do they taste?), fried in one of 3 different oils, replicated twice. First few rows:
+
+```{r, echo = FALSE}
+data(french_fries, package = "reshape2")
+head(french_fries, 4)
+```
+
+What is the experimental unit? What are the factors of the experiment? What was measured? What do you want to know?
+
+---
+# Messy Data Patterns
+
+There are various features of messy data that one can observe in practice. Here are some of the more commonly observed patterns:
+
+- Column headers are values, not variable names
+- Variables are stored in both rows and columns, contingency table format
+- One type of experimental unit stored in multiple tables
+- Dates in many different formats
+
+---
+# What is Tidy Data?
+
+- Each observation forms a row
+- Each variable forms a column
+- Data is contained in a single table
+- Long form makes it easier to reshape in many different ways
+- Wide form is common for analysis
+
+---
+
+![](lego.png)
+
+---
+
+![](playmobile.png)
+
+---
+# Tidy Verbs
+
+- `gather`: specify the **keys** (identifiers) and the **values** (measures) to make long form (used to be called melting)
+- `spread`: variables in columns (used to be called casting)
+- `nest`/`unnest`: working with list variables
+- `separate`/`unite`: split and combine columns
+
+---
+# Tidying the example 2 data
+
+```{r echo=TRUE}
+genes <- read_csv("data/genes.csv")
+head(genes)
+```
+
+---
+# Gather Column Names into Long Form
+
+```{r echo=TRUE}
+gather(genes, variable, expr, -id) 
+```
+
+---
+# Separate Columns
+
+```{r echo=TRUE}
+genes %>%
+  gather(variable, expr, -id) %>%
+  separate(variable, c("trt", "leftover"), "-") 
+```
+
+---
+
+```{r echo=TRUE}
+genes %>%
+  gather(variable, expr, -id) %>%
+  separate(variable, c("trt", "leftover"), "-") %>%
+  separate(leftover, c("time", "rep"), "\\.") 
+```
+
+---
+
+```{r echo=TRUE}
+gtidy <- genes %>%
+  gather(variable, expr, -id) %>%
+  separate(variable, c("trt", "leftover"), "-") %>%
+  separate(leftover, c("time", "rep"), "\\.") %>%
+  mutate(trt = sub("W", "", trt)) %>%
+  mutate(rep = sub("R", "", rep))
+head(gtidy)
+```
+
+---
+# Make a picture
+
+```{r fig.height=4}
+gmean <- gtidy %>% 
+  group_by(id, trt, time) %>% 
+  summarise(expr = mean(expr))
+ggplot(data = gtidy, aes(trt, expr, colour = time)) + 
+         geom_point() + 
+  xlab("Type of modification") + ylab("Expression") + 
+  facet_wrap(~id) +
+  geom_line(data = gmean, aes(group = time))
+```
+
+---
+# Tidying example 3
+
+```{r echo=TRUE}
+melbtemp <- read.fwf("data/ASN00086282.dly", 
+                     c(11, 4, 2, 4, rep(c(5, 1, 1, 1), 31)), fill=T)
+melbtemp <- melbtemp[,c(1,2,3,4,seq(5,128,4))]
+colnames(melbtemp) <- c("id", "year", "month", "var", paste0("V",1:31))
+head(melbtemp)
+```
+
+---
+
+```{r echo=TRUE}
+melbtemp %>% 
+  gather(day, value, V1:V31) %>%
+  head()
+```
+
+---
+
+```{r echo=TRUE}
+melbtemp %>% 
+  gather(day, value, V1:V31) %>%
+  mutate(day = sub("V", "", day)) %>%
+  head()
+```
+
+---
+
+Missing values have been coded as -9999. Need to recode these as NA.
+
+```{r}
+melbtemp %>% 
+  gather(day, value, V1:V31) %>%
+  mutate(day = sub("V", "", day)) %>%
+  summarise(min=min(value), median=median(value), max=max(value)) 
+```
+
+```{r echo=TRUE}
+melbtemp %>% 
+  gather(day, value, V1:V31) %>%
+  mutate(day = sub("V", "", day)) %>%
+  mutate(value=ifelse(value==-9999, NA, value)) %>%
+  head()
+```
+
+---
+
+There are more variables types that are recognisable:
+
+```{r}
+melbtemp %>% 
+  gather(day, value, V1:V31) %>%
+  mutate(day = sub("V", "", day)) %>%
+  mutate(value=ifelse(value==-9999, NA, value)) %>%
+  count(var)
+```
+
+---
+
+```{r echo=TRUE}
+melbtemp %>% 
+  gather(day, value, V1:V31) %>%
+  mutate(day = sub("V", "", day)) %>%
+  mutate(value=ifelse(value==-9999, NA, value)) %>%
+  filter(var %in% c("PRCP", "TMAX", "TMIN")) %>%
+  head()
+```
+
+---
+
+```{r echo=TRUE}
+melbtemp %>% 
+  gather(day, value, V1:V31) %>%
+  mutate(day = sub("V", "", day)) %>%
+  mutate(value=ifelse(value==-9999, NA, value)) %>%
+  filter(var %in% c("PRCP", "TMAX", "TMIN")) %>%
+  spread(var, value) %>%
+  head()
+```
+
+---
+
+```{r echo=TRUE}
+melbtemp %>% 
+  gather(day, value, V1:V31) %>%
+  mutate(day = sub("V", "", day)) %>%
+  mutate(value=ifelse(value==-9999, NA, value)) %>%
+  filter(var %in% c("PRCP", "TMAX", "TMIN")) %>%
+  spread(var, value) %>%
+  mutate(PRCP=PRCP/10, TMAX=TMAX/10, TMIN=TMIN/10) %>%
+  head()
+```
+
+---
+# Now look at Melbourne max temperatures
+
+```{r}
+melbtemp <- melbtemp %>% 
+  gather(day, value, V1:V31) %>%
+  mutate(day = sub("V", "", day)) %>%
+  mutate(value=ifelse(value==-9999, NA, value)) %>%
+  filter(var %in% c("PRCP", "TMAX", "TMIN")) %>%
+  spread(var, value) %>%
+  mutate(PRCP=PRCP/10, TMAX=TMAX/10, TMIN=TMIN/10)
+ggplot(melbtemp, aes(x=year, y=TMAX)) + 
+  geom_smooth(method="lm")
+```
+
+---
+# Tidying example 4
+
+```{r echo=TRUE}
+tb <- tb %>% 
+  gather(var, count, m_04:f_u) %>%
+  separate(var, c("gender", "age")) %>%
+  filter(!(age %in% c("014", "04", "514", "u")))
+head(tb)
+```
+
+---
+# Numbers in Australia
+
+```{r fig.width=12, fig.height=3, echo=TRUE}
+tb %>% 
+  filter(iso2 == "AU") %>% 
+  ggplot(aes(x = year, y = count, fill = gender)) +
+  geom_bar(stat = "identity", position = "fill") +
+  facet_grid(~ age) 
+```
+
+---
+# Tidying example 5
+
+```{r echo=TRUE}
+pew %>%
+  gather(income, count, -religion) %>%
+  group_by(religion) %>%
+  mutate(prop = count / sum(count)) %>%
+  head()
+```
+
+---
+# Relationship between income and religion
+
+```{r}
+pew %>%
+  gather(income, count, -religion) %>%
+  group_by(religion) %>%
+  mutate(prop = count / sum(count)) %>%
+  ggplot(aes(income, prop)) +
+  geom_line(aes(group = religion)) +
+  facet_wrap(~religion, ncol=6) + 
+  scale_x_discrete(labels=c("<$10k"="10", "$10-20k"="20", "$20-30k"="30", 
+                            "$30-40k"="40", "$40-50k"="50", "$50-75k"="75",
+                            "$75-100k"="100", "$100-150k"="150", ">150k"="200",
+                            "Don't know/refused"="N"))
+```
+
+---
+class: inverse middle 
+# Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+

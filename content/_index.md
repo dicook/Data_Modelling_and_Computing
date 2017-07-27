@@ -16,10 +16,17 @@ title: Home
 - Lectures: Tu 10-11 (H1), W 11-12 (H5)
 - Tutorials: W 9:30-11 (E163), 12-1:30 (E163), 1:30-3 (E163); Th 11-12:30 (E163), 12:30-2 (E163)
 
+## Consultation times
+
+- Di: Wed 2-4 (E762A)
+- Puwasala: Wed 4-5 (W1105)
+- Mitch: 
+- Yeasmin: 
+
 ## Lecture notes
 
 - Week 1: [Motivation, background examples](lectures/lecture1_intro.html) [(pdf)](lectures/lecture1_intro.pdf) [(Rmd)](lectures/lecture1_intro.Rmd); Reading: __I Explore__, Sections 2, 3.1-3.3, 4, 5.1-5.2, 6, 7.1-7.3
-- Week 2: Tidy data principles
+- Week 2: [Tidy data principles](lectures/lecture2_tidydata.html)  [(Rmd)](lectures/lecture2_tidydata.Rmd)
 - Week 3: Data cleaning, rearranging and transformation
 - Week 4: Basic visualisation
 - Week 5: Advanced visualisation

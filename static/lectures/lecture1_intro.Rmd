@@ -2,7 +2,7 @@
 title: "ETC1010: Data Modelling and Computing"
 subtitle: 'Lecture 1: Introduction'
 author: "Di Cook (dicook@monash.edu, @visnut)"
-date: "7/25/2017"
+date: "Week 1"
 output:
   xaringan::moon_reader:
     css: ["default", "myremark.css"]
