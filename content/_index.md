@@ -9,7 +9,7 @@ title: Home
 ## Semester 2 2017
 
 - Lecturers: Professor Di Cook and Dr David Frazier
-- Tutors: Puwasala Gamakumara, Mitch O'Hara-Wild, Yeasmin Mahbuba
+- Tutors: Puwasala Gamakumara, Mitchell O'Hara-Wild, Yeasmin Mahbuba
 
 ## Schedule
 
