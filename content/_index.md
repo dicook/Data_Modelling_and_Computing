@@ -20,8 +20,8 @@ title: Home
 
 - Di: Wed 2-4 (E762A)
 - Puwasala: Wed 4-5 (W1105)
-- Mitch: 
-- Yeasmin: 
+- Mitch: Th 12:30-1:30 (W1105)
+- Yeasmin: Th 2-3 (W1105)
 
 ## Lecture notes
 
