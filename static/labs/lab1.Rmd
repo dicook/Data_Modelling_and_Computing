@@ -61,6 +61,7 @@ Describe the distribution of math scores. Discuss min, max, centre and shape.
 Make a bar chart of the number of televisions in the house. 
 
 ```{r}
+library(forcats)
 PISA_oz_sub <- PISA_oz_sub %>%
   filter(!is.na(ST27Q02)) %>%
   mutate(ST27Q02=fct_relevel(ST27Q02, 
@@ -119,10 +120,13 @@ PISA_oz_sub_tbl <- PISA_oz_sub %>%
   mutate(ST85Q01=fct_relevel(ST85Q01, 
       c("Strongly disagree", "Disagree", "Agree", "Strongly agree")), 
       ST85Q02=fct_relevel(ST85Q02, 
-      c("Strongly disagree", "Disagree", "Agree", "Strongly agree"))) %>%
+      c("Strongly disagree", "Disagree", "Agree", "Strongly agree"))) 
+
+PISA_oz_sub_tbl %>%
   group_by(ST85Q01, ST85Q02) %>%
   tally()
-ggplot(PISA_oz_sub) +
+
+ggplot(PISA_oz_sub_tbl) +
   geom_mosaic(aes(x=product(ST85Q01), fill=ST85Q02))
 ```
 Explain the relationship between the two variables. Do students who strongly agree with one, tend to strongly agree with the other statement?
