@@ -41,7 +41,7 @@ title: Home
 ## Tutorials
 
 - Week 1: No tutorial in the first week
-- Week 2: [Setting up your computing environment, reading in and tidying data](labs/lab1.nb.html) [(Rmd)](labs/lab1.Rmd) [PISA_oz_sub.csv](labs/PISA_oz_sub.csv) [PISA_oz_dict.csv](PISA_oz_dict.csv)
+- Week 2: [Setting up your computing environment, reading in and tidying data](labs/lab1.html) [(Rmd)](labs/lab1.Rmd) [PISA_oz_sub.csv](labs/PISA_oz_sub.csv) [PISA_oz_dict.csv](PISA_oz_dict.csv)
 
 ## Computing information
 
