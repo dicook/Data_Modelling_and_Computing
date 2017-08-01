@@ -61,6 +61,7 @@ Describe the distribution of math scores. Discuss min, max, centre and shape.
 Make a bar chart of the number of televisions in the house. 
 
 ```{r}
+library(forcats)
 PISA_oz_sub <- PISA_oz_sub %>%
   filter(!is.na(ST27Q02)) %>%
   mutate(ST27Q02=fct_relevel(ST27Q02, 
