@@ -42,7 +42,7 @@ title: Home
 
 - Week 1: No tutorial in the first week
 - Week 2: [Setting up your computing environment, reading in and tidying data](labs/lab1.html) [(Rmd)](labs/lab1.Rmd) [PISA_oz_sub.csv](labs/PISA_oz_sub.csv) [PISA_oz_dict.csv](labs/PISA_oz_dict.csv)
-- Week 3: [Tidying data](labs/lab2.html) [(Rmd)](labs/lab2.Rmd) [ASN00086282.dly](ASN00086282.dly) [billboard.csv](billboard.csv) [budapest.csv](budapest.csv) [fly_tbl.csv](fly_tbl.csv) [genes.csv](genes.csv) [rates.csv](rates.csv) [tb.csv](tb.csv) [whaleshark-encounters.csv](whaleshark-encounters.csv)
+- Week 3: [Tidying data](labs/lab2.html) [(Rmd)](labs/lab2.Rmd) [ASN00086282.dly](labs/ASN00086282.dly) [billboard.csv](labs/billboard.csv) [budapest.csv](labs/budapest.csv) [fly_tbl.csv](labs/fly_tbl.csv) [genes.csv](labs/genes.csv) [rates.csv](labs/rates.csv) [tb.csv](labs/tb.csv) [whaleshark-encounters.csv](labs/whaleshark-encounters.csv)
 
 ## Computing information
 
