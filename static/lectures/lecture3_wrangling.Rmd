@@ -153,7 +153,7 @@ Orders a data frame or tibble by the values in one column
 
 ```{r echo=TRUE}
 library(lubridate)
-melbtemp %>% 
+ordered_nelbtemp <- melbtemp %>% 
   mutate(date=ymd(paste(year, month, day, sep="-"))) %>%
   arrange(date)
 ```
