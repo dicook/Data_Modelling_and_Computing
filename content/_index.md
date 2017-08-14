@@ -28,7 +28,7 @@ title: Home
 - Week 1: [Motivation, background examples](lectures/lecture1_intro.html) [(pdf)](lectures/lecture1_intro.pdf) [(Rmd)](lectures/lecture1_intro.Rmd); Reading: __I Explore__, Sections 2, 3.1-3.3, 4, 5.1-5.2, 6, 7.1-7.3
 - Week 2: [Tidy data principles](lectures/lecture2_tidydata.html)  [(pdf)](lectures/lecture2_tidydata.pdf) [(Rmd)](lectures/lecture2_tidydata.Rmd); Reading: Chapter 12; Videos: [1](https://vimeo.com/227209727), [2](https://vimeo.com/227210643), [3](https://vimeo.com/227211771), [4](https://vimeo.com/227212366), [5](https://vimeo.com/227213739), [6](https://vimeo.com/227214892), [7](https://vimeo.com/227215866)
 - Week 3: [Data cleaning, rearranging and transformation](lectures/lecture3_wrangling.html)  [(pdf)](lectures/lecture3_wrangling.pdf) [(Rmd)](lectures/lecture3_wrangling.Rmd); Reading; Chapter 5, 9, 10
-- Week 4: [Basic visualisation]lectures/lecture4_visualisation.html)  [(pdf)](lectures/lecture4_visualisation.pdf) [(Rmd)](lectures/lecture4_visualisation.Rmd); Chapter 3
+- Week 4: [Basic visualisation](lectures/lecture4_visualisation.html)  [(pdf)](lectures/lecture4_visualisation.pdf) [(Rmd)](lectures/lecture4_visualisation.Rmd); Chapter 3
 - Week 5: Advanced visualisation
 - Week 6: Reading different data formats
 - Week 7: Handling missing values
