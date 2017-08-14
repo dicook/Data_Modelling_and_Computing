@@ -1,0 +1,264 @@
+---
+title: "ETC 1010 Lab 3"
+output: html_document
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE, 
+  collapse = TRUE,
+  comment = "",
+  fig.height = 8,
+  fig.width = 12,
+  fig.align = "center",
+  cache = FALSE
+)
+```
+
+```{r echo=FALSE}
+library(tidyverse)
+```
+
+# Instructions
+
+In this week's lab, the main goal is to learn how to wrangle a data set. On the due date, turn in your Rmd file and the html product. 
+
+## Exercise 1
+
+Open your project for this class. Make sure all your work is done relative to this project.
+
+Open the `lab3.Rmd` file provided with the instructions. You can edit this file and add your answers to questions in this document.
+
+## Exercise 2 
+
+This is about the french fries example, from lectures notes, make sure the code works for you, and answer these questions:
+
+a. Does the rating on potato'y change over time?
+b. Is there a difference in the grassy rating by oil type? Over time?
+
+```{r}
+data(french_fries, package = "reshape2")
+french_fries <- as_tibble(french_fries)
+ff_m <- french_fries %>% 
+  gather(type, rating, -subject, -time, -treatment, -rep)
+ff_av <- ff_m %>% 
+  filter(type == "potato") %>%
+  group_by(subject, time, treatment) %>%
+  summarise(rating=mean(rating))
+ggplot(ff_av, aes(x=time, y=rating, colour=treatment, group=treatment)) + 
+         geom_line() +
+  facet_wrap(~subject) 
+ff_grassy <- ff_m %>%
+  filter(type == "grassy") 
+ggplot(ff_grassy, aes(x=treatment, y=rating)) + 
+  geom_boxplot() + scale_y_sqrt() +
+facet_wrap(~time)
+```
+
+## Exercise 3 
+
+For the airlines data, shown in lecture notes, join the airports location with the flight table, and answer these questions:
+
+a. What is the plane's flight path on May 6th? How often does plane N4YRAA fly through DFW on May 6th, 2017?
+b. What is the plane's flight path on May 7th? How often does plane N4YRAA fly through DFW on May 7th, 2017?
+c. How many times does it fly through DFW in the month of May, 2017?
+d. Does the plane have the same flight path on each week day? E.g. Is it the same for all Mondays?
+e. How many miles did the plane fly in May?
+f. What is the average number of miles flown per day in May?
+
+```{r echo=TRUE}
+load("plane_N4YRAA.rda")
+airport <- read_csv("airports.csv")
+airport <- airport %>%
+  select(AIRPORT, LATITUDE, LONGITUDE, AIRPORT_IS_LATEST, DISPLAY_AIRPORT_NAME) %>%
+  filter(AIRPORT_IS_LATEST == 1) %>%
+  select(-AIRPORT_IS_LATEST)
+
+N4YRAA_latlon <- left_join(plane_N4YRAA, airport,
+                           by = c("ORIGIN"="AIRPORT")) %>%
+  rename("ORIGIN_LATITUDE"="LATITUDE",
+         "ORIGIN_LONGITUDE"="LONGITUDE")
+N4YRAA_latlon %>% 
+  select(ORIGIN, ORIGIN_LATITUDE, ORIGIN_LONGITUDE, 
+         DISPLAY_AIRPORT_NAME)
+
+N4YRAA_latlon <- left_join(N4YRAA_latlon, airport,
+                           by = c("DEST"="AIRPORT")) %>%
+  rename("DEST_LATITUDE"="LATITUDE",
+         "DEST_LONGITUDE"="LONGITUDE")
+
+N4YRAA_latlon <- N4YRAA_latlon %>% arrange(FL_DATE, DEP_TIME)
+
+library(ggmap)
+library(lubridate)
+library(ggthemes)
+map <- get_map(c(lon=-92.20562, lat=36.20259), zoom=5)
+ggmap(map) +
+  geom_segment(data=filter(N4YRAA_latlon,
+                           FL_DATE == ymd("2017-05-06")),
+               aes(x=ORIGIN_LONGITUDE, xend=DEST_LONGITUDE,
+                   y=ORIGIN_LATITUDE, yend=DEST_LATITUDE),
+               color="navyblue") +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE == ymd("2017-05-06")),
+             aes(x=ORIGIN_LONGITUDE,
+                 y=ORIGIN_LATITUDE), color="orange",
+             alpha=0.3, size=3) +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE == ymd("2017-05-06")),
+             aes(x=DEST_LONGITUDE,
+                 y=DEST_LATITUDE), color="red",
+             alpha=0.3, size=1) +
+   theme_map()
+```
+
+
+## Exercise 4
+
+This question extends the analysis of the whaleshark data was pulled from [https://www.whaleshark.org](https://www.whaleshark.org) in 2013. It lists verified encounters with whale sharks across the globe. 
+
+```{r}
+whalesharks <- read_csv("whaleshark-encounters.csv")
+```
+
+a. Who is the most prolific sighter of sharks? (You can do this using the email address provided of the sighters. Extra point for finding the actual name of this person by web searching.)
+b. What months are sharks most often spotted? Is this different if we only examine sightings from the southern hemisphere?
+c. In Australia, the most common location is off the West Australia coast, near Ningaloo reef. Filter the data based on this geographic region. Use this set for the remaining questions.
+d. Whaleshark A524 is spotted how many times? Make a trajectory or this whaleshark's movements, in 2010, overlaid on a map of the area. 
+e. Filter the whalesharks that are marked individuals, and plot the distribution of the number of sightings. 
+f. Filter the sharks that have been sighted at least 40 times. Using the code provided plot the tracks of these whales, and explore the general habitat. DO some individuals have specific neighborhoods? In some years do they hang in some neighbourhoods and different locations other years? Are there some months when they appear to be migrating?
+
+```{r eval=FALSE}
+library(lubridate)
+library(ggmap)
+map <- get_map(location=c(lon=114.1, lat=-21.9), zoom=8)
+ggmap(map) + geom_point(data=ningaloo_freqwhales, aes(x=Longitude, y=Latitude, 
+                                colour=`Marked Individual`)) + 
+  geom_line(data=ningaloo_freqwhales, 
+            aes(x=Longitude, y=Latitude, 
+                colour=`Marked Individual`, group=`Marked Individual`)) + 
+  facet_wrap(~`Marked Individual`, ncol=5) + theme_map() +
+  theme(legend.position="None")
+ggmap(map) + geom_point(data=ningaloo_freqwhales, aes(x=Longitude, y=Latitude, 
+                                colour=`Marked Individual`)) + 
+  geom_line(data=ningaloo_freqwhales, 
+            aes(x=Longitude, y=Latitude, 
+                colour=`Marked Individual`, group=`Marked Individual`)) + 
+  facet_wrap(~`Year Collected`, ncol=5) + theme_map() +
+  theme(legend.position="None")
+ggmap(map) + geom_point(data=ningaloo_freqwhales, 
+                        aes(x=Longitude, y=Latitude, 
+                                colour=`Marked Individual`)) + 
+  geom_line(data=ningaloo_freqwhales, 
+            aes(x=Longitude, y=Latitude, 
+                colour=`Marked Individual`, group=`Marked Individual`)) + 
+  facet_wrap(~`Month Collected`, ncol=4) + theme_map() +
+  theme(legend.position="None")
+```
+
+
+## Exercise 5
+
+The file `budapest.csv` has a subset of web click through data related to hotel searches for Budapest. Each line in this data corresponds to a summary of a person looking for a hotel on the Expedia web site. For these questions, the from last lab, do the wrangling and answer them now.
+
+```{r}
+budapest <- read_csv("budapest.csv")
+```
+
+a. If I want to answer this question __"What proportion of people searching, actually booked a hotel room?"__ what would I need to do to the data? (The variable recording the searcher's final decision is CLICK_THRU_TYP_ID , and the code indicating a booking is `3406`).
+b. If I want to answer the question __"What day of the week are most people seaching for hotels?"__ what would I need to do with the data? (There are two date variables in the data, one when they are searching, SRCH_DATETM, and the other what dates they want to hotel room, SRCH_BEGIN_USE_DATE, SRCH_END_USE_DATE.)
+c. If I want to answer the question __"How far ahead of the check-in date do people typically search for a hotel room?"__ what needs to done with the data.
+d. There are a lot of missing values in the data, number of NAs, particularly this is true for the booking variable. If an NA essentially means that the person searching quit the site without doing a booking, how would you recode the missing value?
+e. If I want to answer the question __"Does the existence of a promotion, IS_PROMO_FLAG, tend to result in a higher likelihood of a booking?"__ what operations do you need to do on the data.
+
+## Exercise 6
+
+This question is about the 2015 PISA results. (We used the 2012 data in lab 1.) The data is downloaded from [http://www.oecd.org/pisa/data/2015database/](http://www.oecd.org/pisa/data/2015database/). The SPSS format "Student questionnaire data file (419MB)" is downloaded and processed using this code, to extract results for Australia:
+
+```{r eval=FALSE}
+library(haven)
+pisa_2015 <- read_sav(file.choose())
+pisa_au <- pisa_2015 %>% filter(CNT == "AUS")
+save(pisa_au, file="pisa_au.rda")
+```
+
+You don't need to do this, because the Australia data is extracted and saved for you. Your task is to answer these questions about Australia. At times it may be helpful to examine the data dictionary, which is provided as an excel file (you can also download this directly from the OECD PISA site too).
+
+A large amount of pre-processing is done on the data, as performed by this code:
+
+```{r}
+load("pisa_au.rda")
+pisa_au <- pisa_au %>% mutate(state=as.character(substr(STRATUM, 4, 5)),
+                schtype_yr=as.character(substr(STRATUM, 6, 7))) %>%
+  mutate(state=recode(state, "01"="ACT", "02"="NSW", "03"="VIC",
+       "04"="QLD", "05"="SA", "06"="WA", "07"="TAS", "08"="NT")) %>%
+  mutate(schtype_yr=recode(schtype_yr,
+            "01"="Catholic_Y10", "02"="Catholic_noY10",
+            "03"="Gov_Y10", "04"="Gov_noY10",
+            "05"="Ind_Y10", "06"="Ind_noY10",
+            "07"="Catholic_Y10", "08"="Catholic_noY10",
+            "09"="Gov_Y10", "10"="Gov_noY10",
+            "11"="Ind_Y10", "12"="Ind_noY10",
+            "13"="Catholic_Y10", "14"="Catholic_noY10",
+            "15"="Gov_Y10", "16"="Gov_noY10",
+            "17"="Ind_Y10", "18"="Ind_noY10",
+            "19"="Catholic_Y10", "20"="Catholic_noY10",
+            "21"="Gov_Y10", "22"="Gov_noY10",
+            "23"="Ind_Y10", "24"="Ind_noY10",
+            "25"="Catholic_Y10", "26"="Catholic_noY10",
+            "27"="Gov_Y10", "28"="Gov_noY10",
+            "29"="Ind_Y10", "30"="Ind_noY10",
+            "31"="Catholic_Y10", "32"="Catholic_noY10",
+            "33"="Gov_Y10", "34"="Gov_noY10",
+            "35"="Ind_Y10", "36"="Ind_noY10",
+            "37"="Catholic_Y10", "38"="Catholic_noY10",
+            "39"="Gov_Y10", "40"="Gov_noY10",
+            "41"="Ind_Y10", "42"="Ind_noY10",
+            "43"="Catholic_Y10", "44"="Catholic_noY10",
+            "45"="Gov_Y10", "46"="Gov_noY10",
+            "47"="Ind_Y10", "48"="Ind_noY10")) %>%
+  separate(schtype_yr, c("schtype","yr")) %>%
+  rename(birthmonth=ST003D02T, birthyr=ST003D03T,
+         gender=ST004D01T, desk=ST011Q01TA,
+         room=ST011Q02TA, computer=ST011Q04TA, internet=ST011Q06TA,
+         solarpanels=ST011D17TA, tvs=ST012Q01TA, cars=ST012Q02TA,
+         music_instr=ST012Q09NA, books=ST013Q01TA, birthcnt=ST019AQ01T,
+         mother_birthcnt=ST019BQ01T, father_birthcnt=ST019CQ01T,
+         test_anxiety=ST118Q01NA, ambitious=ST119Q04NA,
+         prefer_team=ST082Q01NA, make_friends_easy=ST034Q02TA,
+         tardy=ST062Q03TA, science_fun=ST094Q01NA, breakfast=ST076Q01NA,
+         work_pay=ST078Q10NA, sport=ST078Q11NA, internet_use=IC006Q01TA,
+         install_software=IC015Q02NA,
+         outhours_study=OUTHOURS, math_time=MMINS, read_time=LMINS,
+         science_time=SMINS, belong=BELONG,
+         anxtest=ANXTEST, motivat=MOTIVAT, language=LANGN,
+         home_edres=HEDRES, home_poss=HOMEPOS, wealth=WEALTH,
+         stuweight=W_FSTUWT) %>%
+    mutate(math=(PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+
+                     PV6MATH+PV7MATH+PV8MATH+PV9MATH+PV10MATH)/10,
+           science=(PV1SCIE+PV2SCIE+PV3SCIE+PV4SCIE+PV5SCIE+
+                        PV6SCIE+PV7SCIE+PV8SCIE+PV9SCIE+PV10SCIE)/10,
+           read=(PV1READ+PV2READ+PV3READ+PV4READ+PV5READ+
+                     PV6READ+PV7READ+PV8READ+PV9READ+PV10READ)/10) %>%
+   select(state, schtype, yr, birthmonth, birthyr, gender, desk, room,
+          computer, internet, solarpanels, tvs, cars, music_instr, books,
+          birthcnt, mother_birthcnt, father_birthcnt, test_anxiety,
+          ambitious, prefer_team, make_friends_easy, tardy, science_fun,
+          breakfast, work_pay, sport, internet_use, install_software,
+          outhours_study, math_time, read_time, science_time, belong,
+          anxtest, motivat, language, home_edres, home_poss, wealth,
+          stuweight, math, science, read) %>%
+  mutate(gender=factor(gender, levels=1:2, labels=c("female", "male"))) %>% 
+  mutate(birthmonth=factor(birthmonth, levels=1:12,
+    labels=c("jan", "feb", "mar", "apr", "may", "jun", "jul", "aug",
+                            "sep", "oct", "nov", "dec")))
+```
+
+a. Explain how the STRATUM variable is processed to create three new variables state, schtype and yr.
+b. Compute the average of math scores by state. Which state does best, on average, on math? (You should use the stuweight variable to compute a weighted average. This is survey data, and the weights indicate how representative that individual is of the population.)
+c. Compute the difference in average male and female math scores by state. Which state has the smallest average gender difference?
+d. Does test anxiety have an effect math score? (Use the variable `anxtest`, and a simple regression model to answer this question.)
+e. Explain what the `rename` operation is doing.
+f. Come up with two more questions as a group, based on the data description. Do the wrangling to answer these questions.
