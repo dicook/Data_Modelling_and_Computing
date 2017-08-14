@@ -1,0 +1,692 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+subtitle: 'Lecture 4: Plotting your data'
+author: "Di Cook (dicook@monash.edu, @visnut)"
+date: "Week 4"
+output:
+  xaringan::moon_reader:
+    css: ["default", "myremark.css"]
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r, echo = FALSE, warning = FALSE, message=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  collapse = TRUE,
+  echo=FALSE,
+  comment = "",
+  fig.height = 4,
+  fig.width = 8,
+  fig.align = "center",
+  cache = FALSE
+)
+library(tidyverse)
+library(gridExtra)
+library(plotly)
+library(ggthemes)
+library(ggmap)
+library(lubridate)
+```
+
+# Overview
+
+- Working with dates
+    + Does every year have 365 days? Does every day have 24 hours? Does every minute have 60 seconds?
+    + Where are you?
+    + What day of the week is it? Day of the month? Week in the year?
+    + Are we talking months as numbers or names?
+    + How many days until we go on holidays?
+- Grammar of graphics
+    + Language of defining plots, that integrates with statistical thinking
+    + Way to say how one plot is the same or different from another, e.g. barchart v pie chart
+    + Evaluate whether one design is better than another for communication
+
+---
+class: inverse middle 
+# What's in a data?
+
+How many ways can you write down today's date?
+
+Write them into this window: 
+
+```
+http://collabedit.com/x9nvf
+```
+
+---
+
+
+
+```{r echo=TRUE}
+ymd("2017-08-15")
+mdy("08/15/2017")
+dmy("15082017")
+ymd_hms("2015:08:15 10:05:30", tz = "Australia/Melbourne")
+wday("2017-08-15")
+yday("2017-08-15")
+today()
+today(tz = "America/Los_Angeles")
+```
+
+---
+# Airline data
+
+```{r eval=FALSE}
+air <- read_csv("data/901848483_T_ONTIME.csv")
+lax <- air %>% filter(DEST == "LAX")
+save(lax, file="lax.rda")
+```
+
+```{r}
+load("lax.rda")
+lax
+```
+
+---
+# Flights per day of the week
+
+```{r echo=TRUE}
+lax <- lax %>% mutate(day=lubridate::wday(FL_DATE, label=TRUE)) 
+lax %>%
+  count(day) 
+```
+
+---
+# By carrier
+
+```{r echo=TRUE}
+lax %>% filter(CARRIER %in% c("WN", "AA", "DL", "OO", "UA", "VX")) %>% 
+  ggplot(aes(x=day)) + geom_bar() +
+  facet_wrap(~CARRIER, ncol=3, scales="free_y") +
+  xlab("") + ylab("")
+```
+
+---
+# By origin
+
+```{r echo=TRUE}
+lax %>% filter(ORIGIN %in% c("SFO", "JFK", "SEA", "LAS", "DEN", "ORD")) %>% 
+  ggplot(aes(x=day)) + geom_bar() +
+  facet_wrap(~ORIGIN, ncol=3, scales="free_y") +
+  xlab("") + ylab("")
+```
+
+---
+# Flights by week of the year
+
+```{r echo=TRUE}
+lax <- lax %>% mutate(week=lubridate::week(FL_DATE)) 
+lax %>%
+  count(week) 
+```
+
+
+---
+class: inverse middle 
+# Your turn
+
+- What is a (data) plot?
+- What are the three most important data plots?
+
+---
+class: inverse middle 
+# Your turn
+
+How would you describe this plot?
+
+```{r}
+music <- read.csv("data/music-sub.csv", 
+                  row.names=1, stringsAsFactors = FALSE)
+ggplot(music, aes(x=lvar, y=lave, colour=artist)) + geom_point() +
+  xlab("Variance amplitude") + ylab("Average amplitude") +
+  theme(aspect.ratio=1)
+```
+
+---
+class: inverse middle 
+# Your turn
+
+What about this plot?
+
+```{r}
+ggplot(music, aes(x=lvar, y=lave, shape=artist)) + geom_point() +
+  xlab("Variance amplitude") + ylab("Average amplitude") +
+  scale_shape_manual(values=c("Abba"=1, "Beatles"=2, "Beethoven"=3, 
+                     "Eels"=4, "Enya"=5, "Mozart"=6, "Vivaldi"=7)) +
+  theme(aspect.ratio=1)
+```
+
+---
+# Elements of a data plot
+
+- data
+- mapping of variables to graphical elements (aesthetics)
+- type of plot structure to use (geom)
+- transformations: log scale, ...
+
+and ...
+
+- layers: multiple geoms, multiple data sets, annotation
+- facets: show subsets in different plots
+- themes: modifying style
+
+---
+# Why use a grammar of graphics?
+
+- Remember tidy data?
+- Data is organised into variables and observations. 
+- With a grammar, the variables are directly mapped to an element in the plot 
+
+---
+# Tuberculosis data
+
+```{r}
+tb <- read_csv("data/tb.csv")
+tidy_data <- tb %>% 
+  gather(demo, count, -year, -iso2, na.rm = TRUE) %>% 
+  separate(demo, c("gender", "age"))
+tidy_data <- tidy_data %>% 
+  filter(!(age %in% c("014", "04", "514", "u")))
+tb_au <- tidy_data %>% 
+  filter(iso2 == "AU")
+```
+
+```{r echo=TRUE, fig.width=12, fig.height=2.5}
+ggplot(tb_au, aes(x = year, y = count, fill = gender)) +
+  geom_bar(stat = "identity", position = "fill") +
+  facet_grid(~ age) +
+  scale_fill_brewer(palette="Dark2")
+```
+
+100% charts? What so we learn?
+
+---
+# Bar charts
+
+```{r echo=TRUE, fig.width=12, fig.height=2.5}
+ggplot(tb_au, aes(x = year, y = count, fill = gender)) +
+  geom_bar(stat = "identity") +
+  facet_grid(~ age) +
+  scale_fill_brewer(palette="Dark2")
+```
+
+What do we learn?
+
+---
+# Side-by-side barcharts
+
+```{r echo=TRUE, fig.width=12, fig.height=2.5}
+ggplot(tb_au, aes(x = year, y = count, fill = gender)) +
+  geom_bar(stat = "identity", position="dodge") +
+  facet_grid(~ age) +
+  scale_fill_brewer(palette="Dark2")
+```
+
+What is the focus now?
+
+---
+# Separate bar charts
+
+```{r echo=TRUE, fig.width=12, fig.height=3.5}
+ggplot(tb_au, aes(x = year, y = count, fill = gender)) +
+  geom_bar(stat = "identity") +
+  facet_grid(gender ~ age) +
+  scale_fill_brewer(palette="Dark2")
+```
+
+What is the focus now?
+
+---
+# Pie charts?
+
+```{r echo=TRUE, fig.width=12, fig.height=3.5}
+ggplot(tb_au, aes(x = year, y = count, fill = gender)) +
+  geom_bar(stat = "identity") +
+  facet_grid(gender ~ age) +
+  scale_fill_brewer(palette="Dark2") + coord_polar()
+```
+
+Nope! That's a rose chart.
+
+---
+# Rainbow charts?
+
+```{r echo=TRUE, fig.width=12, fig.height=3.5}
+ggplot(tb_au, aes(x = 1, y = count, fill = factor(year))) +
+  geom_bar(stat = "identity", position="fill") +
+  facet_grid(gender ~ age) +
+  theme(
+    axis.text = element_blank(), 
+    strip.text = element_text(size = 16), 
+    axis.title = element_text(size = 16)
+  ) 
+```
+
+Its a single stacked bar, in each facet.
+
+---
+# Pie charts
+
+```{r echo=TRUE, fig.width=12, fig.height=3.5}
+ggplot(tb_au, aes(x = 1, y = count, fill = factor(year))) +
+  geom_bar(stat = "identity", position="fill") +
+  facet_grid(gender ~ age) +
+  theme(
+    axis.text = element_blank(), 
+    strip.text = element_text(size = 16), 
+    axis.title = element_text(size = 16)
+  ) + coord_polar(theta="y")
+```
+
+---
+# Data - Autism
+
+```{r echo=TRUE}
+library(HLMdiag)
+data(autism)
+glimpse(autism)
+```
+
+Repeated measurements (panel data, longitudinal data) for each subject. Need to examine within subject dependence, relative to between subject, and between demographic group.
+
+---
+# Plotting points
+
+```{r echo=TRUE}
+ggplot(autism, aes(x=age2, y=vsae)) + 
+  geom_point()
+```
+
+
+---
+# Jittering points
+
+```{r echo=TRUE}
+ggplot(autism, aes(x=age2, y=vsae)) + 
+  geom_jitter(width=0.3, height=0)
+```
+
+
+---
+# Adding lines
+
+```{r echo=TRUE}
+ggplot(autism, aes(x=age2, y=vsae)) + 
+  geom_point() + geom_line()
+```
+
+Not the lines we want!
+
+---
+# These are the lines we want
+
+```{r echo=TRUE}
+ggplot(autism, aes(x=age2, y=vsae, group=childid)) + 
+  geom_point() + geom_line()
+```
+
+---
+# Too much ink
+
+```{r echo=TRUE}
+ggplot(autism, aes(x=age2, y=vsae, group=childid)) + 
+  geom_point() + geom_line(alpha=0.1)
+```
+
+---
+# Log scale y
+
+```{r echo=TRUE}
+ggplot(autism, aes(x=age2, y=vsae, group=childid)) + 
+  geom_point() + geom_line(alpha=0.2) + scale_y_log10()
+```
+
+---
+# By diagnosis at age 2 
+
+```{r echo=TRUE}
+ggplot(autism, aes(x=age2, y=vsae, group=childid, colour=bestest2)) + 
+  geom_point() + geom_line(alpha=0.5) + scale_y_log10()
+```
+
+---
+# Refine groups
+
+```{r echo=TRUE}
+ggplot(autism, aes(x=age2, y=vsae, colour=bestest2)) + 
+  geom_point(alpha=0.1) + geom_line(aes(group=childid), alpha=0.1) + 
+  geom_smooth(se=F) +
+  scale_y_log10() 
+```
+
+---
+class: inverse middle 
+# Your turn
+
+
+What do we learn about autism, age, and the diagnosis at age 2?
+
+```{r echo=FALSE, eval=FALSE}
+In terms of categorisation into either pdd or autism the vsae score is not distinct, but on average the autism diagnosis 2 year olds have lower scores. There a lot of overlap between ths group.
+```
+
+
+---
+# A different look
+
+```{r echo=TRUE}
+ggplot(autism, aes(x=age2, y=vsae, colour=bestest2)) + 
+  geom_boxplot() + scale_y_log10()
+```
+
+That's not what I wanted ....
+
+---
+# For each age measured
+
+```{r echo=TRUE}
+ggplot(autism, aes(x=factor(age2), y=vsae, colour=bestest2)) + 
+  geom_boxplot() + scale_y_log10()
+```
+
+---
+# Which is better?
+
+```{r echo=TRUE}
+p1 <- ggplot(autism, aes(x=age2, y=vsae, colour=bestest2)) + 
+  geom_point(alpha=0.1) + geom_line(aes(group=childid), alpha=0.1) + 
+  geom_smooth(se=F) +
+  scale_y_log10() + theme(legend.position="none")
+p2 <- ggplot(autism, aes(x=factor(age2), y=vsae, colour=bestest2)) + 
+  geom_boxplot() + scale_y_log10() + theme(legend.position="none")
+grid.arrange(p1, p2, ncol=2)
+```
+
+---
+# New example - Flying etiquette
+
+[41% Of Fliers Think You’re Rude If You Recline Your Seat](http://fivethirtyeight.com/datalab/airplane-etiquette-recline-seat/)
+
+```{r echo=FALSE}
+fly <- read_csv("data/flying-etiquette.csv")
+glimpse(fly)
+```
+
+---
+# Variables
+
+- Mix of categorical and quantitative variables. 
+- What mappings are appropriate? 
+- Area for counts of categories, 
+- side-by-side boxplots for mixed pair. 
+
+---
+# Support
+
+```{r echo=TRUE}
+ggplot(fly, aes(x=`How often do you travel by plane?`)) + 
+  geom_bar() + coord_flip()
+```
+
+Categories are not sorted
+
+---
+# Sorted categories
+
+```{r echo=TRUE}
+fly$`How often do you travel by plane?` <- 
+  factor(fly$`How often do you travel by plane?`, levels=c(
+    "Never","Once a year or less","Once a month or less",
+    "A few times per month","A few times per week","Every day"))
+ggplot(fly, aes(x=`How often do you travel by plane?`)) + geom_bar() + coord_flip()
+```
+
+---
+
+```{r echo=TRUE}
+ggplot(fly, aes(x=`How often do you travel by plane?`, 
+                fill=`How often do you travel by plane?`)) + geom_bar() + coord_flip() +
+  scale_fill_brewer(palette="Dark2")
+```
+
+---
+# Filter data
+
+```{r echo=TRUE}
+fly_sub <- fly %>% filter(`How often do you travel by plane?` %in% 
+                            c("Once a year or less","Once a month or less")) %>%
+  filter(!is.na(`Do you ever recline your seat when you fly?`)) %>%
+  filter(!is.na(Age)) %>% filter(!is.na(Gender))
+```
+
+---
+# Recline by height
+
+```{r echo=TRUE}
+fly_sub$`Do you ever recline your seat when you fly?` <- factor(
+  fly_sub$`Do you ever recline your seat when you fly?`, levels=c(
+    "Never","Once in a while","About half the time",
+    "Usually","Always"))
+ggplot(fly_sub, aes(y=`How tall are you?`, x=`Do you ever recline your seat when you fly?`)) + geom_boxplot() + coord_flip()
+```
+
+---
+class: inverse middle 
+# Your turn
+
+
+
+
+What is the difference between `colour` and `fill`?
+
+--
+- colour is for 0 or 1-dimensional elements, and 
+
+--
+- fill is for area (2-d) geoms
+
+---
+# Coordinate systems
+
+What does `coord_fixed()` do? What is the difference between this and using `theme(aspect.ratio=...)`?
+
+--
+- coord_fixed operates on the raw data values, but 
+
+--
+- theme(aspect_ratio=...) works on the plot dimensions
+
+
+---
+# Facets
+
+```{r echo=TRUE}
+ggplot(fly_sub, 
+       aes(x=`In general, is itrude to bring a baby on a plane?`)) + 
+  geom_bar() + coord_flip() + facet_wrap(~Gender)
+```
+
+---
+# Facets
+
+```{r echo=TRUE}
+fly_sub$Age <- factor(fly_sub$Age, levels=c("18-29","30-44","45-60","> 60"))
+ggplot(fly_sub, aes(x=`In general, is itrude to bring a baby on a plane?`)) + 
+  geom_bar() + coord_flip() + facet_grid(Age~Gender)
+```
+
+---
+# Color palettes - default
+
+```{r echo=TRUE}
+p <- ggplot(fly_sub, aes(x=`In general, is itrude to bring a baby on a plane?`,
+                    fill=Gender)) + 
+  geom_bar(position="fill") + coord_flip() + facet_wrap(~Age, ncol=5)
+p
+```
+
+What do we learn?
+
+---
+# Color palettes - brewer
+
+```{r echo=TRUE}
+p + scale_fill_brewer(palette="Dark2") 
+```
+
+---
+# Color blind-proofing
+
+```{r fig.show='hide', echo=TRUE}
+library(scales)
+library(dichromat)
+clrs <- hue_pal()(3)
+p + theme(legend.position = "none")
+clrs <- dichromat(hue_pal()(3))
+p + scale_fill_manual("", values=clrs) + theme(legend.position = "none")
+```
+
+---
+
+```{r fig.width=4.5, fig.show='hold', fig.align='default'}
+clrs <- hue_pal()(3)
+p + theme(legend.position = "none")
+clrs <- dichromat(hue_pal()(3))
+p + scale_fill_manual("", values=clrs) + theme(legend.position = "none")
+```
+
+---
+# Perceptual principles
+
+- Hierarchy of mappings: (first) position along an axis - (last) color (Cleveland, 1984; Heer and Bostock, 2009)
+- Pre-attentive: Some elements are noticed before you even realise it.
+- Color: (pre-attentive) palettes - qualitative, sequential, diverging.
+- Proximity: Place elements for primary comparison close together. 
+- Change blindness: When focus is interrupted differences may not be noticed.
+
+---
+# Hierarchy of mappings
+
+- 1.Position - common scale (BEST)
+- 2.Position - nonaligned scale
+- 3.Length, direction, angle
+- 4.Area
+- 5.Volume, curvature
+- 6.Shading, color (WORST)
+
+---
+# Pre-attentive
+
+Can you find the odd one out?
+
+```{r echo=FALSE}
+df <- data.frame(x=runif(100), y=runif(100), cl=sample(c(rep("A", 1), rep("B", 99))))
+ggplot(data=df, aes(x, y, shape=cl)) + theme_bw() + 
+  geom_point() +
+  theme(legend.position="None", aspect.ratio=1)
+```
+
+---
+
+Is it easier now?
+
+```{r echo=FALSE}
+ggplot(data=df, aes(x, y, colour=cl)) + 
+  geom_point() +
+  theme_bw() + 
+  theme(legend.position="None", aspect.ratio=1)
+```
+
+
+---
+# Color palettes
+
+- Qualitative: categorical variables
+- Sequential: low to high numeric values
+- Diverging: negative to positive values
+
+---
+
+```{r, echo=FALSE, fig.height=7, fig.width=12}
+library(RColorBrewer)
+display.brewer.all()
+```
+
+
+---
+# Proximity
+
+```{r echo=TRUE}
+ggplot(fly_sub, aes(x=`In general, is itrude to bring a baby on a plane?`,
+                    fill=Gender)) + 
+  geom_bar(position="fill") + coord_flip() + facet_wrap(~Age, ncol=5)
+```
+
+With this arrangement we can see proportion of gender within each rudeness category, and compare these across age groups.  How could we arrange this differently?
+
+
+---
+# Proximity
+
+```{r echo=TRUE}
+ggplot(fly_sub, aes(x=Gender,
+   fill=`In general, is itrude to bring a baby on a plane?`)) + 
+  geom_bar(position="fill") + coord_flip() + facet_wrap(~Age, ncol=5) +
+  theme(legend.position="bottom")
+```
+
+
+What is different about the comparison now?
+
+---
+# Another arrangement
+
+```{r echo=TRUE}
+ggplot(fly_sub, aes(x=Age,
+                    fill=`In general, is itrude to bring a baby on a plane?`)) + 
+  geom_bar(position="fill") + coord_flip() + facet_wrap(~Gender, ncol=5) + 
+  theme(legend.position="bottom")
+```
+
+---
+# Themes
+
+The `ggthemes` package has many different styles for the plots. Other packages such as `xkcd`, `skittles`, `wes anderson`, `beyonce`, ....
+
+```{r fig.show='hide', echo=TRUE}
+library(xkcd)
+ggplot(fly_sub, aes(x=Gender,
+                    fill=`In general, is itrude to bring a baby on a plane?`)) + 
+  geom_bar(position="fill") + coord_flip() + facet_wrap(~Age, ncol=5) +
+  theme_xkcd() + theme(legend.position="bottom")
+```
+
+
+---
+
+```{r}
+library(xkcd)
+ggplot(fly_sub, aes(x=Gender,
+                    fill=`In general, is itrude to bring a baby on a plane?`)) + 
+  geom_bar(position="fill") + coord_flip() + facet_wrap(~Age, ncol=5) +
+  theme_xkcd() + theme(legend.position="bottom")
+```
+
+---
+# Resources
+
+- Winston Chang (2012) [Cookbook for R](graphics cookbook)
+- Antony Unwin (2014) [Graphical Data Analysis](http://www.gradaanwr.net)
+- Naomi Robbins (2013) [Creating More Effective Charts](http://www.nbr-graphs.com)
+
+---
+class: inverse middle 
+# Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+
