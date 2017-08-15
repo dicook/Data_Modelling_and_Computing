@@ -28,7 +28,7 @@ title: Home
 - Week 1: [Motivation, background examples](lectures/lecture1_intro.html) [(pdf)](lectures/lecture1_intro.pdf) [(Rmd)](lectures/lecture1_intro.Rmd); Reading: __I Explore__, Sections 2, 3.1-3.3, 4, 5.1-5.2, 6, 7.1-7.3
 - Week 2: [Tidy data principles](lectures/lecture2_tidydata.html)  [(pdf)](lectures/lecture2_tidydata.pdf) [(Rmd)](lectures/lecture2_tidydata.Rmd); Reading: Chapter 12; Videos: [1](https://vimeo.com/227209727), [2](https://vimeo.com/227210643), [3](https://vimeo.com/227211771), [4](https://vimeo.com/227212366), [5](https://vimeo.com/227213739), [6](https://vimeo.com/227214892), [7](https://vimeo.com/227215866)
 - Week 3: [Data cleaning, rearranging and transformation](lectures/lecture3_wrangling.html)  [(pdf)](lectures/lecture3_wrangling.pdf) [(Rmd)](lectures/lecture3_wrangling.Rmd); Reading; Chapter 5, 9, 10
-- Week 4: [Basic visualisation](lectures/lecture4_visualisation.html)  [(pdf)](lectures/lecture4_visualisation.pdf) [(Rmd)](lectures/lecture4_visualisation.Rmd); Chapter 3
+- Week 4: [Basic visualisation](lectures/lecture4_visualisation.html)  [(pdf)](lectures/lecture4_visualisation.pdf) [(Rmd)](lectures/lecture4_visualisation.Rmd); Reading: Chapter 3
 - Week 5: Advanced visualisation
 - Week 6: Reading different data formats
 - Week 7: Handling missing values
@@ -41,9 +41,9 @@ title: Home
 ## Tutorials
 
 - Week 1: No tutorial in the first week
-- Week 2: [Setting up your computing environment, reading in and tidying data](labs/lab1.html) [(Rmd)](labs/lab1.Rmd) [SOLUTION](labs/lab1_solution.html) [(Rmd)](labs/lab1_solution.Rmd) [PISA_oz_sub.csv](labs/PISA_oz_sub.csv) [PISA_oz_dict.csv](labs/PISA_oz_dict.csv)
-- Week 3: [Tidying data](labs/lab2.html) [(Rmd)](labs/lab2.Rmd) [ASN00086282.dly](labs/ASN00086282.dly) [billboard.csv](labs/billboard.csv) [budapest.csv](labs/budapest.csv) [fly_tbl.csv](labs/fly_tbl.csv) [genes.csv](labs/genes.csv) [rates.csv](labs/rates.csv) [tb.csv](labs/tb.csv) [whaleshark-encounters.csv](labs/whaleshark-encounters.csv)
-- Week 4: [Wrangling data](labs/lab3.html) [(Rmd)](labs/lab3.Rmd)
+- Week 2: [Setting up your computing environment, reading in and tidying data](labs/lab1.html) [(Rmd)](labs/lab1.Rmd) [SOLUTION](labs/lab1_solution.html) [(Rmd)](labs/lab1_solution.Rmd) [PISA_oz_sub.csv](labs/PISA_oz_sub.csv) [PISA_oz_dict.csv](labs/PISA_oz_dict.csv) [ZIP](labs/lab1.zip)
+- Week 3: [Tidying data](labs/lab2.html) [(Rmd)](labs/lab2.Rmd) [ASN00086282.dly](labs/ASN00086282.dly) [billboard.csv](labs/billboard.csv) [budapest.csv](labs/budapest.csv) [fly_tbl.csv](labs/fly_tbl.csv) [genes.csv](labs/genes.csv) [rates.csv](labs/rates.csv) [tb.csv](labs/tb.csv) [whaleshark-encounters.csv](labs/whaleshark-encounters.csv) [ZIP](labs/lab2.zip)
+- Week 4: [Wrangling data](labs/lab3.html) [(Rmd)](labs/lab3.Rmd) [airports.csv](labs/airports.csv) [plane_N4YRAA.rda](labs/plane_N4YRAA.rda) [pisa_au.rda](labs/pisa_au.rda) [ZIP](labs/lab3.zip)
 
 ## Computing information
 
