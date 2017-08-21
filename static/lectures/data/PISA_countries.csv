@@ -1,0 +1,70 @@
+CNT,n,Alpha_2,Numeric,Name,Official_name,Common_name
+ALB,5215,AL,008,Albania,Republic of Albania,NA
+ARE,14167,AE,784,United Arab Emirates,NA,NA
+ARG,1657,AR,032,Argentina,Argentine Republic,NA
+AUS,14530,AU,036,Australia,NA,NA
+AUT,7007,AT,040,Austria,Republic of Austria,NA
+BEL,9651,BE,056,Belgium,Kingdom of Belgium,NA
+BGR,5928,BG,100,Bulgaria,Republic of Bulgaria,NA
+BRA,23141,BR,076,Brazil,Federative Republic of Brazil,NA
+CAN,20058,CA,124,Canada,NA,NA
+CHE,5860,CH,756,Switzerland,Swiss Confederation,NA
+CHL,7053,CL,152,Chile,Republic of Chile,NA
+CHN,9841,CN,156,China,People's Republic of China,NA
+COL,11795,CO,170,Colombia,Republic of Colombia,NA
+CRI,6866,CR,188,Costa Rica,Republic of Costa Rica,NA
+CZE,6894,CZ,203,Czechia,Czech Republic,NA
+DEU,6504,DE,276,Germany,Federal Republic of Germany,NA
+DNK,7161,DK,208,Denmark,Kingdom of Denmark,NA
+DOM,4740,DO,214,Dominican Republic,NA,NA
+DZA,5519,DZ,012,Algeria,People's Democratic Republic of Algeria,NA
+ESP,39066,ES,724,Spain,Kingdom of Spain,NA
+EST,5587,EE,233,Estonia,Republic of Estonia,NA
+FIN,5882,FI,246,Finland,Republic of Finland,NA
+FRA,6108,FR,250,France,French Republic,NA
+GBR,14157,GB,826,United Kingdom,United Kingdom of Great Britain and Northern Ireland,NA
+GEO,5316,GE,268,Georgia,NA,NA
+GRC,5532,GR,300,Greece,Hellenic Republic,NA
+HKG,5359,HK,344,Hong Kong,Hong Kong Special Administrative Region of China,NA
+HRV,5809,HR,191,Croatia,Republic of Croatia,NA
+HUN,5658,HU,348,Hungary,Hungary,NA
+IDN,6513,ID,360,Indonesia,Republic of Indonesia,NA
+IRL,5741,IE,372,Ireland,NA,NA
+ISL,3371,IS,352,Iceland,Republic of Iceland,NA
+ISR,6598,IL,376,Israel,State of Israel,NA
+ITA,11583,IT,380,Italy,Italian Republic,NA
+JOR,7267,JO,400,Jordan,Hashemite Kingdom of Jordan,NA
+JPN,6647,JP,392,Japan,NA,NA
+KOR,5581,KR,410,"Korea, Republic of",NA,NA
+KSV,4826,NA,NA,Kosovo,NA,NA
+LBN,4546,LB,422,Lebanon,Lebanese Republic,NA
+LTU,6525,LT,440,Lithuania,Republic of Lithuania,NA
+LUX,5299,LU,442,Luxembourg,Grand Duchy of Luxembourg,NA
+LVA,4869,LV,428,Latvia,Republic of Latvia,NA
+MAC,4476,MO,446,Macao,Macao Special Administrative Region of China,NA
+MDA,5325,MD,498,"Moldova, Republic of",Republic of Moldova,Moldova
+MEX,7568,MX,484,Mexico,United Mexican States,NA
+MKD,5324,MK,807,"Macedonia, Republic of",The Former Yugoslav Republic of Macedonia,NA
+MLT,3634,MT,470,Malta,Republic of Malta,NA
+MNE,5665,ME,499,Montenegro,Montenegro,NA
+NLD,5385,NL,528,Netherlands,Kingdom of the Netherlands,NA
+NOR,5456,NO,578,Norway,Kingdom of Norway,NA
+NZL,4520,NZ,554,New Zealand,NA,NA
+PER,6971,PE,604,Peru,Republic of Peru,NA
+POL,4478,PL,616,Poland,Republic of Poland,NA
+PRT,7325,PT,620,Portugal,Portuguese Republic,NA
+QAT,12083,QA,634,Qatar,State of Qatar,NA
+ROU,4876,RO,642,Romania,NA,NA
+RUS,6036,RU,643,Russian Federation,NA,NA
+SGP,6115,SG,702,Singapore,Republic of Singapore,NA
+SVK,6350,SK,703,Slovakia,Slovak Republic,NA
+SVN,6406,SI,705,Slovenia,Republic of Slovenia,NA
+SWE,5458,SE,752,Sweden,Kingdom of Sweden,NA
+THA,8249,TH,764,Thailand,Kingdom of Thailand,NA
+TTO,4692,TT,780,Trinidad and Tobago,Republic of Trinidad and Tobago,NA
+TUN,5375,TN,788,Tunisia,Republic of Tunisia,NA
+TUR,5895,TR,792,Turkey,Republic of Turkey,NA
+TWN,7708,TW,158,"Taiwan, Province of China","Taiwan, Province of China",Taiwan
+URY,6062,UY,858,Uruguay,Eastern Republic of Uruguay,NA
+USA,5712,US,840,United States,United States of America,NA
+VNM,5826,VN,704,Viet Nam,Socialist Republic of Viet Nam,NA
