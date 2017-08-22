@@ -1,0 +1,117 @@
+---
+title: "ETC 1010 Lab 4"
+output: html_document
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE, 
+  collapse = TRUE,
+  echo=FALSE,
+  comment = "",
+  fig.height = 8,
+  fig.width = 12,
+  fig.align = "center",
+  cache = FALSE
+)
+```
+
+```{r echo=FALSE}
+library(tidyverse)
+```
+
+# Instructions
+
+In this week's lab, the main goal is to learn how to define and make effective plots to answer questions about data. On the due date, turn in your Rmd file and the html product. 
+
+## Exercise 1
+
+Open your project for this class. Make sure all your work is done relative to this project.
+
+Open the `lab4.Rmd` file provided with the instructions. You can edit this file and add your answers to questions in this document.
+
+## Exercise 2 
+
+In each of these plots from previous labs, write out the grammar that defines the mapping of the data to the display:
+
+a. 
+```{r}
+PISA_oz_sub <- read_csv("PISA_oz_sub.csv")
+ggplot(PISA_oz_sub, aes(x=PV1MATH)) +
+  geom_histogram(binwidth=25) 
+```
+
+b.
+```{r}
+library(forcats)
+PISA_oz_sub <- PISA_oz_sub %>%
+  filter(!is.na(ST27Q02)) %>%
+  mutate(ST27Q02=fct_relevel(ST27Q02, 
+      c("None", "One", "Two", "Three or more")))
+ggplot(PISA_oz_sub, aes(x=ST27Q02)) + geom_bar()
+```
+
+c. 
+```{r}
+PISA_oz_sub %>% 
+  filter(ST27Q02 != "None") %>%
+  ggplot(aes(x=ST27Q02, y=PV1MATH)) + geom_boxplot()
+```
+
+
+
+d.
+```{r}
+library(lubridate)
+library(ggmap)
+library(ggthemes)
+whalesharks <- read_csv("whaleshark-encounters.csv")
+ningaloo <- whalesharks %>% filter(grepl("Ningaloo", Locality)) %>%
+    mutate(date=ymd(paste(`Year Collected`, `Month Collected`, 
+                          `Day Collected`, sep="-")))
+ningaloo_nomiss <- ningaloo %>% filter(!is.na(`Marked Individual`))
+keep <- ningaloo_nomiss %>% 
+  count(`Marked Individual`, sort=TRUE) %>% 
+  filter(n>=40) 
+ningaloo_freqwhales <- ningaloo %>% 
+  filter(`Marked Individual` %in% keep$`Marked Individual`) %>%
+  arrange(date)
+
+map <- get_map(location=c(lon=114.1, lat=-21.9), zoom=8)
+ggmap(map) + 
+  geom_point(data=ningaloo_freqwhales, aes(x=Longitude, y=Latitude, 
+                                colour=`Marked Individual`)) + 
+  geom_line(data=ningaloo_freqwhales, 
+            aes(x=Longitude, y=Latitude, 
+                colour=`Marked Individual`, group=`Marked Individual`)) + 
+  facet_wrap(~`Marked Individual`, ncol=5) + theme_map() +
+  theme(legend.position="None")
+```
+
+
+## Exercise 3
+
+For the hotel booking data, file `budapest.csv` make a plot to answer this question: __"How far ahead of the check-in date do people typically search for a hotel room?"__, and write a sentence or two answering it. In the last lab you did the wrangling necessary to get the data into shape. You may also need to do a bit more cleaning to remove very strange differences like those less than 0, and more than a year ahead searches. (EXTRA CREDIT POINT: Explain how these odd values arose.)
+
+
+## Exercise 4
+
+For the 2015 PISA results, design plots to answer these questions, explain your reasons for the design, and write an answer to the question. 
+
+a. How do science scores differ by school type?
+b. Do math scores differ by birth month?
+c. What is the relationship between number of TVs in the household and number of cars?
+d. Is amount of internet use associated with amount of time spent studying out of hours?
+e. How does a sense of belonging affect science scores?
+
+## Exercise 5
+
+In this part, we are going to take a look at historical weather for Melbourne. Download the latest data for the Melbourne airport station, [ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily/all/ASN00086282.dly](ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily/all/ASN00086282.dly). You may need to use Google Chrome.  Using the same wrangling code from the previous lab, get the data in shape, and make plots to answer these questions:
+
+a. What is the long term temporal trend for the maximum temperature?
+b. What is the seasonal pattern of maximum temperature, and how varied is this over the years?
+c. Is Melbourne getting drier?
+d. How did the spread from minimum to maximum for June this year compare with the historical trend in spread over the preceding years?
+

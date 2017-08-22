@@ -322,6 +322,33 @@ ggplot(data = ftnet,
 ```
 
 ---
+# Harry Potter characters
+
+There is a connection between two students if one provides emotional support to the other at some point in the book. Code to pull the data together is provided by Sam Tyner [here](https://github.com/sctyner/geomnet/blob/master/README.Rmd#harry-potter-peer-support-network).
+
+```{r echo=TRUE}
+load("data/hpchars.rda")
+load("data/hpedges.rda")
+head(hp.chars)
+head(hp.edges)
+```
+
+---
+
+```{r fig.width=10, fig.height=7}
+hp.all <- fortify(as.edgedf(hp.edges), hp.chars, group = "book")
+ggplot(data=hp.all, aes(from_id = from, to_id = to_id)) + 
+  geom_net(fiteach=T, directed = T, size = 3, linewidth = .5, 
+           ealpha = .5, labelon = T, fontsize = 3, repel = T, 
+           labelcolour = "black", arrowsize = .5, singletons = FALSE,
+           aes(colour = house, group = house, shape = gender)) + 
+  scale_colour_manual(values = c("#941B08","#F1F31C", 
+                                 "#071A80", "#154C07")) + 
+  facet_wrap(~book, labeller = "label_both", ncol=3) + 
+  theme_net() + theme(panel.background = element_rect(colour = 'black'), legend.position="bottom")
+```
+
+---
 # Getting beyond 2D
 
 - Pairs of variables in a matrix layout: pairs plots or scatterplot matrix

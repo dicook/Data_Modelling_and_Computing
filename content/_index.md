@@ -44,6 +44,7 @@ title: Home
 - Week 2: [Setting up your computing environment, reading in and tidying data](labs/lab1.html) [(Rmd)](labs/lab1.Rmd) [SOLUTION](labs/lab1_solution.html) [(Rmd)](labs/lab1_solution.Rmd) [PISA_oz_sub.csv](labs/PISA_oz_sub.csv) [PISA_oz_dict.csv](labs/PISA_oz_dict.csv) [ZIP](labs/lab1.zip)
 - Week 3: [Tidying data](labs/lab2.html) [(Rmd)](labs/lab2.Rmd) [SOLUTION](labs/lab2_solution.html) [(Rmd)](labs/lab2_solution.Rmd) [ASN00086282.dly](labs/ASN00086282.dly) [billboard.csv](labs/billboard.csv) [budapest.csv](labs/budapest.csv) [fly_tbl.csv](labs/fly_tbl.csv) [genes.csv](labs/genes.csv) [rates.csv](labs/rates.csv) [tb.csv](labs/tb.csv) [whaleshark-encounters.csv](labs/whaleshark-encounters.csv) [ZIP](labs/lab2.zip)
 - Week 4: [Wrangling data](labs/lab3.html) [(Rmd)](labs/lab3.Rmd) [airports.csv](labs/airports.csv) [plane_N4YRAA.rda](labs/plane_N4YRAA.rda) [pisa_au.rda](labs/pisa_au.rda) [ZIP](labs/lab3.zip)
+- Week 5: [Plotting data](labs/lab4.html) [(Rmd)](labs/lab4.Rmd)
 
 ## Computing information
 

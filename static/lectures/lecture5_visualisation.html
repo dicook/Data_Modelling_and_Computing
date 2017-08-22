@@ -243,6 +243,37 @@ List of 2
 &lt;img src="lecture5_visualisation_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
+# Harry Potter characters
+
+There is a connection between two students if one provides emotional support to the other at some point in the book. Code to pull the data together is provided by Sam Tyner [here](https://github.com/sctyner/geomnet/blob/master/README.Rmd#harry-potter-peer-support-network).
+
+
+```r
+load("data/hpchars.rda")
+load("data/hpedges.rda")
+head(hp.chars)
+               name schoolyear gender      house
+1      Adrian Pucey       1989      M  Slytherin
+2    Alicia Spinnet       1989      F Gryffindor
+3  Angelina Johnson       1989      F Gryffindor
+4 Anthony Goldstein       1991      M  Ravenclaw
+5     Blaise Zabini       1991      M  Slytherin
+6     C. Warrington       1989      M  Slytherin
+head(hp.edges)
+         name1              name2 book
+1  Dean Thomas Harry James Potter    1
+2  Dean Thomas   Hermione Granger    1
+3  Dean Thomas Neville Longbottom    1
+4  Dean Thomas     Ronald Weasley    1
+5  Dean Thomas    Seamus Finnigan    1
+6 Fred Weasley     George Weasley    1
+```
+
+---
+
+&lt;img src="lecture5_visualisation_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+
+---
 # Getting beyond 2D
 
 - Pairs of variables in a matrix layout: pairs plots or scatterplot matrix
@@ -251,17 +282,17 @@ List of 2
 ---
 # Pairs plots
 
-&lt;img src="lecture5_visualisation_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture5_visualisation_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # All variables are numeric
 
-&lt;img src="lecture5_visualisation_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture5_visualisation_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Parallel coordinate plot
 
-&lt;img src="lecture5_visualisation_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture5_visualisation_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Resources
