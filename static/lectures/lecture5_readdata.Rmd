@@ -20,8 +20,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   echo=FALSE,
   comment = "",
-  fig.height = 6,
-  fig.width = 10,
+  fig.height = 5.5,
+  fig.width = 9,
   fig.align = "center",
   cache = FALSE
 )
