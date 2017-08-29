@@ -1,0 +1,152 @@
+---
+title: "ETC 1010 Lab 5"
+output: html_document
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE, 
+  collapse = TRUE,
+  echo=FALSE,
+  comment = "",
+  fig.height = 8,
+  fig.width = 12,
+  fig.align = "center",
+  cache = FALSE
+)
+```
+
+```{r echo=FALSE}
+library(tidyverse)
+library(forcats)
+```
+
+# Instructions
+
+In this week's lab, the main goal is to practice reading and handling different data formats. On the due date, turn in your Rmd file and the html product. 
+
+## Exercise 1
+
+Open your project for this class. Make sure all your work is done relative to this project.
+
+Open the `lab5.Rmd` file provided with the instructions. You can edit this file and add your answers to questions in this document.
+
+
+## Exercise 2
+
+The financial world operates with many different currencies, and for countries to trade, for people to travel, these currencies are converted, bought and sold. The web site [https://openexchangerates.org/](https://openexchangerates.org/) provides access to (daily) cross rates of currencies relative to the USD. The data is provided in JSON form. With a free account you can pull 30 days worth of data, every day. [Carson Sievert's web site](https://gist.github.com/cpsievert/e05da83fc4253e6d1986) explains how to do this, and provides R code. To follow the instructions and get your own data you need to sign up for an instant free account, and use the key provided to get the data. 
+
+a. Between your group members pull at least 80 days of cross-rates. Turn this in with your lab report.
+b. Use the `lubridate` package data handling routines to make R recognise the date column as a date.
+c. Make a time series plot of the currency of your choice, for the period of data that you have downloaded. Describe the fluctuation in the rates over the time.
+d. Compare and contrast the Australian dollar fluctuations with this currency. Make a plot or two to help with your description.
+
+## Exercise 3
+
+This task is to take the example of the Australian electorate data from the lecture notes (Lecture 5 Reading different data formats), make sure that you can do the work, to make an electoral map of Australia. And then extend it with a little more info.
+
+a. Download the Australian electorate shape files.
+b. Use the `mapshaper` package to thin out the boundaries.
+c. Get the map polygons into tidy format.
+d. Make the map of electorates coloured by size.
+e. Extract the information about the electorates from the shape files. Extract the centroids for each electorate, and combine these two.
+f. Plot the centroids overlaid on the map of electorates.
+g. Pull the polling station data from the AEC site. Plot the polling stations on the map. Explain any patterns that you see in locations where you can go to vote.
+
+## Exercise 4 
+
+In previous labs, we worked with the PISA 2015 data. In this question, you will extract this data for yourself. 
+
+a. Find the data on the OECD PISA web site, [http://www.oecd.org/pisa/data/2015database/](http://www.oecd.org/pisa/data/2015database/). Download the SPSS format "Student questionnaire data file (419MB)". (The downloaded file name should be `CY6_MS_CMB_STU_QQQ.sav`.) It is quite large, so if you have trouble your tutor has the file on a USB stick, that you can copy.
+
+b. Read the data into R using this code:
+
+```{r eval=FALSE}
+library(haven)
+pisa_2015 <- read_sav(file.choose())
+```
+
+How many students are in the data set?
+
+c. If you continue to work with the data in R you will have some slow times. It is ok if you just want to focus on one country, but if we want to make calculations and models on all the data you computer will sit and spin a lot. The best approach is to create a small database, and use this to do calculations. This code creates the database, in your project folder:
+
+```{r eval=FALSE}
+library(sqldf)
+library(DBI)
+dbWriteTable(conn=db, name="student", value=pisa_2015)
+```
+
+d. Let's test the speed
+
+From the R object:
+
+```{r eval=FALSE}
+start_time <- Sys.time()
+score_gap <- pisa_2015 %>% 
+  group_by(CNT) %>%
+  summarise(math=mean(PV1MATH),
+            read=mean(PV1READ),
+            scie=mean(PV1SCIE))
+end_time <-Sys.time()
+end_time-start_time
+```
+
+Using sqlite database:
+
+```{r eval=FALSE}
+library(sqldf)
+library(DBI)
+library(dbplyr)
+db <- dbConnect(SQLite(), dbname="PISA.sqlite")
+tb <- tbl(db, "student")
+start_time <- Sys.time()
+score_gap <- tb %>% group_by(CNT) %>%
+  summarise(math=mean(PV1MATH),
+            read=mean(PV1READ),
+            scie=mean(PV1SCIE)) %>%
+  collect()
+end_time <-Sys.time()
+end_time-start_time
+```
+
+(I get 27.09944 secs directly in R, and 1.61168 secs using the database.)
+
+e. Using the code below, how many different plausible scores are generated for each student, in math, reading and science?
+
+```{r eval=FALSE}
+dbListFields(db, "student")
+```
+
+f. Compute the averages across the multiple math scores, and save in an R object. Make a dotplot against country, ordered from top score to lowest. What are the top three countries? What is Australia's rank?
+
+```{r eval=FALSE}
+scores <- tb %>% 
+  mutate(math=(PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+PV6MATH+
+                 PV7MATH+PV8MATH+PV9MATH+PV10MATH)/10) %>%
+  group_by(CNT) %>%
+  summarise(mathmean=mean(math)) %>%
+  collect()
+scores <- scores %>% mutate(CNT=fct_reorder(CNT, mathmean))
+ggplot(scores, aes(x=mathmean, y=CNT)) + geom_point()
+```
+
+g. Database operations typically only operate on a column by column basis, so calculating statistics such as standard deviation can be a challenge. (Try it, and see what happens if you ask for the database to compute the standard deviation of the math scores instead of the mean, using the `sd` function.) You can do this with a direct SQL QUERY (the ugly code is below). Do it! And then make a plot which shows the mean and a segment indicating one standard deviation below and above the mean, by country, sorted from highest to lowest average.
+
+
+```{r eval=FALSE}
+library(RSQLite)
+mathmean <- dbGetQuery(db, "SELECT Avg((PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+PV6MATH+
+                 PV7MATH+PV8MATH+PV9MATH+PV10MATH)/10) as m FROM student GROUP BY CNT")
+mathsq <- dbGetQuery(db, "SELECT Sum((PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+PV6MATH+
+        PV7MATH+PV8MATH+PV9MATH+PV10MATH)*(PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+PV6MATH+
+        PV7MATH+PV8MATH+PV9MATH+PV10MATH)/100) as s FROM student GROUP BY CNT")
+n <- dbGetQuery(db, "SELECT count(*) as n FROM student GROUP BY CNT")
+CNT <- dbGetQuery(db, "SELECT distinct CNT as CNT FROM student")
+
+scores_sql <- data.frame(mathmean, mathsq, n, CNT)
+scores_sql <- scores_sql %>%
+  mutate(mathsd=sqrt((s - n*m^2)/(n-1))) %>%
+  mutate(CNT=fct_reorder(CNT, m))
+```

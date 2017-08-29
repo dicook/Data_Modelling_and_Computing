@@ -30,21 +30,22 @@ title: Home
 - Week 3: [Data cleaning, rearranging and transformation](lectures/lecture3_wrangling.html)  [(pdf)](lectures/lecture3_wrangling.pdf) [(Rmd)](lectures/lecture3_wrangling.Rmd); Reading; Chapter 5, 9, 10
 - Week 4: [Basic visualisation](lectures/lecture4_visualisation.html)  [(pdf)](lectures/lecture4_visualisation.pdf) [(Rmd)](lectures/lecture4_visualisation.Rmd); Reading: Chapter 3
 - Week 5: [Advanced visualisation](lectures/lecture5_visualisation.html); [(pdf)](lectures/lecture5_visualisation.pdf) [(Rmd)](lectures/lecture5_visualisation.Rmd), [Reading different data formats](lectures/lecture5_readdata.html); [(pdf)](lectures/lecture5_readdata.pdf) [(Rmd)](lectures/lecture5_readdata.Rmd); Reading: [R for Excel users](http://blog.yhat.com/posts/R-for-excel-users.html), Textbook chapter 11
-- Week 6: [Reading different data formats](lectures/lecture6_readdata.html); [(pdf)](lectures/lecture6_readdata.pdf) [(Rmd)](lectures/lecture6_readdata.Rmd);
-- Week 7: Handling missing values
-- Week 8: Data description
-- Week 9: Basic modeling
-- Week 10: Linear optimisation
-- Week 11: Optimal decision modeling
-- Week 12: TBD
+- Week 6: [Reading different data formats](lectures/lecture6_readdata.html); [(pdf)](lectures/lecture6_readdata.pdf) [(Rmd)](lectures/lecture6_readdata.Rmd); Reading: 
+- Week 7: Basic modeling
+- Week 8: Linear optimisation
+- Week 9: Advanced modeling
+- Week 10: Optimal decision modeling
+- Week 11: TBD
+- Week 12: Presentations
 
 ## Tutorials
 
 - Week 1: No tutorial in the first week
 - Week 2: [Setting up your computing environment, reading in and tidying data](labs/lab1.html) [(Rmd)](labs/lab1.Rmd) [SOLUTION](labs/lab1_solution.html) [(Rmd)](labs/lab1_solution.Rmd) [PISA_oz_sub.csv](labs/PISA_oz_sub.csv) [PISA_oz_dict.csv](labs/PISA_oz_dict.csv) [ZIP](labs/lab1.zip)
 - Week 3: [Tidying data](labs/lab2.html) [(Rmd)](labs/lab2.Rmd) [SOLUTION](labs/lab2_solution.html) [(Rmd)](labs/lab2_solution.Rmd) [ASN00086282.dly](labs/ASN00086282.dly) [billboard.csv](labs/billboard.csv) [budapest.csv](labs/budapest.csv) [fly_tbl.csv](labs/fly_tbl.csv) [genes.csv](labs/genes.csv) [rates.csv](labs/rates.csv) [tb.csv](labs/tb.csv) [whaleshark-encounters.csv](labs/whaleshark-encounters.csv) [ZIP](labs/lab2.zip)
-- Week 4: [Wrangling data](labs/lab3.html) [(Rmd)](labs/lab3.Rmd) [airports.csv](labs/airports.csv) [plane_N4YRAA.rda](labs/plane_N4YRAA.rda) [pisa_au.rda](labs/pisa_au.rda) [ZIP](labs/lab3.zip)
+- Week 4: [Wrangling data](labs/lab3.html) [(Rmd)](labs/lab3.Rmd) [SOLUTION](labs/lab3_solution.html) [(Rmd)](labs/lab3_solution.Rmd) [airports.csv](labs/airports.csv) [plane_N4YRAA.rda](labs/plane_N4YRAA.rda) [pisa_au.rda](labs/pisa_au.rda) [ZIP](labs/lab3.zip)
 - Week 5: [Plotting data](labs/lab4.html) [(Rmd)](labs/lab4.Rmd)
+- Week 6: [Reading different formats](labs/lab5.html) [(Rmd)](labs/lab5.Rmd)
 
 ## Computing information
 

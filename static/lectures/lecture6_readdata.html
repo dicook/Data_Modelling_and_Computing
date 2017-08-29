@@ -112,7 +112,7 @@ When you can see that a file is large, try to read just a few lines in.
 # Big binary files
 
 - Climate data sets are often stored in netCDF (Network Common Data Form) format. These are "gridded" data which means big rectangular tables. They are typically large, and require special routines for extracting information on what is in the file, and what records to extract. There is an [R cheatsheet here](https://www.r-bloggers.com/a-netcdf-4-in-r-cheatsheet/).
-- Another common format is HDF5 (Hierarchical Data Format), arose from supercomuting needs, for storing multidimensional or grouped data. An example is the song recommender system [Million Song DatasetMillion Song Dataset](https://labrosa.ee.columbia.edu/millionsong/pages/getting-dataset). The `rhdf5` from [bioconductor] (https://www.bioconductor.org/packages/devel/bioc/vignettes/rhdf5/inst/doc/rhdf5.pdf) can read this for you.
+- Another common format is HDF5 (Hierarchical Data Format), arose from supercomuting needs, for storing multidimensional or grouped data. An example is the song recommender system [Million Song DatasetMillion Song Dataset](https://labrosa.ee.columbia.edu/millionsong/pages/getting-dataset). The `rhdf5` from [bioconductor](https://www.bioconductor.org/packages/devel/bioc/vignettes/rhdf5/inst/doc/rhdf5.pdf) can read this for you.
 - A new format `feather` has recently been announced, by the R and python groups. It is a fast, lightweight, and easy-to-use binary file format for storing data frames, not metadata. A good description of the speed increases can be found [here](https://blog.dominodatalab.com/the-r-data-i-o-shootout/).
 
 ---
@@ -210,7 +210,7 @@ nba$SALARY &lt;- as.numeric(gsub("[$,]", "",
 
 ```
 [1] $34,382,550 $33,285,709 $31,269,231 $29,727,900 $29,512,900 $28,703,704
-309 Levels: $19,508,958 $19,578,455 $20,000,000 $20,061,729 ... $874,636
+309 Levels: $19,508,958 $19,578,455 $20,000,000 $20,061,729 ... $895,197
 [1] "34382550" "33285709" "31269231" "29727900" "29512900" "28703704"
 Warning: NAs introduced by coercion
 ```
