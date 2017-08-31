@@ -30,7 +30,7 @@ title: Home
 - Week 3: [Data cleaning, rearranging and transformation](lectures/lecture3_wrangling.html)  [(pdf)](lectures/lecture3_wrangling.pdf) [(Rmd)](lectures/lecture3_wrangling.Rmd); Reading; Chapter 5, 9, 10
 - Week 4: [Basic visualisation](lectures/lecture4_visualisation.html)  [(pdf)](lectures/lecture4_visualisation.pdf) [(Rmd)](lectures/lecture4_visualisation.Rmd); Reading: Chapter 3
 - Week 5: [Advanced visualisation](lectures/lecture5_visualisation.html); [(pdf)](lectures/lecture5_visualisation.pdf) [(Rmd)](lectures/lecture5_visualisation.Rmd), [Reading different data formats](lectures/lecture5_readdata.html); [(pdf)](lectures/lecture5_readdata.pdf) [(Rmd)](lectures/lecture5_readdata.Rmd); Reading: [R for Excel users](http://blog.yhat.com/posts/R-for-excel-users.html), Textbook chapter 11
-- Week 6: [Reading different data formats](lectures/lecture6_readdata.html); [(pdf)](lectures/lecture6_readdata.pdf) [(Rmd)](lectures/lecture6_readdata.Rmd); [Handling missings, descriptive stats](lectures/lecture6_missings.html); [(pdf)](lectures/lecture6_missings.pdf) [(Rmd)](lectures/lecture6_missings.Rmd); Reading: 
+- Week 6: [Reading different data formats](lectures/lecture6_readdata.html); [(pdf)](lectures/lecture6_readdata.pdf) [(Rmd)](lectures/lecture6_readdata.Rmd); [Handling missings, descriptive stats](lectures/lecture6_missings.html); [(pdf)](lectures/lecture6_missings.pdf) [(Rmd)](lectures/lecture6_missings.Rmd); Reading: [Descriptive statistics](https://en.wikipedia.org/wiki/Descriptive_statistics)
 - Week 7: Basic modeling
 - Week 8: Linear optimisation
 - Week 9: Advanced modeling
