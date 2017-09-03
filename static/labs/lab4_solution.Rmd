@@ -1,0 +1,405 @@
+---
+title: "ETC 1010 Lab 4 SOLUTION"
+output: html_document
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE, 
+  collapse = TRUE,
+  echo=FALSE,
+  comment = "",
+  fig.height = 8,
+  fig.width = 12,
+  fig.align = "center",
+  cache = FALSE
+)
+```
+
+```{r echo=FALSE}
+library(tidyverse)
+```
+
+# Instructions
+
+In this week's lab, the main goal is to learn how to define and make effective plots to answer questions about data. On the due date, turn in your Rmd file and the html product. 
+
+## Exercise 1
+
+Open your project for this class. Make sure all your work is done relative to this project.
+
+Open the `lab4.Rmd` file provided with the instructions. You can edit this file and add your answers to questions in this document.
+
+## Exercise 2 (13 pts)
+
+In each of these plots from previous labs, write out the grammar that defines the mapping of the data to the display:
+
+a. (3pts)
+```
+DATA: PISA_oz_sub
+AESTHETICS/MAPPINGS: x=PV1MATH
+GEOM: histogram
+STAT: bin
+POSITION: identity
+COORDINATE: cartesian
+FACET: none
+```
+
+```{r}
+PISA_oz_sub <- read_csv("PISA_oz_sub.csv")
+ggplot(PISA_oz_sub, aes(x=PV1MATH)) +
+  geom_histogram(binwidth=25) 
+```
+
+b. (3pts)
+
+```
+DATA: PISA_oz_sub, without missing values
+AESTHETICS/MAPPINGS: x=ST27Q02
+GEOM: bar
+STAT: count
+POSITION: identity
+COORDINATE: cartesian
+FACET: none
+```
+
+```{r}
+library(forcats)
+PISA_oz_sub <- PISA_oz_sub %>%
+  filter(!is.na(ST27Q02)) %>%
+  mutate(ST27Q02=fct_relevel(ST27Q02, 
+      c("None", "One", "Two", "Three or more")))
+ggplot(PISA_oz_sub, aes(x=ST27Q02)) + geom_bar()
+```
+
+c. (3pts)
+
+```
+DATA: PISA_oz_sub, without missing values in ST27Q02
+AESTHETICS/MAPPINGS: x=ST27Q02, y=PV1MATH
+GEOM: boxplot
+STAT: boxplot
+POSITION: dodge
+COORDINATE: cartesian
+FACET: none
+```
+
+```{r}
+PISA_oz_sub %>% 
+  filter(ST27Q02 != "None") %>%
+  ggplot(aes(x=ST27Q02, y=PV1MATH)) + geom_boxplot()
+```
+
+
+
+d. (4pts)
+
+```
+DATA: ningaloo_freqwhales
+LAYER 1: (not important to say anything more than this)
+  DATA: map 
+LAYER 2: 
+  DATA: ningaloo_freqwhales
+  AESTHETICS/MAPPINGS: x=Longitude, y=Latitude, 
+                                colour=`Marked Individual`
+  GEOM: point
+  STAT: identity
+  POSITION: identity
+  COORDINATE: cartesian
+  FACET: `Marked Individual`
+LAYER 3: 
+  DATA: ningaloo_freqwhales
+  AESTHETICS/MAPPINGS: x=Longitude, y=Latitude, 
+                                colour=`Marked Individual`
+  GEOM: line
+  STAT: identity
+  POSITION: identity
+  COORDINATE: cartesian
+  FACET: `Marked Individual`
+```
+
+```{r}
+library(lubridate)
+library(ggmap)
+library(ggthemes)
+whalesharks <- read_csv("whaleshark-encounters.csv")
+ningaloo <- whalesharks %>% filter(grepl("Ningaloo", Locality)) %>%
+    mutate(date=ymd(paste(`Year Collected`, `Month Collected`, 
+                          `Day Collected`, sep="-")))
+ningaloo_nomiss <- ningaloo %>% filter(!is.na(`Marked Individual`))
+keep <- ningaloo_nomiss %>% 
+  count(`Marked Individual`, sort=TRUE) %>% 
+  filter(n>=40) 
+ningaloo_freqwhales <- ningaloo %>% 
+  filter(`Marked Individual` %in% keep$`Marked Individual`) %>%
+  arrange(date)
+
+map <- get_map(location=c(lon=114.1, lat=-21.9), zoom=8)
+ggmap(map) + 
+  geom_point(data=ningaloo_freqwhales, aes(x=Longitude, y=Latitude, 
+                                colour=`Marked Individual`)) + 
+  geom_line(data=ningaloo_freqwhales, 
+            aes(x=Longitude, y=Latitude, 
+                colour=`Marked Individual`, group=`Marked Individual`)) + 
+  facet_wrap(~`Marked Individual`, ncol=5) + theme_map() +
+  theme(legend.position="None")
+```
+
+
+## Exercise 3 (5pts)
+
+For the hotel booking data, file `budapest.csv` make a plot to answer this question: __"How far ahead of the check-in date do people typically search for a hotel room?"__, and write a sentence or two answering it. In the last lab you did the wrangling necessary to get the data into shape. You may also need to do a bit more cleaning to remove very strange differences like those less than 0, and more than a year ahead searches. (EXTRA CREDIT POINT: Explain how these odd values arose.)
+
+```
+A univariate display of the distribution of differences is the best way to answer this question. Using a histogram, or a density plot, is better than a boxplot, because it allows for a more detailed glimpse of the distribution. 
+
+The distribution is heavily right-skewed. Most searches are done within a month of the accommodation needed. There are a very few searches done more than 3 months ahead of time. There appear to be two small modes corresponding to about 3 months ahead, 2 months ahead. 
+
+Possible reasons for the negative values, are time zone errors of the person making the search from a different part of the globe. And searches beyond a year, are possible, but fairly rare. Looking at the search dates corresponding to these odd times reveals that many of the negatives come from "1900-01-01" being the SRCH_BEGIN_USE_DATE, and for the positives "2020-10-21" being the SRCH_BEGIN_USE_DATE. It may be that these are defaults in the booking web site to give something to kick off quotes, or just ways it is automatically filled if it is missing in the actual click through data collection.
+```
+
+```{r}
+library(tidyverse)
+library(lubridate)
+budapest <- read_csv("budapest.csv")
+date_diff <- budapest %>% 
+  mutate(SRCH_BEGIN_USE_DATE=ymd(SRCH_BEGIN_USE_DATE),
+           SRCH_DATETM=as.Date(ymd_hms(SRCH_DATETM))) %>%
+  select(SRCH_BEGIN_USE_DATE, SRCH_DATETM) %>%
+  mutate(dif = as.numeric(SRCH_BEGIN_USE_DATE - SRCH_DATETM)) %>%
+  filter(dif > 0 & dif < 365)
+ggplot(date_diff, aes(x=dif)) + 
+  geom_density(fill="black", alpha=0.5) +
+  xlab("Time ahead to book")
+```
+
+## Exercise 4 (15 pts)
+
+For the 2015 PISA results, design plots to answer these questions, explain your reasons for the design, and write an answer to the question. 
+
+```{r dataprocessing}
+load("pisa_au.rda")
+pisa_au <- pisa_au %>% mutate(state=as.character(substr(STRATUM, 4, 5)),
+                schtype_yr=as.character(substr(STRATUM, 6, 7))) %>%
+  mutate(state=recode(state, "01"="ACT", "02"="NSW", "03"="VIC",
+       "04"="QLD", "05"="SA", "06"="WA", "07"="TAS", "08"="NT")) %>%
+  mutate(schtype_yr=recode(schtype_yr,
+            "01"="Catholic_Y10", "02"="Catholic_noY10",
+            "03"="Gov_Y10", "04"="Gov_noY10",
+            "05"="Ind_Y10", "06"="Ind_noY10",
+            "07"="Catholic_Y10", "08"="Catholic_noY10",
+            "09"="Gov_Y10", "10"="Gov_noY10",
+            "11"="Ind_Y10", "12"="Ind_noY10",
+            "13"="Catholic_Y10", "14"="Catholic_noY10",
+            "15"="Gov_Y10", "16"="Gov_noY10",
+            "17"="Ind_Y10", "18"="Ind_noY10",
+            "19"="Catholic_Y10", "20"="Catholic_noY10",
+            "21"="Gov_Y10", "22"="Gov_noY10",
+            "23"="Ind_Y10", "24"="Ind_noY10",
+            "25"="Catholic_Y10", "26"="Catholic_noY10",
+            "27"="Gov_Y10", "28"="Gov_noY10",
+            "29"="Ind_Y10", "30"="Ind_noY10",
+            "31"="Catholic_Y10", "32"="Catholic_noY10",
+            "33"="Gov_Y10", "34"="Gov_noY10",
+            "35"="Ind_Y10", "36"="Ind_noY10",
+            "37"="Catholic_Y10", "38"="Catholic_noY10",
+            "39"="Gov_Y10", "40"="Gov_noY10",
+            "41"="Ind_Y10", "42"="Ind_noY10",
+            "43"="Catholic_Y10", "44"="Catholic_noY10",
+            "45"="Gov_Y10", "46"="Gov_noY10",
+            "47"="Ind_Y10", "48"="Ind_noY10")) %>%
+  separate(schtype_yr, c("schtype","yr")) %>%
+  rename(birthmonth=ST003D02T, birthyr=ST003D03T,
+         gender=ST004D01T, desk=ST011Q01TA,
+         room=ST011Q02TA, computer=ST011Q04TA, internet=ST011Q06TA,
+         solarpanels=ST011D17TA, tvs=ST012Q01TA, cars=ST012Q02TA,
+         music_instr=ST012Q09NA, books=ST013Q01TA, birthcnt=ST019AQ01T,
+         mother_birthcnt=ST019BQ01T, father_birthcnt=ST019CQ01T,
+         test_anxiety=ST118Q01NA, ambitious=ST119Q04NA,
+         prefer_team=ST082Q01NA, make_friends_easy=ST034Q02TA,
+         tardy=ST062Q03TA, science_fun=ST094Q01NA, breakfast=ST076Q01NA,
+         work_pay=ST078Q10NA, sport=ST078Q11NA, internet_use=IC006Q01TA,
+         install_software=IC015Q02NA,
+         outhours_study=OUTHOURS, math_time=MMINS, read_time=LMINS,
+         science_time=SMINS, belong=BELONG,
+         anxtest=ANXTEST, motivat=MOTIVAT, language=LANGN,
+         home_edres=HEDRES, home_poss=HOMEPOS, wealth=WEALTH,
+         stuweight=W_FSTUWT) %>%
+    mutate(math=(PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+
+                     PV6MATH+PV7MATH+PV8MATH+PV9MATH+PV10MATH)/10,
+           science=(PV1SCIE+PV2SCIE+PV3SCIE+PV4SCIE+PV5SCIE+
+                        PV6SCIE+PV7SCIE+PV8SCIE+PV9SCIE+PV10SCIE)/10,
+           read=(PV1READ+PV2READ+PV3READ+PV4READ+PV5READ+
+                     PV6READ+PV7READ+PV8READ+PV9READ+PV10READ)/10) %>%
+   select(state, schtype, yr, birthmonth, birthyr, gender, desk, room,
+          computer, internet, solarpanels, tvs, cars, music_instr, books,
+          birthcnt, mother_birthcnt, father_birthcnt, test_anxiety,
+          ambitious, prefer_team, make_friends_easy, tardy, science_fun,
+          breakfast, work_pay, sport, internet_use, install_software,
+          outhours_study, math_time, read_time, science_time, belong,
+          anxtest, motivat, language, home_edres, home_poss, wealth,
+          stuweight, math, science, read) %>%
+  mutate(gender=factor(gender, levels=1:2, labels=c("female", "male"))) %>% 
+  mutate(birthmonth=factor(birthmonth, levels=1:12,
+    labels=c("jan", "feb", "mar", "apr", "may", "jun", "jul", "aug",
+                            "sep", "oct", "nov", "dec")))
+```
+
+a. How do science scores differ by school type? (3pts)
+
+```
+The median score and middle 50% of scores differ between the school types, but the overall range is the same. The best scores, based on the median, are the independent, then catholic and followed by government schools. However, the top scores at each of the schools are basically the same, and similarly the worst scores are the same. 
+```
+
+```{r}
+ggplot(data=pisa_au, aes(x=schtype, y=science)) + 
+  geom_boxplot() + xlab("")
+```
+
+b. Do math scores differ by birth month? (3pts)
+
+```
+There is not much difference. On the median, students score better if they were born may and june, and a bit less in april. 
+```
+
+```{r}
+ggplot(data=pisa_au, aes(x=birthmonth, y=math)) + 
+  geom_boxplot() + xlab("Student birth month")
+```
+
+c. What is the relationship between number of TVs in the household and number of cars? (3pts)
+
+```
+A mosaic plot is the easiest way to examine the relationship between these two variables, but a jittered dotplot is a good start. There is positive association between the variables. Overwhelmingly, is a household has no TVs it also has no cars, and if it has 4 tvs then it is almost certain to have at least 3 cars. Most household have at least 2 TVs.
+```
+
+```{r}
+ggplot(data=pisa_au, aes(x=tvs, y=cars)) + 
+  geom_jitter(alpha=0.5) + theme(aspect.ratio=1)
+PISA_tvs_cars <- pisa_au %>% count(tvs, cars) %>% 
+  replace_na(list(tvs=0, cars=0)) %>%
+  mutate(tvs=factor(tvs), cars=factor(cars))
+  
+library(ggmosaic)
+ggplot(PISA_tvs_cars) +
+  geom_mosaic(aes(weight=n, x=product(tvs), fill=cars))
+```
+
+d. Is amount of internet use associated with amount of time spent studying out of hours? (3pts)
+
+```
+Side-by-side boxplots are a good choice here, because internet_use is discrete. I do like a jittered dotplot, with the means overlaid, though, because it shows the skewness clearly. 
+
+There is not much association between the two variables. Study time dips a little, on average, in categories 3, 4, 5 of internet use, that is as usage increases from 30mins to 4 hours. But it increases a bit again with internet use over 4 hours!
+```
+
+```{r}
+attr(pisa_au$internet_use, "labels")
+ggplot(data=pisa_au, aes(x=factor(internet_use), y=outhours_study)) +
+  geom_boxplot()
+pisa_au_study_av <- pisa_au %>% group_by(internet_use) %>%
+  summarise(outhours_study=mean(outhours_study, na.rm=T))
+ggplot(data=pisa_au, aes(x=internet_use, y=outhours_study)) + 
+  geom_jitter(width=0.2, height=0, alpha=0.5) + 
+  geom_point(data=pisa_au_study_av, 
+             aes(x=internet_use, y=outhours_study), 
+             colour="red", size=4)
+  theme(aspect.ratio=1) 
+```
+
+e. How does a sense of belonging affect science scores? (3pts)
+
+```
+You need to do a scatterplot of these two variables. Its a bit messy, and there is little data out in the tails. Focus in on the range of belong around zero to examine the relationship. Add a smoother, or linear model to focus.
+
+There is a weak relationship, but on average science scores increase a little (about 50 points) as the belong score increases.
+```
+
+```{r}
+ggplot(data=pisa_au, aes(x=belong, y=science)) +
+  geom_point(alpha=0.5)
+ggplot(data=pisa_au, aes(x=belong, y=science)) +
+  geom_point(alpha=0.5) + 
+  xlim(c(-1,1)) +
+  geom_smooth(se=FALSE)
+```
+
+## Exercise 5 (12 pts)
+
+In this part, we are going to take a look at historical weather for Melbourne. Download the latest data for the Melbourne airport station, [ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily/all/ASN00086282.dly](ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily/all/ASN00086282.dly). You may need to use Google Chrome.  Using the same wrangling code from the previous lab, get the data in shape, and make plots to answer these questions:
+
+```{r}
+melbtemp <- read.fwf("ASN00086282.dly", 
+                     c(11, 4, 2, 4, rep(c(5, 1, 1, 1), 31)), fill=T)
+melbtemp <- melbtemp[,c(1,2,3,4,seq(5,128,4))]
+colnames(melbtemp) <- c("id", "year", "month", "var", paste0("V",1:31))
+melbtemp <- melbtemp %>% 
+  gather(day, value, V1:V31) %>%
+  mutate(day = as.numeric(sub("V", "", day))) %>%
+  mutate(value=ifelse(value==-9999, NA, value)) %>%
+  filter(var %in% c("PRCP", "TMAX", "TMIN")) %>%
+  spread(var, value) %>%
+  mutate(PRCP=PRCP/10, TMAX=TMAX/10, TMIN=TMIN/10)
+```
+
+a. What is the long term temporal trend for the maximum temperature? (3pts)
+
+```
+There is a ot of data, so using a smoother is a good way to answer this question. A smoother will allow for nonlinear association, which places less constraints on the relationship than a linear model fit. Using year as the x variable gives enough temporal resolution to do the smoothing and examine the long term trend. (A slight adjustment to the data is needed, that 2017 is not complete, so only records to 2016 should be used when examining on the yearly scale.)
+
+Since 1970, the maximum tempoerature has increased roughly 2 degrees.
+```
+
+```{r}
+ggplot(filter(melbtemp, year < 2017), aes(x=year, y=TMAX)) + geom_smooth() 
+```
+
+b. What is the seasonal pattern of maximum temperature, and how varied is this over the years? (3pts)
+
+```
+The easiest way to address this question is to use side-by-side boxplots. 
+
+Generally max temperatures are lower in the winter than the summer months. The variability is smaller in the winter months. Winter max temperatures are always above 5, and the highest max temperature, about 46, occurred in a February.
+```
+
+```{r}
+ggplot(filter(melbtemp, year < 2017), 
+       aes(x=factor(month), y=TMAX)) + geom_boxplot() 
+```
+
+c. Is Melbourne getting drier? (3pts)
+
+```
+The best way to answer this question is to use a smoother again. It is best to look at precipitation on a sqrt scale, though, because is it heavily right-skewed. 
+
+It does look like there is a slight downward trend, since 1970. 
+```
+
+```{r}
+ggplot(filter(melbtemp, year < 2017), aes(x=year, y=PRCP)) + 
+  geom_smooth() + scale_y_sqrt()
+```
+
+d. How did the spread from minimum to maximum for June this year compare with the historical trend in spread over the preceding years? (3pts)
+
+```
+This is tricky! The neatest way to look at this is calculate historical average global max and min for June, use a vertical bar to represent this. And then overlay vertical bars for this year's temperature range. The focus is on the range of temperatures each day. (You could also think about using the average of the historical min/max's to represent the past, or 10/90 percentiles.)
+
+We would expect the historical bars to be wider, since it represents more data. The bars for this year, should be roughly in the middle, and if they are shifted one direction or another it says this year was warmer or cooler than expected. For many of the days this year, particularly in the middle it was warmer than we might expect. In the latter part of the month, the temperatures were closer to the historical averages, and perhaps less varied.  
+```
+
+```{r}
+melbtemp_global <- melbtemp %>%
+  filter(year < 2017, month==6, day<31) %>% 
+  group_by(day) %>%
+  summarize(TMIN=min(TMIN, na.rm=T), TMAX=max(TMAX, na.rm=T))
+  
+july <- melbtemp %>% filter(year==2017, month==6, day<31)
+ggplot() + 
+  geom_linerange(data=melbtemp_global, 
+                 aes(x=day, ymin=TMIN, ymax=TMAX), size=5) +
+  geom_linerange(data=july, 
+                 aes(x=day, ymin=TMIN, ymax=TMAX), size=2, colour="red")
+```
