@@ -38,6 +38,8 @@ title: Home
 - Week 11: TBD
 - Week 12: Presentations
 
+## [Project Description](project/project-ETC1010.pdf) 
+
 ## Tutorials
 
 - Week 1: No tutorial in the first week
