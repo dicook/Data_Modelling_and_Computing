@@ -1,0 +1,301 @@
+---
+title: "Model Building and Fitting"
+author: "David T. Frazier"
+date: "30/08/2017"
+output:
+  xaringan::moon_reader:
+    css: ["default", "myremark.css"]
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(fig.align = 'center',echo=FALSE)
+library(tidyverse)
+library(ggplot2)
+library(readr)
+library(readxl)
+library(modelr)
+library(plotly)
+library(lubridate)
+
+```
+
+# Outline
+- What is `optim` doing?
+- Optimization of functions with one variable
+- Optimization of functions with two variables
+- Using `optim`
+
+
+---
+
+
+--- 
+# Optimization of functions with one variable
+
+- Goal is to find min or max of $f(b)$, continuous in $b$,
+- Domain of the function is $[a_0,a_1]$, values $b$ can take
+- Range of the function is $\mathbb{R}$
+- *Extreme Value Theorem*
+    - $f(b)$ is continuous for all $b$ in $[a_0,a_1]$
+    - then $f(b)$ obtains a min and max on $[a_0,a_1]$
+
+---
+# Optimization: one variable
+
+- Optimum can occur at 
+    - Boundary of $D$; i.e., $a_0$ or $a_1$
+    - Point at which the function is not differentiable
+    - A value $\hat{b}$ where $f'(\hat{b})=0$
+- The point $f'(b)=0$ is called the **"first-order condition" (FOC)** 
+
+---
+#Optimization: one variable
+- Let $f$ and $f'$ be continuous on $[a_0,a_1]$. 
+- If there is a $\hat{b}\in(a_0,a_1)$ such that $f'(\hat{b})=0$ **and** $f''(\hat{b})\neq0$, $\hat{b}$ is an _optimum_
+- Optimum can be max or min!
+- How to differentiate? 
+    - if $f''(\hat{b})>0$, $f(b)$ has a local min at $b=\hat{b}$
+    - if $f''(\hat{b})<0$, $f(b)$ has a local max at $b=\hat{b}$
+- Sign of $f''(\hat{b})$ is called the **"second-order condition" (SOC)**
+
+---
+# Example: polynomial
+- $f(b) = 2+3b+4b^2-b^3$
+- $f'(b) = 3+8b-3b^2$
+- Solve for $\hat{b}$ via quadratic formula!
+- $0=f'(b)=-3b^2 + 8b+3$, implies $\hat{b}=\frac{-8\pm \sqrt{8^2-4*(-3)*3}}{2(-3)}$
+- Min or max?
+    
+---
+# Example: polynomial
+- $f(b) = 2+3b+4b^2-b^3$
+- $f'(b) = 3+8b-3b^2$
+- Solve for $\hat{b}$ via quadratic formula!
+- $0=f'(b)=-3b^2 + 8b+3$, implies $\hat{b}=\frac{-8\pm \sqrt{8^2-4*(-3)*3}}{2(-3)}$
+- Min or max?
+    - $f''(b)=8-6b>0$ for $b<3/2$
+    - $f''(b)=8-6b<0$ for $b>3/2$
+    
+---
+# Example: Ordinary Least Squares (OLS) through origin
+- $\min_{b_1}f(b)=\min_{b}{\sum_{i}\{y_i-b x_i\}^2}$
+- Closed form solution 
+- $f'(b)=-2\sum_{i}x_i\{y_i-b  x_i\}$
+- $\hat{b}=\sum_{i}x_iy_i/\sum_{i}{(x_i)^2}$
+- Min or max?
+
+---
+# Example: Ordinary Least Squares (OLS) through origin
+- $\min_{b_1}f(b)=\min_{b}{\sum_{i}\{y_i-b x_i\}^2}$
+- Closed form solution 
+- $f'(b)=-2\sum_{i}x_i\{y_i-b  x_i\}$
+- $\hat{b}=\sum_{i}x_iy_i/\sum_{i}{(x_i)^2}$
+- Min or max?
+    - SOC: $f''(b)=\sum_{i=1}^{n} x_{i}^{2} >0$
+---
+# No Analytic Solution?
+- Newton Method
+- Can't solve $f'(b)=0$ but know $f'(b)$
+- Given guess $b^{(0)}$, updated guess according to $$b^{(1)}=b^{(0)}-\frac{f'(b^{(0)})}{f''(b^{(0)})}$$
+- At $k$-th step 
+$$b^{(k)}=b^{(k-1)}-\frac{f'(b^{(k-1)})}{f''(b^{(k-1)})}$$
+- `optim(f,init,method="BFGS")`, Newton-type approach
+
+
+
+---
+# Newton: 60% of the time,
+- It works ever time...
+- Can fail, easily, 
+- What if $f''(b^{(k-1)})=0$?
+
+---
+# Newton: 60% of the time,
+![Bimodality](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/max_min.png)
+- Try multiple initial values. 
+
+---
+# What if $f'(b)$ does not exist?
+- Take $\min_{b}f(b)=\min_{b}{\sum_{i}|y_i-b\cdot x_i|}$?
+    - **Least Absolute Deviations**
+```{r fig.width=6, fig.height=3.5}
+Giving<- read.csv("AlumniGiving.csv")
+data<-Giving
+data$x<-Giving$Student.Faculty.Ratio
+data$y<-Giving$Alumni.Giving.Rate
+
+model1 <- function(b, data) {
+  b[1] + data$x * b[2]
+}
+
+measure_distance2 <- function(mod, data) {
+  diff <- data$y - model1(mod, data)
+  (mean(abs(diff )))
+}
+
+sim2_dist <- function(b1, b2) {
+  measure_distance2(c(b1, b2), data)
+}
+
+models2 <- tibble(
+ b0 = seq(0, 100, length.out=50 ),
+b1 = seq(-10, 10, length.out=50 )
+)
+
+models2 <- models2 %>% 
+  mutate(dist = purrr::map2_dbl(b0,b1, sim2_dist))
+# plot() model implied distances across x coordinate
+# Shape of above objective function across a grid for $b_0$
+v <- ggplot(models2, aes(x=models2$b1, y=models2$dist))
+v + geom_line()
+```
+
+
+
+---
+# No derivatives
+- Recall, defn of derivative: $$f'(c)=\lim_{h\rightarrow0}\frac{f(c+h)-f(c)}{h}$$
+- If $f(b)=|b|$, then at $b=0$, $f'(0)=\lim_{h\rightarrow0}\frac{|0+h|-|0|}{h}=\lim |h|/h$. However, 
+    - Limit differs if $h>0$ or $h<0$
+    - $\lim_{h\downarrow0} |h|/h=1$
+    - $\lim_{h\uparrow0} |h|/h=-1$
+- Nelder-Mead algorithm doesn't use derivatives
+- `optim(init,f,method="Nelder-Mead")`
+
+---
+# Multivariate Optimization
+- Just optimization with more than one variable
+- $b=\begin{pmatrix}b_0,b_1\end{pmatrix}$
+- Objective function: $f(b)=f(b_0,b_1)$
+
+
+
+---
+# Ordinary Least Squares (OLS)
+- Start with an example you've all seen...
+- $\min_{b_0,b_1}{\sum_{i}\{y_i-b_0-b_1x_i\}^2}$
+- This is multivariate optimization (in $b_0,b_1$)
+- Closed form solutions 
+    - $\hat{b}_0 = \bar{y}-\hat{b}_{1}\bar{x}$
+    - $\hat{b}_1 = \sum_{i}{(y_i-\bar{y}) (x_i-\bar{x})}/\sum_{i}{(x_i-\bar{x})^2}$
+- How'd we get these?
+
+---
+# OLS cont.
+- Let $f(b_0,b_1)={\sum_{i}\{y_i-b_0-b_1x_i\}^2}$
+- Derivatives worked for univariate case...
+    - $\frac{\partial f(b_0,b_1)}{\partial b_0}=-2\sum_i \{y_i - b_0 -b_1 x_i\}$
+    - $\frac{\partial f(b_0,b_1)}{\partial b_1}=-2\sum_i x_i\{y_i - b_0 -b_1 x_i\}$
+- Solving for zero gives us $\hat{b}_0$ and $\hat{b}_1$ 
+- Built in function to do this in R `lm()`
+
+
+---
+# Simple OLS in R
+- `lm()` function fits linear models
+```{r, echo=TRUE}
+  mod1 <- lm(y ~ x, data=data )
+mod1$coefficients
+
+```
+---
+# Simple OLS in R
+- Summary stats
+
+```{r, echo=TRUE}
+summary(mod1)
+```
+---
+# Simple OLS in R
+- Predictions: $\hat{y}_{i}=\hat{b}_0+\hat{b}_1 x_i$
+- Residuals: $y_i-\hat{y}_{i}=y_i-\hat{b}_0-\hat{b}_1 x_i$
+    - Remember, want uniform residual cloud!
+- `ggplot(mod1, aes(x=mod1$fitted.values,y=mod1$residuals))+geom_point()`
+
+```{r fig.width=6, fig.height=3.5}
+#y_hat <- mod1$fitted.values
+#res_hat <- mod1$residuals
+ggplot(mod1, aes(x=mod1$fitted.values,y=mod1$residuals))+geom_point()
+```
+---
+# Back to general optimization
+- Multivariate case similar to univariate case
+- To find optimum, say of $f(b_0,b_1)$, take partial derivatives and solve
+    - $\partial f(b_0,b_1)/\partial b_0=0$
+    - $\partial f(b_0,b_1)/\partial b_1=0$
+- Will $\hat{b}=(\hat{b}_0,\hat{b}_1)'$ be a min or max?
+- Second order conditions!
+
+---
+# Back to optimization
+- With two variables, three second order conditions to check
+    - SOC1: $\partial^2 f(b_0,b_1)/\partial b_0^2$
+    - SOC2: $\partial^2 f(b_0,b_1)/\partial b_1$
+    - SOC3: $\left(\partial^2 f(b_0,b_1)/\partial b_0^2\right)\left(\partial^2 f(b_0,b_1)/\partial b_1^2\right)-\partial^2 f(b_0,b_1)/\partial b_0\partial b_1$
+- Maximum: $SOC1<0$, $SOC2<0$, $SOC3>0$
+- Minimum: $SOC1>0$, $SOC2>0$, $SOC3<0$
+---
+## Back to OLS example
+- $f(b_0,b_1)={n^{-1}\sum_{i=1}^{n}\{y_i-b_0-b_1x_i\}^2}$
+    - SOC1: $\partial^2 f(b_0,b_1)/\partial b_0^2=n^{-1}\sum_{i=1}^{n} 1=n>0$
+    - SOC2: $\partial^2 f(b_0,b_1)/\partial b_1^2=2n^{-1}\sum_{i=1}^{n}x_i^2>0$
+    - SOC3: $2n^{-1}\sum_{i=1}^{n}x_{i}^2-(2n^{-1}\sum_{i=1}^{n}x_{i})^2<0$
+- EC: show me the last SOC...
+
+---
+# Non-Diff Example: LAD Regression
+- Standard OLS fits a straight line
+- What about points far away from the line?
+- Automobile dataset
+
+```{r fig.width=6, fig.height=3.5}
+#setwd("~/Dropbox/ETC1010/S2_2017_Notes")
+load("New_data")
+#load("~/Desktop/Data_Modelling_and_Computing/Auto_data")
+#load(Auto_data)
+
+
+p<-ggplot(New_Auto, aes(x=New_Auto$horsepower, y=New_Auto$mpg)) + 
+  geom_point()
+ p+geom_smooth(method='gam',formula=y~x)
+ols_fit <- lm(New_Auto$mpg~New_Auto$horsepower,data=New_Auto) 
+
+
+```
+
+- Influential points can adversely affect the regression line
+- $|x-y|$ less sensitive to such points than $(x-y)^2$
+
+---
+# Least Absolute Deviation (LAD) Regression
+- Build and estimate model $$mpg_i = \beta_0+\beta_1 Horsepower_i + \beta_2 Weight_i +\epsilon_i$$ 
+- using $\sum_{i=1}^{n}|mpg_i-b_0-b_1 horsepower_i-b_2 weight_i|$ 
+- compare with OLS.
+```{r}
+#load("~/Desktop/Data_Modelling_and_Computing/Auto_data")
+#OLS fit
+fit_OLS <- lm(mpg~horsepower+weight,data=New_Auto) 
+
+
+model_Auto <- function(b, data) {
+  b[1] + data$horsepower * b[2]+ data$weight * b[3]}
+
+measure_distance_LAD <- function(mod, data) {
+  diff <- data$mpg - model_Auto(mod, data)
+  ((mean(abs(diff ))))
+}
+
+fit_LAD <- optim(c(0, 0,0), measure_distance_LAD, data = New_Auto)
+# LAD fit
+fit_LAD$par
+# OLS fit
+fit_OLS$coefficients
+
+```
