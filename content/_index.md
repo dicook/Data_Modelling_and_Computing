@@ -48,6 +48,7 @@ title: Home
 - Week 4: [Wrangling data](labs/lab3.html) [(Rmd)](labs/lab3.Rmd) [SOLUTION](labs/lab3_solution.html) [(Rmd)](labs/lab3_solution.Rmd) [airports.csv](labs/airports.csv) [plane_N4YRAA.rda](labs/plane_N4YRAA.rda) [pisa_au.rda](labs/pisa_au.rda) [ZIP](labs/lab3.zip)
 - Week 5: [Plotting data](labs/lab4.html) [(Rmd)](labs/lab4.Rmd) [SOLUTION](labs/lab4_solution.html) [(Rmd)](labs/lab4_solution.Rmd)
 - Week 6: [Reading different formats](labs/lab5.html) [(Rmd)](labs/lab5.Rmd) 
+- Week 7: [Missing values](labs/lab6.html) [(Rmd)](labs/lab6.Rmd) 
 
 ## Computing information
 

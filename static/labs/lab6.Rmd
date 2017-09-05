@@ -1,0 +1,133 @@
+---
+title: "ETC 1010 Lab 6"
+output: html_document
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE, 
+  collapse = TRUE,
+  echo=FALSE,
+  comment = "",
+  fig.height = 8,
+  fig.width = 12,
+  fig.align = "center",
+  cache = FALSE
+)
+```
+
+```{r echo=FALSE}
+library(tidyverse)
+library(forcats)
+```
+
+# Instructions
+
+In this week's lab, the main goal is to pull data together from multiple excel sheets, explore and impute missing values.  On the due date, turn in your Rmd file and the html product. 
+
+## Exercise 1
+
+Open your project for this class. Make sure all your work is done relative to this project.
+
+Open the `lab6.Rmd` file provided with the instructions. You can edit this file and add your answers to questions in this document.
+
+
+## Exercise 2
+
+In the lecture notes, we pulled data about rentals in Hobart. This is the code that pulls the data together. 
+
+```{r echo=TRUE}
+library(readxl)
+library(sawfish) # devtools::install_github("AnthonyEbert/sawfish")
+url<-"http://data.gov.au/dataset/rental-bond-and-rental-data-tasmania-2016-to-2017"
+fls <- find_files(url, "xlsx")
+f1 <- tempfile()
+rentals <- NULL
+for (i in 1:length(fls)) {
+  download.file(fls[i], f1, mode="wb")
+  t1 <- read_xlsx(path=f1, sheet=1)
+  rentals <- bind_rows(rentals, t1)
+}
+```
+
+a. Check the data format using the `visdat` package. What types of variables are there in the data?
+
+```{r eval=FALSE}
+library(visdat)
+vis_dat(rentals)
+```
+
+b. From the visdat heatmap, summarise the missing data patterns.
+
+c. Using the `naniar` package, numerically summarise missings. What proportion of the overall data are missing? What proportion of variables have missings? What fraction of cases have 0, 1, 2, ... missings? It could be useful to also make the missingness map (as done in the lectures).
+
+```{r eval=FALSE}
+library(naniar)
+vis_miss(rentals)
+s_miss <- miss_summary(rentals)
+s_miss$miss_df_prop
+s_miss$miss_var_prop
+s_miss$miss_case_table
+```
+
+d. Determine an appropriate strategy for dealing with the missing values. And go ahead an implement your strategy.
+
+
+e. Make a plot of weekly rent by number of bedrooms, with missings plotted in the margins. Describe the distribution of rent, based on missing or not of bedrooms. 
+
+```{r eval=FALSE}
+ggplot(rentals, aes(x=`No of Bedrooms`, y=`Weekly Rent`)) + 
+  geom_miss_point() + scale_color_brewer(palette="Dark2")
+```
+
+f. Count the number of rental units in each suburb, and sort in decreasing order. What suburb has the most rental units available, at least according to this data? Make a histogram of the counts. Describe the distribution of counts.
+
+```{r eval=FALSE}
+rentals %>% count(Suburb, sort=TRUE) %>% 
+  ggplot(aes(x=n)) + geom_histogram(binwidth=50)
+```
+
+g. Working only with suburbs with more than 200 rentals, examining the relationship with missings on bedrooms. Are the missing values distributed uniformly across suburbs? (Make a plot to support your argument.)
+
+```{r eval=FALSE}
+suburb_count <- rentals %>% count(Suburb, sort=TRUE)
+keep <- suburb_count %>% filter(n>200) %>% select(Suburb)
+rentals_shadow <- rentals %>% 
+  filter(Suburb %in% keep$Suburb) %>%
+  bind_shadow() %>%
+  select(Suburb:`Dwelling/Premises Type`,`No of Bedrooms_NA`) %>%
+  mutate(Suburb = factor(Suburb, levels=keep$Suburb))
+ggplot(rentals_shadow, 
+       aes(x=`Suburb`, fill=`No of Bedrooms_NA`)) + 
+  geom_bar(position="fill") + scale_fill_brewer(palette="Dark2") + coord_flip()
+```
+
+Continue working with the subset of suburbs with more than 200 rentals. 
+
+h. Now we will attempt to impute the missing values. The easiest is probably nearest neighbours. Explain how you can use the nearest neighbours approach here for this data, and special ways that you will need to modify the procedure. For example, nearest neighbors can only use numerical variables to find the closest neighbours. And also, if you average the number of bedrooms, the result may not be an integer. Now implement it.
+
+```{r eval=FALSE}
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("impute")
+library(impute)
+rentals_impute <- rentals_shadow %>%
+  select(`Bond Amount`, `Weekly Rent`, `No of Bedrooms`) 
+rentals_impute <- impute.knn(as.matrix(rentals_impute), 5)
+rentals_impute <- as_tibble(rentals_impute$data) %>%
+  mutate(`No of Bedrooms` = round(`No of Bedrooms`, 0))
+rentals_impute <- bind_cols(rentals_impute, 
+  select(rentals_shadow, Suburb, Postcode, 
+         `Bond Lodgement date (DD/MM/YYYY)`, `Dwelling/Premises Type`))
+```
+
+i. Now answer some questions about rentals in Tasmania.
+
+   I. What are the different dwelling types?
+   
+  II For flats, compute the average rental by bedrooms. What would you expect to pay for a four bedroom flat, on average?
+  
+  III What suburb has the highest average weekly rent for a four bedroom flat?
+
+  IV If you found a lovely four bedroom flat, in a nice location in HOBART, and the rental price being asked was $520 per week, would you grab it as a bargain for you and three friends?
