@@ -33,7 +33,7 @@ title: Home
 - Week 6: [Reading different data formats](lectures/lecture6_readdata.html); [(pdf)](lectures/lecture6_readdata.pdf) [(Rmd)](lectures/lecture6_readdata.Rmd); [Handling missings, descriptive stats](lectures/lecture6_missings.html); [(pdf)](lectures/lecture6_missings.pdf) [(Rmd)](lectures/lecture6_missings.Rmd); Reading: [Descriptive statistics](https://en.wikipedia.org/wiki/Descriptive_statistics)
 - Week 7: [Basic modeling](lectures/lecture7_basicmodel.html) [(Rmd)](lectures/lecture7_basicmodel.Rmd); Reading: Chapter 23 of textbook
 - Week 8: [Optimisation](lectures/lecture8_optimization.html) [(Rmd)](lectures/lecture8_optimization.Rmd);
-- Week 9: Linear Optimisation
+- Week 9: [Linear Optimisation](lectures/lecture9_optimization.html) [(Rmd)](lectures/lecture9_optimization.Rmd);
 - Week 10: Advanced modeling
 - Week 11: TBD
 - Week 12: Presentations
