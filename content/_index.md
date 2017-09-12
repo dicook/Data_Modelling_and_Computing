@@ -31,7 +31,7 @@ title: Home
 - Week 4: [Basic visualisation](lectures/lecture4_visualisation.html)  [(pdf)](lectures/lecture4_visualisation.pdf) [(Rmd)](lectures/lecture4_visualisation.Rmd); Reading: Chapter 3
 - Week 5: [Advanced visualisation](lectures/lecture5_visualisation.html); [(pdf)](lectures/lecture5_visualisation.pdf) [(Rmd)](lectures/lecture5_visualisation.Rmd), [Reading different data formats](lectures/lecture5_readdata.html); [(pdf)](lectures/lecture5_readdata.pdf) [(Rmd)](lectures/lecture5_readdata.Rmd); Reading: [R for Excel users](http://blog.yhat.com/posts/R-for-excel-users.html), Textbook chapter 11
 - Week 6: [Reading different data formats](lectures/lecture6_readdata.html); [(pdf)](lectures/lecture6_readdata.pdf) [(Rmd)](lectures/lecture6_readdata.Rmd); [Handling missings, descriptive stats](lectures/lecture6_missings.html); [(pdf)](lectures/lecture6_missings.pdf) [(Rmd)](lectures/lecture6_missings.Rmd); Reading: [Descriptive statistics](https://en.wikipedia.org/wiki/Descriptive_statistics)
-- Week 7: [Basic modeling](lectures/lecture7_basicmodel.html) [(Rmd)](lectures/lecture7_basicmodel.Rmd); Reading: Chapter 23 of textbook; [Alumni data](lecturs/AlumniGiving.csv); [Auto data](lecturs/Auto_data.rda)
+- Week 7: [Basic modeling](lectures/lecture7_basicmodel.html) [(Rmd)](lectures/lecture7_basicmodel.Rmd); Reading: Chapter 23 of textbook; [Alumni data](lectures/AlumniGiving.csv); [Auto data](lectures/Auto_data)
 - Week 8: [Optimisation](lectures/lecture8_optimization.html) [(Rmd)](lectures/lecture8_optimization.Rmd);
 - Week 9: [Linear Optimisation](lectures/lecture9_optimization.html) [(Rmd)](lectures/lecture9_optimization.Rmd); Reading: Chapter 2 of [Optimization textbook](lectures/LinearProg_in_R.pdf)
 - Week 10: Advanced modeling
