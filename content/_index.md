@@ -50,6 +50,7 @@ title: Home
 - Week 6: [Reading different formats](labs/lab5.html) [(Rmd)](labs/lab5.Rmd) 
 - Week 7: [Missing values](labs/lab6.html) [(Rmd)](labs/lab6.Rmd) 
 - Week 8: [Optimization 1](labs/lab7.html) [(Rmd)](labs/lab7.Rmd) [engel.csv](labs/engel.csv)
+- Week 9: [Optimization 1](labs/lab8.html) [(Rmd)](labs/lab8.Rmd) [engel.csv](labs/engel.csv)
 
 ## Computing information
 
