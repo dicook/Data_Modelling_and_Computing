@@ -300,7 +300,7 @@ prod_sol$solution
 
 ---
 # Example: Portfolio Selection
-- Select a specific investment stragey
+- Select a specific investment strategy
 - Variety of investment alternatives 
 - Goal: maximize profit or minimize risk.  
 
@@ -418,7 +418,7 @@ prod_sol$solution
 
 ---
 # LP Relaxation
-- Gives a near-optimial solution
+- Gives a near-optimal solution
 - Rounding may not always be a good strategy. 
     - If decision variables take on small values
     - Can have major impact on the value of the objective function or feasibility, 
@@ -441,19 +441,19 @@ prod_sol$solution
     - $T$- townhouse, $A$- apartment.
 - Each townhouse can be purchased for 282,000
     - Five available: $T\leq 5$
-- Each apartment can be purchased for 400,000. Develope construct as many as desired.
+- Each apartment can be purchased for 400,000. Develop construct as many as desired.
     - $282T+400A\leq 2000$
     
 ---
 # All Integer Example: Eastborne Realty
 - Property manager can devote 140 hours per month to properties.
-- Each townhous requires 4 hours per month.
+- Each townhouse requires 4 hours per month.
 - Each apartment requires 40 hours per month. 
 
 ---
 # All Integer Example: Eastborne Realty
 - Property manager can devote 140 hours per month to properties.
-- Each townhous requires 4 hours per month.
+- Each townhouse requires 4 hours per month.
 - Each apartment requires 40 hours per month. 
     - $4T+40A\leq 140$
 
@@ -520,6 +520,172 @@ prod_sol$solution
 #Example: Eastborne Realty
 - ![LP Relax](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/lp_relax2.png)    
     
+---
+# Binary Variables
+
+---
+# Binary Optimization Example
+- Binary variables
+    - $x_{j}=1$ if activity *IS* undertaken
+    - $x_{j}=0$ if activity *NOT* undertaken
+- Many Examples:
+    - Capital budgeting
+    - fixed cost
+    - area covering problems
+
+---
+# Capital budgeting
+- The Ice-Cold Refrigerator Company is considering investing in several projects that have varying capital requirements over the next four years.
+- Faced with limited capital each year, management would like to select the most profitable projects that it can afford.    
+- Estimated net present value for each project, the capital requirement and the available capital over 4-year period are:    
+---
+# Capital budgeting
+- Estimated net present value for each project, the capital requirement and the available capital over 4-year period are: 
+- ![Data](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/binary1.jpg)    
+    
+---
+# Capital budgeting
+- Capital budgeting problem: the objective function is to maximize the net present value of the capital budgeting projects.
+- Decision variables
+    - $P=1$ plant expansion
+    - $W=1$ warehouse expansion
+    - $M=1$ new machinery
+    - $R=1$ new research
+- Constraints? Objective function?
+
+---
+# Captial budgeting: Objective Function
+- Maximize NPV
+- $\max 90P+40W+10M+37R$
+
+---
+# Captial budgeting: Constraints
+- ![Capital Requirements](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/binary1.jpg)    
+
+---
+# Captial budgeting: Constraints
+- $15P+10W+10M+15R\leq40$ (Year 1)
+- $20P+15W+00M+10R\leq50$ (Year 2)
+- $20P+20W+00M+10R\leq20$ (Year 3)
+- $15P+5W+4M+10R\leq35$ (Year 4)
+- $P,W,M,R$ are either $0,1$
+
+---
+# Capital budgeting: Putting it all together
+- $\max 90P+40W+10M+37R$ subject to
+- $15P+10W+10M+15R\leq40$ 
+- $20P+15W+00M+10R\leq50$ 
+- $20P+20W+00M+10R\leq40$ 
+- $15P+5W+4M+10R\leq35$ 
+- $P,W,M,R$ are either $0,1$
+
+
+
+---
+# Captial budgeting: Solution
+```{r, echo=TRUE}
+library(lpSolve)
+obj_fun <- c(90,40,10,37)
+constr <- matrix(c(15,10,10,15,20,15,00,10,20,20,00,10,15,5,4,10),ncol = 4, byrow=TRUE)
+const_dir <- c("<=","<=","<=","<=")
+RHS <- c(40,50,40,35)
+# Solution
+prod_sol <- lp("max",obj_fun,constr,const_dir,RHS,all.bin=TRUE)
+prod_sol$solution
+
+```    
+
+
+---
+# Binary mixed-integer Problems
+
+---
+# Mixed problems
+- Many problems require binary variables, integers, and continuous part
+- Same process, but must specify which variables are which...
+
+---
+# Fixed-Cost problem
+-In many applications, the cost of production has two components
+- A setup cost, which is fixed (hence, fixed cost)
+- A variable cost, directly related to production
+- Fixed cost problem: binary mixed-integer programming problem where binary variables represent whether an activity, such as a production run, is undertaken (variable = 1) or not (variable = 0).
+
+---
+# Fixed-Cost problem
+- ![Data](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/binary2.jpg)
+
+---
+# Fixed-Cost problem: Decision Variables
+- $F$ tons of fuel additive produced
+- $S$ tons of solvent produced
+- $C$ tons of carpet cleaning fluid produced
+- How to incorporate fixed cost?
+    - $SF=1$ if fuel additive is produced
+    - $SS=1$ if fuel additive is produced
+    - $SC=1$ if fuel additive is produced
+
+---
+# Fixed-Cost problem: Objective function?
+- Maximize profits from production
+    - Need to deal with the fixed costs
+- Revenue
+    - $40F+30S+50C$
+- Fixed Costs
+    - $200SF+50SS+400SC$
+- Var costs dealt with through material constraints    
+---
+# Fixed-Cost problem: Constraints?
+- $.4F+.5S+.6C\leq20$
+    - $F+0S+0C\leq50SF$
+- $0F+.2S+.1C\leq5$
+    - $0F+S+0C\leq25SS$
+- $.6F+.3S+.3C\leq21$
+    - $0F+0S+C\leq40SC$   
+- $F,S,C\geq0$
+- $SF,SS,SC$ are $0,1$
+---
+# Fixed-Cost problem: Putting it together
+- $\max 40F+30S+50C-(200SF+50SS+400SC)$ subject to
+- $.4F+.5S+.6C\leq20$
+- $F+0S+0C\leq50SF$
+- $0F+.2S+.1C\leq5$
+- $0F+S+0C\leq25SS$
+- $.6F+.3S+.3C\leq21$
+- $0F+0S+C\leq40SC$   
+- $F,S,C\geq0$
+- $SF,SS,SC$ are $0,1$
+
+---
+# Fixed-Cost: Solution
+- Need to rewrite some of the constraints
+- $.4F+.5S+.6C+0SF+0SS+0SC\leq20$
+- $F+0S+0C+0SS+0SC-50SF\leq0F$
+- $0F+.2S+.1C+0SF+0SS+0SC\leq5$
+- $0F+S+0C+0SF+0SC-25SS\leq0$
+- $.6F+.3S+.3C+0SF+0SS+0SC\leq21$
+- $0F+0S+C+0SF+0SS-40SC\leq0$   
+---
+# Fixed-Cost: Solution
+
+```{r, echo=TRUE}
+library(lpSolve)
+obj_fun <- c(40,30,50,-200,-50,-400)
+constr <- matrix(c(.4,.5,.6,0,0,0,
+                   1,0,0,-50,0,0,
+                   0,.2,.1,0,0,0,
+                   0,1,0,0,-25,0,
+                   .6,.3,.3,0,0,0,
+                   0,0,1,0,0,-40),ncol = 6, byrow=TRUE)
+const_dir <- c("<=","<=","<=","<=")
+RHS <- c(20,0,5,0,21,0)
+# Solution
+prod_sol <- lp("max",obj_fun,constr,const_dir,RHS,binary.vec=c(4,5,6))
+prod_sol$solution
+
+```    
+
+
     
     
     
