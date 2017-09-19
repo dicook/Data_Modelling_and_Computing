@@ -53,6 +53,6 @@ i. Using the function `rq()`, fit the quantile regression model for $\tau=.5$. D
 
 j. For quantiles $\tau = .25$ and $\tau=.75$ fit the quantile regression model using the function `rq()`. As food expenditures increases, does the slope coefficient in the model change? What about the intercept?
 
-k. How many observations were used to fit the qr model with $\tau=.05$? Describe the behavior of the confidence intervals for the qr model as $\tau$ descreases or increases.
+k. Describe the behavior of the confidence intervals for the qr model as $\tau$ descreases or increases.
 
 l. Explain your reasoning behind your answer to part k. 
