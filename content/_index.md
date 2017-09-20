@@ -52,6 +52,10 @@ title: Home
 - Week 8: [Optimization 1](labs/lab7.html) [(Rmd)](labs/lab7.Rmd) [engel.csv](labs/engel.csv)
 - Week 9: [Optimization 2](labs/lab8.html) [(Rmd)](labs/lab8.Rmd) [engel.csv](labs/engel.csv)
 
+## Exam information
+
+- [Formula sheet](lectures/ETC1010_FORMULA_SHEET.pdf)
+
 ## Computing information
 
 - R (Friday 2017-06-30, Single Candle) R-3.4.1, install on your computer from https://cran.r-project.org
