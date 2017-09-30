@@ -4,6 +4,7 @@
     <title>Model Building and Fitting</title>
     <meta charset="utf-8">
     <meta name="author" content="David T. Frazier" />
+    <meta name="date" content="2017-12-09" />
     <link href="lecture8_optimization_files/remark-css-0.0.1/example.css" rel="stylesheet" />
     <link rel="stylesheet" href="myremark.css" type="text/css" />
   </head>
@@ -13,9 +14,11 @@ class: center, middle, inverse, title-slide
 
 # Model Building and Fitting
 ### David T. Frazier
-### 30/08/2017
+### 12/09/2017
 
 ---
+
+
 
 
 
@@ -112,14 +115,14 @@ class: center, middle, inverse, title-slide
 
 ---
 # Newton: 60% of the time,
-![Bimodality](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/max_min.png)
+![Bimodality](max_min.png)
 - Try multiple initial values. 
 
 ---
 # What if `\(f'(b)\)` does not exist?
 - Take `\(\min_{b}f(b)=\min_{b}{\sum_{i}|y_i-b\cdot x_i|}\)`?
     - **Least Absolute Deviations**
-&lt;img src="lecture8_optimization_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture8_optimization_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
 
 
 
@@ -166,7 +169,7 @@ class: center, middle, inverse, title-slide
 - `lm()` function fits linear models
 
 ```r
-  mod1 &lt;- lm(y ~ x, data=data )
+mod1 &lt;- lm(y ~ x, data=data )
 mod1$coefficients
 ```
 
@@ -208,9 +211,21 @@ summary(mod1)
 - Predictions: `\(\hat{y}_{i}=\hat{b}_0+\hat{b}_1 x_i\)`
 - Residuals: `\(y_i-\hat{y}_{i}=y_i-\hat{b}_0-\hat{b}_1 x_i\)`
     - Remember, want uniform residual cloud!
-- `ggplot(mod1, aes(x=mod1$fitted.values,y=mod1$residuals))+geom_point()`
 
-&lt;img src="lecture8_optimization_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+.pull-left[
+
+```r
+library(broom)
+mod1_augment &lt;- augment(mod1)
+ggplot(mod1_augment, aes(x=.fitted, y=.resid)) +
+  geom_point()
+```
+]
+
+.pull-right[
+&lt;img src="lecture8_optimization_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+]
+
 ---
 # Back to general optimization
 - Multivariate case similar to univariate case
@@ -242,7 +257,7 @@ summary(mod1)
 - What about points far away from the line?
 - Automobile dataset
 
-&lt;img src="lecture8_optimization_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture8_optimization_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
 
 - Influential points can adversely affect the regression line
 - `\(|x-y|\)` less sensitive to such points than `\((x-y)^2\)`
@@ -261,6 +276,12 @@ summary(mod1)
 ##  (Intercept)   horsepower       weight 
 ## 46.192470033 -0.051143624 -0.005809749
 ```
+
+---
+class: inverse middle 
+# Share and share alike
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by/4.0/"&gt;Creative Commons Attribution 4.0 International License&lt;/a&gt;.
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
@@ -268,8 +289,7 @@ summary(mod1)
 "highlightLines": true,
 "countIncrementalSlides": false
 });
-if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
-(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});</script>
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({

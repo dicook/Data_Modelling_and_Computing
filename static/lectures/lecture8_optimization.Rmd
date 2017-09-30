@@ -1,7 +1,7 @@
 ---
 title: "Model Building and Fitting"
 author: "David T. Frazier"
-date: "30/08/2017"
+date: "12/09/2017"
 output:
   xaringan::moon_reader:
     css: ["default", "myremark.css"]
@@ -15,7 +15,14 @@ output:
 
 ```{r setup, include=FALSE}
 library(knitr)
-opts_chunk$set(fig.align = 'center',echo=FALSE)
+opts_chunk$set(fig.align = 'center',
+               echo=FALSE,
+               warning=FALSE, 
+               message=FALSE,
+               error=FALSE)
+```
+
+```{r}
 library(tidyverse)
 library(ggplot2)
 library(readr)
@@ -23,7 +30,6 @@ library(readxl)
 library(modelr)
 library(plotly)
 library(lubridate)
-
 ```
 
 # Outline
@@ -118,7 +124,7 @@ $$b^{(k)}=b^{(k-1)}-\frac{f'(b^{(k-1)})}{f''(b^{(k-1)})}$$
 
 ---
 # Newton: 60% of the time,
-![Bimodality](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/max_min.png)
+![Bimodality](max_min.png)
 - Try multiple initial values. 
 
 ---
@@ -153,7 +159,7 @@ models2 <- models2 %>%
   mutate(dist = purrr::map2_dbl(b0,b1, sim2_dist))
 # plot() model implied distances across x coordinate
 # Shape of above objective function across a grid for $b_0$
-v <- ggplot(models2, aes(x=models2$b1, y=models2$dist))
+v <- ggplot(models2, aes(x=b1, y=dist))
 v + geom_line()
 ```
 
@@ -201,9 +207,8 @@ v + geom_line()
 # Simple OLS in R
 - `lm()` function fits linear models
 ```{r, echo=TRUE}
-  mod1 <- lm(y ~ x, data=data )
+mod1 <- lm(y ~ x, data=data )
 mod1$coefficients
-
 ```
 ---
 # Simple OLS in R
@@ -217,13 +222,23 @@ summary(mod1)
 - Predictions: $\hat{y}_{i}=\hat{b}_0+\hat{b}_1 x_i$
 - Residuals: $y_i-\hat{y}_{i}=y_i-\hat{b}_0-\hat{b}_1 x_i$
     - Remember, want uniform residual cloud!
-- `ggplot(mod1, aes(x=mod1$fitted.values,y=mod1$residuals))+geom_point()`
 
-```{r fig.width=6, fig.height=3.5}
-#y_hat <- mod1$fitted.values
-#res_hat <- mod1$residuals
-ggplot(mod1, aes(x=mod1$fitted.values,y=mod1$residuals))+geom_point()
+.pull-left[
+```{r fig.width=6, fig.height=3.5, echo=TRUE, fig.show='hide'}
+library(broom)
+mod1_augment <- augment(mod1)
+ggplot(mod1_augment, aes(x=.fitted, y=.resid)) +
+  geom_point()
 ```
+]
+
+.pull-right[
+```{r fig.width=6, fig.height=3.5}
+ggplot(mod1_augment, aes(x=.fitted, y=.resid)) +
+  geom_point()
+```
+]
+
 ---
 # Back to general optimization
 - Multivariate case similar to univariate case
@@ -262,10 +277,10 @@ load("New_data")
 #load(Auto_data)
 
 
-p<-ggplot(New_Auto, aes(x=New_Auto$horsepower, y=New_Auto$mpg)) + 
+p <- ggplot(New_Auto, aes(x=horsepower, y=mpg)) + 
   geom_point()
- p+geom_smooth(method='gam',formula=y~x)
-ols_fit <- lm(New_Auto$mpg~New_Auto$horsepower,data=New_Auto) 
+p + geom_smooth(method='gam', formula=y~x)
+ols_fit <- lm(mpg~horsepower, data=New_Auto) 
 
 
 ```
@@ -299,3 +314,10 @@ fit_LAD$par
 fit_OLS$coefficients
 
 ```
+
+---
+class: inverse middle 
+# Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+

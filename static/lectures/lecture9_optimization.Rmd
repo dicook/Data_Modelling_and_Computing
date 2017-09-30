@@ -1,7 +1,7 @@
 ---
 title: "Linear Optimization: Model Building and Fitting"
 author: "David T. Frazier"
-date: "30/08/2017"
+date: "19/09/2017"
 output:
   xaringan::moon_reader:
     css: ["default", "myremark.css"]
@@ -20,10 +20,6 @@ opts_chunk$set(fig.align = 'center',echo=FALSE)
 library(lpSolve)
 ```
 
-
-#Linear Optimization
-
----
 # Outline
 - In general, optimization is a tool for decision making. 
     - Tells us the optimal input to our objective function $f(b)$
@@ -62,17 +58,15 @@ library(lpSolve)
 
 ---
 # Example
--A farmer has 240 acres of land to plant. She needs to decides how many acres of corn to plant and how many acres of oats. She can make $40 per acre profit for corn and $30 per acre for oats. However, the corn takes 2 hours of labour per acre to harvest and the oats take only 1 hour per acre. She only has 320 hours of labour she can invest. To maximize her profit, how many acres of each should she plant?
-    - What is the objective function?
-    - What are the constraints?
----
-# Example
--A farmer has 240 acres of land to plant. She needs to decides how many acres of corn to plant and how many acres of oats. She can make **$40 per acre profit for corn** and **$30 per acre for oats**. However, the *corn takes 2 hours of labour per acre to harvest* and the *oats take only 1 hour per acre*. She only has *320 hours of labour* she can invest. **To maximize her profit**, how many acres of each should she plant?
-    - What is the objective function? 
-    - What are the constraints?
+
+A farmer has 240 acres of land to plant. She needs to decides how many acres of corn to plant and how many acres of oats. She can make **$40 per acre profit for corn** and **$30 per acre for oats**. However, the *corn takes 2 hours of labour per acre to harvest* and the *oats take only 1 hour per acre*. She only has *320 hours of labour* she can invest. **To maximize her profit**, how many acres of each should she plant?
+
+- What is the objective function? 
+- What are the constraints?
     
 ---
-# From words to Math
+# From words to math
+
 - Decision variables: corn $x$, oats $y$ (in acers)
 - Obj. Fun.
     - Profit: $\Pi=40x+30y$
@@ -83,107 +77,116 @@ library(lpSolve)
 
 
 ---
-# Modelling Assumptions in Linear Programming
+# Modelling assumptions in linear programming
 
 - **Proportionality**: the contribution to the objective function and the left-hand-side of each constraint by each decision variable is proportional to the value of the decision variable.
-- **Additivity**: the contribution to the objective function and the left-hand-side of each constraint by any decision variable is completely independent of any other decision variable and is additive (involving?addition).
+- **Additivity**: the contribution to the objective function and the left-hand-side of each constraint by any decision variable is completely independent of any other decision variable and is additive (involving addition).
 - **Divisibility**: the quantities represented by each decision variable are innately divisible (i.e., fractional answers make sense).
 - **Certainty**: the coefficients in the objective function and constraints are known with certainty.
 
-
 ---
 # Example: Par, INC.
--The PAR, Inc company produces golf bags. 
--The managers are interested in expand production and also want to move to **medium** & **high** price bags.
--Bag production involves 4 steps:
+
+- The PAR, Inc company produces golf bags. 
+- The managers are interested in expand production and also want to move to **medium** & **high** price bags.
+- Bag production involves 4 steps:
     - Cutting and dyeing the material
     - Sewing
     - Finishing
     - Inspection & packaging   
 
-
 ---
 # Example: Par, INC.
--The director of manufacturing estimated that each of the two options will result in the following number of hours at each department: 
-    - Cutting and dyeing the material
-        -Standard Bag: 7/10, Delux Bag: 1
-    - Sewing
-        -Standard Bag: 1/2, Delux Bag: 5/6
-    - Finishing
-        -Standard Bag: 1, Delux Bag: 2/3
-    - Inspection & packaging   
-        -Standard Bag: 1/10, Delux Bag: 1/4
 
+- The director of manufacturing estimated that each of the two options will result in the following number of hours at each department: 
+    - Cutting and dyeing the material: Standard Bag: 7/10, Delux Bag: 1
+    - Sewing: Standard Bag: 1/2, Delux Bag: 5/6
+    - Finishing: Standard Bag: 1, Delux Bag: 2/3
+    - Inspection & packaging: Standard Bag: 1/10, Deluxe Bag: 1/4
+        
 ---
 # Example: Par, INC.
--After studying each department, the director estimates the following production capacities:
+
+- After studying each department, the director estimates the following production capacities:
     - 630 hours of cutting and dyeing,
     - 600 hours of sewing,
     - 708 hours of finishing, and
     - 135 hours for inspection and packaging 
--The accounting manager estimates that the company's profit from a standard bag and a deluxe bag will be **$10** and **$9**, respectively.  
+- The accounting manager estimates that the company's profit from a standard bag and a deluxe bag will be **$10** and **$9**, respectively.  
 
 ---
 # Example: Par, INC.
+
 - Decision Variables? 
-    
 - Objective function?
-    
 - Constraints?
+
 ---
 # Example: Par, INC.
+
 - Decision Variables? 
     - Number of bags of each type:
         - $S$ = standard bags
         - $D$ = delux bags
+        
 ---
 # Example: Par, INC.
+
 - Objective function?
     - Maximize profit: $max_{S,D}10S+9D$
+    
 ---
 # Example: Par, INC.
+
 - Constraints?
-    - Cutting and dyeing the material
-        - Standard Bag: 7/10, Delux Bag: 1; 630 hours
-        - $(7/10)S+D\leq 630$
-    - Sewing
-        - Standard Bag: 1/2, Delux Bag: 5/6; 600 hours
-        - $(1/2)S+(5/6)D\leq 600$
-    - Finishing
-        - Standard Bag: 1, Delux Bag: 2/3; 708 hours
-        - $S+(2/3)D\leq 708$
-    - Inspection & packaging   
-        - Standard Bag: 1/10, Delux Bag: 1/4; 135 hours
-        - $(1/10)S+(1/4)D\leq 135$
-    - Number of bags can't be negative!!
-        - $S,D\geq0$. 
+    - Cutting and dyeing the material: Standard Bag: 7/10, Delux Bag: 1; 630 hours;  $(7/10)S+D\leq 630$
+    - Sewing: Standard Bag: 1/2, Delux Bag: 5/6; 600 hours; $(1/2)S+(5/6)D\leq 600$
+    - Finishing: Standard Bag: 1, Delux Bag: 2/3; 708 hours; $S+(2/3)D\leq 708$
+    - Inspection & packaging: Standard Bag: 1/10, Delux Bag: 1/4; 135 hours; $(1/10)S+(1/4)D\leq 135$
+    - Number of bags can't be negative!! $S,D\geq0$. 
+        
 ---
 # Example: Par, INC.
-- ![](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/par_inc_1.jpg)
+- ![](par_inc_1.jpg)
+
 ---
 # Example: Par, INC.
-- ![](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/par_inc_2.jpg)
+
+- ![](par_inc_2.jpg)
+
 ---
 # Example: Par, INC.
-- ![](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/par_inc_3.jpg)
+
+- ![](par_inc_3.jpg)
+
 ---
 # Example: Par, INC.
-- ![](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/par_inc_4.jpg)
+
+- ![](par_inc_4.jpg)
+
 ---
 # Example: Par, INC.
-- ![](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/par_inc_5.jpg)
+
+- ![](par_inc_5.jpg)
+
 ---
 # Example: Par, INC.
-- ![](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/par_inc_6.jpg)
+
+- ![](par_inc_6.jpg)
+
 ---
 # Example: Par, INC.
-- ![](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/par_inc_7.jpg)
+
+- ![](par_inc_7.jpg)
+
 ---
 # Example: Par, INC.
-- ![](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/par_inc_8.jpg)
+
+- ![](par_inc_8.jpg)
 
 ---
 # How to solve this in `R`?
+
 - Just like `optim`, we need some numerical method to solve this optimization problem
 - We'll make use of the `lpSolve` package in `R`. 
     - "Modeling and Solving Linear Programming with `R`."
@@ -191,8 +194,10 @@ library(lpSolve)
     - Takes function as input
     - initial values for parameters
 - Main difference: Must now add in constraint information.
+
 ---
 # Constraints in `lpSolve`
+
 -  Constraint information must be entered in a particular way
 - Three pieces of information
     - Constraint coefficients
@@ -204,6 +209,7 @@ library(lpSolve)
 
 ---
 # Example: Par, INC
+
 - Easiest to see from an example.
 ```{r, echo=TRUE}
 library(lpSolve)
@@ -217,7 +223,9 @@ prod_sol$solution
  
 ---
 # Example: Solve Farm Prob.
+
 - Problem: $$\max_{x,y}40x+30y,\;s.t.\;x+y\leq320;\;x+y\leq240.$$
+
 ```{r, echo=TRUE}
 library(lpSolve)
 obj_fun <- c(40,30)
@@ -227,53 +235,37 @@ RHS <- c(320,240)
 prod_sol <- lp("max",obj_fun,constr,const_dir,RHS)
 prod_sol$solution
 ```
+
 ---
 # Example
-- A small business sells two products, named Product 1 and Product 2.
-Each tonne of Product 1 consumes 30 working hours, and each tonne of
-Product 2 consumes 20 working hours. The business has a maximum of
-2,700 working hours for the period considered. As for machine hours,
-each tonne of Products 1 and 2 consumes 5 and 10 machine hours,
-respectively. There are 850 machine hours available.
 
-- Each tonne of Product 1 yields 20 Me of profit, while Product 2 yields
-60 Me for each tonne sold. For technical reasons, the firm must produce
-a minimum of 95 tonnes in total between both products. We need
-to know how many tonnes of Product 1 and 2 must be produced to
+- A small business sells two products, named Product 1 and Product 2. Each tonne of Product 1 consumes 30 working hours, and each tonne of Product 2 consumes 20 working hours. The business has a maximum of
+2,700 working hours for the period considered. As for machine hours, each tonne of Products 1 and 2 consumes 5 and 10 machine hours, respectively. There are 850 machine hours available.
+- Each tonne of Product 1 yields 20 Me of profit, while Product 2 yields 60 Me for each tonne sold. For technical reasons, the firm must produce a minimum of 95 tonnes in total between both products. We need to know how many tonnes of Product 1 and 2 must be produced to
 maximize total profit.
----
-# Example: Objective function?
-- A small business sells two products, named Product 1 and Product 2.
-Each tonne of Product 1 consumes 30 working hours, and each tonne of
-Product 2 consumes 20 working hours. The business has a maximum of
-2,700 working hours for the period considered. As for machine hours,
-each tonne of Products 1 and 2 consumes 5 and 10 machine hours,
-respectively. There are 850 machine hours available.
 
-- Each tonne of Product 1 yields **20 Millon of profit**, while Product 2 yields
-**60 Millon** for each tonne sold. For technical reasons, the firm must produce
-a minimum of 95 tonnes in total between both products. We need
-to know how many tonnes of Product 1 and 2 must be produced to
-**maximize total profit**.
 ---
 # Example: Objective function?
+
+- A small business sells two products, named Product 1 and Product 2. Each tonne of Product 1 consumes 30 working hours, and each tonne of Product 2 consumes 20 working hours. The business has a maximum of 2,700 working hours for the period considered. As for machine hours, each tonne of Products 1 and 2 consumes 5 and 10 machine hours, respectively. There are 850 machine hours available.
+- Each tonne of Product 1 yields **20 Millon of profit**, while Product 2 yields **60 Millon** for each tonne sold. For technical reasons, the firm must produce a minimum of 95 tonnes in total between both products. We need to know how many tonnes of Product 1 and 2 must be produced to **maximize total profit**.
+
+---
+# Example: Objective function?
+
 - Mathematically: $$\max_{p_1,p_2}20p_1+60p_2$$
 
 ---
 # Example: Constraints?
-- A small business sells two products, named Product 1 and Product 2.
-Each tonne of **Product 1 consumes 30 working hours**, and each tonne of
-**Product 2 consumes 20 working hours**. The business has a maximum of
-**2,700 working hours** for the period considered. As for machine hours,
-each tonne of **Products 1 and 2 consumes 5 and 10 machine hours**,
-respectively. There are **850** machine hours available.
 
-- Each tonne of Product 1 yields 20 Millon of profit, while Product 2 yields 60 Millon for each tonne sold. For technical reasons, the firm must produce
-**a minimum of 95 tonnes in total** between both products. We need
-to know how many tonnes of Product 1 and 2 must be produced to
-maximize total profit.
+- A small business sells two products, named Product 1 and Product 2. Each tonne of **Product 1 consumes 30 working hours**, and each tonne of **Product 2 consumes 20 working hours**. The business has a maximum of **2,700 working hours** for the period considered. As for machine hours,
+each tonne of **Products 1 and 2 consumes 5 and 10 machine hours**, respectively. There are **850** machine hours available.
+- Each tonne of Product 1 yields 20 Millon of profit, while Product 2 yields 60 Millon for each tonne sold. For technical reasons, the firm must produce **a minimum of 95 tonnes in total** between both products. We need
+to know how many tonnes of Product 1 and 2 must be produced to maximize total profit.
+
 ---
 # Example: Constraints?
+
 - Mathematically: 
     - $30p_1+20p_2\leq 2700$
     - $5p_1+10p_2\leq850$
@@ -294,34 +286,36 @@ prod_sol$solution
 
 ---
 # Additional Examples
+
 - Portfolio selection
 - Transportation planning
 - Advertising campaign planning
 
 ---
 # Example: Portfolio Selection
+
 - Select a specific investment strategy
 - Variety of investment alternatives 
 - Goal: maximize profit or minimize risk.  
 
 ---
 # Example: Portfolio Selection
+
 - Investment opportunity for a fund of $100,000.
-
 - The company has been recommended to invest in the oil industry, steel industry or government bonds.
-
 - Five investment opportunities: Atlantic Oil (7.3% return), Pacific Oil (10.3 %), Midwest Steel (6.4%), Huber Steel (7.5%) and Government bonds (4.5%).    
 
 ---
 # Example: Portfolio Selection
+
 - Investment guidelines:
     - Neither oil or steel industry should receive more than $50,000.
     - Amount invested in government bonds should be at least 25 percent of the steel industry investments.
     - The investment in Pacific Oil, the high-return but high-risk investment, cannot be more than 60 percent of the total oil industry investment.
 
-
 ---
 # Example: Portfolio Selection
+
 - Define the following decision variables:
     - X1 - Atlantic Oil 
     - X2 - Pacific Oil 
@@ -331,20 +325,23 @@ prod_sol$solution
     
 ---
 # Example: Portfolio Selection
-- Objective function?
 
+- Objective function?
 
 ---
 # Example: Portfolio Selection
+
 - Objective function?
     - $\max_{x_{1},...,x_{5}}.073x_{1}+.103x_{2}+.064x_{3}+.075x_{4}+.045x_{5}$
     
 ---
 # Example: Portfolio Selection
+
 - Constraints?
 
 ---
 # Example: Portfolio Selection
+
 - Constraints?
 - Max fund 10000
     - $x_{1}+x_{2}+...+x_{5}\leq 100,00$
@@ -359,6 +356,7 @@ prod_sol$solution
 
 ---
 # Putting it together
+
 - $\max_{x_{1},...,x_{5}}.073x_{1}+.103x_{2}+.064x_{3}+.075x_{4}+.045x_{5}$
     - $x_{1}+x_{2}+...+x_{5}\leq 100,00$
     - $x_{1}+x_{2}\leq 50,000$
@@ -367,11 +365,10 @@ prod_sol$solution
     - $x_{2}\leq .6*(x_{1}+x_{2})$
     - $x_{1},...,x_{5}\geq0$ 
 
----
-# Integer Programs and Optimization
 
 ---
 # Integer Optimization
+
 - So far, assumed $x_{1},...,x_{n}$ infinitely divisible
     - i.e., continuous. 
 - Not true in many cases
@@ -380,14 +377,16 @@ prod_sol$solution
 - **Integer linear programs**: Problems that are modeled as linear programs with the additional requirement that at least one variable must be integer.
 
 ---
-# Integer Optimization
--Types of Integer Linear Optimization Models:
+# Integer Programming and Optimization
+
+- Types of Integer Linear Optimization Models:
     - All-integer linear program
     - Mixed-integer linear program
     - Binary integer linear program
 
 ---
 # Linear optimization Structure
+
 - $\max_{x_1,...,x_n}b_1x_1+b_2x_2+...+b_nx_n$ subject to 
 - $a_{11}x_{1}+...+a_{1n}x_{n}\leq RHS_{1}$
 - $\cdots$
@@ -398,6 +397,7 @@ prod_sol$solution
 
 ---
 # Linear optimization Structure
+
 - Using `R`, can solve nearly exactly the same way
 - All-integer
     - `lp("min", f, const.mat, const.dir, const.rhs, all.int=TRUE)`
@@ -406,7 +406,6 @@ prod_sol$solution
 - Mixed
     - `lp("min", f, const.mat, const.dir, const.rhs, int.vec)`
     - Numeric vector giving the indices of variables that are required to be integer.     - The length of this vector will therefore be the number of integer variables
-
 
 ---
 # LP Relaxation
@@ -418,6 +417,7 @@ prod_sol$solution
 
 ---
 # LP Relaxation
+
 - Gives a near-optimal solution
 - Rounding may not always be a good strategy. 
     - If decision variables take on small values
@@ -426,6 +426,7 @@ prod_sol$solution
 
 ---
 # All Integer Example: Eastborne Realty
+
 - Eastborne Realty has $2 million available for the purchase of new rental property.
 - After an initial screening, Eastborne reduced the investment alternatives to townhouses and apartment buildings. 
 - Each townhouse can be purchased for $282,000.
@@ -433,9 +434,9 @@ prod_sol$solution
 - Each apartment building can be purchased for $400,000.
     - The developer will construct as many buildings as Eastborne wants to purchase.
 
-
 ---
 # All Integer Example: Eastborne Realty
+
 - Eastborne Realty has $2 million available for the purchase of new rental property.
 - After an initial screening, Eastborne reduced the investment alternatives to townhouses and apartment buildings. 
     - $T$- townhouse, $A$- apartment.
@@ -446,12 +447,14 @@ prod_sol$solution
     
 ---
 # All Integer Example: Eastborne Realty
+
 - Property manager can devote 140 hours per month to properties.
 - Each townhouse requires 4 hours per month.
 - Each apartment requires 40 hours per month. 
 
 ---
 # All Integer Example: Eastborne Realty
+
 - Property manager can devote 140 hours per month to properties.
 - Each townhouse requires 4 hours per month.
 - Each apartment requires 40 hours per month. 
@@ -459,6 +462,7 @@ prod_sol$solution
 
 ---
 # All Integer Example: Eastborne Realty
+
 - Annual cash flow (After deducting mortgage payments and operating expenses) estimated to be:
     - $10,000 per townhouse.
     - $15,000 per apartment building.
@@ -467,6 +471,7 @@ prod_sol$solution
 
 ---
 # All Integer Example: Eastborne Realty
+
 - Defining the decision variables:
     - $T$ = number of townhouses
     - $A$ = number of apartment buildings
@@ -482,7 +487,8 @@ prod_sol$solution
     
 ---
 # Example: Eastborne Realty
-- ![LP Relax](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/lp_relax.png)
+
+- ![LP Relax](lp_relax.png)
   
 ---
 # Example: Eastborne Realty
@@ -503,28 +509,28 @@ prod_sol$solution
 
 ---
 # A note on LP
+
 - Rounding is a trial-and-error approach. 
 - Each rounded solution must be evaluated for feasibility as well as for its impact on the value of the objective function.
 - Even when a rounded solution is feasible, there is no guarantee that the optimal integer solution has been found. 
 
 ---
 # Example: Eastborne Realty
+
 - What 
 - What is the true feasible region for the Eastborne Realty problem? 
     - As shown in the following plot, the feasible region is the set of integer points that lie within the feasible region of the LP Relaxation.
     - There are 20 such feasible solutions (designated by blue dots in the figure). 
 - The region bounded by the dashed lines is the feasible integer solutions.
 
-
 ---
-#Example: Eastborne Realty
-- ![LP Relax](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/lp_relax2.png)    
+# Example: Eastborne Realty
+
+- ![LP Relax](lp_relax2.png)    
     
 ---
-# Binary Variables
-
----
 # Binary Optimization Example
+
 - Binary variables
     - $x_{j}=1$ if activity *IS* undertaken
     - $x_{j}=0$ if activity *NOT* undertaken
@@ -535,16 +541,21 @@ prod_sol$solution
 
 ---
 # Capital budgeting
+
 - The Ice-Cold Refrigerator Company is considering investing in several projects that have varying capital requirements over the next four years.
 - Faced with limited capital each year, management would like to select the most profitable projects that it can afford.    
-- Estimated net present value for each project, the capital requirement and the available capital over 4-year period are:    
+- Estimated net present value for each project, the capital requirement and the available capital over 4-year period are:   
+
 ---
 # Capital budgeting
-- Estimated net present value for each project, the capital requirement and the available capital over 4-year period are: 
-- ![Data](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/binary1.jpg)    
+
+Estimated net present value for each project, the capital requirement and the available capital over 4-year period are: 
+
+![Data](binary1.jpg)    
     
 ---
 # Capital budgeting
+
 - Capital budgeting problem: the objective function is to maximize the net present value of the capital budgeting projects.
 - Decision variables
     - $P=1$ plant expansion
@@ -554,16 +565,19 @@ prod_sol$solution
 - Constraints? Objective function?
 
 ---
-# Captial budgeting: Objective Function
+# Capital budgeting: Objective Function
+
 - Maximize NPV
 - $\max 90P+40W+10M+37R$
 
 ---
-# Captial budgeting: Constraints
-- ![Capital Requirements](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/binary1.jpg)    
+# Capital budgeting: Constraints
+
+![Capital Requirements](binary1.jpg)    
 
 ---
 # Captial budgeting: Constraints
+
 - $15P+10W+10M+15R\leq40$ (Year 1)
 - $20P+15W+00M+10R\leq50$ (Year 2)
 - $20P+20W+00M+10R\leq20$ (Year 3)
@@ -572,6 +586,7 @@ prod_sol$solution
 
 ---
 # Capital budgeting: Putting it all together
+
 - $\max 90P+40W+10M+37R$ subject to
 - $15P+10W+10M+15R\leq40$ 
 - $20P+15W+00M+10R\leq50$ 
@@ -579,10 +594,9 @@ prod_sol$solution
 - $15P+5W+4M+10R\leq35$ 
 - $P,W,M,R$ are either $0,1$
 
-
-
 ---
-# Captial budgeting: Solution
+# Capital budgeting: Solution
+
 ```{r, echo=TRUE}
 library(lpSolve)
 obj_fun <- c(90,40,10,37)
@@ -606,17 +620,20 @@ prod_sol$solution
 
 ---
 # Fixed-Cost problem
--In many applications, the cost of production has two components
+
+- In many applications, the cost of production has two components
 - A setup cost, which is fixed (hence, fixed cost)
 - A variable cost, directly related to production
 - Fixed cost problem: binary mixed-integer programming problem where binary variables represent whether an activity, such as a production run, is undertaken (variable = 1) or not (variable = 0).
 
 ---
 # Fixed-Cost problem
-- ![Data](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/binary2.jpg)
+
+- ![Data](binary2.jpg)
 
 ---
 # Fixed-Cost problem: Decision Variables
+
 - $F$ tons of fuel additive produced
 - $S$ tons of solvent produced
 - $C$ tons of carpet cleaning fluid produced
@@ -627,15 +644,18 @@ prod_sol$solution
 
 ---
 # Fixed-Cost problem: Objective function?
+
 - Maximize profits from production
     - Need to deal with the fixed costs
 - Revenue
     - $40F+30S+50C$
 - Fixed Costs
     - $200SF+50SS+400SC$
-- Var costs dealt with through material constraints    
+- Var costs dealt with through material constraints 
+
 ---
 # Fixed-Cost problem: Constraints?
+
 - $.4F+.5S+.6C\leq20$
     - $F+0S+0C\leq50SF$
 - $0F+.2S+.1C\leq5$
@@ -644,8 +664,10 @@ prod_sol$solution
     - $0F+0S+C\leq40SC$   
 - $F,S,C\geq0$
 - $SF,SS,SC$ are $0,1$
+
 ---
 # Fixed-Cost problem: Putting it together
+
 - $\max 40F+30S+50C-(200SF+50SS+400SC)$ subject to
 - $.4F+.5S+.6C\leq20$
 - $F+0S+0C\leq50SF$
@@ -658,13 +680,15 @@ prod_sol$solution
 
 ---
 # Fixed-Cost: Solution
+
 - Need to rewrite some of the constraints
 - $.4F+.5S+.6C+0SF+0SS+0SC\leq20$
 - $F+0S+0C+0SS+0SC-50SF\leq0F$
 - $0F+.2S+.1C+0SF+0SS+0SC\leq5$
 - $0F+S+0C+0SF+0SC-25SS\leq0$
 - $.6F+.3S+.3C+0SF+0SS+0SC\leq21$
-- $0F+0S+C+0SF+0SS-40SC\leq0$   
+- $0F+0S+C+0SF+0SS-40SC\leq0$ 
+
 ---
 # Fixed-Cost: Solution
 
@@ -685,14 +709,13 @@ prod_sol$solution
 
 ```    
 
+---
+class: inverse middle 
+# Share and share alike
 
-    
-    
-    
-    
-    
-    
-    
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+
+
     
     
     

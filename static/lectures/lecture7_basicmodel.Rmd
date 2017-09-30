@@ -1,7 +1,7 @@
 ---
 title: "Model Building and Fitting"
 author: "David T. Frazier"
-date: "30/08/2017"
+date: "05/09/2017"
 output:
   xaringan::moon_reader:
     css: ["default", "myremark.css"]
@@ -47,8 +47,8 @@ library(lubridate)
 - Models allow us to understand
     - how variables are related, strength of relationship, direction of relationship
 - More than correlation and direction 
-    - Correlation can be [spurrious](www.tylervigen.com/spurious-correlations)
-    - ![Decieving](/Users/frazdt/Dropbox/ETC1010/S2_2017_Notes/Picture1.png)
+    - Correlation can be [spurious](www.tylervigen.com/spurious-correlations)
+    - ![Deceiving](Picture1.png)
 
 ---
 # But Why Models? 
@@ -73,19 +73,23 @@ library(lubridate)
 ```{r fig.width=6, fig.height=5}
 # Load Alumni Giving data file
 Giving<- read.csv("AlumniGiving.csv")
-p<-ggplot(Giving, aes(x=Giving$Student.Faculty.Ratio,y=Giving$Alumni.Giving.Rate)) + geom_point()
+p <- ggplot(Giving,
+            aes(x=Student.Faculty.Ratio,
+                y=Alumni.Giving.Rate)) + 
+  geom_point()
 
- p+geom_smooth(method='lm',formula=y~x)
+ p + geom_smooth(method='lm', formula=y~x)
 ```
+
 ---
 # Example
 ```{r fig.width=6, fig.height=5}
 
 # Load New_Auto data file
 load("Auto_data")
-p<-ggplot(New_Auto, aes(x=New_Auto$horsepower, y=New_Auto$mpg)) + geom_point()
- p+geom_smooth(method='lm',formula=y~x)
-
+p <- ggplot(New_Auto, aes(x=horsepower, y=mpg)) +
+  geom_point()
+p + geom_smooth(method='lm',formula=y~x)
 ```
 
 ---
@@ -132,7 +136,7 @@ models <- models %>%
   mutate(dist = purrr::map2_dbl(b0,b1, sim1_dist))
 # plot() model implied distances across x coordinate
 # Shape of above objective function across a grid for $b_0$
-v <- ggplot(models, aes(x=models$b1, y=models$dist))
+v <- ggplot(models, aes(x=b1, y=dist))
 v + geom_line()
 ```
 
@@ -160,7 +164,7 @@ models2 <- models2 %>%
   mutate(dist = purrr::map2_dbl(b0,b1, sim2_dist))
 # plot() model implied distances across x coordinate
 # Shape of above objective function across a grid for $b_0$
-v <- ggplot(models2, aes(x=models2$b1, y=models2$dist))
+v <- ggplot(models2, aes(x=b1, y=dist))
 v + geom_line()
 ```
 ---
@@ -186,7 +190,7 @@ models2 <- models2 %>%
   mutate(dist = purrr::map2_dbl(b0,b1, sim2_dist))
 # plot() model implied distances across x coordinate
 # Shape of above objective function across a grid for $b_0$
-v <- ggplot(models2, aes(x=models2$b1, y=models2$dist))
+v <- ggplot(models2, aes(x=b1, y=dist))
 v + geom_line()
 ```
 ---
@@ -212,7 +216,7 @@ models2 <- models2 %>%
   mutate(dist = purrr::map2_dbl(b0,b1, sim2_dist))
 # plot() model implied distances across x coordinate
 # Shape of above objective function across a grid for $b_0$
-v <- ggplot(models2, aes(x=models2$b1, y=models2$dist))
+v <- ggplot(models2, aes(x=b1, y=dist))
 v + geom_line()
 ```
 
@@ -353,3 +357,10 @@ measure_distance2 <- function(mod, data) {
 best2 <- optim(c(0, 0), measure_distance2, data = data)
 best2$par
 ```
+
+---
+class: inverse middle 
+# Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+
