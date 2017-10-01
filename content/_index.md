@@ -34,7 +34,7 @@ title: Home
 - Week 7: [Basic modeling](lectures/lecture7_basicmodel.html) [(Rmd)](lectures/lecture7_basicmodel.Rmd); [(pdf)](lectures/lecture7_basicmodel.pdf); Reading: Chapter 23 of textbook; [Alumni data](lectures/AlumniGiving.csv); [Auto data](lectures/Auto_data)
 - Week 8: [Optimisation](lectures/lecture8_optimization.html) [(Rmd)](lectures/lecture8_optimization.Rmd); [(pdf)](lectures/lecture8_optimization.pdf);
 - Week 9: [Linear Optimisation](lectures/lecture9_optimization.html) [(Rmd)](lectures/lecture9_optimization.Rmd); [(pdf)](lectures/lecture9_optimization.pdf); Reading: Chapter 2 of [Optimization textbook](lectures/LinearProg_in_R.pdf)
-- Week 10: Advanced modeling 
+- Week 10: [Advanced modeling](lectures/lecture10_advanced_models.html) [(Rmd)](lectures/lecture10_advanced_models.Rmd); [(pdf)](lectures/lecture10_advanced_models.pdf); Reading: Chapter 24 of textbook (R for data science)
 - Week 11: TBD
 - Week 12: Presentations
 

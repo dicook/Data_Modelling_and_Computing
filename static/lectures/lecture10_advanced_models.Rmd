@@ -1,0 +1,688 @@
+---
+title: "ETC1010: Advanced Modeling"
+subtitle: "Distributions, Inference, Diagnostics, Decision trees"
+author: "Di Cook (dicook@monash.edu, @visnut)"
+date: "3/10/2017"
+output:
+  xaringan::moon_reader:
+    css: ["default", "myremark.css"]
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r, echo = FALSE, warning = FALSE, message=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  collapse = TRUE,
+  echo=FALSE,
+  comment = "",
+  fig.height = 4,
+  fig.width = 6,
+  fig.align = "center",
+  cache = FALSE
+)
+library(tidyverse)
+library(gridExtra)
+library(plotly)
+library(ggthemes)
+library(broom)
+library(rpart)
+```
+
+# Outline
+
+- Linear model diagnostics
+- Regression trees, model by optimisation
+- Fit all possible models
+- Using linear models for exploration
+
+---
+# Linear model diagnostics
+
+- Response variable, $y$
+- Predictors, or explanatory variables, $x_1, \dots, x_p$
+- Assumptions, residual diagnostics
+- $R^2$, deviance, AIC, BIC, likelihood
+- Statistically significant, and variable selection
+
+---
+# Multiple regression model
+
+$$y_i=\beta_0+\beta_1x_{i1}+\dots +\beta_px_{ip}+\varepsilon_i, ~~~ i=1, \dots, n$$
+where $\varepsilon$ is a sample from a normal distribution, $N(0, \sigma^2)$.
+
+By optimisation, of $\sum_i (y_i-(b_0+b_1x_{i1}+\dots +b_px_{ip}))^2$, we found the line of best fit, and parameter estimates $(b_0, b_1, \dots, b_p, \hat{\sigma})$ for the "true" (population) model. 
+
+For a simple linear model,
+
+$$b_1 = r \frac{s_y}{s_y}$$ 
+
+is the *slope*
+
+$$b_0 = \bar{y} - b_1 \bar{x}$$
+is the *intercept*, and
+
+$$\hat{\sigma}^2 = \frac{1}{n}\sum_{i=1}^{n} (y_i - (b_0+b_1x_{i1}+\dots +b_px_{ip}))^2$$ 
+
+is also called the *mean squared error*.
+
+---
+# Population vs sample
+
+Often the data we have is a sample from all possible values available in a larger population. Using the sample we would like to be able to say something about the patterns in the entire population.
+
+|Population| <-> |Sample|
+|:---:|:---:|:---:|
+|parameters|  |statistics|
+| $\beta_k$ |  | $b_k$ |
+| $\sigma$ | | $s$ |
+| $\mu$ | | $\bar{x}$ |
+
+The population parameters are unknown. The statistics are calculated from the sample, so are known. The model should be written this way:
+
+$$\hat{y} = b_0+b_1x_{1}+\dots +b_px_{p}$$
+
+Note the fitted model, and fitted values, are called *y hat* . The fitted values are points along the line.
+
+---
+# Normal residuals
+
+The assumption is that $\varepsilon \sim N(0, \sigma^2)$ implies that 
+
+$$y|x_1, \dots, x_p \sim N(b_0+b_1x_{1}+\dots +b_px_{p}, \sigma^2)$$
+
+```{r}
+set.seed(5)
+b0 <- 15
+b1 <- -2
+e <- rnorm(100, 0, 0.5)
+x <- sort(runif(100))
+y <- b0 + b1*x + e
+df <- data.frame(x, y, e)
+#ggplot(df, aes(x, y)) + 
+#  geom_point() +
+#  geom_abline(intercept=b0, slope=b1)
+norm_curves <- data.frame(x=seq(-1.5,1.5,0.1),
+     e=dnorm(seq(-1.5,1.5,0.1), 0, 0.5)/10) 
+
+ggplot(df, aes(x, y)) + 
+  geom_point() +
+  geom_abline(intercept=b0, slope=b1, colour="orange") + 
+  geom_path(data=norm_curves, aes(x=0.5+e, y=x+14), colour="orange") + 
+  geom_path(data=norm_curves, aes(x=0.25+e, y=x+14.5), colour="orange") + 
+  geom_path(data=norm_curves, aes(x=0.75+e, y=x+13.5), colour="orange")
+```
+
+Regardless of the value of $x$ the distribution of points above and below the line should be the same, and symmetric. And as you get further form the line, there should be less points. 
+
+---
+# Implications
+
+- Optimisation function should consider the distribution assumption 
+- Need to check the residuals from the model fit satisfy the normality assumption.
+
+---
+# Optimisation
+
+Normal density function
+
+$$f(x) = \frac{1}{\sqrt{2\pi}} \exp \left\{ -\frac{1}{2} \left(\frac{x-\mu}{\sigma}\right)^2 \right\}$$
+
+For error, $\mu=0$. 
+
+The likelihood function is the product of the density function evaluated for each sample value, $x_1, ..., x_n$.
+
+$$l(\mu, \sigma|x_1, \dots, x_n) = \frac{1}{\sqrt{2\pi}} \exp \left\{ -\frac{1}{2} \left(\frac{x_1-\mu}{\sigma}\right)^2 \right\}\times ... \times \frac{1}{\sqrt{2\pi}} \exp \left\{ -\frac{1}{2} \left(\frac{x_n-\mu}{\sigma}\right)^2 \right\}$$
+
+
+E.g. suppose $x_1 = 1, x_2 = -3$, then the likelihood is, assuming $\mu=0$,
+
+$$l(\sigma|x_1=1, x_2=-3) = \frac{1}{2\pi}\exp\left\{-\frac{1}{2}\frac{(1+9)}{\sigma^2}\right\}$$
+
+which is a function in $\sigma$. Optimise this function to get the maximum likelihood estimate for $\sigma$.
+
+---
+# Intercept and slope
+
+Set $\mu=\beta_0+\dots+\beta_1x$ and then the likelihood is a function of $\sigma, \beta_0, \dots, \beta_p$. Optimise the function over all of these parameters to get the maximum likelihood estimates for the linear model.
+
+These will be the same as if you minimised the least squares equation, $\sum_i (y_i-(b_0+b_1x_{1}+\dots +b_px_{p}))^2$. 
+
+---
+# Checking normality
+
+- Plot residuals vs fitted: is it nice and uniform?
+- Make a histogram: is it symmetric, unimodal, no outliers?
+- Make a normal probability plot: does it pass the fat marker test?
+
+```{r fig.width=9, fig.height=4}
+df_lm <- glm(y~x, data=df)
+df_aug <- augment(df_lm)
+p1 <- ggplot(df_aug, aes(x, .resid)) + 
+  geom_hline(yintercept=0, size=4, colour="white") +
+  geom_point() +
+  theme(aspect.ratio=1)
+p2 <- ggplot(df_aug, aes(x=.resid)) +
+  geom_histogram(binwidth=0.3) +
+  theme(aspect.ratio=1)
+df_aug <- df_aug %>% arrange(.resid) %>%
+  mutate(q=qnorm(c(1 - 0.5^(1/100), (2:(100-1) - 0.3175) / (100 + 0.365),0.5^(1/100)), mean=0, sd=0.5))
+p3 <- ggplot(df_aug, aes(x=.resid, y=q)) + 
+               geom_point() +
+               geom_abline(intercept=0, slope=1) +
+  ylab("theoretical quantiles") +
+  theme(aspect.ratio=1)
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+---
+# Common problems
+
+- Non-linear relationship
+- Heteroskedastic error
+- Outliers
+
+```{r fig.width=9, fig.height=4}
+set.seed(1111)
+x <- runif(100)
+df2 <- data.frame(x, y1=5+x-2*(x-0.4)^2+rnorm(100)*0.1,
+                  y2=5+2*x+rnorm(100)*x,
+                  y3=5+4*x+rnorm(100)*0.1)
+m <- which.max(x)
+df2$y3[m] <- 9
+df2$x2 <- x
+df2$x2[m] <- 1.3
+df2_lm1 <- glm(y1~x, data=df2)
+df2_aug1 <- augment(df2_lm1)
+p1 <- ggplot(df2_aug1, aes(x, .resid)) + 
+  geom_hline(yintercept=0, size=3, colour="white") +
+  geom_point() + ggtitle("Non-linear") + theme(aspect.ratio=1)
+df2_lm2 <- glm(y2~x, data=df2)
+df2_aug2 <- augment(df2_lm2)
+p2 <- ggplot(df2_aug2, aes(x, .resid)) + 
+  geom_hline(yintercept=0, size=3, colour="white") +
+  geom_point() + ggtitle("Heteroskedastic") +
+  theme(aspect.ratio=1)
+df2_lm3 <- glm(y3~x2, data=df2)
+df2_aug3 <- augment(df2_lm3)
+p3 <- ggplot(df2_aug3, aes(x2, .resid)) + 
+  geom_hline(yintercept=0, size=3, colour="white") +
+  geom_point() + ggtitle("Outlier") + 
+  theme(aspect.ratio=1)
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+---
+
+Its good to overlay a smoother sometimes.
+
+```{r fig.width=9, fig.height=4}
+p1 <- ggplot(df2_aug1, aes(x, .resid)) + 
+  geom_hline(yintercept=0, size=3, colour="white") +
+  geom_point() + ggtitle("Non-linear") + 
+  geom_smooth() +
+  theme(aspect.ratio=1)
+p2 <- ggplot(df2_aug2, aes(x, .resid)) + 
+  geom_hline(yintercept=0, size=3, colour="white") +
+  geom_point() + 
+  geom_smooth() +
+  ggtitle("Heteroskedastic") +
+  theme(aspect.ratio=1)
+p3 <- ggplot(df2_aug3, aes(x2, .resid)) + 
+  geom_hline(yintercept=0, size=3, colour="white") +
+  geom_point() + 
+  geom_smooth() +
+  ggtitle("Outlier") + 
+  theme(aspect.ratio=1)
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+---
+# Model fit
+
+- $R^2$: proportion of variation explained by model
+- deviance, null deviance
+- AIC, BIC, negative loglikelihood
+
+---
+# Proportion of variation explained
+
+$$R^2 = 1 - \frac{SSE}{SST}$$
+
+where $SST = \sum_i (y_i-\bar{y})^2$ and $SSE = \sum_i (y_i-\hat{y})^2$. 
+
+$0 < R^2 < 1$, where $1$ would indicate the model explains ALL the variation in $y$, and $0$ indicates it explains nothing.
+
+```{r fig.width=7, fig.height=4}
+set.seed(22222)
+x <- runif(100)
+df3 <- data.frame(x, y1=2-5*x, y2=rnorm(100))
+p1 <- ggplot(data=df3, aes(x=x, y=y1)) + 
+  geom_point() + ggtitle("R2=1") + ylab("y") +
+  theme(aspect.ratio=1)
+p2 <- ggplot(data=df3, aes(x=x, y=y2)) + 
+  geom_point() + ggtitle("R2=0") + ylab("y") +
+  theme(aspect.ratio=1)
+grid.arrange(p1, p2, ncol=2)
+```
+
+---
+# Deviance and null deviance
+
+- Most software does not report $R^2$ any more
+- Related to the distributional assumptions on the error
+- *deviance* : up to a constant, minus twice the maximized log-likelihood. 
+- *null deviance* : The deviance for the null model, comparable with deviance. 
+- A good model has a deviance that is much smaller than the null deviance, which means that it explains a lot of the variability in $y$. (Or the closer to $0$ the better.)
+- Deviance will decrease as more variables added to the model.
+
+---
+# AIC, BIC
+
+- AIC (Akaike Information Criterion): minus twice the maximized log-likelihood plus twice the number of parameters
+- The lower the value the better the model
+- Primarily used to compare models, pick the model with the lowest value
+- BIC (Bayes Information Criterion) small variation, instead of twice, use `log(n)`, the number of parameters.
+
+---
+# Model building
+
+- Statistical tests can be used to determine whether parameter estimates indicate the true parameter is different from zero
+- Use AIC to help select variables when there are many
+
+---
+# Statistical tests on parameters
+
+.left-column[
+```{r}
+coefs <- coefficients(df_lm)
+ggplot(df, aes(x, y)) + 
+  geom_point() +
+  geom_abline(intercept=coefs[1], slope=coefs[2]) +
+  theme(aspect.ratio=1)
+```
+]
+
+.right-column[
+```{r}
+summary(df_lm)
+```
+]
+
+---
+# Statistical tests on parameters
+
+- `t value` is calculated by `Estimate` divided by `Std. Error`
+- If `t value` is large, indicates that the $\beta_k$ (population parameter) is unlikely to be $0$. Given what we have seen in the sample, it indicates that this parameter, and thus the variable associated with it is important (statistically significant) for explaining $y$.
+- This should correspond to a `Pr(>|t|)` (*p-value*) being really small, less than 0.1.
+- Both $\beta_0$ and $\beta_1$ in the example here are statistically significant (both different from $0$) and so $x_1$ is really important for explaining $y$.
+
+---
+# Interpretation
+
+- Intercept: When $x_1=0$, then estimated $y$ is $b_0$. Often doesn't make sense, but its important for the math to have this as part of the model
+- Slope: For each unit increase in $x_1$, $y$ increases, on average, by $b_1$. 
+- For multiple predictors, the interpretation of slope remains the same, assuming that all other variables are at fixed values.
+
+---
+# Cautions
+
+.left-column[
+A model can be statistically significant but explain very little of the response variable. An example: Many restaurants in the USA have a policy *a tip rate of 18% will be charged to dining parties of six or more*. This comes from a linear model, like this:  
+]
+
+.right-column[
+```{r}
+tips <- read_csv("data/tips.csv")
+tips <- tips %>% select(-X1) %>% 
+  mutate(tip_pct = tip/bill*100)
+tips_lm <- glm(tip_pct~size+sex+smoker+day+time, data=tips)
+```
+
+```{r eval=FALSE}
+summary(tips_lm)
+```
+```
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  18.3191     2.0750   8.829 2.44e-16 ***
+size         -0.9625     0.4217  -2.282   0.0234 *  
+sexMale      -0.8543     0.8348  -1.023   0.3072    
+smokerYes     0.3637     0.8497   0.428   0.6690    
+daySat       -0.1773     1.8341  -0.097   0.9231    
+daySun        1.6672     1.9023   0.876   0.3817    
+dayThur      -1.8176     2.3194  -0.784   0.4340    
+timeLunch     2.3371     2.6118   0.895   0.3718    
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for gaussian family taken to be 36.79008)
+
+    Null deviance: 9063.4  on 243  degrees of freedom
+Residual deviance: 8682.5  on 236  degrees of freedom
+AIC: 1582
+
+Number of Fisher Scoring iterations: 2
+```
+]
+
+---
+# Interpretation
+
+The only important variable in the model is `Size`.
+
+$$\mbox{Tip percentage} = 18.3 - 0.96\times\mbox{Size of the dining party}$$
+
+For each additional member in the dining party, the tip % decreases by about 1%. 
+
+But look at deviance ( $8682.5$ ) relative to the null deviance ( $9063.4$ ). There is very little difference between the two, which means that size of the dining party explains very little of the variation in tip percentage. 
+
+---
+
+If we prefer to use $R^2$ use the `lm` function instead:
+
+```{r}
+tips_lm <- lm(tip_pct~size, data=tips)
+summary(tips_lm)
+```
+
+The model is statistically significant but it explains only 2% of the variation in tip percentage. It is practically useless. There are a lot of other factors that affect tips. However, restauranteurs have picked up on the relationship and instituted a convenient policy to guarantee a minimal tip intake with larger dining parties. 
+
+---
+# Make a plot
+
+```{r}
+coef <- coefficients(tips_lm)
+ggplot(tips, aes(x=size, y=tip_pct)) + 
+  geom_jitter(width=0.2, height=0) +
+  geom_abline(intercept=coef[1], slope=coef[2])
+```
+
+---
+# Regression trees
+
+- Regression (decision) trees recursively partition the data, and use the average response value of each partition as the model estimate
+- Computationally intensive technique, involves examining ALL POSSIBLE partitions. 
+- Chooses the BEST partition by optimizing a criteria
+- For regression, with a quantitative response variable, the criteria is called ANOVA:
+
+$$SS_T-(SS_L+SS_R)$$
+where $SS_T = \sum (y_i-\bar{y})^2$, and $SS_L, SS_R$ are the equivalent values for the two subsets created by partitioning.
+
+---
+# What it looks like
+
+Here's a synthetic data set for illustration
+
+```{r}
+set.seed(900)
+x=sort(runif(100)-0.5)
+df <- data.frame(x, y=c(x[1:50]^2, x[51:75]*2, -x[76:100]^2)+rnorm(100)*0.1)
+ggplot(df, aes(x=x, y=y)) + geom_point()
+```
+
+---
+Model
+
+```{r echo=TRUE}
+df_rp <- rpart(y~x, data=df)
+df_rp
+```
+
+---
+# Model decision tree
+
+```{r}
+library(rpart.plot)
+rpart.plot(df_rp)
+```
+
+Next, picture the model on the data
+
+---
+# Splits
+
+```{r}
+df_rp$splits
+```
+
+---
+
+```{r}
+ggplot(df, aes(x=x, y=y)) + geom_point() +
+  geom_vline(xintercept = df_rp$splits[1,4], colour="hotpink", linetype=2, size=2) + scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1))
+```
+
+---
+
+```{r}
+ggplot(df, aes(x=x, y=y)) + geom_point() +
+  geom_vline(xintercept = df_rp$splits[1,4], colour="hotpink") + 
+  geom_vline(xintercept = df_rp$splits[2,4], colour="hotpink", linetype=2, size=2) + scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1))
+```
+
+---
+
+```{r}
+ggplot(df, aes(x=x, y=y)) + geom_point() +
+  geom_vline(xintercept = df_rp$splits[1,4], colour="hotpink") + 
+  geom_vline(xintercept = df_rp$splits[2,4], colour="hotpink") +
+  geom_vline(xintercept = df_rp$splits[3,4], colour="hotpink", linetype=2, size=2) + scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1))
+```
+
+---
+
+```{r}
+ggplot(df, aes(x=x, y=y)) + geom_point() +
+  geom_vline(xintercept = df_rp$splits[1,4], colour="hotpink") + 
+  geom_vline(xintercept = df_rp$splits[2,4], colour="hotpink") +
+  geom_vline(xintercept = df_rp$splits[3,4], colour="hotpink") +
+  geom_vline(xintercept = df_rp$splits[4,4], colour="hotpink", linetype=2, size=2) + scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1))
+```
+
+---
+
+```{r}
+ggplot(df, aes(x=x, y=y)) + geom_point() +
+  geom_vline(xintercept = df_rp$splits[1,4], colour="hotpink") + 
+  geom_vline(xintercept = df_rp$splits[2,4], colour="hotpink") +
+  geom_vline(xintercept = df_rp$splits[3,4], colour="hotpink") +
+  geom_vline(xintercept = df_rp$splits[4,4], colour="hotpink") +
+  geom_vline(xintercept = df_rp$splits[5,4], colour="hotpink", linetype=2, size=2) + scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1))
+```
+
+---
+
+```{r}
+ggplot(df, aes(x=x, y=y)) + geom_point() +
+  geom_vline(xintercept = df_rp$splits[1,4], colour="hotpink") + 
+  geom_vline(xintercept = df_rp$splits[2,4], colour="hotpink") +
+  geom_vline(xintercept = df_rp$splits[3,4], colour="hotpink") +
+  geom_vline(xintercept = df_rp$splits[4,4], colour="hotpink") +
+  geom_vline(xintercept = df_rp$splits[5,4], colour="hotpink") +
+  geom_vline(xintercept = df_rp$splits[6,4], colour="hotpink", linetype=2, size=2) + scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1))
+```
+
+---
+
+```{r}
+df_fit <- df %>%
+  mutate(partitions = cut(x, 
+      breaks=c(-Inf, sort(df_rp$splits[,4]), Inf))) %>%
+  group_by(partitions) %>%
+  summarise(x=mean(x), y=mean(y))
+ggplot(df, aes(x=x, y=y)) + geom_point() +
+  geom_vline(xintercept = df_rp$splits[1,4], colour="hotpink") + 
+  geom_vline(xintercept = df_rp$splits[2,4], colour="hotpink") +
+  geom_vline(xintercept = df_rp$splits[3,4], colour="hotpink") +
+  geom_vline(xintercept = df_rp$splits[4,4], colour="hotpink") +
+  geom_vline(xintercept = df_rp$splits[5,4], colour="hotpink") +
+  geom_vline(xintercept = df_rp$splits[6,4], colour="hotpink") + scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1)) +
+  geom_point(data=df_fit, aes(x=x, y=y),
+             colour="hotpink", size=5, alpha=0.7)
+```
+
+---
+# When do we stop?
+
+- Its an algorithm. Why did it stop at 7 groups?
+- Stopping rules ar needed, else the algorithm will keep fitting until every observartion is in its own group.
+- Control parameters set stopping points:
+   + minsplit: minimum number of points in a node that algorithm is allowed to split
+   + minbucket: minimum number of points in a terminal node
+- In addition, we can also look at the change in value of $SS_T-(SS_L+SS_R)$ at each split, and if the change is too *small*, stop. To decide on a suitable value for *small* a cross-validation procedure is used.
+
+---
+# Stop points in example model
+
+```{r}
+str(df_rp$control)
+```
+
+---
+# Changing control parameters
+
+```{r echo=TRUE}
+df_rp <- rpart(y~x, data=df, 
+  control = rpart.control(minsplit=5, minbucket = 2))
+df_rp
+```
+
+---
+
+```{r echo=TRUE}
+df_rp <- rpart(y~x, data=df, 
+  control = rpart.control(minsplit=30, minbucket = 10))
+df_rp
+```
+
+---
+# What's the computation?
+
+Illustration showing the calculations made to decide on the first partition.
+
+```{r}
+sst <- var(df$y)*(nrow(df)-1)
+compute_anova <- function(left, right) {
+  ssl <- var(left$y)*(nrow(left)-1)
+  if (nrow(left) == 1)
+    ssl <- 1
+  ssr <- var(right$y)*(nrow(right)-1)
+  if (nrow(right) == 1)
+    ssr <- 1
+  av <- sst - (ssl+ssr)
+  return(av)
+}
+aov_f <- data.frame(x=df$x[-1], f=df$y[-1])
+for (i in 2:nrow(df)) {
+  left <- df[1:(i-1),]
+  right <- df[i:nrow(df),]
+  aov_f$x[i-1] <- mean(df$x[c(i-1, i)])
+  aov_f$f[i-1] <- compute_anova(left, right)
+}
+ggplot(df, aes(x=x, y=y)) + geom_point(alpha=0.5) + scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1)) +
+  geom_line(data=aov_f, aes(x=x, y=f), colour="hotpink") +
+    geom_vline(xintercept = df_rp$splits[1,4], colour="hotpink", linetype=2)
+```
+
+---
+# Residuals
+
+```{r}
+df_rp <- rpart(y~x, data=df)
+df_rp_aug <- cbind(df, e=residuals(df_rp))
+ggplot(df_rp_aug, aes(x=x, y=e)) + geom_point() +
+  ylab("residuals") + scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1))
+```
+
+---
+# Goodness of fit
+
+```{r echo=TRUE}
+gof <- printcp(df_rp, digits=3)
+```
+
+The relative error is $1-R^2$. For this example, after 6 splits it is `r gof[6,3]`. So $R^2=$ `r 1-gof[6,3]`. 
+
+```{r eval=FALSE}
+1-sum(df_rp_aug$e^2)/sum((df$y-mean(df$y))^2)
+```
+
+---
+# Strengths and weaknesses
+
+- There are no parametric assumptions underlying partitioning methods
+- Also means that there is not a nice formula for the model as a result, or inference about populations available
+- By minimizing sum of squares (ANOVA) we are forcing the partitions to have relatively equal variance. The method could be influenced by outliers, but it would be isolating the effect to one partition.
+- Because it operates on single variables, it can efficiently handle missing values. 
+
+---
+# Example
+
+- OECD PISA, what factors affect reading scores?
+- 15 year old standardised test scores, Australia, 2015
+- Response: math
+- Predictors: gender, ANXTEST, PARED, JOYSCIE, WEALTH, nbooks, ntvs
+
+---
+# Linear model
+
+```{r}
+load("pisa_au_nomiss.rda")
+pisa_lm <- lm(math~gender+ANXTEST+PARED+JOYSCIE+WEALTH+nbooks+ntvs, data=pisa_au_nomiss, weights=W_FSTUWT)
+summary(pisa_lm)
+```
+
+---
+# Regression tree
+
+```{r}
+pisa_rp <- rpart(math~gender+ANXTEST+PARED+JOYSCIE+WEALTH+nbooks+ntvs, data=pisa_au_nomiss, weights=W_FSTUWT)
+pisa_rp
+```
+
+---
+
+```{r}
+rpart.plot(pisa_rp)
+```
+
+---
+# Most important variable
+
+```{r}
+ggplot(pisa_au_nomiss, aes(x=JOYSCIE, y=math)) +
+  geom_point() + geom_vline(xintercept=-0.1626, colour="hotpink")
+```
+
+---
+# All the variables
+
+```{r fig.width=12, fig.height=6}
+p1 <- ggplot(pisa_au_nomiss, aes(x=gender, y=math)) +
+  geom_boxplot() 
+p2 <- ggplot(pisa_au_nomiss, aes(x=ANXTEST, y=math)) +
+  geom_point()
+p3 <- ggplot(pisa_au_nomiss, aes(x=WEALTH, y=math)) +
+  geom_point()
+p4 <- ggplot(pisa_au_nomiss, aes(x=factor(PARED), y=math)) +
+  geom_boxplot() 
+p5 <- ggplot(pisa_au_nomiss, aes(x=factor(nbooks), y=math)) +
+  geom_boxplot() 
+p6 <- ggplot(pisa_au_nomiss, aes(x=factor(ntvs), y=math)) +
+  geom_boxplot() 
+grid.arrange(p1, p2, p3, p4, p5, p6, ncol=3)
+```
+
+---
+class: inverse middle 
+# Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+
