@@ -35,7 +35,7 @@ title: Home
 - Week 8: [Optimisation](lectures/lecture8_optimization.html) [(Rmd)](lectures/lecture8_optimization.Rmd); [(pdf)](lectures/lecture8_optimization.pdf);
 - Week 9: [Linear Optimisation](lectures/lecture9_optimization.html) [(Rmd)](lectures/lecture9_optimization.Rmd); [(pdf)](lectures/lecture9_optimization.pdf); Reading: Chapter 2 of [Optimization textbook](lectures/LinearProg_in_R.pdf)
 - Week 10: [Advanced modeling](lectures/lecture10_advanced_models.html) [(Rmd)](lectures/lecture10_advanced_models.Rmd); [(pdf)](lectures/lecture10_advanced_models.pdf); Reading: Chapter 24 of textbook (R for data science)
-- Week 11: TBD
+- Week 11: Advanced modeling
 - Week 12: Presentations
 
 ## [Project Description](project/project-ETC1010.pdf) 
@@ -47,8 +47,8 @@ title: Home
 - Week 3: [Tidying data](labs/lab2.html) [(Rmd)](labs/lab2.Rmd) [SOLUTION](labs/lab2_solution.html) [(Rmd)](labs/lab2_solution.Rmd) [ASN00086282.dly](labs/ASN00086282.dly) [billboard.csv](labs/billboard.csv) [budapest.csv](labs/budapest.csv) [fly_tbl.csv](labs/fly_tbl.csv) [genes.csv](labs/genes.csv) [rates.csv](labs/rates.csv) [tb.csv](labs/tb.csv) [whaleshark-encounters.csv](labs/whaleshark-encounters.csv) [ZIP](labs/lab2.zip)
 - Week 4: [Wrangling data](labs/lab3.html) [(Rmd)](labs/lab3.Rmd) [SOLUTION](labs/lab3_solution.html) [(Rmd)](labs/lab3_solution.Rmd) [airports.csv](labs/airports.csv) [plane_N4YRAA.rda](labs/plane_N4YRAA.rda) [pisa_au.rda](labs/pisa_au.rda) [ZIP](labs/lab3.zip)
 - Week 5: [Plotting data](labs/lab4.html) [(Rmd)](labs/lab4.Rmd) [SOLUTION](labs/lab4_solution.html) [(Rmd)](labs/lab4_solution.Rmd)
-- Week 6: [Reading different formats](labs/lab5.html) [(Rmd)](labs/lab5.Rmd) 
-- Week 7: [Missing values](labs/lab6.html) [(Rmd)](labs/lab6.Rmd) 
+- Week 6: [Reading different formats](labs/lab5.html) [(Rmd)](labs/lab5.Rmd) [SOLUTION](labs/lab5_solution.html) [(Rmd)](labs/lab5_solution.Rmd)
+- Week 7: [Missing values](labs/lab6.html) [(Rmd)](labs/lab6.Rmd) [SOLUTION](labs/lab6_solution.html) [(Rmd)](labs/lab6_solution.Rmd) 
 - Week 8: [Optimization 1](labs/lab7.html) [(Rmd)](labs/lab7.Rmd) [engel.csv](labs/engel.csv)
 - Week 9: [Optimization 2](labs/lab8.html) [(Rmd)](labs/lab8.Rmd) [engel.csv](labs/engel.csv)
 
