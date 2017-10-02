@@ -1,0 +1,45 @@
+---
+title: "Lab 3"
+author: "David T. Frazier"
+date: "30/08/2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(quantreg)
+```
+# Linear Optimization
+
+## Question one
+
+A firm called "Clean-Head" produces two products, shampoo and conditioner. Each product is manufactured by a two-step process that involves blending and mixing in machine $A$ and packaging on machine $B$. The same production facilities can be used for both products, thus achieving better utilization of these facilities. The processing times required for shampoo on Machine $A$ and Machine $B$ are 2 and 3 hours respectively. The processing time required for conditioner on Machine $A$ and Machine $B$ are 4 and 2 hours respectively. Usually Machine $A$ can work up to 80 hours a week and Machine $B$ can work up to 60 hours a week.     
+
+You have been called by the CEO to a meeting to discuss how to utilize the available machine time in the most profitable way.
+
+The financial manager has obtained the variable cost and the potential selling price for both products. He estimated that variable cost to produce one bottle of shampoo will cost \$29 and to produce one bottle of conditioner will cost \$40. He also predicted that based on the current market situation, the company will sell the shampoo for \$35 per bottle and the conditioner for \$45 per bottle.   
+ 
+The company's marketing adviser has indicated that the company will not be able to sell more than 16 bottle of shampoo and 18 bottles of conditioner.
+
+The production manager has pointed out that one of the products is more profitable than the other and suggested producing the maximum possible amount of this product within market limitations, using the balance of the capacity to produce the less profitable product.
+
+1.	What will be your advice to the production manager? 
+2.	Formulate this problem in a mathematical way.  (Hint: first calculate the profit for each product.)
+3.	In a few words discuss whether the problem meets all the linear programming modeling assumptions. 
+4.	Provide a graphical solution to this problem.
+5.	What will be your advice to the CEO regarding the production amounts of each product?
+6.	How will you answer change if due to technological improvements the time used on machine A to produce shampoo will decrease from 3 hours to 2 hours? 
+
+
+## Question two
+
+The Happy-Toy company produces toy planes and toy boats. The toy company can sell its planes for \$10 and its boats for \$8 dollars. It cost \$3 in raw materials to make a plane and $2 in raw materials to make a boat. A plane requires 3 hours to make and 1 hour to finish while a boat requires 1 hour to make and 2 hours to finish. The toy company knows it will not sell any more than 35 planes per week. Further, given the number of workers, the company cannot spend any more than 160 hours per week finishing toys and 120 hours per week making toys. The company wishes to maximize the profit it makes choosing how much of each toy to produce.
+
+
+1. In a few words discuss whether the problem meets all of the linear programming modeling assumptions. 
+2. Formulate a mathematical linear programming model and solve it using a graphical solution.
+3. Compare your solution with an `R` implementation. 
