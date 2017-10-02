@@ -254,8 +254,8 @@ ggplot(mod1_augment, aes(x=.fitted, y=.resid)) +
     - SOC1: $\partial^2 f(b_0,b_1)/\partial b_0^2$
     - SOC2: $\partial^2 f(b_0,b_1)/\partial b_1$
     - SOC3: $\left(\partial^2 f(b_0,b_1)/\partial b_0^2\right)\left(\partial^2 f(b_0,b_1)/\partial b_1^2\right)-\partial^2 f(b_0,b_1)/\partial b_0\partial b_1$
-- Maximum: $SOC1<0$, $SOC2<0$, $SOC3>0$
-- Minimum: $SOC1>0$, $SOC2>0$, $SOC3<0$
+- Maximum: $SOC1<0$, $SOC3>0$
+- Minimum: $SOC1>0$, $SOC3>0$
 ---
 ## Back to OLS example
 - $f(b_0,b_1)={n^{-1}\sum_{i=1}^{n}\{y_i-b_0-b_1x_i\}^2}$

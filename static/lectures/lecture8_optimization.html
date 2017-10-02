@@ -241,8 +241,8 @@ ggplot(mod1_augment, aes(x=.fitted, y=.resid)) +
     - SOC1: `\(\partial^2 f(b_0,b_1)/\partial b_0^2\)`
     - SOC2: `\(\partial^2 f(b_0,b_1)/\partial b_1\)`
     - SOC3: `\(\left(\partial^2 f(b_0,b_1)/\partial b_0^2\right)\left(\partial^2 f(b_0,b_1)/\partial b_1^2\right)-\partial^2 f(b_0,b_1)/\partial b_0\partial b_1\)`
-- Maximum: `\(SOC1&lt;0\)`, `\(SOC2&lt;0\)`, `\(SOC3&gt;0\)`
-- Minimum: `\(SOC1&gt;0\)`, `\(SOC2&gt;0\)`, `\(SOC3&lt;0\)`
+- Maximum: `\(SOC1&lt;0\)`, `\(SOC3&gt;0\)`
+- Minimum: `\(SOC1&gt;0\)`, `\(SOC3&gt;0\)`
 ---
 ## Back to OLS example
 - `\(f(b_0,b_1)={n^{-1}\sum_{i=1}^{n}\{y_i-b_0-b_1x_i\}^2}\)`
@@ -289,7 +289,8 @@ class: inverse middle
 "highlightLines": true,
 "countIncrementalSlides": false
 });
-if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});</script>
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
+(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
