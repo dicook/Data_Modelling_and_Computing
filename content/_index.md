@@ -51,7 +51,7 @@ title: Home
 - Week 7: [Missing values](labs/lab6.html) [(Rmd)](labs/lab6.Rmd) [SOLUTION](labs/lab6_solution.html) [(Rmd)](labs/lab6_solution.Rmd) 
 - Week 8: [Optimization 1](labs/lab7.html) [(Rmd)](labs/lab7.Rmd) [engel.csv](labs/engel.csv)
 - Week 9: [Optimization 2](labs/lab8.html) [(Rmd)](labs/lab8.Rmd) [engel.csv](labs/engel.csv)
-- Week 10: [Optimization 3](labs/lab9.html) [(Rmd)](labs/lab9.Rmd) 
+- Week 10: [Optimization 3](labs/lab9.html) [(Rmd)](labs/lab9.Rmd)
 ## Exam information
 
 - [Formula sheet](lectures/ETC1010_FORMULA_SHEET.pdf)
