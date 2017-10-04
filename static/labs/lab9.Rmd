@@ -32,7 +32,7 @@ The production manager has pointed out that one of the products is more profitab
 3.	In a few words discuss whether the problem meets all the linear programming modeling assumptions. 
 4.	Provide a graphical solution to this problem.
 5.	What will be your advice to the CEO regarding the production amounts of each product?
-6.	How will you answer change if due to technological improvements the time used on machine A to produce shampoo will decrease from 3 hours to 2 hours? 
+6.	How will you answer change if due to technological improvements the time used on machine B to produce shampoo will decrease from 3 hours to 2 hours? 
 
 
 ## Question two
