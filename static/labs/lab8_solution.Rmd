@@ -1,0 +1,95 @@
+---
+title: "Lab 2"
+author: "David T. Frazier"
+date: "30/08/2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(quantreg)
+```
+
+# Extending Least Absolute Deviations Regression
+This lab will work on building a generalization of the least absolute deviation (LAD) regression framework. We will again be working with the "engel" dataset from the previous lab. Assume we believe the following linear relationship between food expenditures and incomes exists: $$foodexp_i=\beta_0+\beta_1income_i +\epsilon.$$
+
+Recall that, for $Y$ a continuous random variable with distribution $F$ (for example, $F$="the normal distribution"), the $\tau$ quantile of $Y$ is given by $Q_{\tau}=\inf\{y\in \mathbb{R}:\tau\leq F(y)\}$. 
+
+Intuitively, the quantile is the smallest value of $y$ such that the mass in the left tail of the distribution is $\tau$. 
+
+a. Using `R`, for $Y$ a standard normal random variable, find the $\tau=.015$ and $\tau=.985$ quantiles.
+```{r}
+# recall the shape of the normal. 
+grid_x<-seq(-5,5,length.out = 1000)
+y_vals <- dnorm(grid_x,mean=0,sd=1)
+for_plots <- data.frame(grid_x,y_vals)
+ggplot(for_plots, aes(x=grid_x,y=y_vals))+geom_line()
+# What is the quantile though?
+q_015<-qnorm(.015,mean=0,sd=1)
+```
+b. Now, find the $\tau=.05$ and $\tau=.95$ quantiles of the food expenditures data using the `quantile()` function. 
+```{r}
+engel<-read_csv("engel.csv")
+q_05_y <-quantile(engel$foodexp,.05)
+q_95_y <-quantile(engel$foodexp,.95)
+```
+c. When the outcome variable in a regression model is symmetric, OLS can do a great job estimating the regression coefficients. Analyze the shape of the distribution for food expenditures data. Is the distribution symmetric? *ANS: No, it is skewed*
+
+```{r}
+ggplot(engel, aes(x=foodexp)) +
+  geom_histogram(binwidth=25) 
+```
+
+d. Will the presences of a few very large food expenditures and many very small food expenditures affect the OLS coefficient estimates? *ANS: Yes. This is because the OLS criterion is a symmetric criterion*
+
+e. How might the shape of this distribution affect the OLS estimates? *ANS: These very large and very small expenditures would act as outliers in the regression and change the slope of the regression line, relative to a regression without these points*
+
+f. To get an understanding of how asymmetry can affect OLS estimates, fit the above regression model to 1) the full data set and 2) only data corresponding to food expenditures less than the corresponding $\tau=.25$ quantile. 
+```{r}
+food_25 <- quantile(engel$foodexp,.25)
+new_engel <- engel[order(engel$foodexp),] 
+engel_25 <- new_engel[new_engel$foodexp<=food_25,]
+
+fit_25 <-lm(foodexp~income,data=engel_25)
+fit_25$coefficients
+fit_all <-lm(foodexp~income,data=engel)
+fit_all$coefficients
+
+
+```
+
+g. Compare the estimates you obtained in part f. In particular, interpret the regression coefficients. *ANS: Standard regression interpretation*
+
+h. Does your answer from part g. support or dispel the notion of income inequality? *ANS: Supports the notion since lower income indviduals spend a relatively higher amount of their fixed income on food than those with higher income.*
+
+
+Recall the differences between the OLS and LAD results from the previous tutorial, we see that (from parts a.- g. above) the asymmetry of the outcome and response variables could partly be behind the difference between the OLS and LAD regression results. 
+
+In addition, it is also important to realize that food expenditures should be different depending on where in the income distribution a family sits. That is, in general, families who have higher levels of wealth can **afford** to spend more on food than those with lower wealth. Therefore, it doesn't necessarily make sense to say that, for all individuals in the population the coefficients in the regression $$foodexp_i=\beta_0+\beta_1 income_i +\epsilon_i$$ **are constant**. Instead we need to come up with a model that allows $\beta_0,\beta_1$ to differ between different groups of indivduals, such as those with high and low wealth. 
+
+An approach that can deail with this issue is quantile regression. The quantile regression model assumes that, for each quantile $\tau\in(0,1)$, the regression parameters $\beta_0$ and $\beta_1$ can be different. Hueristically, this means that, conditional on a value of $income_i$, the parameters $\beta_0$ and $\beta_1$ describing the behavior of $foodexp_i$ are allowed to change. We can then define the quantile regression model through the quantile function as 
+$$Q_{\tau}(foodexp_i|income_i)=\beta_0(\tau)+\beta_1(\tau) income_i.$$ The package `quantreg` allows us to fit this model to different quantiles using exactly the same syntax as the `lm()` function. Implementation of this method requires the `optim` function. However, we won't bother with this and will instead let `R` do the work for us.  
+
+i. Using the function `rq()`, fit the quantile regression model for $\tau=.5$. Do the coefficient estimates appear similar to those obtained by OLS? HINT: `?rq` may be helpful.
+```{r}
+fit_med <- rq(foodexp~income, tau=.5,data=engel)
+fit_med$coefficients
+summary(fit_med)
+# Lower and Upper bounds are 95% confidence intervals
+```
+j. For quantiles $\tau = .25$ and $\tau=.75$ fit the quantile regression model using the function `rq()`. As food expenditures increases, does the slope coefficient in the model change? What about the intercept?
+```{r}
+# Comment out these lines to run this chunck.
+#fit_taus <- rq(foodexp~income, tau=c(.1,.2,.3,.7,.8,.9),data=engel)
+#fit_taus$coefficients
+#summary(fit_taus)
+# Lower and Upper bounds are 95% confidence intervals
+```
+
+k. Describe the behavior of the confidence intervals for the qr model as $\tau$ descreases or increases. *ANS: as $\tau$ gets smaller the confider intervals wide, but as $\tau$ gets larger the confidence intervals shrink.*
+l. Explain your reasoning behind your answer to part k. *ANS: This is due to the fact that as $\tau$ gets larger we have more and more data with which to fit the model.*
+
