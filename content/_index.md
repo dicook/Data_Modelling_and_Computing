@@ -35,7 +35,7 @@ title: Home
 - Week 8: [Optimisation](lectures/lecture8_optimization.html) [(Rmd)](lectures/lecture8_optimization.Rmd) [(pdf)](lectures/lecture8_optimization.pdf);
 - Week 9: [Linear Optimisation](lectures/lecture9_optimization.html) [(Rmd)](lectures/lecture9_optimization.Rmd) [(pdf)](lectures/lecture9_optimization.pdf); Reading: Chapter 2 of [Optimization textbook](lectures/LinearProg_in_R.pdf)
 - Week 10: [Advanced modeling](lectures/lecture10_advanced_models.html) [(Rmd)](lectures/lecture10_advanced_models.Rmd) [(pdf)](lectures/lecture10_advanced_models.pdf); Reading: Chapter 24 of textbook (R for data science)
-- Week 11: Advanced modeling
+- Week 11: [Model building](lectures/lecture11_advanced_models.html) [(Rmd)](lectures/lecture10_advanced_models.Rmd)
 - Week 12: Presentations
 
 ## [Project Description](project/project-ETC1010.pdf) 
