@@ -61,6 +61,21 @@ title: Home
 - [Practice exam](exam/practice_exam2017.pdf) (This has 10 questions, actual exam has 9.)
 - [Practice exam solution](exam/practice_exam2017_solution.pdf)
 
+## Quizzes 
+
+Please just use these to help you study, and don't distribute them to next year's students.
+
+- [Quiz 1](quizzes/Quiz1.pdf)
+- [Quiz 2](quizzes/Quiz2.pdf)
+- [Quiz 3](quizzes/Quiz3.pdf)
+- [Quiz 4](quizzes/Quiz4.pdf)
+- [Quiz 5](quizzes/Quiz5.pdf)
+- [Quiz 6](quizzes/Quiz6.pdf)
+- [Quiz 7](quizzes/Quiz7.pdf)
+- [Quiz 8](quizzes/Quiz8.pdf)
+- [Quiz 9](quizzes/Quiz9.pdf)
+- [Quiz 10](quizzes/Quiz10.pdf)
+
 ## Computing information
 
 - R (Friday 2017-06-30, Single Candle) R-3.4.1, install on your computer from https://cran.r-project.org
