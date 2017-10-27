@@ -70,10 +70,14 @@ pisa_2015 <- read_sav(file.choose()) # The SPSS format zip file
 library(sqldf)
 library(DBI)
 db <- dbConnect(SQLite(), dbname="PISA.sqlite")
+dbWriteTable(conn=db, name="student", value=pisa_2015)
+dbListFields(db, "student")
 
 library(ISOcodes)
 data("ISO_3166_1")
 
+library(dbplyr)
+tb <- tbl(db, "student")
 scores <- tb %>% 
   select(CNT, ST004D01T, PV1MATH, PV1READ, PV1SCIE, SENWT) %>% collect()
 scores <- scores %>% 
@@ -88,7 +92,19 @@ countries <- countries %>%
   mutate(ST004D01T=factor(ST004D01T, levels=c(1,2), labels=c("female","male")))
 score_gap <- countries %>% 
   group_by(Name) %>%
-  summarise(wmathgap=weighted.mean(PV1MATH[ST004D01T=="male"],
+  summarise(wmath_m = weighted.mean(PV1MATH[ST004D01T=="male"],
+                       w=SENWT[ST004D01T=="male"], na.rm=T),
+            wmath_f = weighted.mean(PV1MATH[ST004D01T=="female"],
+                       w=SENWT[ST004D01T=="female"], na.rm=T),
+            wread_m = weighted.mean(PV1READ[ST004D01T=="male"],
+                       w=SENWT[ST004D01T=="male"], na.rm=T),
+            wmread_f = weighted.mean(PV1READ[ST004D01T=="female"],
+                       w=SENWT[ST004D01T=="female"], na.rm=T),
+            wscience_m = weighted.mean(PV1SCIE[ST004D01T=="male"],
+                       w=SENWT[ST004D01T=="male"], na.rm=T),
+            wscience_f = weighted.mean(PV1SCIE[ST004D01T=="female"],
+                       w=SENWT[ST004D01T=="female"], na.rm=T),
+            wmathgap=weighted.mean(PV1MATH[ST004D01T=="male"],
                        w=SENWT[ST004D01T=="male"], na.rm=T)-
                      weighted.mean(PV1MATH[ST004D01T=="female"],
                        w=SENWT[ST004D01T=="female"], na.rm=T),

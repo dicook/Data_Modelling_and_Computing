@@ -53,7 +53,7 @@ title: Home
 - Week 9: [Optimization 2](labs/lab8.html) [(Rmd)](labs/lab8.Rmd) [engel.csv](labs/engel.csv) [SOLUTION](labs/lab8_solution.html) [(Rmd)](labs/lab8_solution.Rmd) 
 - Week 10: [Optimization 3](labs/lab9.html) [(Rmd)](labs/lab9.Rmd) 
 [SOLUTION](labs/lab9_solution.html) [(Rmd)](labs/lab9_solution.Rmd) 
-- Week 11: [Modelling](labs/lab10.html) [(Rmd)](labs/lab10.Rmd)[SPAM-503.csv](labs/SPAM-503.csv)
+- Week 11: [Modelling](labs/lab10.html) [(Rmd)](labs/lab10.Rmd) [SOLUTION](labs/lab10_solution.html) [(Rmd)](labs/lab10_solution.Rmd); [SPAM-503.csv](labs/SPAM-503.csv)
 
 ## Exam information
 
