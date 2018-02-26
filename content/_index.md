@@ -21,7 +21,7 @@ title: Home
 
 - Di: ?? (E762A)
 - Earo: ??
-- Stuart: ??
+- Stuart: Friday 12:30-14:00
 
 ## Lecture notes
 
