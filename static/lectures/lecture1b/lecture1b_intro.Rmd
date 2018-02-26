@@ -1,0 +1,374 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+author: "Di Cook"
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 4,
+                      fig.width = 8,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+```
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(gridExtra)
+```
+
+# Introduction
+## Financial data 
+
+### Cross-rates relative to USD
+
+Pull historical exchange rates from [http://openexchangerates.org/api/historical/](http://openexchangerates.org/api/historical/). 
+
+```{r eval=FALSE}
+library(jsonlite)
+ru <- NULL
+dt <- as.Date("2017-06-20")
+for (i in 3:27) {
+  cat(i,"\n")
+  url <- paste("http://openexchangerates.org/api/historical/",dt,".json?app_id=XXXX", sep="")
+  x <- fromJSON(url)
+  x <- x$rates
+  if (length(x) == 171) 
+    x <- x[-c(164,166)]
+  ru <- rbind(ru, data.frame(date=dt, x))
+  dt <- dt + days(1)
+}
+rownames(ru) <- ru$date
+write_csv(ru, path="data/rates.csv")
+```
+
+```{r}
+rates <- read_csv("data/rates.csv")
+rates_m <- rates %>% select(date, AUD, NZD, GBP) %>%
+  mutate_at(vars(AUD, NZD, GBP), scale) %>%
+  gather(currency, rate, -date)
+p1 <- ggplot(rates_m, aes(x=date, y=rate, colour=currency)) + 
+  geom_line() + xlab("Standardised rates") +
+  scale_colour_brewer(palette="Dark2") 
+p2 <- ggplot(rates, aes(AUD, NZD)) + 
+  geom_point() + ##geom_line() +
+  theme(aspect.ratio=1)
+p3 <- ggplot(rates, aes(AUD, GBP)) + 
+  geom_point() + ##geom_line() +
+  theme(aspect.ratio=1)
+p4 <- ggplot(rates, aes(NZD, GBP)) + 
+  geom_point() + ##geom_line() +
+  theme(aspect.ratio=1)
+library(ggplot2)
+library(gridExtra)
+grid.arrange(p1, p2, p3, p4, 
+             layout_matrix = matrix(c(1, 1, 1, 2, 3, 4), 
+                                    ncol=3, byrow=TRUE))
+```
+
+```{r rate-quiz}
+quiz(
+  question("Why is the axis of the line plot showing a standardised data scale? (centered at 0, and ranging from -2 to 2)",
+    answer("exchange rates are on z-scores"),
+    answer("the currencies have similar value"),
+    answer("the exchange rates have been standardised before plotting together", correct = TRUE))
+)
+```
+
+## Text analysis
+
+### Analysing tweets
+
+Is it possible to distinguish tweets coming from Donald Trump's phone vs his staff's phone? With a twitter api you can collect all tweets between certain times, from different people, with different hashtags, ... David Robinson wrote a [post](http://varianceexplained.org/r/trump-tweets/) during last year's US election cycle doing just this. Here's a re-creation of his analysis.
+
+Tweets from @realDonaldTrump were collected and passed through a sentiment analysis.
+
+```{r}
+#load(url("http://varianceexplained.org/files/trump_tweets_df.rda"))
+load("data/trump_tweets_df.rda")
+tweets <- trump_tweets_df %>%
+  select(id, statusSource, text, created) %>%
+  extract(statusSource, "source", "Twitter for (.*?)<") %>%
+  filter(source %in% c("iPhone", "Android"))
+tweets %>%
+  count(source, hour = hour(with_tz(created, "EST"))) %>%
+  mutate(percent = n / sum(n)*100) %>%
+  ggplot(aes(hour, percent, color = source)) +
+  geom_line() +
+  labs(x = "Hour of day (EST)",
+       y = "% of tweets",
+       color = "")
+```
+
+### Common words between devices
+
+```{r fig.height=7}
+library(tidytext)
+library(stringr)
+
+reg <- "([^A-Za-z\\d##@']|'(?![A-Za-z\\d##@]))"
+tweet_words <- tweets %>%
+  filter(!str_detect(text, '^"')) %>%
+  mutate(text = str_replace_all(text, "https://t.co/[A-Za-z\\d]+|&amp;", "")) %>%
+  unnest_tokens(word, text, token = "regex", pattern = reg) %>%
+  filter(!word %in% stop_words$word,
+         str_detect(word, "[a-z]"))
+android_iphone_ratios <- tweet_words %>%
+  count(word, source) %>%
+  filter(sum(n) >= 5) %>%
+  spread(source, n, fill = 0) %>%
+  mutate_at(vars(Android, iPhone), 
+            funs((. + 1) / sum(. + 1))) %>%
+  mutate(logratio = log2(Android / iPhone)) %>%
+  arrange(desc(logratio))
+android_iphone_ratios %>%
+  group_by(logratio > 0) %>%
+  top_n(15, abs(logratio)) %>%
+  ungroup() %>%
+  mutate(word = reorder(word, logratio)) %>%
+  ggplot(aes(word, logratio, fill = logratio < 0)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  ylab("Android / iPhone log ratio") +
+  scale_fill_manual(name = "", labels = c("Android", "iPhone"),
+                    values = c("red", "lightblue"))
+```
+
+### Sentiment analysis
+
+Poisson test of the differences between whether it is mode likely to emerge from the Android.
+
+```{r results='hide'}
+nrc <- sentiments %>%
+  filter(lexicon == "nrc") %>%
+  dplyr::select(word, sentiment)
+
+sources <- tweet_words %>%
+  group_by(source) %>%
+  mutate(total_words = n()) %>%
+  ungroup() %>%
+  distinct(id, source, total_words)
+
+by_source_sentiment <- tweet_words %>%
+  inner_join(nrc, by = "word") %>%
+  count(sentiment, id) %>%
+  ungroup() %>%
+  complete(sentiment, id, fill = list(n = 0)) %>%
+  inner_join(sources) %>%
+  group_by(source, sentiment, total_words) %>%
+  summarize(words = sum(n)) %>%
+  ungroup()
+
+library(broom)
+sentiment_differences <- by_source_sentiment %>%
+  group_by(sentiment) %>%
+  do(tidy(poisson.test(.$words, .$total_words))) %>%
+  ungroup() %>%
+  mutate(sentiment = reorder(sentiment, estimate))
+```
+
+```{r fig.width=6, fig.height=5}
+ggplot(sentiment_differences, aes(x=sentiment, y=estimate)) + 
+  geom_hline(yintercept=1, colour="white", size=3) +
+  geom_point() + 
+  geom_errorbar(aes(x=sentiment, ymin=conf.low, ymax=conf.high)) +
+  scale_y_continuous(breaks=seq(0.7, 2.2, 0.1)) + 
+  coord_flip()
+```
+
+```{r tweet-quiz}
+quiz(
+  question("What time of day are tweets from the Android phone more frequent?",
+    answer("6-9am", correct = TRUE),
+    answer("9am-12pm"),
+    answer("7pm-10pm")),
+  question("Negative sentiment was most likely to be expressed from which phone?",
+    answer("iphone"),
+    answer("android", correct = TRUE),
+    answer("pixel"))
+)
+```
+
+## Climate change
+
+### CO2 monitoring
+
+- Data is collected at a number of locations world wide. 
+- See [Scripps Inst. of Oceanography](http://scrippsco2.ucsd.edu/data/atmospheric_co2) 
+- Let's pull the data from the web and take a look ...
+- 
+- Recordings from South Pole (SPO), Kermadec Islands (KER), Mauna Loa Hawaii (MLF), La Jolla Pier, California (LJO), Point Barrow, Alaska (PTB).
+
+### Read data and plot
+
+```{r CO2, fig.width=10, fig.height=5}
+CO2.ptb<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ptb.csv", sep=",", skip=69)
+colnames(CO2.ptb)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
+CO2.ptb$lat<-71.3
+CO2.ptb$lon<-(-156.6)
+CO2.ptb$stn<-"ptb"
+
+CO2.ljo<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ljo.csv", sep=",", skip=69)
+colnames(CO2.ljo)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
+CO2.ljo$lat<-32.9
+CO2.ljo$lon<-(-117.3)
+CO2.ljo$stn<-"ljo"
+
+CO2.spo<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_spo.csv", sep=",", skip=69)
+colnames(CO2.spo)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
+CO2.spo$lat<- (-90.0)
+CO2.spo$lon<-0
+CO2.spo$stn<-"spo"
+
+CO2.ker<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ker.csv", sep=",", skip=69)
+colnames(CO2.ker)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
+CO2.ker$lat<-(-29.2)
+CO2.ker$lon<-(-177.9)
+CO2.ker$stn<-"ker"
+
+CO2.all<-rbind(CO2.ker,CO2.ljo,CO2.ptb,CO2.spo)
+CO2.all$date<-as.Date(CO2.all$date)
+
+CO2.all$invlat=-1*CO2.all$lat
+CO2.all$stn=reorder(CO2.all$stn,CO2.all$invlat)
+
+CO2.all.loc <- rbind(CO2.ker[1,],CO2.ljo[1,],CO2.ptb[1,],CO2.spo[1,])
+
+p1 <- qplot(date, co2, data=subset(CO2.all, flg < 2), colour=stn, geom="line",xlab="Year",ylab="CO2 (ppm)") + 
+		facet_wrap(~stn, ncol=1) + theme(axis.text.y=element_text(size = 6), legend.position="none")
+p2 <- qplot(date, co2, data=subset(CO2.all, flg < 2), colour=stn, geom="line",xlab="Year",ylab="CO2 (ppm)") + 
+  theme(axis.text.y=element_text(size = 6), legend.position="none")
+grid.arrange(p1, p2, ncol=2)
+```
+
+### on a map
+
+```{r CO2-map, fig.width=4.5, fig.height=2.5}
+world <- map_data("world")
+worldmap <- ggplot(world, aes(x=long, y=lat, group=group)) +
+  geom_path(color="grey80", size=0.5) + xlab("") + ylab("") +
+  scale_y_continuous(breaks=(-2:2) * 30) +
+  scale_x_continuous(breaks=(-4:4) * 45) +
+  theme_bw() + theme(aspect.ratio=0.6)
+worldmap + geom_point(data=CO2.all.loc, aes(x=lon, y=lat, group=1), colour="red", 
+                      size=2, alpha=0) +
+  geom_text(data=CO2.all.loc, aes(x=lon, y=lat, label=stn, group=1), 
+            colour="orange", size=5)
+```
+
+- CO2 is increasing, and it looks like it is exponential increase. 
+- The same trend is seen at every location - REALLY? Need some physics to understand this.
+- Some stations show seasonal pattern - actually the more north the more seasonality - WHY?
+
+```{r CO2-quiz}
+quiz(
+  question("CO2 measurements in the northern hemisphere are",
+    answer("higher than the southern hemisphere"),
+    answer("more towards the equator"),
+    answer("more seasonal than the southern hemisphere", correct = TRUE)),
+  question("CO2 is increasing at all measuring locations",
+    answer("in the same rate", correct = TRUE),
+    answer("differently"),
+    answer("its not, its decreasing"))
+)
+```
+
+## What is R?
+
+* Most commonly used data science software [kdnuggets](http://www.kdnuggets.com/2017/05/poll-analytics-data-science-machine-learning-software-leaders.html)
+* __Free__ to use, __open source__ so you can see what code is doing to your data
+* __Extensible__: Over 12000 user contributed add-on packages currently on CRAN! Bioconductor has more than 1300 packages, and many researchers provide packages through github.
+* __Powerful__: With the right tools, get more work done, faster, better.
+* __Flexible__: Not a question of _can_, but _how_.
+
+```{r, eval = FALSE, echo = FALSE}
+## devtools::install_github("metacran/crandb")
+## pkgs <- crandb::list_packages(limit = 999999)
+## length(pkgs)
+## [1] 12194
+```
+
+## RStudio is ...
+
+[From Julie Lowndes](http://jules32.github.io/resources/RStudio_intro/):  
+
+<blockquote>
+<b>If R were an airplane, RStudio would be the airport</b>, providing many, many supporting services that make it easier for you, the pilot, to take off and go to awesome places. Sure, you can fly an airplane without an airport, but having those runways and supporting infrastructure is a game-changer.
+</blockquote>
+
+## The RStudio IDE
+
+- Source editor: Docking station for multiple files, Useful shortcuts ("Knit"), Highlighting/Tab-completion, Code-checking (R, HTML, JS), Debugging features  
+- Console window: Highlighting/Tab-completion, Search recent commands
+- Other tabs/panes: Graphics, R documentation, Environment pane, File system navigation/access, Tools for package development, git, etc
+
+## Installing packages
+
+From CRAN
+
+```{r eval=FALSE, echo=TRUE}
+install.packages("learnr")
+```
+
+
+From bioconductor
+
+```{r eval=FALSE, echo=TRUE}
+source("https://bioconductor.org/biocLite.R")
+biocLite("ggbio")
+```
+
+From github repos
+
+```{r eval=FALSE, echo=TRUE}
+devtools::install_github("earowang/sugrrants")
+devtools::install_github("haleyjeppson/ggmosaic")
+```
+
+## What is R Markdown?
+
+From the [R Markdown home page](http://rmarkdown.rstudio.com/):
+- R Markdown is an authoring format that enables easy creation of dynamic documents, presentations, and reports from R. 
+- It combines the core syntax of __markdown__ (an easy-to-write plain text format) __with embedded R code chunks__ that are run so their output can be included in the final document. 
+- R Markdown documents are fully reproducible (they can be automatically regenerated whenever underlying R code or data changes).
+
+## Open data, open source
+
+- Data is available everywhere today, publicly, free
+- Software, very powerful software, for analysis of data is available publicly, free
+- Combined with a knowledge of mathematics and statistics empowers each of us to contribute to understand and improve our world
+
+
+## Summary
+
+Today's class was about what you can do if you have good data handling skills. 
+
+Tomorrow is going to be getting everyone up and running with the software environment. 
+
+```{r tomorrow}
+quiz(
+  question("I need to bring these things to class",
+    answer("laptop, ready to install R, RStudio, and enrol in ED", correct = TRUE),
+    answer("printed lecture notes"),
+    answer("textbook")),
+  question("If I don't have a laptop, I can borrow one from",
+    answer("room 2.24 in the new Learning and Teaching building", correct = TRUE),
+    answer("Dr Cook"),
+    answer("my mum"))
+)
+```
+
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+
