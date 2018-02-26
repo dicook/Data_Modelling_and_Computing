@@ -19,17 +19,18 @@ title: Home
 
 ## Consultation times
 
-- Di: ?? (E762A)
+- Di: Monday 2-3pm (E762A)
 - Earo: ??
 - Stuart: ??
 
 ## Lecture notes
 
-- Week 1: [Motivation, background examples](lectures/lecture1a_intro.html) [(Rmd)](lectures/lecture1a_intro.Rmd); Textbook reading: __I Explore__, Sections 2, 3.1-3.3, 4, 5.1-5.2, 6, 7.1-7.3
-
-## [2017 Project Description](project/project-ETC1010.pdf) 
+- Week 1: [Motivation, background examples](https://ebsmonash.shinyapps.io/lecture1a_intro/#section-welcome) [(Rmd)](lectures/lecture1a_intro.Rmd); Textbook reading: __I Explore__, Sections 2, 3.1-3.3, 4, 5.1-5.2, 6, 7.1-7.3
 
 ## Data 
+
+
+## [2017 Project Description](project/project-ETC1010.pdf) 
 
 
 ## Exam information
