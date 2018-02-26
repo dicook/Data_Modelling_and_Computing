@@ -1,0 +1,12 @@
+name: lecture1a_intro
+title: lecture1a_intro
+username:
+account: ebsmonash
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 288325
+bundleId: 1239922
+url: https://ebsmonash.shinyapps.io/lecture1a_intro/
+when: 1519628846.83863
+asMultiple: FALSE
+asStatic: FALSE

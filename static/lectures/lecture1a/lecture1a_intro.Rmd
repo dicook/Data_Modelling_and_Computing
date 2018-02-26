@@ -1,0 +1,614 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+author: "Di Cook"
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 4,
+                      fig.width = 8,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+```
+
+# Introduction
+## Welcome!
+
+Lovely to see your new shining faces, eager for the new year.
+
+- I'm Di, a professor at Monash University in Melbourne Australia, and I like to play all sorts of sports, tennis, soccer, hockey, cricket, and go boogie boarding.
+- This is Steph! She is the lab manager for the course. This means that she will help solve problems and manage operations during the lectorial, but will not grade. She just finished her undergraduate degree, and will start a masters in Statistics soon.
+- This is Stuart! Stuart is a second year PhD student in Econometrics and Business Statistics. Stuart is interested in biological data, big, big data, and especially visualisation of the data.
+- This is Earo! Earo is a third year PhD student. She graduated with Bachelor of Commerce, Honours I from Monash. Her expertise is in all sorts of data wrangling and visualisation, especially for time series. 
+
+### Exercise 
+
+Look around .... Your best resources can be right beside you!
+
+- Introduce yourself to the other class mates at your table. 
+- Tell everyone at the table one thing that is interesting about yourself. 
+- Try to make up a (long) name for your table, that summarises everyone's interests.
+
+## Outline
+
+- What is this course is about? 
+- What can we do if we have good data handling skills?
+    - __Insert lots of examples here__
+- We are going to use the software called **R**. Why?
+
+## Materials
+
+- [Unit guide](https://unitguidemanager.monash.edu/view?unitCode=ETC1010&tpCode=S1-01&tpYear=2018): Objectives, tentative schedule, assessment
+- Textbook: [R for Data Science](http://r4ds.had.co.nz), Garret Grolemund and Hadley Wickham. Its free online, but you can also buy a copy if you wish. Best book to get you up and running as a data analyst!
+- Computing: [R](https://cran.r-project.org) and [RStudio](https://www.rstudio.com) desktop IDE
+- Materials: 
+    + Moodle for grades
+    + [course web site](https://dmac.netlify.com) for lecture and lab materials 
+    + online quizzes, lab and assignment submissions will be in  [ED](https://edstem.org/)
+
+## Learning objectives
+
+- apply principles and techniques of data management with computers and spreadsheet modelling to business and economic decision-making
+- interpret and evaluate relationships between variables using simple and multiple linear regression
+- apply statistical techniques for making decisions with quantitative and categorical data in business and economics
+
+### Philosophy
+
+"If you feed a person a fish, they eat for a day. If you teach a person to fish, they eat for a lifetime."
+
+Whatever I do, you can do too.
+
+__Data preparation accounts for about 80% of the work of data scientists__
+
+[Gil Press, Forbes, 2016](https://www.forbes.com/sites/gilpress/2016/03/23/data-preparation-most-time-consuming-least-enjoyable-data-science-task-survey-says/##47cbbbf46f63)
+
+This is one of the least taught parts of data science, and business analytics, and yet it is what data scientists spend most of their time on. By the end of this semester, we hope that you will have the tools to be more efficient and effective in this area, so that you have more time to spend on your mining and modeling.
+
+## Class format
+
+Reading material will be assigned each week. Prior to the first class, and sometimes the second class each week, you should complete the reading assignment. There will be short quizzes (self-graded, and for 5% of assessment) at the start of most classes testing that you have completed the reading. 
+
+There will be some lecturing, typically at the start of each class, and occasionally during the class period. Some ungraded quizzess and exercises will be in the lecture notes. 
+
+A large part of each class will be doing hands-on exercises and problem solving. There will be some in-class coding challenges (self-graded and for 10% of assessment), to ensure that everyone learns enough to be their own data analysis guru. 
+
+Every two weeks there will be a data analysis assignment due. This will be completed as a team, with one report handed in. Each person needs to contribute, and will provide information about their contribution, which will be scored by other team members. The reports will be graded (blindly) by another team, as well as the tutors. These account for 10% of assessment. 
+
+Around 2/3 through the semester the project assignment will be announced. You will need to form teams, collect your own data, munge it, write a report and present your analysis to the class. This accounts for 15% of assessment. 
+
+The classroom is a new teaching space. This is called a **MoVE** unit, which means that you are encouraged, actually expected to bring your own device to class. If you don't have a laptop you can borrow a laptop for an activity or for a full day. 
+
+### Borrowing a laptop
+
+If you are enrolled in a MoVE unit and forget your laptop, or do not own one as yet, please visit room 2.24 in the new Learning and Teaching building (Clayton campus) to borrow a laptop for an activity or the full day. You will be required to provide proof of ID (student card or personal ID) in order to borrow a laptop. This service is open from 7.45am - 7.00pm on Monday to Friday.
+
+## Quiz
+
+```{r operators}
+quiz(
+  question("Where do I find the class lectorial notes?",
+    answer("moodle"),
+    answer("https://edstem.org/"),
+    answer("class web site (http://dmac.netlify.com)", correct = TRUE),
+    answer("http://r4ds.had.co.nz")),
+  question("Where do I find my grades?",
+    answer("moodle", correct = TRUE),
+    answer("https://edstem.org/"),
+    answer("class web site (http://dmac.netlify.com)"),
+    answer("http://r4ds.had.co.nz")),
+  question("What is the link for the course textbook?",
+    answer("moodle"),
+    answer("https://edstem.org/"),
+    answer("class web site (http://dmac.netlify.com)"),
+    answer("http://r4ds.had.co.nz", correct = TRUE))
+)
+```
+  
+
+```{r}
+library(tidyverse)
+library(gridExtra)
+```
+
+## Music
+
+### Reading audio data
+
+- Read in a wave file
+- Digitise it as time and amplitude
+- Plot
+- Compare with other sounds
+
+```{r}
+library(tuneR)
+m1 <- readWave("data/data3.wav")
+m1 <- extractWave(m1, from = 25000, to = 75000)
+m1_df <- data.frame(t=1:length(m1@left), 
+                    left=m1@left, 
+                    right=m1@right)
+p1 <- ggplot(m1_df, aes(x=t, y=left)) + geom_line() + ggtitle("Say `data`")
+m2 <- readWave("data/statistics1.wav")
+m2 <- extractWave(m2, from = 25000, to = 75000)
+m2_df <- data.frame(t=1:length(m2@left), 
+                    left=m2@left, 
+                    right=m2@right)
+p2 <- ggplot(m2_df, aes(x=t, y=left)) + geom_line() + ggtitle("Say `statistics`")
+grid.arrange(p1, p2, ncol=1)
+```
+
+### Compare left and right channels
+
+```{r}
+p1 <- ggplot(m1_df, aes(x=left, y=right)) + 
+  geom_point() + theme(aspect.ratio=1)
+p2 <- ggplot(m2_df, aes(x=left, y=right)) + 
+  geom_point() + theme(aspect.ratio=1)
+grid.arrange(p1, p2, ncol=2)
+```
+
+Oh, same sound is on both channels! A tad drab.
+
+### Compute statistics
+
+```{r}
+m1_df <- m1_df %>% gather(channel, value, left, right) %>%
+  mutate(word="data")
+m2_df <- m2_df %>% gather(channel, value, left, right) %>%
+  mutate(word="statistics")
+m_df <- bind_rows(m1_df, m2_df)
+m_df %>% filter(channel == "left") %>%
+  group_by(word) %>%
+  summarise(m = mean(value), s = sd(value), 
+            mx = max(value), mn = min(value))
+```
+
+### My music - please don't laugh
+
+```{r}
+music <- read.csv("data/music-sub.csv", 
+                  row.names=1, stringsAsFactors = FALSE)
+ggplot(music, aes(x=artist, y=lave)) + geom_boxplot() +
+  xlab("") + ylab("Average amplitude")
+```
+
+```{r fig.height=4, fig.weight=4}
+ggplot(music, aes(x=lvar, y=lave, colour=artist)) + 
+  geom_point(size=5, alpha=0.5) +
+  scale_colour_brewer(palette="Dark2") +
+  xlab("Std amplitude") + ylab("Average amplitude") +
+  theme(aspect.ratio = 1)
+```
+
+Abba is just different from everyone else!
+
+
+```{r audio}
+quiz(
+  question("How does `data` appear different than `statistics` in the time series?",
+    answer("statistics is longer"),
+    answer("statistics has more peaks", correct=TRUE),
+    answer("they are the same")),
+  question("What format is the data in an audio file?",
+    answer("binary", correct=TRUE),
+    answer("text"),
+    answer("comma separated"),
+    answer("tab separated"),
+    answer("JSON")),
+  question("How is Abba different from the other music clips?",
+    answer("It has more variation"),
+    answer("It has less variation"),
+    answer("It has a higher average amplitude"),
+    answer("It has a lower average amplitude", correct=TRUE))
+)
+```
+
+## Education
+
+### Data description
+
+- OECD PISA survey is the world's global metric for quality, equity and efficiency in school education.
+- Workforce readiness of 15-year old students
+- 14530 students tested in Australia in 2015
+- How many schools?
+- Math, reading and science tests, surveys on school and home environment, 921 variables
+- Data available from [http://www.oecd.org/pisa/data/](http://www.oecd.org/pisa/data/)
+
+```{r eval=FALSE}
+pisa_2015 <- read_sav(file.choose()) ## The SPSS format zip file
+pisa_au <- pisa_2015 %>% filter(CNT == "AUS")
+save(pisa_au, file="data/pisa_au.rda")
+```
+
+
+### Gender differences
+
+```{r}
+load("data/pisa_au.rda")
+pisa_au <- pisa_au %>% 
+  mutate(ST004D01T = factor(ST004D01T, 
+                            levels=c(1,2), 
+                            labels=c("girls", "boys"))) 
+pisa_au %>%
+  group_by(ST004D01T) %>%
+  summarise(math=weighted.mean(PV1MATH, SENWT), 
+            read=weighted.mean(PV1READ, SENWT), 
+            sci=weighted.mean(PV1SCIE, SENWT))
+p1 <- ggplot(pisa_au, aes(x=ST004D01T, y=PV1MATH, 
+                          fill=ST004D01T)) +
+  geom_boxplot() + xlab("") + theme(legend.position="none")
+p2 <- ggplot(pisa_au, aes(x=ST004D01T, y=PV1READ, 
+                          fill=ST004D01T)) +
+  geom_boxplot() + xlab("") + theme(legend.position="none")
+p3 <- ggplot(pisa_au, aes(x=ST004D01T, y=PV1SCIE, 
+                          fill=ST004D01T)) +
+  geom_boxplot() + xlab("") + theme(legend.position="none")
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+On average reading scores are most different, with girls scoring substantially higher. There is more variability from individual to individual than from boys to girls. 
+
+```{r education}
+quiz(
+  question("The middle bar in the box of the boxplot represents the",
+    answer("median", correct=TRUE),
+    answer("mean"),
+    answer("standard deviation"),
+    answer("Q1"),
+    answer("Q3")),  
+  question("Which test score sees the biggest difference in medians?",
+    answer("math"),
+    answer("reading", correct=TRUE),
+    answer("science")),
+  question("What value do points outside the whiskers exceed?",
+    answer("three standard deviations"),
+    answer("half the range"),
+    answer("1.5 times the size of the box", correct=TRUE))
+)
+```
+
+## Tennis
+
+Statistics for grand slam and top tournament matches are available through the ATP and WTA web sites. By web scraping these web sites we can pull data together to explore characteristics of different players, surfaces, ... These are compiled into the R package deuce. 
+
+```{r}
+library(plotly)
+## devtools::install_github("skoval/deuce")
+library(deuce)
+data(wta_matches)
+grand_slams <- filter(wta_matches, 
+                      tourney_level == "Grand Slams", 
+                      year>1983)
+p <- ggplot(grand_slams, aes(x=factor(year), y=winner_age)) + 
+  geom_boxplot() + 
+  scale_x_discrete(breaks=c("1990", "2000", "2010", "2020")) + 
+  xlab("") + ylab("winner age") 
+p <- p +
+  geom_point(mapping=aes(text=winner_name), 
+             data=filter(grand_slams, winner_age > 35), 
+             alpha=0.5, colour="red", size=3) 
+ggplotly(p)
+```
+
+Yes, there are 47 year olds playing Grand Slams! [See NYTimes, 2004](http://www.nytimes.com/2004/06/21/sports/tennis/navratilova-47-wins-at-wimbledon.html)
+
+
+```{r tennis}
+quiz(
+  question("Who is the oldest woman to have won a match?",
+    answer("Martina Navratilova"),
+    answer("Venus Williams"),
+    answer("Kimiko Date Krumm"),
+    answer("Katerina Bohmova", correct=TRUE)),  
+  question("What year was the last year that Martina Navratilova played and won a match?",
+    answer("2017"),
+    answer("2015"),
+    answer("2010"),
+    answer("2004" , correct=TRUE))
+)
+```
+
+## Australian Politics
+
+### AEC data
+
+The [Australian Electoral Commission](http://www.aec.gov.au/elections/federal_elections/2016/downloads.htm) provides Federal election results, and the electoral map. 
+
+```{r fig.width=5, fig.height=4}
+library(eechidna)
+who_won <- aec2016_2pp_electorate %>% 
+  group_by(PartyNm) %>% 
+  tally() %>% 
+  arrange(desc(n)) 
+
+## plot
+who_won <- aec2016_2pp_electorate %>% 
+  group_by(PartyNm) %>% 
+  tally() %>% 
+  arrange(desc(n)) 
+
+## plot
+ggplot(who_won, 
+       aes(reorder(PartyNm, n), 
+           n)) +
+  geom_point(size = 3) + 
+  coord_flip() + 
+  theme_bw() +
+  ylab("Total number of electorates") +
+  xlab("") +
+  theme(text = element_text(size=10))
+```
+
+### Map it!
+
+```{r fig.width=6, fig.height=4}
+library(ggthemes)
+data(nat_data_2016_cart)
+data(nat_map_2016)
+data(aec2016_fp_electorate)
+map.winners <- aec2016_fp_electorate %>% filter(Elected == "Y") %>% 
+  select(Electorate, PartyNm) %>% 
+  merge(nat_map_2016, by.x="Electorate", by.y="Elect_div")
+
+## Grouping different Lib/Nats togethers
+map.winners$PartyNm <- as.character(map.winners$PartyNm)
+coalition <- c("Country Liberals (NT)", "Liberal", 
+               "Liberal National Party of Queensland", "The Nationals")
+map.winners.grouped <- mutate(map.winners, 
+    PartyNm = ifelse(as.character(PartyNm) %in% coalition,
+       "Liberal National Coalition", PartyNm))
+map.winners.grouped <- map.winners.grouped %>% arrange(group, order)
+
+## Colour cells to match that parties colours
+## Order = Australian Labor Party, Independent, Katters, Lib/Nats Coalition, Palmer, The Greens
+partycolours = c("##FF0033", "##000000", "##CC3300", "##0066CC", "##FFFF00", "##009900")
+
+ggplot(data=map.winners.grouped) + 
+  geom_polygon(aes(x=long, y=lat, group=group,
+                   fill=PartyNm)) +
+  #scale_fill_manual(name="Political Party",
+  #                  values=partycolours) +
+  theme_map() + coord_equal() + theme(legend.position="bottom")
+```
+
+### Cartogram it!
+
+```{r fig.width=7, fig.height=5}
+## Load election results
+cart.winners <- aec2016_fp_electorate %>% filter(Elected == "Y") %>% 
+  select(Electorate, PartyNm) %>% 
+  merge(nat_data_2016_cart, by.x="Electorate", by.y="ELECT_DIV")
+
+## Grouping different Lib/Nats togethers
+cart.winners$PartyNm <- as.character(cart.winners$PartyNm)
+coalition <- c("Country Liberals (NT)", "Liberal", "Liberal National Party of Queensland",
+               "The Nationals")
+cart.winners.grouped <- mutate(cart.winners, 
+  PartyNm = ifelse(as.character(PartyNm) %in% coalition, 
+                   "Liberal National Coalition", PartyNm))
+
+## Plot it
+ggplot(data=nat_map_2016) +
+  geom_polygon(aes(x=long, y=lat, group=group, order=order),
+               fill="grey90", colour="white") +
+  geom_point(data=cart.winners.grouped, aes(x=x, y=y, colour=PartyNm), size=2, alpha=0.8) +
+#  scale_colour_manual(name="Political Party", values=partycolours) +
+  theme_map() + coord_equal() + theme(legend.position="bottom")
+```
+
+
+### Combine with Census data
+
+```{r}
+## devtools::install_github("ijlyttle/vembedr")
+library(vembedr)
+embed_vimeo("167367369", width=800, height=500)
+```
+
+Video link: [https://vimeo.com/167367369](https://vimeo.com/167367369)
+
+```{r politics}
+quiz(
+  question("How many federal electorates does NT have",
+    answer("1"),
+    answer("2", correct=TRUE),
+    answer("3"),
+    answer("4")),  
+  question("Which party won the most seats in SA?",
+    answer("ALP", correct=TRUE),
+    answer("LNC"),
+    answer("NXT"),
+    answer("Greens"))
+)
+```
+
+## About Melbourne
+
+### Pedestrian sensors
+
+```{r fig.width=10, fig.height=3}
+ped <- read_csv("http://www.pedestrian.melbourne.vic.gov.au/datadownload/January_2018.csv")
+ped_m <- ped %>% 
+  mutate(Date = dmy(Date)) %>%
+  select(Date, Hour, `Melbourne Central`, `Flinders St Station Underpass`, `Birrarung Marr`) %>%
+  gather(location, count, `Melbourne Central`, `Flinders St Station Underpass`, `Birrarung Marr`) %>%
+    mutate(wday=wday(Date, label=TRUE), mday=mday(Date),
+           wk=week(Date)) ##%>%
+    ##mutate(wday=recode_factor(wday,
+    ##    levels=c("Mon","Tues","Wed","Thurs","Fri","Sat","Sun")))
+ggplot(ped_m, aes(x=Hour, y=count, 
+                       colour=location, 
+                       group=interaction(Date, location))) +
+  scale_colour_brewer(palette="Dark2") +
+  facet_wrap(~wday, ncol=7) +
+  geom_line() + theme(legend.position="bottom")
+```
+
+### Each day 
+
+```{r fig.height=7}
+ggplot(ped_m, aes(x=Hour, y=count, 
+                       colour=location)) +
+  scale_colour_brewer(palette="Dark2") +
+  facet_grid(wk~wday) +
+  geom_line() + theme(legend.position="bottom")
+```
+
+### Google maps
+
+Pull a google map and see where the sensors are located.
+
+```{r}
+## devtools::install_github("dkahle/ggmap")
+locations <- read_csv("data/Pedestrian_sensor_locations.csv")
+library(ggmap)
+ctr <- locations %>% 
+  summarise(lat=mean(Latitude), lon=mean(Longitude))
+map <- get_map(c(ctr$lon, ctr$lat), zoom=14)
+ggmap(map) + geom_point(data=locations, 
+                        mapping=aes(x=Longitude, y=Latitude)) +
+  theme_map()
+```
+
+```{r sensors}
+quiz(
+  question("Which sensor shows the strongest commuter pattern?",
+    answer("Birrarung Marr"),
+    answer("Flinders St Station Underpass", correct=TRUE),
+    answer("Melbourne Central")),  
+  question("Which sensor shows the signs of an event on the second Saturday in January?",
+    answer("Birrarung Marr", correct=TRUE),
+    answer("Flinders St Station Underpass"),
+    answer("Melbourne Central"))
+)
+```
+
+## Airline traffic
+
+### Data source
+
+The web site [https://www.transtats.bts.gov](https://www.transtats.bts.gov) keeps records for all commercial flights in the USA. The ontime database is interesting. You can download all records since record collection started, about 20Gb, or select months. I've pulled records for May 2017, 20Mb zip'd data.
+
+### Variables
+
+```{r eval=FALSE, echo=TRUE}
+"YEAR","MONTH","DAY_OF_MONTH","DAY_OF_WEEK",
+"FL_DATE","UNIQUE_CARRIER","AIRLINE_ID","CARRIER",
+"TAIL_NUM","FL_NUM","ORIGIN_AIRPORT_ID",
+"ORIGIN_AIRPORT_SEQ_ID","ORIGIN_CITY_MARKET_ID",
+"DEST_AIRPORT_ID","DEST_AIRPORT_SEQ_ID",
+"DEST_CITY_MARKET_ID","CRS_DEP_TIME","DEP_TIME",
+"DEP_DELAY","DEP_DELAY_NEW","DEP_DEL15",
+"DEP_DELAY_GROUP","TAXI_OUT","WHEELS_OFF","WHEELS_ON",
+"TAXI_IN","CRS_ARR_TIME","ARR_TIME","ARR_DELAY",
+"ARR_DELAY_NEW","ARR_DEL15","CANCELLED",
+"CANCELLATION_CODE","DIVERTED","CRS_ELAPSED_TIME",
+"ACTUAL_ELAPSED_TIME","AIR_TIME","DISTANCE",
+"CARRIER_DELAY","WEATHER_DELAY","NAS_DELAY",
+"SECURITY_DELAY","LATE_AIRCRAFT_DELAY"
+```
+
+### Where did my plane fly?
+
+```{r eval=FALSE}
+air <- read_csv("data/901848483_T_ONTIME.csv")
+
+dfw_dsm <- air %>%
+  filter(CARRIER == "AA", FL_DATE == "2017-05-06",
+         ORIGIN == "DFW", DEST == "DSM")
+dfw_dsm %>%
+  select(CRS_DEP_TIME, TAIL_NUM)
+
+plane_N4YRAA <- air %>% filter(TAIL_NUM == "N4YRAA") %>%
+  select(FL_DATE, CARRIER, FL_NUM, ORIGIN, DEST, DEP_TIME, ARR_TIME, DISTANCE)
+save(plane_N4YRAA, file="data/plane_N4YRAA.rda")
+```
+
+```{r fig.width=6, fig.height=6}
+load("data/plane_N4YRAA.rda")
+airport <- read_csv("data/airports.csv")
+airport <- airport %>%
+  select(AIRPORT, LATITUDE, LONGITUDE, AIRPORT_IS_LATEST, DISPLAY_AIRPORT_NAME) %>%
+  filter(AIRPORT_IS_LATEST == 1) %>%
+  select(-AIRPORT_IS_LATEST)
+
+N4YRAA_latlon <- left_join(plane_N4YRAA, airport,
+                           by = c("ORIGIN"="AIRPORT")) %>%
+  rename("ORIGIN_LATITUDE"="LATITUDE",
+         "ORIGIN_LONGITUDE"="LONGITUDE")
+
+N4YRAA_latlon <- left_join(N4YRAA_latlon, airport,
+                           by = c("DEST"="AIRPORT")) %>%
+  rename("DEST_LATITUDE"="LATITUDE",
+         "DEST_LONGITUDE"="LONGITUDE")
+
+N4YRAA_latlon <- N4YRAA_latlon %>% arrange(FL_DATE, DEP_TIME)
+
+map <- get_map(c(lon=-92.20562, lat=36.20259), zoom=5)
+ggmap(map) +
+  geom_segment(data=filter(N4YRAA_latlon,
+                           FL_DATE == ymd("2017-05-06")),
+               aes(x=ORIGIN_LONGITUDE, xend=DEST_LONGITUDE,
+                   y=ORIGIN_LATITUDE, yend=DEST_LATITUDE),
+               color="navyblue") +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE == ymd("2017-05-06")),
+             aes(x=ORIGIN_LONGITUDE,
+                 y=ORIGIN_LATITUDE), color="orange",
+             alpha=0.3, size=3) +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE == ymd("2017-05-06")),
+             aes(x=DEST_LONGITUDE,
+                 y=DEST_LATITUDE), color="red",
+             alpha=0.3, size=1) +
+   theme_map()
+```
+
+### and in the rest of the month ...
+
+```{r fig.width=10, fig.height=6}
+map <- get_map(c(lon=-92.20562, lat=36.20259), zoom=4)
+ggmap(map) +
+  geom_segment(data=filter(N4YRAA_latlon,
+                           FL_DATE < ymd("2017-05-15")),
+               aes(x=ORIGIN_LONGITUDE, xend=DEST_LONGITUDE,
+                   y=ORIGIN_LATITUDE, yend=DEST_LATITUDE),
+               color="navyblue") +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE < ymd("2017-05-15")),
+             aes(x=ORIGIN_LONGITUDE,
+                 y=ORIGIN_LATITUDE), color="orange",
+             alpha=0.3, size=3) +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE < ymd("2017-05-15")),
+             aes(x=DEST_LONGITUDE,
+                 y=DEST_LATITUDE), color="red",
+             alpha=0.3, size=1) +
+  facet_wrap(~FL_DATE, ncol=7) + 
+  theme_map()
+```
+
+### What airports are these
+
+```{r}
+library(knitr)
+origin_airports <- N4YRAA_latlon %>% 
+  select(ORIGIN) %>%
+  distinct() 
+airport %>% filter(AIRPORT %in% origin_airports$ORIGIN) %>%
+  select(AIRPORT, DISPLAY_AIRPORT_NAME) %>% kable()
+```
+
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+

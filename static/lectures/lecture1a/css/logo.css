@@ -1,0 +1,4 @@
+.tutorialTitle:before {
+  content: url("../img/M.png");
+  display: block;
+}

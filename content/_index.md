@@ -23,12 +23,15 @@ title: Home
 - Earo: Thursday 12:30-2:00pm (Menzies E1105)
 - Stuart: Friday 12:30-2:00 (Menzies E1105)
 
+## MoVE
+
+If you are enrolled in a MoVE unit and forget your laptop, or do not own one as yet, please visit room 2.24 in the new Learning and Teaching building (Clayton campus) to borrow a laptop for an activity or the full day. You will be required to provide proof of ID (student card or personal ID) in order to borrow a laptop. This service is open from 7.45am - 7.00pm on Monday to Friday.
+
 ## Lecture notes
 
-- Week 1: [Motivation, background examples](https://ebsmonash.shinyapps.io/lecture1a_intro/#section-welcome) [(Rmd)](lectures/lecture1a_intro.Rmd); Textbook reading: __I Explore__, Sections 2, 3.1-3.3, 4, 5.1-5.2, 6, 7.1-7.3
+- Week 1: [Motivation, background examples](https://ebsmonash.shinyapps.io/lecture1a_intro/#section-welcome) [(Rmd)](lectures/lecture1a/lecture1a_intro.Rmd); Textbook reading: __I Explore__, Sections 2, 3.1-3.3, 4, 5.1-5.2, 6, 7.1-7.3
 
 ## Data 
-
 
 ## [2017 Project Description](project/project-ETC1010.pdf) 
 
