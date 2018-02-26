@@ -282,6 +282,13 @@ quiz(
 )
 ```
 
+## Spotify and US Gun Control
+
+These two examples were posted today on twitter:
+
+- [Scraping and analyzinf potify streaming data](https://ramirobentes.netlify.com/post/scraping-and-analyzing-spotify-streaming-data-using-r/)
+- [Persistence of Public Interest in Gun Control](https://rawgit.com/benmarwick/Persistence-of-Public-Interest-in-Gun-Control/master/README.html)
+
 ## What is R?
 
 * Most commonly used data science software [kdnuggets](http://www.kdnuggets.com/2017/05/poll-analytics-data-science-machine-learning-software-leaders.html)
