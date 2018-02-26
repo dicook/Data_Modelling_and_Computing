@@ -19,9 +19,9 @@ title: Home
 
 ## Consultation times
 
-- Di: Monday 2-3pm (E762A)
-- Earo: ??
-- Stuart: ??
+- Di: Monday 2-3pm (Menzies E762A)
+- Earo: Thursday 12:30-2:00pm (Menzies E1105)
+- Stuart: Friday 12:30-2:00 (Menzies E1105)
 
 ## Lecture notes
 
