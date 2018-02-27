@@ -33,14 +33,14 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 
 ## Data 
 
-- [music-sub.csv](data/music-sub.csv)
-- [Pedestrian_sensor_locations.csv](data/Pedestrian_sensor_locations.csv)
-- [rates.csv](data/rates.csv)
-- [airports.csv](data/airports.csv)
-- [data3.wav](data/data3.wav)
-- [statistics1.wav](data/statistics1.wav)
-- [pisa_au.rda](data/pisa_au.rda)
-- [plane_N4YRAA.rda](data/plane_N4YRAA.rda)
+- [music-sub.csv](lecture1a/data/music-sub.csv)
+- [Pedestrian_sensor_locations.csv](lecture1a/data/Pedestrian_sensor_locations.csv)
+- [rates.csv](lecture1a/data/rates.csv)
+- [airports.csv](lecture1a/data/airports.csv)
+- [data3.wav](lecture1a/data/data3.wav)
+- [statistics1.wav](lecture1a/data/statistics1.wav)
+- [pisa_au.rda](lecture1a/data/pisa_au.rda)
+- [plane_N4YRAA.rda](lecture1a/data/plane_N4YRAA.rda)
 
 ## [2017 Project Description](project/project-ETC1010.pdf) 
 
