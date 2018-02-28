@@ -29,7 +29,8 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 
 ## Lecture notes
 
-- Week 1: About this course and getting your computer setup nicely [Slide set a](https://ebsmonash.shinyapps.io/lecture1a_intro/) [(Rmd)](lectures/lecture1a/lecture1a_intro.Rmd); [Slide set b](https://ebsmonash.shinyapps.io/lecture1b_intro/) [(Rmd)](lectures/lecture1b/lecture1b_intro.Rmd); [Wednesday exercises](https://ebsmonash.shinyapps.io/lecture1c_intro/) [(Rmd)](lectures/lecture1c/lecture1c_intro.Rmd)Textbook reading: __I Explore__, Sections 2, 3.1-3.3, 4, 5.1-5.2, 6, 7.1-7.3
+- Week 1: About this course and getting your computer setup nicely [Slide set a](https://ebsmonash.shinyapps.io/lecture1a_intro/) [(Rmd)](lectures/lecture1a/lecture1a_intro.Rmd); [Slide set b](https://ebsmonash.shinyapps.io/lecture1b_intro/) [(Rmd)](lectures/lecture1b/lecture1b_intro.Rmd); [Wednesday exercises](https://ebsmonash.shinyapps.io/lecture1c_intro/) [(Rmd)](lectures/lecture1c/lecture1c_intro.Rmd); Textbook reading: __I Explore__, Sections 2, 3.1-3.3, 4, 5.1-5.2, 6, 7.1-7.3
+- Week 2: Tidy data principles; Reading: Chapter 12
 
 ## Data 
 
