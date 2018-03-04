@@ -373,6 +373,27 @@ ggplot(melbtemp_wide, aes(x=year, y=TMAX)) +
 
 Make the same plot, except use minimum temperature. Is there a trend for the minimum, like there is for the maximum? 
 
+Read the data in first with this code:
+
+```
+library(tidyverse)
+melbtemp <- read_fwf("http://dmac.netlify.com/lectures/data/ASN00086282.dly",
+  col_positions=fwf_widths(c(11, 4, 2, 4, 
+        rep(c(5, 1, 1, 1), 31)), 
+      col_names = c("station", "year", "month",
+        "variable", paste0("X", 5:128))))
+melbtemp <- melbtemp[,c(1:4, seq(5,128,4))] 
+melbtemp_wide <- melbtemp %>% 
+  gather(day, value, X5:X125) %>%
+  mutate(day = sub("X", "", day)) %>%
+  mutate(day = as.numeric(day)%/%4) %>%
+  mutate(day = as.integer(day)) %>% 
+  filter(variable %in% c("PRCP", "TMAX", "TMIN")) %>% 
+  mutate(value=ifelse(value==-9999, NA, value)) %>%
+  spread(variable, value) %>%
+  mutate(PRCP=PRCP/10, TMAX=TMAX/10, TMIN=TMIN/10) 
+```
+
 ```{r sandbox2, exercise=TRUE}
 
 ```
