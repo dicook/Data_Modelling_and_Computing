@@ -1,0 +1,404 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 4,
+                      fig.width = 8,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+```
+
+# Tidy data
+
+## Overview
+
+- Motivation
+- Terminology of data
+- Different examples of data 
+- Steps in making data tidy
+
+## US graduate programs
+
+This is data from a study on US grad programs. It originally came in an excel file containing rankings of many different programs. This data set contains information on four programs astronomy, economics, entomology and psychology. 
+
+```{r readgrad}
+library(tidyverse)
+grad <- read_csv("data/graduate-programs.csv")
+grad %>% top_n(10)
+```
+
+What's special about the format?
+
+- Rows contain information about the institution
+- Columns contain types of information, like average number of publications, average number of citations, % completion, 
+
+It makes it easy to make summaries:
+
+```{r gradsummary}
+grad %>% count(subject)
+grad %>% filter(subject == "economics") %>%
+  summarise(m=mean(NumStud), s=sd(NumStud))
+grad %>% filter(subject == "economics") %>%
+  ggplot(aes(x=NumStud, y=MedianTimetoDegree)) +
+  geom_point() + theme(aspect.ratio=1)
+```
+
+What do we learn from these summaries?
+
+```{r variable, echo=FALSE}
+quiz(
+  question("The average number of graduate students per economics program is ",
+    answer("about 61", correct = TRUE),
+    answer("about 39")),
+  question("What is the best description of the relationship between number of students and median time to degree?",
+    answer("as the number of students increases the median time to degree increases, weakly", correct = TRUE),
+    answer("as the number of students increases the variability in median time to degree decreases"))
+)
+```
+
+In the R window below, for economics programs: 
+
+- compute the mean and standard deviation of average number of publications. 
+- make a plot of average number of publications by average number of citations. Is there a relationship?
+
+```{r sandbox, exercise=TRUE}
+
+```
+
+## Terminology of data
+
+- A __variable__ is a quantity, quality, or property that you can measure. For the grad programs, these would be all the column headers.
+- An __observation__ is a set of measurements made under similar conditions (you usually make all of the measurements in an observation at the same time and on the same object). An observation will contain several values, each associated with a different variable. I’ll sometimes refer to an observation as a data point. For the grad programs, this is institution, and program, uniquley define the observation.
+- A value is the state of a variable when you measure it. The value of a variable typically changes from observation to observation.
+
+## Tidy tabular form
+
+__Tabular data__ is a set of values, each associated with a variable and an observation. Tabular data is __tidy__ if each value is placed in its own `cell`, each variable in its own column, and each observation in its own row.
+
+The grad programs data in tabular form. It also is in **wide** tidy form, because there are multiple columns containing different variables.
+
+It can also be useful - for the process of data analysis - to arrange data into **long** tidy form, where each value is uniquely identified.
+
+```{r}
+grad %>% gather(variable, value, -subject, -Inst)
+```
+
+## Different examples of data
+
+For each of these data examples, identify the variables and the observations - some are HARD!
+
+### Social survey
+
+```{r}
+pew <- read_delim(
+  file = "http://stat405.had.co.nz/data/pew.txt",
+  delim="\t",
+  col_names = TRUE
+)
+pew
+```
+
+### Genes experiment
+
+```{r}
+genes <- read_csv("data/genes.csv")
+genes 
+```
+
+### Melbourne weather
+
+What are the variables? Observations?
+
+```{r}
+melbtemp <- read_fwf("data/ASN00086282.dly", 
+   col_positions=fwf_widths(c(11, 4, 2, 4, 
+        rep(c(5, 1, 1, 1), 31))))
+melbtemp %>% select(X1, X2, X3, X4, X5, X9, 
+          X13, X17, X21, X25, X29, X33)
+```
+
+### TB incidence
+
+```{r}
+tb <- read_csv("data/tb.csv")
+tb %>% top_n(-10)
+```
+
+## Messy vs tidy
+
+Messy data is messy in its own way. You can make unique solutions, but then another data set comes along, and you have to again make a unique solution. 
+
+Tidy data can be though of as legos. Once you have this form, you can put it together in so many different ways, to make different analyses.
+
+![](img/lego.png)
+
+## Tidy verbs
+
+- `gather`: specify the **keys** (identifiers) and the **values** (measures) to make long form (used to be called melting)
+- `spread`: variables in columns (used to be called casting)
+- `nest`/`unnest`: working with list variables
+- `separate`/`unite`: split and combine columns
+
+## Tidying contingency table
+
+Turn it into long form tidy
+
+```{r}
+pew_long <- pew %>%
+  gather(income, count, -religion)
+pew_long %>% top_n(10)
+```
+
+### Make calculations 
+
+```{r}
+pew_long <- pew_long %>%
+  group_by(religion) %>%
+  mutate(prop = count / sum(count)) 
+pew_long %>% top_n(10)
+```
+
+### Relationship between income and religion
+
+```{r}
+pew_long %>%
+  ggplot(aes(income, prop)) +
+    geom_line(aes(group = religion)) +
+    facet_wrap(~religion, ncol=6) + 
+    scale_x_discrete(labels=c("<$10k"="10", 
+      "$10-20k"="20", "$20-30k"="30", 
+      "$30-40k"="40", "$40-50k"="50", 
+      "$50-75k"="75", "$75-100k"="100",
+      "$100-150k"="150", ">150k"="200",
+      "Don't know/refused"="N"))
+```
+
+
+## Tidying genes data
+
+```{r}
+genes_long <- genes %>% 
+  gather(variable, expr, -id) 
+genes_long
+```
+
+### separate Columns
+
+```{r}
+genes_long %>%
+  separate(variable, c("trt", "leftover"), "-") 
+```
+
+```{r}
+genes_long %>%
+  separate(variable, c("trt", "leftover"), "-") %>%
+  separate(leftover, c("time", "rep"), "\\.") 
+```
+
+### Trim redundant information 
+
+```{r}
+gtidy <- genes_long %>%
+  separate(variable, c("trt", "leftover"), "-") %>%
+  separate(leftover, c("time", "rep"), "\\.") %>%
+  mutate(trt = sub("W", "", trt)) %>%
+  mutate(rep = sub("R", "", rep))
+gtidy
+```
+
+### Make summaries and plot
+
+```{r}
+gmean <- gtidy %>% 
+  group_by(id, trt, time) %>% 
+  summarise(expr = mean(expr))
+ggplot(data = gtidy, aes(trt, expr, colour = time)) + 
+         geom_point() + 
+  xlab("Type of modification") + ylab("Expression") + 
+  facet_wrap(~id) +
+  geom_line(data = gmean, aes(group = time))
+```
+
+What do we learn about the data? At 12 hours the expression for Gene 1 is different between genotypes I and M, because the variability in replicates is small relative to the difference between means. For the rest of the numbers and genes the variability is too high to be able to say anything about difference between means. 
+
+## Melbourne weather
+
+```{r}
+melbtemp <- read_fwf("data/ASN00086282.dly", 
+   col_positions=fwf_widths(c(11, 4, 2, 4, 
+        rep(c(5, 1, 1, 1), 31)), 
+        col_names = c("station", "year", "month",
+              "variable", paste0("X", 5:128))))
+melbtemp
+```
+
+### Sometime easier to index select
+
+- `[...]` allows indexing of elements of a vector, or collection of numbers
+- `c(1:4, seq(5,128,4))` means collect items 1 through 4, and then every 4th item until the 128'th
+
+```{r}
+melbtemp <- melbtemp[,c(1:4, seq(5,128,4))] 
+melbtemp
+```
+
+### Make long form
+
+```{r}
+melbtemp_long <- melbtemp %>% 
+  gather(day, value, X5:X125)
+melbtemp_long
+```
+
+### Create day variable
+
+```{r}
+melbtemp_long %>% 
+  mutate(day = sub("X", "", day))
+```
+
+```{r}
+melbtemp_long <- melbtemp_long %>% 
+  mutate(day = sub("X", "", day)) %>%
+  mutate(day = as.numeric(day)%/%4) %>%
+  mutate(day = as.integer(day))
+melbtemp_long
+```
+
+### Take a look
+
+It looks like there are just three variables, PRCP, TMAX, TMIN but there are actually quite a few more.
+
+```{r}
+melbtemp_long %>% count(variable)
+```
+
+We are only interested in PRCP, TMAX, TMIN, so filter.
+
+```{r}
+melbtemp_long <- melbtemp_long %>% 
+  filter(variable %in% c("PRCP", "TMAX", "TMIN"))
+melbtemp_long %>% count(variable)
+```
+
+### Check the data
+
+```{r}
+melbtemp_long
+```
+
+### Convert month to numeric
+
+```{r}
+melbtemp_long <- melbtemp_long %>% 
+  mutate(month = as.integer(month))
+```
+
+### Spread the variables into wide form
+
+```{r}
+melbtemp_wide <- melbtemp_long %>% 
+  spread(variable, value)
+melbtemp_wide
+```
+
+### Check the data summaries
+
+```{r}
+summary(melbtemp_wide)
+```
+
+### What are the numbers?
+
+- What is the range of temperature and precipitation?
+- What units could this be in?
+- Why the -9999?
+
+Go to the data source: [https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt](https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt)
+
+```{r units, echo=FALSE}
+quiz(
+  question("Which is the best description of the temperature units? ",
+    answer("degrees farehnheit F"),
+    answer("degrees Kelvin K"),
+    answer("tenths of degrees C", correct = TRUE)),
+  question("What is the best description of the precipitation units",
+    answer("tenths of mm", correct = TRUE),
+    answer("inches")),
+  question("What does -9999 mean?",
+    answer("it was really cold"),
+    answer("the keyboard got stuck"),
+    answer("the value was missing", correct = TRUE))
+)
+```
+
+### Fix missings and scale
+
+```{r}
+melbtemp_wide <- melbtemp_long %>% 
+  mutate(value=ifelse(value==-9999, NA, value)) %>%
+  spread(variable, value) %>%
+  mutate(PRCP=PRCP/10, TMAX=TMAX/10, TMIN=TMIN/10) 
+melbtemp_wide
+```
+
+### Make some plots
+
+This plot examines the long term trend in maximum temperatures. Rather than plotting the data, a model is fitted, and this is displayed.  
+
+```{r}
+ggplot(melbtemp_wide, aes(x=year, y=TMAX)) + 
+  geom_smooth(method="lm")
+```
+
+### Your turn
+
+Make the same plot, except use minimum temperature. Is there a trend for the minimum, like there is for the maximum? 
+
+```{r sandbox2, exercise=TRUE}
+
+```
+
+## Lab exercise 1
+
+Your job is to tidy the TB incidence data. 
+
+- Write down the steps that will be needed go from raw data to tidy
+- Write the code piece by piece
+- Submit your final code in the ED system
+
+## Lab exercise 2
+
+[41% Of Fliers Think You’re Rude If You Recline Your Seat](http://fivethirtyeight.com/datalab/airplane-etiquette-recline-seat/). In the following table, V1 is a response to the question "Is it rude to recline your seat on a plane?", and V2 is the response to the question "Do you ever recline your seat when you fly?". The data is in the form of a contingency table.
+
+```{r}
+fly_tbl <- read_csv("data/fly_tbl.csv")
+fly_tbl
+```
+
+a. What are the variables and observations in this data?
+b. Put the data in tidy long form. Submit your code to ED.
+
+## Lab exercise 3
+
+For the data set, `rates.csv`, 
+
+```{r}
+rates <- read_csv("data/rates.csv")
+head(rates)
+```
+
+a. What are the variables and observations?
+b. Make a time series (line plot) of the Australian dollar cross rate with the USA. What day was the best day to exchange USD into AUD during this period?
+c. Focusing on the five currencies, AUD, GBP, JPY, CNY, CAD, make it into tidy long form, submit the code to ED.

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<meta name="progressive" content="false" />
+<meta name="allow-skip" content="false" />
+
+<title>ETC1010: Data Modelling and Computing</title>
+
+
+<!-- highlightjs -->
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+<link rel="stylesheet" href="css/logo.css" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+<div class="pageContent band">
+<div class="bandContent page">
+
+<div class="topics">
+
+<div id="section-basic-data-plots" class="section level1">
+<h1>Basic data plots</h1>
+<div id="section-overview" class="section level2">
+<h2>Overview</h2>
+<ul>
+<li>Basic grammar for making plots
+<ul>
+<li>Barcharts: making and interpreting</li>
+<li>Scatterplots: making and interpreting</li>
+<li>Side-by-side boxplots</li>
+</ul></li>
+</ul>
+</div>
+<div id="section-tb-incidence-example" class="section level2">
+<h2>TB incidence example</h2>
+<div id="section-read-the-data-tidy-it-and-filter-only-records-for-australia" class="section level3">
+<h3>Read the data, tidy it, and filter only records for Australia</h3>
+<pre class="r"><code>library(tidyverse)
+tb &lt;- read_csv(&quot;data/tb.csv&quot;)
+tidy_data &lt;- tb %&gt;% 
+  gather(demo, count, -year, -iso2, na.rm = TRUE) %&gt;% 
+  separate(demo, c(&quot;gender&quot;, &quot;age&quot;))
+tidy_data &lt;- tidy_data %&gt;% 
+  filter(!(age %in% c(&quot;014&quot;, &quot;04&quot;, &quot;514&quot;, &quot;u&quot;)))
+tb_au &lt;- tidy_data %&gt;% 
+  filter(iso2 == &quot;AU&quot;)</code></pre>
+</div>
+<div id="section-make-a-bar-chart" class="section level3">
+<h3>Make a bar chart</h3>
+<pre class="r"><code>ggplot(tb_au, aes(x = year)) +
+  geom_bar(aes(weight=count))</code></pre>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-2-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<ul>
+<li>Grammar
+<ul>
+<li>data: tb_au</li>
+<li>mapping: x=year, counts are aggregated and mapped to y</li>
+</ul></li>
+<li>What do we learn?
+<ul>
+<li>Counts vary from a little over 100 to over 300</li>
+<li>There was a drop in incidence in 2003, but it has since risen again</li>
+</ul></li>
+</ul>
+</div>
+<div id="section-by-gender" class="section level3">
+<h3>By gender</h3>
+<pre class="r"><code>ggplot(tb_au, aes(x = year, fill=gender)) +
+  geom_bar(aes(weight=count)) +
+  scale_fill_brewer(palette=&quot;Dark2&quot;)</code></pre>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-3-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<ul>
+<li>Grammar
+<ul>
+<li>data: tb_au</li>
+<li>mapping: x=year, counts are aggregated and mapped to y, gender is mapped to colour</li>
+<li>creates a “stacked bar chart”</li>
+</ul></li>
+<li>What do we learn?
+<ul>
+<li>Counts for females looks to be lower than men every year.</li>
+</ul></li>
+</ul>
+</div>
+<div id="section-change-the-mapping-to-focus-on-proportion" class="section level3">
+<h3>Change the mapping to focus on proportion</h3>
+<pre class="r"><code>ggplot(tb_au, aes(x = year, fill=gender)) +
+  geom_bar(aes(weight=count), position=&quot;fill&quot;) +
+  scale_fill_brewer(palette=&quot;Dark2&quot;)</code></pre>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-4-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<ul>
+<li>What do we learn?
+<ul>
+<li>Proportion of tb incidence is lower in females than males, and ranges between 55 to 75%.</li>
+</ul></li>
+</ul>
+</div>
+<div id="section-examine-by-age" class="section level3">
+<h3>Examine by age</h3>
+<pre class="r"><code>ggplot(tb_au, aes(x = age)) +
+  geom_bar(aes(weight=count))</code></pre>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-5-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<ul>
+<li>What do we learn?
+<ul>
+<li>Incidence drops in middle age, affects younger and older people more.</li>
+</ul></li>
+</ul>
+</div>
+<div id="section-examine-by-age-and-year" class="section level3">
+<h3>Examine by age and year</h3>
+<pre class="r"><code>ggplot(tb_au, aes(x = year)) +
+  geom_bar(aes(weight=count)) +
+  facet_grid(~ age)</code></pre>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-6-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<ul>
+<li>What do we learn?
+<ul>
+<li>The pattern holds across years, that incidence is lower is middle age.</li>
+<li>The higher incidence of TB in recent years appears to be affecting the young population more than any other.</li>
+</ul></li>
+</ul>
+</div>
+<div id="section-examine-by-age-gender-and-year" class="section level3">
+<h3>Examine by age, gender and year</h3>
+<pre class="r"><code>ggplot(tb_au, aes(x = year, fill=gender)) +
+  geom_bar(aes(weight=count)) +
+  scale_fill_brewer(palette=&quot;Dark2&quot;) +
+  facet_grid(~ age)</code></pre>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-7-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<ul>
+<li>What do we learn?
+<ul>
+<li>Does seem to affect males more, but hard to say because main pattern is varying heights of bars. To examine relative incidence of male and female, need to focus on proportions.</li>
+</ul></li>
+</ul>
+</div>
+<div id="section-focus-on-proportions" class="section level3">
+<h3>Focus on proportions</h3>
+<pre class="r"><code>ggplot(tb_au, aes(x = year, fill=gender)) +
+  geom_bar(aes(weight=count), position=&quot;fill&quot;) +
+  scale_fill_brewer(palette=&quot;Dark2&quot;) +
+  facet_grid(~ age)</code></pre>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-8-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<ul>
+<li>What do we learn?
+<ul>
+<li>Increase among youth in recent years appears to affect females as much as males</li>
+</ul></li>
+</ul>
+</div>
+<div id="section-separate-focus-for-males-and-females" class="section level3">
+<h3>Separate focus for males and females</h3>
+<p>This way, “side-by-side bars”:</p>
+<pre class="r"><code>ggplot(tb_au, aes(x = year, fill=gender)) +
+  geom_bar(aes(weight=count), position=&quot;dodge&quot;) +
+  scale_fill_brewer(palette=&quot;Dark2&quot;) +
+  facet_grid(~ age)</code></pre>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-9-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p>or this way:</p>
+<pre class="r"><code>ggplot(tb_au, aes(x = year, fill=gender)) +
+  geom_bar(aes(weight=count), position=&quot;dodge&quot;) +
+  scale_fill_brewer(palette=&quot;Dark2&quot;) +
+  facet_grid(gender ~ age)</code></pre>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-10-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<ul>
+<li>What do we learn?
+<ul>
+<li>Increase among youth in recent years is more dramatic among males. For females it is more pronounced in the 25-34 age group.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="section-pisa-data" class="section level2">
+<h2>PISA data</h2>
+<p>Load the data, and make some calculations:</p>
+<ul>
+<li>ST004D01T is the gender of the student</li>
+<li>code creates a new variable called gender, and makes the labels “girls” and “boys” to replace 1 and 2.</li>
+</ul>
+<pre class="r"><code>load(&quot;data/pisa_au.rda&quot;)
+pisa_au &lt;- pisa_au %&gt;% 
+  mutate(gender = factor(ST004D01T, 
+                            levels=c(1,2), 
+                            labels=c(&quot;girls&quot;, &quot;boys&quot;))) </code></pre>
+<p>This creates a side-by-side boxplot, of math scores by gender. A basic boxplot is constructed from a five number summary:</p>
+<ul>
+<li>minimum, Q1, median, Q3, maximum</li>
+</ul>
+<p>where Q1 is the first quartile, the value that has 25% of numbers below it, and similarly Q3 is the third quartile with 25% of numbers above it.</p>
+<p>The boxplot has a box and whiskers. The box is drawn between Q1 and Q3, and a line representing the median is drawn inside the box. The whiskers connect the box to the most extreme expected points. In practice, this is 1.5 times the size of the box. Any points more extreme than this are drawn individually, as dots.</p>
+<p><strong>Boxplots are used to compare distributions of numbers</strong></p>
+<pre class="r"><code>ggplot(pisa_au, aes(x=gender, y=PV1MATH, 
+                          fill=gender)) +
+  geom_boxplot() + xlab(&quot;&quot;) + theme(legend.position=&quot;none&quot;)</code></pre>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-12-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>What do we learn?</p>
+<ul>
+<li>The distribution of math scores are quite similar between boys and girls in Australia.</li>
+<li>The median for boys is slightly higher than girls</li>
+<li>Q3 is slightly higher for boys, but Q1 is similar.</li>
+<li>The boys has a slightly higher max and min score.</li>
+</ul>
+<div id="section-knowledge-check" class="section level3">
+<h3>Knowledge check</h3>
+<div class="panel panel-default">
+<div class="panel-heading tutorial-panel-heading">Quiz</div>
+<table class="table quiz-table">
+<tr>
+<td>
+
+<div id="htmlwidget-39b0441d3a0c4e185a1a" style="width:100%;height:auto;", class = "quiz html-widget">
+<div class="panel panel-default">
+<div class="panel-body quizArea">
+</div>
+</div>
+</div>
+
+<script type="application/json" data-for="htmlwidget-39b0441d3a0c4e185a1a">{"x":{"question":"Compute the median of these values, 1,2,4,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute the median of these values, 1,2,4,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+</td>
+</tr>
+<tr>
+<td>
+
+<div id="htmlwidget-002bc27d2daec1aace9a" style="width:100%;height:auto;", class = "quiz html-widget">
+<div class="panel panel-default">
+<div class="panel-body quizArea">
+</div>
+</div>
+</div>
+
+<script type="application/json" data-for="htmlwidget-002bc27d2daec1aace9a">{"x":{"question":"Compute the median of these values, 4,2,1,10,6","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute the median of these values, 4,2,1,10,6","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+</td>
+</tr>
+<tr>
+<td>
+
+<div id="htmlwidget-b4778d8b712219490581" style="width:100%;height:auto;", class = "quiz html-widget">
+<div class="panel panel-default">
+<div class="panel-body quizArea">
+</div>
+</div>
+</div>
+
+<script type="application/json" data-for="htmlwidget-b4778d8b712219490581">{"x":{"question":"Compute Q1 of these values, 1,2,4,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":true,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute Q1 of these values, 1,2,4,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":true,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+</td>
+</tr>
+<tr>
+<td>
+
+<div id="htmlwidget-9fdb89af891c3c6c041c" style="width:100%;height:auto;", class = "quiz html-widget">
+<div class="panel panel-default">
+<div class="panel-body quizArea">
+</div>
+</div>
+</div>
+
+<script type="application/json" data-for="htmlwidget-9fdb89af891c3c6c041c">{"x":{"question":"Compute Q3 of these values, 1,2,4,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":true,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-4","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute Q3 of these values, 1,2,4,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":true,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+</td>
+</tr>
+<tr>
+<td>
+
+<div id="htmlwidget-b8b7b724b3540f1342c2" style="width:100%;height:auto;", class = "quiz html-widget">
+<div class="panel panel-default">
+<div class="panel-body quizArea">
+</div>
+</div>
+</div>
+
+<script type="application/json" data-for="htmlwidget-b8b7b724b3540f1342c2">{"x":{"question":"Compute the median of these values, 1,2,4,5,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"4.5","correct":true,"message":null},{"option":"5","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-5","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute the median of these values, 1,2,4,5,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"4.5","correct":true,"message":null},{"option":"5","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div id="section-scatterplot" class="section level3">
+<h3>Scatterplot</h3>
+<p>The PISA scores that are reported have multiple values for each student. This is interesting. They don’t actually report the individual scores that a student gets! They build a big linear model for scores based on all of the demographic variables (school, age, gender, …), and simulate scores from this model. In 2015 10 math scores were reported for each student. We can look at how these are similar or different by making a scatterplot.</p>
+<pre class="r"><code>ggplot(pisa_au, aes(x=PV1MATH, y=PV2MATH)) +
+  geom_point() + 
+  xlab(&quot;Math score 1&quot;) + 
+  ylab(&quot;Math score 2&quot;) + 
+  theme(aspect.ratio=1)</code></pre>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-13-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Its a bit dense, and this can be thinned out by making the points transparent.</p>
+<pre class="r"><code>ggplot(pisa_au, aes(x=PV1MATH, y=PV2MATH)) +
+  geom_point(alpha=0.1) + 
+  xlab(&quot;Math score 1&quot;) + 
+  ylab(&quot;Math score 2&quot;) + 
+  theme(aspect.ratio=1)</code></pre>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-14-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>What do we learn?</p>
+<ul>
+<li>There is positive, linear association. That is, if a student’s first score is low, then the second score is low too.</li>
+<li>There is considerable variability also. Suppose a student’s first score was 300, the second time it was simulated it may have been less than 200.</li>
+</ul>
+</div>
+</div>
+<div id="section-your-turn" class="section level2">
+<h2>Your turn</h2>
+<pre class="r"><code>grad &lt;- read_csv(&quot;data/graduate-programs.csv&quot;)
+grad %&gt;% top_n(10)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["subject"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Inst"],"name":[2],"type":["chr"],"align":["left"]},{"label":["AvNumPubs"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["AvNumCits"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["PctFacGrants"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["PctCompletion"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["MedianTimetoDegree"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["PctMinorityFac"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["PctFemaleFac"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["PctFemaleStud"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["PctIntlStud"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["AvNumPhDs"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["AvGREs"],"name":[13],"type":["int"],"align":["right"]},{"label":["TotFac"],"name":[14],"type":["int"],"align":["right"]},{"label":["PctAsstProf"],"name":[15],"type":["int"],"align":["right"]},{"label":["NumStud"],"name":[16],"type":["int"],"align":["right"]}],"data":[{"1":"economics","2":"BOSTON UNIVERSITY","3":"0.49","4":"2.66","5":"36.9","6":"34.2","7":"5.50","8":"0.0","9":"66.7","10":"37.2","11":"87.2","12":"11.6","13":"788","14":"34","15":"26","16":"148"},{"1":"economics","2":"UNIVERSITY OF CALIFORNIA-BERKELEY","3":"0.79","4":"2.68","5":"71.4","6":"42.6","7":"5.70","8":"4.5","9":"10.9","10":"34.7","11":"34.1","12":"23.0","13":"790","14":"60","15":"20","16":"170"},{"1":"economics","2":"UNIVERSITY OF CHICAGO","3":"0.61","4":"3.44","5":"54.8","6":"62.5","7":"5.50","8":"6.9","9":"3.2","10":"19.8","11":"72.5","12":"26.4","13":"800","14":"70","15":"9","16":"182"},{"1":"economics","2":"UNIVERSITY OF MARYLAND COLLEGE PARK","3":"0.61","4":"1.81","5":"50.4","6":"37.9","7":"5.30","8":"16.2","9":"15.4","10":"38.2","11":"70.7","12":"22.0","13":"791","14":"52","15":"17","16":"152"},{"1":"psychology","2":"NORTHERN ILLINOIS UNIVERSITY","3":"0.92","4":"1.32","5":"45.8","6":"32.1","7":"7.00","8":"3.4","9":"44.8","10":"75.2","11":"4.5","12":"12.2","13":"631","14":"35","15":"20","16":"157"},{"1":"psychology","2":"UNIVERSITY OF CALIFORNIA-LOS ANGELES","3":"1.42","4":"4.45","5":"72.0","6":"48.9","7":"6.00","8":"11.7","9":"34.4","10":"63.6","11":"8.0","12":"23.8","13":"737","14":"82","15":"18","16":"162"},{"1":"psychology","2":"UNIVERSITY OF CONNECTICUT","3":"1.15","4":"3.47","5":"69.5","6":"46.8","7":"6.00","8":"3.6","9":"41.8","10":"63.9","11":"15.2","12":"17.6","13":"680","14":"86","15":"17","16":"158"},{"1":"psychology","2":"UNIVERSITY OF FLORIDA","3":"1.05","4":"1.72","5":"65.6","6":"34.2","7":"6.00","8":"5.7","9":"30.0","10":"66.1","11":"13.7","12":"9.2","13":"672","14":"58","15":"3","16":"168"},{"1":"psychology","2":"UNIVERSITY OF ILLINOIS AT URBANA-CHAMPAIGN","3":"1.39","4":"3.30","5":"57.2","6":"28.1","7":"6.17","8":"7.1","9":"37.9","10":"65.1","11":"26.4","12":"22.0","13":"742","14":"110","15":"25","16":"175"},{"1":"psychology","2":"UNIVERSITY OF MINNESOTA-TWIN CITIES","3":"2.02","4":"2.89","5":"69.9","6":"39.0","7":"6.00","8":"1.8","9":"25.0","10":"55.5","11":"12.9","12":"17.0","13":"737","14":"66","15":"18","16":"155"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<ul>
+<li>Exercise 1:
+<ul>
+<li>Make a side-by-side boxplot of the AvGREs by subject.</li>
+<li>Explain the difference between the programs. (If you need to, lookup what the meaning of GRE is.)</li>
+</ul></li>
+<li>Exercise 2:
+<ul>
+<li>Make a scatterplot of AvGREs against AvNumPubs, facetted by subject.</li>
+<li>Explain the relationship between the variables, and any difference between the programs.<br />
+
+<script type="application/shiny-prerendered" data-context="server-start">
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 4,
+                      fig.width = 8,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::register_http_handlers(session, metadata = NULL)
+</script>
+ <!--html_preserve-->
+<script type="application/shiny-prerendered" data-context="dependencies">
+{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap-3.3.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cerulean.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["pagedtable"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pagedtable-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/pagedtable.js"]},{"type":"character","attributes":{},"value":["css/pagedtable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["href"]}},"value":[{"type":"character","attributes":{},"value":["lecture2b_tidydata_files/highlightjs-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["textmate.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-format"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmarkdown/templates/tutorial/resources"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-format.js"]},{"type":"character","attributes":{},"value":["tutorial-format.css","rstudio-theme.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["4.5.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/font-awesome-4.5.0"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["css/font-awesome.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["4.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["localforage"]},{"type":"character","attributes":{},"value":["1.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/localforage"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["localforage.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets"]},{"type":"character","attributes":{},"value":["1.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["htmlwidgets.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["htmlwidgets"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["quiz-binding"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["quiz.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[false]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap-3.3.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/bootstrap.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["4.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["localforage"]},{"type":"character","attributes":{},"value":["1.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/localforage"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["localforage.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["slickquiz"]},{"type":"character","attributes":{},"value":["1.5.20"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets/lib/slickquiz"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/slickQuiz.js"]},{"type":"character","attributes":{},"value":["css/slickQuiz.css","css/slickQuizTutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]}]}
+</script>
+<!--/html_preserve--></li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+</div> <!-- topics -->
+
+<div class="topicsContainer">
+<div class="topicsPositioner">
+<div class="band">
+<div class="bandContent topicsListContainer">
+
+<!-- begin doc-metadata -->
+<div id="doc-metadata">
+<h2 class="title toc-ignore" style="display:none;">ETC1010: Data Modelling and Computing</h2>
+</div>
+<!-- end doc-metadata -->
+
+</div> <!-- bandContent.topicsListContainer -->
+</div> <!-- band -->
+</div> <!-- topicsPositioner -->
+</div> <!-- topicsContainer -->
+
+
+</div> <!-- bandContent page -->
+</div> <!-- pageContent band -->
+
+
+
+
+<script>
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+
+</html>
