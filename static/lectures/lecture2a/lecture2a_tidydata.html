@@ -60,7 +60,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <h2>US graduate programs</h2>
 <p>This is data from a study on US grad programs. It originally came in an excel file containing rankings of many different programs. This data set contains information on four programs astronomy, economics, entomology and psychology.</p>
 <pre class="r"><code>library(tidyverse)
-grad &lt;- read_csv(&quot;./data/graduate-programs.csv&quot;)
+grad &lt;- read_csv(&quot;data/graduate-programs.csv&quot;)
 grad %&gt;% top_n(10)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -97,27 +97,27 @@ grad %&gt;% top_n(10)</code></pre>
 <tr>
 <td>
 
-<div id="htmlwidget-17f362099c819d05a4ba" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-3e1f437293936a5a386f" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-17f362099c819d05a4ba">{"x":{"question":"The average number of graduate students per economics program is ","answers":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"label":"variable-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"The average number of graduate students per economics program is ","a":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-3e1f437293936a5a386f">{"x":{"question":"The average number of graduate students per economics program is ","answers":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"label":"variable-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"The average number of graduate students per economics program is ","a":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-5dffd4b78a2371aac1da" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-cd063709bb4eadc14e25" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-5dffd4b78a2371aac1da">{"x":{"question":"What is the best description of the relationship between number of students and median time to degree?","answers":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"label":"variable-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the relationship between number of students and median time to degree?","a":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-cd063709bb4eadc14e25">{"x":{"question":"What is the best description of the relationship between number of students and median time to degree?","answers":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"label":"variable-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the relationship between number of students and median time to degree?","a":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 </table>
@@ -127,6 +127,9 @@ grad %&gt;% top_n(10)</code></pre>
 <li>compute the mean and standard deviation of average number of publications.</li>
 <li>make a plot of average number of publications by average number of citations. Is there a relationship?</li>
 </ul>
+<p>Use this code to read the data:</p>
+<pre><code>library(tidyverse)
+grad &lt;- read_csv(&quot;http://dmac.netlify.com/lectures/data/graduate-programs.csv&quot;)</code></pre>
 <div class="tutorial-exercise" data-label="sandbox" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
 <script type="application/json" data-opts-chunk="1">{"fig.width":8,"fig.height":4,"fig.retina":2,"fig.align":"center","fig.keep":"high","fig.show":"asis","out.width":768,"warning":false,"error":false,"message":false,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
 </div>
@@ -208,7 +211,7 @@ tb %&gt;% top_n(-10)</code></pre>
 <p>Messy data is messy in its own way. You can make unique solutions, but then another data set comes along, and you have to again make a unique solution.</p>
 <p>Tidy data can be though of as legos. Once you have this form, you can put it together in so many different ways, to make different analyses.</p>
 <div class="figure">
-<img src="img/lego.png" />
+<img src="images/lego.png" />
 
 </div>
 </div>
@@ -449,40 +452,40 @@ melbtemp_wide</code></pre>
 <tr>
 <td>
 
-<div id="htmlwidget-06133285a37e3f8ecd7a" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-ac50454b5ce6ab3fa309" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-06133285a37e3f8ecd7a">{"x":{"question":"Which is the best description of the temperature units? ","answers":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"tenths of degrees C","correct":true,"message":null}],"label":"units-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Which is the best description of the temperature units? ","a":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"tenths of degrees C","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-ac50454b5ce6ab3fa309">{"x":{"question":"Which is the best description of the temperature units? ","answers":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"tenths of degrees C","correct":true,"message":null}],"label":"units-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Which is the best description of the temperature units? ","a":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"tenths of degrees C","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-de1e1e5675fb3394f190" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-dc2ad713d8cdcba6dc51" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-de1e1e5675fb3394f190">{"x":{"question":"What is the best description of the precipitation units","answers":[{"option":"tenths of mm","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"label":"units-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the precipitation units","a":[{"option":"tenths of mm","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-dc2ad713d8cdcba6dc51">{"x":{"question":"What is the best description of the precipitation units","answers":[{"option":"tenths of mm","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"label":"units-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the precipitation units","a":[{"option":"tenths of mm","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-b1a29842a905397f3ef9" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-bf8a74cf7fbf48640888" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-b1a29842a905397f3ef9">{"x":{"question":"What does -9999 mean?","answers":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"label":"units-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What does -9999 mean?","a":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-bf8a74cf7fbf48640888">{"x":{"question":"What does -9999 mean?","answers":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"label":"units-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What does -9999 mean?","a":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 </table>

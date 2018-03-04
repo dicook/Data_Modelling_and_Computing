@@ -72,6 +72,13 @@ In the R window below, for economics programs:
 - compute the mean and standard deviation of average number of publications. 
 - make a plot of average number of publications by average number of citations. Is there a relationship?
 
+Use this code to read the data:
+
+```
+library(tidyverse)
+grad <- read_csv("http://dmac.netlify.com/lectures/data/graduate-programs.csv")
+```
+
 ```{r sandbox, exercise=TRUE}
 
 ```
@@ -141,7 +148,7 @@ Messy data is messy in its own way. You can make unique solutions, but then anot
 
 Tidy data can be though of as legos. Once you have this form, you can put it together in so many different ways, to make different analyses.
 
-![](img/lego.png)
+![](images/lego.png)
 
 ## Tidy verbs
 
