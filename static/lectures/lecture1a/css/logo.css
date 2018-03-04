@@ -1,4 +1,5 @@
 .tutorialTitle:before {
-  content: url("../img/M.png");
+  content: url("../images/M.png");
   display: block;
+  width: 100%;
 }
