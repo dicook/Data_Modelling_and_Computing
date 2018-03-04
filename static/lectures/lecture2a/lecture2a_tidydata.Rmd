@@ -141,7 +141,9 @@ Messy data is messy in its own way. You can make unique solutions, but then anot
 
 Tidy data can be though of as legos. Once you have this form, you can put it together in so many different ways, to make different analyses.
 
-![](img/lego.png)
+```{r echo=FALSE}
+knitr::include_graphics("images/lego.png")
+```
 
 ## Tidy verbs
 
