@@ -412,13 +412,14 @@ fly_tbl
 ```
 
 a. What are the variables and observations in this data?
-b. Put the data in tidy long form. Submit your code to ED.
+b. Put the data in tidy long form (using the names `V2` as the key variable, and `count` as the value). 
 
 You can get the data from  [data/fly_tbl.csv](http://dmac.netlify.com/lectures/data/fly_tbl.csv) 
 
 ```{r echo=FALSE, eval=FALSE}
 library(tidyverse)
-fly_tbl <- read_csv("http://dmac.netlify.com/lectures/data/fly_tbl.csv")
+fly_tbl <- read_csv("data/fly_tbl.csv")
+fly_tbl %>% gather(V2, count, -V1)
 ```
 
 ## Lab exercise 2
@@ -427,10 +428,15 @@ Your job is to tidy the TB incidence data.
 
 - Write down the steps that will be needed go from raw data to tidy
 - Write the code piece by piece
-- Submit your final code in the ED system
 
 You can get the data from  [tb.csv](http://dmac.netlify.com/lectures/data/tb.csv) 
 
+```{r echo=FALSE, eval=FALSE}
+library(tidyverse)
+tb <- read_csv("data/tb.csv")
+tb_tidy <- tb %>% gather(variable, count, -iso2, -year) %>%
+  separate(variable, c("gender", "age")) 
+```
 
 ## Lab exercise 3
 
@@ -443,6 +449,21 @@ head(rates)
 
 a. What are the variables and observations?
 b. Make a time series (line plot) of the Australian dollar cross rate with the USA. What day was the best day to exchange USD into AUD during this period?
-c. Focusing on the five currencies, AUD, GBP, JPY, CNY, CAD, make it into tidy long form, submit the code to ED.
+c. Focusing on the five currencies, AUD, GBP, JPY, CNY, CAD, make it into tidy long form.
+d. Make line plots of the currencies, like the plot below, and describe the similarities and differences between the currencies. 
 
 You can get the data from [rates.csv](http://dmac.netlify.com/lectures/data/rates.csv) 
+
+```{r echo=FALSE, results='hide', fig.show='hide'}
+library(tidyverse)
+rates <- read_csv("data/rates.csv")
+ggplot(rates, aes(x=date, y=AUD)) + geom_line()
+```
+
+```{r echo=FALSE, results='hide', fig.width=6, fig.height=10}
+rates_long <- rates %>% select(date, AUD, GBP, JPY, CNY, CAD) %>%
+  gather(currency, rate, -date)
+ggplot(rates_long, aes(x=date, y=rate)) + 
+  geom_line() +
+  facet_wrap(~currency, ncol=1, scales="free_y")
+```

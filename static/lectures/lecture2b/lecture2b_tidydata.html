@@ -45,11 +45,13 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 <div class="topics">
 
-<div id="section-basic-data-plots" class="section level1">
-<h1>Basic data plots</h1>
+<div id="section-basic-r-usage" class="section level1">
+<h1>Basic R usage</h1>
 <div id="section-overview" class="section level2">
 <h2>Overview</h2>
 <ul>
+<li>Projects</li>
+<li>R markdown</li>
 <li>Basic grammar for making plots
 <ul>
 <li>Barcharts: making and interpreting</li>
@@ -58,8 +60,19 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 </ul></li>
 </ul>
 </div>
-<div id="section-tb-incidence-example" class="section level2">
-<h2>TB incidence example</h2>
+<div id="section-projects" class="section level2">
+<h2>Projects</h2>
+<p>Keep your work organised</p>
+<ul>
+<li>Make a project for the class (upper right hand corner or RStudio window)</li>
+<li>Open this project each time you start RStudio to work on exercises for this course</li>
+<li>A project is a “folder” on your computer that stores the files you create or save</li>
+<li>It helps to create directories underneath this to help organise different parts, and make it easier to share your work with others, for e.g. creating and using a <code>data</code> folder in the project folder allows relative file referencing like <code>tb &lt;- read_csv(&quot;data/tb.csv&quot;)</code> which will work across any computer platform.</li>
+<li>When you exit RStudio after finishing your work, it is a good idea to choose “Don’t save” your workspace. Hopefully everything that you do can be easily reproduced. Not storing the objects you have created helps to avoid conflicts down the road.</li>
+</ul>
+</div>
+<div id="section-example-tb-incidence" class="section level2">
+<h2>Example TB incidence</h2>
 <div id="section-read-the-data-tidy-it-and-filter-only-records-for-australia" class="section level3">
 <h3>Read the data, tidy it, and filter only records for Australia</h3>
 <pre class="r"><code>library(tidyverse)
@@ -236,66 +249,66 @@ pisa_au &lt;- pisa_au %&gt;%
 <tr>
 <td>
 
-<div id="htmlwidget-39b0441d3a0c4e185a1a" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-2993702b0c891346dc8c" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-39b0441d3a0c4e185a1a">{"x":{"question":"Compute the median of these values, 1,2,4,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute the median of these values, 1,2,4,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-2993702b0c891346dc8c">{"x":{"question":"Compute the median of these values, 1,2,4,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute the median of these values, 1,2,4,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-002bc27d2daec1aace9a" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-ef05895f5b9b3458302c" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-002bc27d2daec1aace9a">{"x":{"question":"Compute the median of these values, 4,2,1,10,6","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute the median of these values, 4,2,1,10,6","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-ef05895f5b9b3458302c">{"x":{"question":"Compute the median of these values, 4,2,1,10,6","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute the median of these values, 4,2,1,10,6","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-b4778d8b712219490581" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-cc75d464d46b057af8f5" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-b4778d8b712219490581">{"x":{"question":"Compute Q1 of these values, 1,2,4,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":true,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute Q1 of these values, 1,2,4,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":true,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-cc75d464d46b057af8f5">{"x":{"question":"Compute Q1 of these values, 1,2,4,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":true,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute Q1 of these values, 1,2,4,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":true,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-9fdb89af891c3c6c041c" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-c5a7fe33579154c3d267" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-9fdb89af891c3c6c041c">{"x":{"question":"Compute Q3 of these values, 1,2,4,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":true,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-4","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute Q3 of these values, 1,2,4,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":true,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-c5a7fe33579154c3d267">{"x":{"question":"Compute Q3 of these values, 1,2,4,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":true,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-4","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute Q3 of these values, 1,2,4,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":true,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-b8b7b724b3540f1342c2" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-c6c1f913ee312c0b788c" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-b8b7b724b3540f1342c2">{"x":{"question":"Compute the median of these values, 1,2,4,5,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"4.5","correct":true,"message":null},{"option":"5","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-5","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute the median of these values, 1,2,4,5,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"4.5","correct":true,"message":null},{"option":"5","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-c6c1f913ee312c0b788c">{"x":{"question":"Compute the median of these values, 1,2,4,5,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"4.5","correct":true,"message":null},{"option":"5","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-5","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute the median of these values, 1,2,4,5,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"4.5","correct":true,"message":null},{"option":"5","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 </table>

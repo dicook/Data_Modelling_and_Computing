@@ -19,16 +19,34 @@ knitr::opts_chunk$set(echo = TRUE,
 tutorial_html_dependency()
 ```
 
-# Basic data plots
+# Basic R usage
 
 ## Overview
 
+- Projects
+- Packages, and conflicts in names of functions
+- R markdown
 - Basic grammar for making plots
     - Barcharts: making and interpreting
     - Scatterplots: making and interpreting
     - Side-by-side boxplots
 
-## TB incidence example
+## Projects
+
+Keep your work organised
+
+- Make a project for the class (upper right hand corner or RStudio window)
+- Open this project each time you start RStudio to work on exercises for this course
+- A project is a "folder" on your computer that stores the files you create or save
+- It helps to create directories underneath this to help organise different parts, and make it easier to share your work with others, for e.g. creating and using a `data` folder in the project folder allows relative file referencing like `tb <- read_csv("data/tb.csv")`
+which will work across any computer platform.
+- When you exit RStudio after finishing your work, it is a good idea to choose "Don't save" your workspace. Hopefully everything that you do can be easily reproduced. Not storing the objects you have created helps to avoid conflicts down the road.
+
+## Package system
+
+
+
+## Example TB incidence
 
 ### Read the data, tidy it, and filter only records for Australia
 
