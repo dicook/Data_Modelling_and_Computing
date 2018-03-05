@@ -404,16 +404,6 @@ melbtemp_wide <- melbtemp %>%
 
 ## Lab exercise 1
 
-Your job is to tidy the TB incidence data. 
-
-- Write down the steps that will be needed go from raw data to tidy
-- Write the code piece by piece
-- Submit your final code in the ED system
-
-You can get the data from  [tb.csv](http://dmac.netlify.com/lectures/data/tb.csv) 
-
-## Lab exercise 2
-
 [41% Of Fliers Think You’re Rude If You Recline Your Seat](http://fivethirtyeight.com/datalab/airplane-etiquette-recline-seat/). In the following table, V1 is a response to the question "Is it rude to recline your seat on a plane?", and V2 is the response to the question "Do you ever recline your seat when you fly?". The data is in the form of a contingency table.
 
 ```{r}
@@ -424,7 +414,23 @@ fly_tbl
 a. What are the variables and observations in this data?
 b. Put the data in tidy long form. Submit your code to ED.
 
-You can get the data from  [data/fly_tbl.csv](http://dmac.netlify.com/lectures/data/data/fly_tbl.csv) 
+You can get the data from  [data/fly_tbl.csv](http://dmac.netlify.com/lectures/data/fly_tbl.csv) 
+
+```{r echo=FALSE, eval=FALSE}
+library(tidyverse)
+fly_tbl <- read_csv("http://dmac.netlify.com/lectures/data/fly_tbl.csv")
+```
+
+## Lab exercise 2
+
+Your job is to tidy the TB incidence data. 
+
+- Write down the steps that will be needed go from raw data to tidy
+- Write the code piece by piece
+- Submit your final code in the ED system
+
+You can get the data from  [tb.csv](http://dmac.netlify.com/lectures/data/tb.csv) 
+
 
 ## Lab exercise 3
 
