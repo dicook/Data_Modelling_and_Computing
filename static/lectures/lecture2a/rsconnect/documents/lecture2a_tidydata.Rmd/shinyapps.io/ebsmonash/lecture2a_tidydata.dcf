@@ -5,8 +5,8 @@ account: ebsmonash
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 292514
-bundleId: 1251531
+bundleId: 1252737
 url: https://ebsmonash.shinyapps.io/lecture2a_tidydata/
-when: 1520155591.21278
+when: 1520236852.77659
 asMultiple: FALSE
 asStatic: FALSE

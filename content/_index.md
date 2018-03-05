@@ -36,13 +36,14 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 
 - [music-sub.csv](http://dmac.netlify.com/lectures/data/music-sub.csv)
 - [Pedestrian_sensor_locations.csv](http://dmac.netlify.com/lectures/data/Pedestrian_sensor_locations.csv)
-- [rates.csv](http://dmac.netlify.com/lectures/data/rates.csv)
+- [rates.csv](http://dmac.netlify.com/lectures/data/rates.csv) Cross rates for different currencies
 - [airports.csv](http://dmac.netlify.com/lectures/data/airports.csv)
 - [data3.wav](http://dmac.netlify.com/lectures/data/data3.wav)
 - [statistics1.wav](http://dmac.netlify.com/lectures/data/statistics1.wav)
-- [pisa_au.rda](http://dmac.netlify.com/lectures/data/pisa_au.rda)
+- [pisa_au.rda](http://dmac.netlify.com/lectures/data/pisa_au.rda) Programme for International student assessment
 - [plane_N4YRAA.rda](http://dmac.netlify.com/lectures/data/plane_N4YRAA.rda)
-- [tb.csv](http://dmac.netlify.com/lectures/data/tb.csv)
+- [tb.csv](http://dmac.netlify.com/lectures/data/tb.csv) Tuberculosis incidence
+- [data/fly_tbl.csv](http://dmac.netlify.com/lectures/data/data/fly_tbl.csv) Etiquette of flying
 
 ## [2017 Project Description](project/project-ETC1010.pdf) 
 

@@ -32,7 +32,7 @@ This is a link to the course web site, in case you need to go back and forth bet
 - Different examples of data 
 - Steps in making data tidy
 
-## US graduate programs
+## Example: US graduate programs
 
 This is data from a study on US grad programs. It originally came in an excel file containing rankings of many different programs. This data set contains information on four programs astronomy, economics, entomology and psychology. 
 
@@ -243,7 +243,7 @@ ggplot(data = gtidy, aes(trt, expr, colour = time)) +
 
 What do we learn about the data? At 12 hours the expression for Gene 1 is different between genotypes I and M, because the variability in replicates is small relative to the difference between means. For the rest of the numbers and genes the variability is too high to be able to say anything about difference between means. 
 
-## Melbourne weather
+## Tidying Melbourne weather
 
 ```{r}
 melbtemp <- read_fwf("data/ASN00086282.dly", 
@@ -410,6 +410,8 @@ Your job is to tidy the TB incidence data.
 - Write the code piece by piece
 - Submit your final code in the ED system
 
+You can get the data from  [tb.csv](http://dmac.netlify.com/lectures/data/tb.csv) 
+
 ## Lab exercise 2
 
 [41% Of Fliers Think You’re Rude If You Recline Your Seat](http://fivethirtyeight.com/datalab/airplane-etiquette-recline-seat/). In the following table, V1 is a response to the question "Is it rude to recline your seat on a plane?", and V2 is the response to the question "Do you ever recline your seat when you fly?". The data is in the form of a contingency table.
@@ -421,6 +423,8 @@ fly_tbl
 
 a. What are the variables and observations in this data?
 b. Put the data in tidy long form. Submit your code to ED.
+
+You can get the data from  [data/fly_tbl.csv](http://dmac.netlify.com/lectures/data/data/fly_tbl.csv) 
 
 ## Lab exercise 3
 
@@ -434,3 +438,5 @@ head(rates)
 a. What are the variables and observations?
 b. Make a time series (line plot) of the Australian dollar cross rate with the USA. What day was the best day to exchange USD into AUD during this period?
 c. Focusing on the five currencies, AUD, GBP, JPY, CNY, CAD, make it into tidy long form, submit the code to ED.
+
+You can get the data from [rates.csv](http://dmac.netlify.com/lectures/data/rates.csv) 
