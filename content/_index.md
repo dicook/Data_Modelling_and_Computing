@@ -34,14 +34,15 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 
 ## Data 
 
-- [music-sub.csv](lectures/lecture1a/data/music-sub.csv)
-- [Pedestrian_sensor_locations.csv](lectures/lecture1a/data/Pedestrian_sensor_locations.csv)
-- [rates.csv](lectures/lecture1a/data/rates.csv)
-- [airports.csv](lectures/lecture1a/data/airports.csv)
-- [data3.wav](lectures/lecture1a/data/data3.wav)
-- [statistics1.wav](lectures/lecture1a/data/statistics1.wav)
-- [pisa_au.rda](lectures/lecture1a/data/pisa_au.rda)
-- [plane_N4YRAA.rda](lectures/lecture1a/data/plane_N4YRAA.rda)
+- [music-sub.csv](http://dmac.netlify.com/lectures/music-sub.csv)
+- [Pedestrian_sensor_locations.csv](http://dmac.netlify.com/lectures/Pedestrian_sensor_locations.csv)
+- [rates.csv](http://dmac.netlify.com/lectures/rates.csv)
+- [airports.csv](http://dmac.netlify.com/lectures/airports.csv)
+- [data3.wav](http://dmac.netlify.com/lectures/data3.wav)
+- [statistics1.wav](http://dmac.netlify.com/lectures/statistics1.wav)
+- [pisa_au.rda](http://dmac.netlify.com/lectures/pisa_au.rda)
+- [plane_N4YRAA.rda](http://dmac.netlify.com/lectures/plane_N4YRAA.rda)
+- [tb.csv](http://dmac.netlify.com/lectures/tb.csv)
 
 ## [2017 Project Description](project/project-ETC1010.pdf) 
 
