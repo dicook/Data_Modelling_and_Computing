@@ -64,6 +64,7 @@ tidy_data <- tidy_data %>%
   filter(!(age %in% c("014", "04", "514", "u")))
 tb_au <- tidy_data %>% 
   filter(iso2 == "AU")
+tb_au
 ```
 
 ### Make a bar chart

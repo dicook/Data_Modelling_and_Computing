@@ -1,0 +1,80 @@
+---
+title: "Lab Exercises Week 2 Tidying data"
+author: "Di Cook"
+date: "3/6/2018"
+output: html_document
+---
+
+This is the list of lab exercises from Tuesday's class. Work your way through them, show your neighbour to check if you have them correct, and then to a tutor. Nothing to turn in today though.
+
+```{r}
+library(tidyverse)
+```
+
+## Lab exercise 1
+
+[41% Of Fliers Think You’re Rude If You Recline Your Seat](http://fivethirtyeight.com/datalab/airplane-etiquette-recline-seat/). In the following table, V1 is a response to the question "Is it rude to recline your seat on a plane?", and V2 is the response to the question "Do you ever recline your seat when you fly?". The data is in the form of a contingency table.
+
+```{r}
+fly_tbl <- read_csv("data/fly_tbl.csv")
+fly_tbl
+```
+
+a. What are the variables and observations in this data?
+b. Put the data in tidy long form (using the names `V2` as the key variable, and `count` as the value). 
+
+You can get the data from the  [course web site.](http://dmac.netlify.com) 
+
+```{r echo=FALSE, eval=FALSE}
+library(tidyverse)
+fly_tbl <- read_csv("data/fly_tbl.csv")
+fly_tbl %>% gather(V2, count, -V1)
+```
+
+## Lab exercise 2
+
+Your job is to tidy the TB incidence data. 
+
+- Write down the steps that will be needed go from raw data to tidy
+- Write the code piece by piece
+
+```{r echo=FALSE, eval=FALSE}
+library(tidyverse)
+tb <- read_csv("data/tb.csv")
+tb_tidy <- tb %>% gather(variable, count, -iso2, -year) %>%
+  separate(variable, c("gender", "age")) 
+```
+
+You can get the data from the  [course web site.](http://dmac.netlify.com) 
+
+## Lab exercise 3
+
+For the data set, `rates.csv`, 
+
+```{r}
+rates <- read_csv("data/rates.csv")
+head(rates)
+```
+
+a. What are the variables and observations?
+b. Make a time series (line plot) of the Australian dollar cross rate with the USA. What day was the best day to exchange USD into AUD during this period?
+c. Focusing on the five currencies, AUD, GBP, JPY, CNY, CAD, make it into tidy long form.
+d. Make line plots of the currencies, like the plot below, and describe the similarities and differences between the currencies. 
+
+You can get the data from [rates.csv](http://dmac.netlify.com/lectures/data/rates.csv) 
+
+```{r echo=FALSE, results='hide', fig.show='hide'}
+library(tidyverse)
+rates <- read_csv("data/rates.csv")
+ggplot(rates, aes(x=date, y=AUD)) + geom_line()
+```
+
+```{r echo=FALSE, results='hide', fig.width=6, fig.height=10}
+rates_long <- rates %>% select(date, AUD, GBP, JPY, CNY, CAD) %>%
+  gather(currency, rate, -date)
+ggplot(rates_long, aes(x=date, y=rate)) + 
+  geom_line() +
+  facet_wrap(~currency, ncol=1, scales="free_y")
+```
+
+You can get the data from the  [course web site.](http://dmac.netlify.com) 
