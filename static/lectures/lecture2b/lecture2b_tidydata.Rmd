@@ -46,7 +46,7 @@ which will work across any computer platform.
 
 Because so many people contribute packages to R, it is a blessing and a curse. The best techniques are available, but there can be conflicts. The summary that is printed when you load the tidyverse library is a great summary of this.
 
-```{r}
+```{r message=TRUE}
 library(tidyverse)
 ```
 
@@ -68,7 +68,7 @@ tb_au <- tidy_data %>%
 
 ### Make a bar chart
 
-```{r fig.width=12, fig.height=2.5}
+```{r fig.width=8, fig.height=2.5}
 ggplot(tb_au, aes(x = year)) +
   geom_bar(aes(weight=count))
 ```
@@ -83,7 +83,7 @@ ggplot(tb_au, aes(x = year)) +
     
 ### By gender
 
-```{r fig.width=12, fig.height=2.5}
+```{r fig.width=8, fig.height=2.5}
 ggplot(tb_au, aes(x = year, fill=gender)) +
   geom_bar(aes(weight=count)) +
   scale_fill_brewer(palette="Dark2")
@@ -99,7 +99,7 @@ ggplot(tb_au, aes(x = year, fill=gender)) +
 
 ### Change the mapping to focus on proportion
 
-```{r fig.width=12, fig.height=2.5}
+```{r fig.width=8, fig.height=2.5}
 ggplot(tb_au, aes(x = year, fill=gender)) +
   geom_bar(aes(weight=count), position="fill") +
   scale_fill_brewer(palette="Dark2")
@@ -110,7 +110,7 @@ ggplot(tb_au, aes(x = year, fill=gender)) +
 
 ### Examine by age
 
-```{r fig.width=12, fig.height=2.5}
+```{r fig.width=8, fig.height=2.5}
 ggplot(tb_au, aes(x = age)) +
   geom_bar(aes(weight=count))
 ```
