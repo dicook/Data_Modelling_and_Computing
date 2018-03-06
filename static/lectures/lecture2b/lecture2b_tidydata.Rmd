@@ -44,7 +44,11 @@ which will work across any computer platform.
 
 ## Package system
 
+Because so many people contribute packages to R, it is a blessing and a curse. The best techniques are available, but there can be conflicts. The summary that is printed when you load the tidyverse library is a great summary of this.
 
+```{r}
+library(tidyverse)
+```
 
 ## Example TB incidence
 

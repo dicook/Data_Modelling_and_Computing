@@ -51,6 +51,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <h2>Overview</h2>
 <ul>
 <li>Projects</li>
+<li>Packages, and conflicts in names of functions</li>
 <li>R markdown</li>
 <li>Basic grammar for making plots
 <ul>
@@ -71,6 +72,11 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <li>When you exit RStudio after finishing your work, it is a good idea to choose “Don’t save” your workspace. Hopefully everything that you do can be easily reproduced. Not storing the objects you have created helps to avoid conflicts down the road.</li>
 </ul>
 </div>
+<div id="section-package-system" class="section level2">
+<h2>Package system</h2>
+<p>Because so many people contribute packages to R, it is a blessing and a curse. The best techniques are available, but there can be conflicts. The summary that is printed when you load the tidyverse library is a great summary of this.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+</div>
 <div id="section-example-tb-incidence" class="section level2">
 <h2>Example TB incidence</h2>
 <div id="section-read-the-data-tidy-it-and-filter-only-records-for-australia" class="section level3">
@@ -89,7 +95,7 @@ tb_au &lt;- tidy_data %&gt;%
 <h3>Make a bar chart</h3>
 <pre class="r"><code>ggplot(tb_au, aes(x = year)) +
   geom_bar(aes(weight=count))</code></pre>
-<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-2-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-3-1.png" width="1152" style="display: block; margin: auto;" /></p>
 <ul>
 <li>Grammar
 <ul>
@@ -108,7 +114,7 @@ tb_au &lt;- tidy_data %&gt;%
 <pre class="r"><code>ggplot(tb_au, aes(x = year, fill=gender)) +
   geom_bar(aes(weight=count)) +
   scale_fill_brewer(palette=&quot;Dark2&quot;)</code></pre>
-<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-3-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-4-1.png" width="1152" style="display: block; margin: auto;" /></p>
 <ul>
 <li>Grammar
 <ul>
@@ -127,7 +133,7 @@ tb_au &lt;- tidy_data %&gt;%
 <pre class="r"><code>ggplot(tb_au, aes(x = year, fill=gender)) +
   geom_bar(aes(weight=count), position=&quot;fill&quot;) +
   scale_fill_brewer(palette=&quot;Dark2&quot;)</code></pre>
-<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-4-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-5-1.png" width="1152" style="display: block; margin: auto;" /></p>
 <ul>
 <li>What do we learn?
 <ul>
@@ -139,7 +145,7 @@ tb_au &lt;- tidy_data %&gt;%
 <h3>Examine by age</h3>
 <pre class="r"><code>ggplot(tb_au, aes(x = age)) +
   geom_bar(aes(weight=count))</code></pre>
-<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-5-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-6-1.png" width="1152" style="display: block; margin: auto;" /></p>
 <ul>
 <li>What do we learn?
 <ul>
@@ -152,7 +158,7 @@ tb_au &lt;- tidy_data %&gt;%
 <pre class="r"><code>ggplot(tb_au, aes(x = year)) +
   geom_bar(aes(weight=count)) +
   facet_grid(~ age)</code></pre>
-<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-6-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-7-1.png" width="1152" style="display: block; margin: auto;" /></p>
 <ul>
 <li>What do we learn?
 <ul>
@@ -167,7 +173,7 @@ tb_au &lt;- tidy_data %&gt;%
   geom_bar(aes(weight=count)) +
   scale_fill_brewer(palette=&quot;Dark2&quot;) +
   facet_grid(~ age)</code></pre>
-<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-7-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-8-1.png" width="1152" style="display: block; margin: auto;" /></p>
 <ul>
 <li>What do we learn?
 <ul>
@@ -181,7 +187,7 @@ tb_au &lt;- tidy_data %&gt;%
   geom_bar(aes(weight=count), position=&quot;fill&quot;) +
   scale_fill_brewer(palette=&quot;Dark2&quot;) +
   facet_grid(~ age)</code></pre>
-<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-8-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-9-1.png" width="1152" style="display: block; margin: auto;" /></p>
 <ul>
 <li>What do we learn?
 <ul>
@@ -196,13 +202,13 @@ tb_au &lt;- tidy_data %&gt;%
   geom_bar(aes(weight=count), position=&quot;dodge&quot;) +
   scale_fill_brewer(palette=&quot;Dark2&quot;) +
   facet_grid(~ age)</code></pre>
-<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-9-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-10-1.png" width="1152" style="display: block; margin: auto;" /></p>
 <p>or this way:</p>
 <pre class="r"><code>ggplot(tb_au, aes(x = year, fill=gender)) +
   geom_bar(aes(weight=count), position=&quot;dodge&quot;) +
   scale_fill_brewer(palette=&quot;Dark2&quot;) +
   facet_grid(gender ~ age)</code></pre>
-<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-10-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-11-1.png" width="1152" style="display: block; margin: auto;" /></p>
 <ul>
 <li>What do we learn?
 <ul>
@@ -233,7 +239,7 @@ pisa_au &lt;- pisa_au %&gt;%
 <pre class="r"><code>ggplot(pisa_au, aes(x=gender, y=PV1MATH, 
                           fill=gender)) +
   geom_boxplot() + xlab(&quot;&quot;) + theme(legend.position=&quot;none&quot;)</code></pre>
-<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-12-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-13-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>What do we learn?</p>
 <ul>
 <li>The distribution of math scores are quite similar between boys and girls in Australia.</li>
@@ -249,66 +255,66 @@ pisa_au &lt;- pisa_au %&gt;%
 <tr>
 <td>
 
-<div id="htmlwidget-2993702b0c891346dc8c" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-1f436659fe8aa6f67e11" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-2993702b0c891346dc8c">{"x":{"question":"Compute the median of these values, 1,2,4,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute the median of these values, 1,2,4,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-1f436659fe8aa6f67e11">{"x":{"question":"Compute the median of these values, 1,2,4,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute the median of these values, 1,2,4,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-ef05895f5b9b3458302c" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-37188ee7983eed989e3f" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-ef05895f5b9b3458302c">{"x":{"question":"Compute the median of these values, 4,2,1,10,6","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute the median of these values, 4,2,1,10,6","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-37188ee7983eed989e3f">{"x":{"question":"Compute the median of these values, 4,2,1,10,6","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute the median of these values, 4,2,1,10,6","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":true,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-cc75d464d46b057af8f5" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-341b37530ff8d9984f37" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-cc75d464d46b057af8f5">{"x":{"question":"Compute Q1 of these values, 1,2,4,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":true,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute Q1 of these values, 1,2,4,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":true,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-341b37530ff8d9984f37">{"x":{"question":"Compute Q1 of these values, 1,2,4,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":true,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute Q1 of these values, 1,2,4,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":true,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-c5a7fe33579154c3d267" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-bdc126d9f7ac282eac73" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-c5a7fe33579154c3d267">{"x":{"question":"Compute Q3 of these values, 1,2,4,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":true,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-4","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute Q3 of these values, 1,2,4,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":true,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-bdc126d9f7ac282eac73">{"x":{"question":"Compute Q3 of these values, 1,2,4,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":true,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-4","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute Q3 of these values, 1,2,4,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"6","correct":true,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-c6c1f913ee312c0b788c" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-128aeff625d0ad26a537" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-c6c1f913ee312c0b788c">{"x":{"question":"Compute the median of these values, 1,2,4,5,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"4.5","correct":true,"message":null},{"option":"5","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-5","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute the median of these values, 1,2,4,5,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"4.5","correct":true,"message":null},{"option":"5","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-128aeff625d0ad26a537">{"x":{"question":"Compute the median of these values, 1,2,4,5,6,10","answers":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"4.5","correct":true,"message":null},{"option":"5","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"label":"medians-5","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Compute the median of these values, 1,2,4,5,6,10","a":[{"option":"1","correct":false,"message":null},{"option":"2","correct":false,"message":null},{"option":"4","correct":false,"message":null},{"option":"4.5","correct":true,"message":null},{"option":"5","correct":false,"message":null},{"option":"6","correct":false,"message":null},{"option":"10","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 </table>
@@ -322,14 +328,14 @@ pisa_au &lt;- pisa_au %&gt;%
   xlab(&quot;Math score 1&quot;) + 
   ylab(&quot;Math score 2&quot;) + 
   theme(aspect.ratio=1)</code></pre>
-<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-13-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-14-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Its a bit dense, and this can be thinned out by making the points transparent.</p>
 <pre class="r"><code>ggplot(pisa_au, aes(x=PV1MATH, y=PV2MATH)) +
   geom_point(alpha=0.1) + 
   xlab(&quot;Math score 1&quot;) + 
   ylab(&quot;Math score 2&quot;) + 
   theme(aspect.ratio=1)</code></pre>
-<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-14-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2b_tidydata_files/figure-html4/unnamed-chunk-15-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>What do we learn?</p>
 <ul>
 <li>There is positive, linear association. That is, if a student’s first score is low, then the second score is low too.</li>

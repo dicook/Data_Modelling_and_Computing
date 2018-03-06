@@ -44,6 +44,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - [plane_N4YRAA.rda](http://dmac.netlify.com/lectures/data/plane_N4YRAA.rda)
 - [tb.csv](http://dmac.netlify.com/lectures/data/tb.csv) Tuberculosis incidence
 - [fly_tbl.csv](http://dmac.netlify.com/lectures/data/fly_tbl.csv) Etiquette of flying
+- [grad-programs.csv](http://dmac.netlify.com/lectures/data/grad-programs.csv) US Graduate programs 
 
 ## [2017 Project Description](project/project-ETC1010.pdf) 
 
