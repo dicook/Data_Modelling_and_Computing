@@ -50,7 +50,7 @@ Because so many people contribute packages to R, it is a blessing and a curse. T
 library(tidyverse)
 ```
 
-## Example TB incidence
+## Barcharts: TB incidence
 
 ### Read the data, tidy it, and filter only records for Australia
 
@@ -177,7 +177,7 @@ ggplot(tb_au, aes(x = year, fill=gender)) +
 - What do we learn?
     - Increase among youth in recent years is more dramatic among males. For females it is more pronounced in the 25-34 age group.
 
-## PISA data
+## Boxplots: PISA data
 
 Load the data, and make some calculations:
 
@@ -254,7 +254,7 @@ quiz(
 )
 ```
 
-### Scatterplot
+## Scatterplots: PISA
 
 The PISA scores that are reported have multiple values for each student. This is interesting. They don't actually report the individual scores that a student gets! They build a big linear model for scores based on all of the demographic variables (school, age, gender, ...), and simulate scores from this model. In 2015 10 math scores were reported for each student. We can look at how these are similar or different by making a scatterplot.
 
