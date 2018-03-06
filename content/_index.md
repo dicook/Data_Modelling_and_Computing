@@ -43,7 +43,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - [pisa_au.rda](http://dmac.netlify.com/lectures/data/pisa_au.rda) Programme for International student assessment
 - [plane_N4YRAA.rda](http://dmac.netlify.com/lectures/data/plane_N4YRAA.rda)
 - [tb.csv](http://dmac.netlify.com/lectures/data/tb.csv) Tuberculosis incidence
-- [data/fly_tbl.csv](http://dmac.netlify.com/lectures/data/fly_tbl.csv) Etiquette of flying
+- [fly_tbl.csv](http://dmac.netlify.com/lectures/data/fly_tbl.csv) Etiquette of flying
 
 ## [2017 Project Description](project/project-ETC1010.pdf) 
 
