@@ -44,8 +44,9 @@ passengers <- read_xls("data/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
     - bound: IN or OUT
 
 - Use your data to make 
-    - a scatterplot of domestic inbound vs outbound passengers facetted by year
-    - histograms of international inbound passengers facetted by year
+    - a barchart of type of flight facetted by year.
+    - a scatterplot of domestic inbound vs outbound passengers facetted by year. There are three airports with much higher numbers, which are these three?
+    - a scatterplot of international inbound vs outbound passengers facetted by year
 
 - Write a paragraph explaining what you learn from each of the plots
 
