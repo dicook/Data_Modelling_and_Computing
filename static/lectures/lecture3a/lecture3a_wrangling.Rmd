@@ -1,0 +1,360 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 4,
+                      fig.width = 8,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+```
+
+# Wrangling data
+
+## Overview
+
+- Main wrangling verbs: 
+    - *filter*: subset cases
+    - *select*: subset variables 
+    - *mutate*: create new, or change, a variable
+    - *summarise*: compute a single number from a collection
+    - *arrange*: order a table by values in one column
+- Additional verbs used thus far: 
+    - *count*: count the number of objects in a variable
+    - *tally*:  count the number outputted
+    - *group_by*: operate on subsets specified by a categorical variable
+    - *left_join, full_join*: combine data sets
+
+## Example: french fries
+
+10 week sensory experiment, 12 individuals assessed taste of french fries on several scales (how potato-y, buttery, grassy, rancid, paint-y do they taste?), fried in one of 3 different oils, replicated twice. First few rows:
+
+```{r, echo=FALSE}
+library(tidyverse)
+library(forcats)
+library(gridExtra)
+library(ggthemes)
+data(french_fries, package = "reshape2")
+french_fries <- as_tibble(french_fries)
+french_fries
+```
+
+![](images/french_fries.png)
+
+### Questions to answer
+
+- Is the design complete?
+- Are replicates like each other?
+- How do the ratings on the different criteria differ?
+- Are raters giving different scores on average?
+- Do ratings change over the weeks?
+- Do some oils consistently get better ratings? Over time?
+
+Each of these questions involves different summaries of the data.
+
+## Are ratings similar? (gather, mutate, summarise)
+
+How would you investigate this question?
+
+- compute summary statistics for each rating
+- make plots of each rating, in a way that they can be compared, e.g. side-by-side boxplots
+
+```{r}
+ff_long <- french_fries %>% 
+  gather(type, rating, -subject, -time, -treatment, -rep) %>%
+  mutate(type=as.factor(type))
+ff_long %>% group_by(type) %>%
+  summarise(m=mean(rating, na.rm=TRUE), s=sd(rating, na.rm=TRUE))
+ff_long %>% 
+  ggplot(aes(x=fct_reorder(type, rating, fun = median, na.rm=TRUE), y=rating)) +
+  geom_boxplot() + xlab("type")
+ff_long %>% 
+  ggplot(aes(x=fct_reorder(type, rating, fun = median, na.rm=TRUE), y=rating)) +
+  geom_violin() + xlab("type")
+```
+
+### Note: decimal places
+
+For **presentation purposes**, round numbers to 2-3 *variable* digits.
+
+```{r}
+ff_long %>% group_by(type) %>%
+  summarise(m=mean(rating, na.rm=TRUE), s=sd(rating, na.rm=TRUE))
+ff_long %>% group_by(type) %>%
+  summarise(m=mean(rating, na.rm=TRUE), s=sd(rating, na.rm=TRUE)) %>%
+  mutate(m=sprintf("%0.2f", m), s=sprintf("%0.2f", s))
+```
+
+Also reorder table by mean, helps readers
+
+```{r}
+ff_long %>% group_by(type) %>%
+  summarise(m=mean(rating, na.rm=TRUE), s=sd(rating, na.rm=TRUE)) %>% 
+  mutate(m=sprintf("%0.2f", m), s=sprintf("%0.2f", s)) %>%
+  arrange(m)
+```
+
+### Summary: Comparison of the types
+
+Ratings on the different criteria are quite different. 
+
+- Potato'y scores relatively highly. 
+- Grassy are mostly 0's, with low variability. 
+- Buttery and painty are skewed right. The values are mostly low.
+- Rancid is quite varied. 
+
+## Do the replicates look like each other? (spread, scales, summarise)
+
+- Plot replicates against each other using a scatterplot. 
+- If raters give the same rating to the replicates, we would expect something close to this, then all values would lie on the X=Y line
+- We need to 
+    - gather the data into long form, and 
+    - then get the replicates spread into separate columns. 
+    - plot replicates
+    - compute correlation, or fit a linear model
+
+
+```{r echo=TRUE}
+ff_rep <- ff_long %>% spread(rep, rating)
+ff_rep
+```
+
+Correlation between two variables is 
+
+```{r}
+ff_rep %>% summarise(r=cor(`1`, `2`, use="complete.obs"))
+``` 
+
+which seems to be reasonable.
+
+```{r cor-quiz, echo=FALSE}
+library(mvtnorm)
+df1 <- rmvnorm(100, sigma=matrix(c(1,0.6,0.6,1),
+               ncol=2, byrow=TRUE))
+df2 <- rmvnorm(100, sigma=matrix(c(1,-0.9,-0.9,1),
+               ncol=2, byrow=TRUE))
+df3 <- rmvnorm(100, sigma=matrix(c(1,0.2,0.2,1),
+               ncol=2, byrow=TRUE))
+df <- data.frame(x1=c(df1[,1], df2[,1], df3[,1]), 
+                 x2=c(df1[,2], df2[,2], df2[,2]), 
+                 group=c(rep("A", 100), rep("B", 100), rep("C", 100)))
+ggplot(df, aes(x=x1, y=x2)) + geom_point() +
+  facet_wrap(~group) +
+  theme(aspect.ratio=1)
+quiz(
+  question("Which plot has the strongest correlation?",
+    answer("A"),
+    answer("B", correct = TRUE),
+    answer("C")),
+  question("Which plot has correlation about 0.6?",
+    answer("A", correct = TRUE),
+    answer("B"),
+    answer("C"))
+)
+```
+
+
+```{r}
+ggplot(data=ff_rep, aes(x=`1`, y=`2`)) + geom_point() +
+  theme(aspect.ratio=1) + xlab("Rep 1") + ylab("Rep 2")
+```
+
+Transform the variables, to symmetrise
+
+```{r}
+ggplot(data=ff_rep, aes(x=`1`, y=`2`)) + geom_point() +
+  theme(aspect.ratio=1) + xlab("Rep 1") + ylab("Rep 2") + 
+  scale_x_sqrt() + scale_y_sqrt()
+```
+
+### Summary
+
+They have some positive linear association, but there is a lot more variation than expected. One rep might have scored 15 and the other 0, that's the same batches, same oil, same criteria, same week, same rater!
+
+### Dig deeper: by type
+
+```{r}
+ggplot(data=ff_rep, aes(x=`1`, y=`2`)) + 
+  geom_point() +
+  theme(aspect.ratio=1) + 
+  xlab("Rep 1") + ylab("Rep 2") + 
+  facet_wrap(~type, ncol=5)
+```
+
+Summary: buttery and potato'y look a bit better. The rest are still terrible. 
+
+### Dig deeper: by oil
+
+```{r}
+ggplot(data=ff_rep, aes(x=`1`, y=`2`)) + 
+  geom_point() +
+  theme(aspect.ratio=1) + 
+  xlab("Rep 1") + ylab("Rep 2") +
+  facet_grid(treatment~type)
+```
+
+Summary: Not much improvement here.
+
+### Dig deeper: By subject 
+
+```{r}
+ggplot(data=ff_rep, aes(x=`1`, y=`2`)) + geom_point() +
+  theme(aspect.ratio=1) + 
+  xlab("Rep 1") + ylab("Rep 2") + facet_wrap(~subject, ncol=4)
+```
+
+Summary: Some subjects may be more experienced than others?
+
+## Completeness of design (select, count, spread)
+
+If the data is complete it should be `12 x 10 x 3 x 2`, that is, 6 records for each person. (Assuming that each person rated on all scales.) 
+
+To check this we want to tabulate the number of records for each subject, time and treatment. That is,
+- select appropriate columns, 
+- tabulate, 
+- count and 
+- spread it out to give a nice table.
+
+---
+
+```{r echo=TRUE}
+french_fries %>% 
+  select(subject, time, treatment) %>% 
+  count(subject, time) %>%
+  spread(time, n)
+```
+
+Summary: There are a few missing values: subjects, 3, 31, 79, 86 all missed one rating session. 
+
+### By criteria
+
+```{r}
+ff_long %>% 
+  select(subject, time, treatment, type) %>% 
+  count(subject, time) %>%
+  spread(time, n)
+```
+
+## Do ratings get higher for rancid over time? (filter, group_by, summarise)
+
+- Filter on criteria
+- Compute means by subject, week and oil
+- Plot
+
+```{r}
+ff_av <- ff_long %>% 
+  filter(type == "rancid") %>%
+  group_by(subject, time, treatment) %>%
+  summarise(rating=mean(rating))
+```
+
+```{r }
+p <- ff_long %>% filter(type == "rancid") %>%
+  ggplot(aes(x=time, y=rating, colour=treatment)) + 
+         geom_point(alpha=0.5) +
+  scale_colour_brewer(palette="Dark2") +
+  facet_wrap(~subject) 
+p + geom_line(data=ff_av, aes(group=treatment))
+```
+
+Summary: Oh, its awful data! Only subject 86 is seeing the chips get more rancid over time, with maybe oil 1 being worse. Subject 63, shows some trend. Nothing is rancid for subjects 78, 79. Subject 52 thinks they taste better after many weeks in the same old oil!
+
+## Lab exercise
+
+This question is about the 2015 PISA results. The data is downloaded from [http://www.oecd.org/pisa/data/2015database/](http://www.oecd.org/pisa/data/2015database/). The SPSS format "Student questionnaire data file (419MB)" is downloaded and processed using this code, to extract results for Australia:
+
+```{r eval=FALSE}
+library(haven)
+pisa_2015 <- read_sav(file.choose())
+pisa_au <- pisa_2015 %>% filter(CNT == "AUS")
+save(pisa_au, file="pisa_au.rda")
+```
+
+You don't need to do this, because the Australia data is extracted and saved for you. Your task is to answer these questions about Australia. At times it may be helpful to examine the data dictionary, which is provided as an excel file (you can also download this directly from the OECD PISA site too).
+
+A large amount of pre-processing is done on the data, as performed by this code:
+
+```{r}
+load("data/pisa_au.rda")
+pisa_au <- pisa_au %>% mutate(state=as.character(substr(STRATUM, 4, 5)),
+                schtype_yr=as.character(substr(STRATUM, 6, 7))) %>%
+  mutate(state=recode(state, "01"="ACT", "02"="NSW", "03"="VIC",
+       "04"="QLD", "05"="SA", "06"="WA", "07"="TAS", "08"="NT")) %>%
+  mutate(schtype_yr=recode(schtype_yr,
+            "01"="Catholic_Y10", "02"="Catholic_noY10",
+            "03"="Gov_Y10", "04"="Gov_noY10",
+            "05"="Ind_Y10", "06"="Ind_noY10",
+            "07"="Catholic_Y10", "08"="Catholic_noY10",
+            "09"="Gov_Y10", "10"="Gov_noY10",
+            "11"="Ind_Y10", "12"="Ind_noY10",
+            "13"="Catholic_Y10", "14"="Catholic_noY10",
+            "15"="Gov_Y10", "16"="Gov_noY10",
+            "17"="Ind_Y10", "18"="Ind_noY10",
+            "19"="Catholic_Y10", "20"="Catholic_noY10",
+            "21"="Gov_Y10", "22"="Gov_noY10",
+            "23"="Ind_Y10", "24"="Ind_noY10",
+            "25"="Catholic_Y10", "26"="Catholic_noY10",
+            "27"="Gov_Y10", "28"="Gov_noY10",
+            "29"="Ind_Y10", "30"="Ind_noY10",
+            "31"="Catholic_Y10", "32"="Catholic_noY10",
+            "33"="Gov_Y10", "34"="Gov_noY10",
+            "35"="Ind_Y10", "36"="Ind_noY10",
+            "37"="Catholic_Y10", "38"="Catholic_noY10",
+            "39"="Gov_Y10", "40"="Gov_noY10",
+            "41"="Ind_Y10", "42"="Ind_noY10",
+            "43"="Catholic_Y10", "44"="Catholic_noY10",
+            "45"="Gov_Y10", "46"="Gov_noY10",
+            "47"="Ind_Y10", "48"="Ind_noY10")) %>%
+  separate(schtype_yr, c("schtype","yr")) %>%
+  rename(birthmonth=ST003D02T, birthyr=ST003D03T,
+         gender=ST004D01T, desk=ST011Q01TA,
+         room=ST011Q02TA, computer=ST011Q04TA, internet=ST011Q06TA,
+         solarpanels=ST011D17TA, tvs=ST012Q01TA, cars=ST012Q02TA,
+         music_instr=ST012Q09NA, books=ST013Q01TA, birthcnt=ST019AQ01T,
+         mother_birthcnt=ST019BQ01T, father_birthcnt=ST019CQ01T,
+         test_anxiety=ST118Q01NA, ambitious=ST119Q04NA,
+         prefer_team=ST082Q01NA, make_friends_easy=ST034Q02TA,
+         tardy=ST062Q03TA, science_fun=ST094Q01NA, breakfast=ST076Q01NA,
+         work_pay=ST078Q10NA, sport=ST078Q11NA, internet_use=IC006Q01TA,
+         install_software=IC015Q02NA,
+         outhours_study=OUTHOURS, math_time=MMINS, read_time=LMINS,
+         science_time=SMINS, belong=BELONG,
+         anxtest=ANXTEST, motivat=MOTIVAT, language=LANGN,
+         home_edres=HEDRES, home_poss=HOMEPOS, wealth=WEALTH,
+         stuweight=W_FSTUWT) %>%
+    mutate(math=(PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+
+                     PV6MATH+PV7MATH+PV8MATH+PV9MATH+PV10MATH)/10,
+           science=(PV1SCIE+PV2SCIE+PV3SCIE+PV4SCIE+PV5SCIE+
+                        PV6SCIE+PV7SCIE+PV8SCIE+PV9SCIE+PV10SCIE)/10,
+           read=(PV1READ+PV2READ+PV3READ+PV4READ+PV5READ+
+                     PV6READ+PV7READ+PV8READ+PV9READ+PV10READ)/10) %>%
+   select(state, schtype, yr, birthmonth, birthyr, gender, desk, room,
+          computer, internet, solarpanels, tvs, cars, music_instr, books,
+          birthcnt, mother_birthcnt, father_birthcnt, test_anxiety,
+          ambitious, prefer_team, make_friends_easy, tardy, science_fun,
+          breakfast, work_pay, sport, internet_use, install_software,
+          outhours_study, math_time, read_time, science_time, belong,
+          anxtest, motivat, language, home_edres, home_poss, wealth,
+          stuweight, math, science, read) %>%
+  mutate(gender=factor(gender, levels=1:2, labels=c("female", "male"))) %>% 
+  mutate(birthmonth=factor(birthmonth, levels=1:12,
+    labels=c("jan", "feb", "mar", "apr", "may", "jun", "jul", "aug",
+                            "sep", "oct", "nov", "dec")))
+```
+
+a. Explain how the STRATUM variable is processed to create three new variables state, schtype and yr.
+b. Compute the average of math scores by state. Which state does best, on average, on math? (You should use the stuweight variable to compute a weighted average. This is survey data, and the weights indicate how representative that individual is of the population.)
+c. Compute the difference in average male and female math scores by state. Which state has the smallest average gender difference?
+d. Does test anxiety have an effect math score? (Use the variable `anxtest`, and a simple regression model to answer this question.)
+e. Explain what the `rename` operation is doing.
+f. Come up with two more questions as a group, based on the data description. Do the wrangling to answer these questions. Discuss these with a tutor.
