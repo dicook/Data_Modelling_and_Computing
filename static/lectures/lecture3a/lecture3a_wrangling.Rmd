@@ -39,7 +39,7 @@ tutorial_html_dependency()
 
 10 week sensory experiment, 12 individuals assessed taste of french fries on several scales (how potato-y, buttery, grassy, rancid, paint-y do they taste?), fried in one of 3 different oils, replicated twice. First few rows:
 
-```{r, echo=FALSE}
+```{r}
 library(tidyverse)
 library(forcats)
 library(gridExtra)
@@ -74,7 +74,7 @@ ff_long <- french_fries %>%
   gather(type, rating, -subject, -time, -treatment, -rep) %>%
   mutate(type=as.factor(type))
 ff_long %>% group_by(type) %>%
-  summarise(m=mean(rating, na.rm=TRUE), s=sd(rating, na.rm=TRUE))
+  dplyr::summarise(m=mean(rating, na.rm=TRUE), s=sd(rating, na.rm=TRUE))
 ff_long %>% 
   ggplot(aes(x=fct_reorder(type, rating, fun = median, na.rm=TRUE), y=rating)) +
   geom_boxplot() + xlab("type")
@@ -89,9 +89,9 @@ For **presentation purposes**, round numbers to 2-3 *variable* digits.
 
 ```{r}
 ff_long %>% group_by(type) %>%
-  summarise(m=mean(rating, na.rm=TRUE), s=sd(rating, na.rm=TRUE))
+  dplyr::summarise(m=mean(rating, na.rm=TRUE), s=sd(rating, na.rm=TRUE))
 ff_long %>% group_by(type) %>%
-  summarise(m=mean(rating, na.rm=TRUE), s=sd(rating, na.rm=TRUE)) %>%
+  dplyr::summarise(m=mean(rating, na.rm=TRUE), s=sd(rating, na.rm=TRUE)) %>%
   mutate(m=sprintf("%0.2f", m), s=sprintf("%0.2f", s))
 ```
 
@@ -99,7 +99,7 @@ Also reorder table by mean, helps readers
 
 ```{r}
 ff_long %>% group_by(type) %>%
-  summarise(m=mean(rating, na.rm=TRUE), s=sd(rating, na.rm=TRUE)) %>% 
+  dplyr::summarise(m=mean(rating, na.rm=TRUE), s=sd(rating, na.rm=TRUE)) %>% 
   mutate(m=sprintf("%0.2f", m), s=sprintf("%0.2f", s)) %>%
   arrange(m)
 ```
@@ -132,7 +132,7 @@ ff_rep
 Correlation between two variables is 
 
 ```{r}
-ff_rep %>% summarise(r=cor(`1`, `2`, use="complete.obs"))
+ff_rep %>% dplyr::summarise(r=cor(`1`, `2`, use="complete.obs"))
 ``` 
 
 which seems to be reasonable.
