@@ -1,0 +1,226 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 4,
+                      fig.width = 8,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+```
+
+# Wrangling data
+
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.netlify.com](http://dmac.netlify.com)
+
+## Overview
+
+- Joining tables
+- Working with dates
+
+## Joins
+
+It’s rare that a data analysis involves only a single table of data. Typically you have many tables of data, and you must combine them to answer the questions that you’re interested in. Collectively, multiple tables of data are called relational data because it is the relations, not just the individual datasets, that are important.
+
+### Airline travel, ontime data
+
+
+```{r}
+library(tidyverse)
+library(ggmap)
+library(lubridate)
+library(ggthemes)
+load("data/plane_N4YRAA.rda")
+plane_N4YRAA %>% glimpse()
+```
+
+### Airline travel, airport location
+
+```{r}
+airport <- read_csv("data/airports.csv")
+airport %>% select(AIRPORT, LATITUDE, LONGITUDE, AIRPORT_STATE_NAME) %>%
+  glimpse()
+```
+
+### Joining the two tables
+
+- Purpose is to show flight movement on the map
+- Key is the airport three letter code, 
+    - called ORIGIN or DEST in plane_N4YRAA table
+    - called AIRPORT in the airport table
+- One table, plane_N4YRAA, has less airports than the other
+    - Only want to keep the rows of airport table, for those that appear in the plane_N4YRAA table
+
+
+```{r}
+airport <- airport %>%
+  select(AIRPORT, LATITUDE, LONGITUDE, AIRPORT_IS_LATEST, DISPLAY_AIRPORT_NAME) %>%
+  filter(AIRPORT_IS_LATEST == 1) %>%
+  select(-AIRPORT_IS_LATEST)
+
+N4YRAA_latlon <- left_join(plane_N4YRAA, airport,
+                           by = c("ORIGIN"="AIRPORT")) %>%
+  rename("ORIGIN_LATITUDE"="LATITUDE",
+         "ORIGIN_LONGITUDE"="LONGITUDE")
+N4YRAA_latlon %>% 
+  select(ORIGIN, ORIGIN_LATITUDE, ORIGIN_LONGITUDE, 
+         DISPLAY_AIRPORT_NAME)
+```
+
+The variables ORIGIN_LATITUDE, ORIGIN_LONGITUDE, DISPLAY_AIRPORT_NAME are added to corresponding row in the plane_N4YRAA table.
+
+### Add destination locations
+
+
+- Added the spatial coordinates (lat, lon) for the origin airport
+- The same needs to be done for the destination airport
+- Then the airports can be drawn over a map
+
+```{r}
+N4YRAA_latlon <- left_join(N4YRAA_latlon, airport,
+                           by = c("DEST"="AIRPORT")) %>%
+  rename("DEST_LATITUDE"="LATITUDE",
+         "DEST_LONGITUDE"="LONGITUDE")
+
+N4YRAA_latlon <- N4YRAA_latlon %>% arrange(FL_DATE, DEP_TIME)
+```
+
+### Map it
+
+```{r}
+map <- get_map(c(lon=-92.20562, lat=36.20259), zoom=5)
+ggmap(map) +
+  geom_segment(data=filter(N4YRAA_latlon,
+                           FL_DATE == ymd("2017-05-06")),
+               aes(x=ORIGIN_LONGITUDE, xend=DEST_LONGITUDE,
+                   y=ORIGIN_LATITUDE, yend=DEST_LATITUDE),
+               color="navyblue") +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE == ymd("2017-05-06")),
+             aes(x=ORIGIN_LONGITUDE,
+                 y=ORIGIN_LATITUDE), color="orange",
+             alpha=0.3, size=3) +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE == ymd("2017-05-06")),
+             aes(x=DEST_LONGITUDE,
+                 y=DEST_LATITUDE), color="red",
+             alpha=0.3, size=1) +
+   theme_map()
+```
+
+## Working with dates
+
+- Working with dates
+    + Does every year have 365 days? Does every day have 24 hours? Does every minute have 60 seconds?
+    + Where are you?
+    + What day of the week is it? Day of the month? Week in the year?
+    + Are we talking months as numbers or names?
+    + How many days until we go on holidays?
+
+### The problem
+
+How many ways can you think of you write yesterday's date? 
+
+Type them in this [collaborative whiteboard](https://public.etherpad-mozilla.org/p/ETC1010).  
+
+### Parsing dates
+
+These are all functions for reading and interpreting dates, with the `lubridate` package:
+
+```{r echo=TRUE}
+ymd("2017-08-15")
+mdy("08/15/2017")
+dmy("15082017")
+ymd_hms("2015:08:15 10:05:30", tz = "Australia/Melbourne")
+wday("2017-08-15")
+yday("2017-08-15")
+today()
+today(tz = "America/Los_Angeles")
+```
+
+### Example: pedestrian sensor
+
+```{r eval=FALSE}
+library(rwalkr)
+ped <- run_melb(year=2017, sensor="Melbourne Central")
+save(ped, file="data/ped.rda")
+```
+
+```{r}
+load("data/ped.rda")
+ped
+```
+
+- The basic time unit is day, and then we have counts for each hour. 
+- From day, we would like to extract 
+    - month
+    - week day vs weekend
+    - week
+    - day of the month
+    - holiday or work day
+    
+### Extract elements
+
+```{r}
+ped <- ped %>%
+  mutate(month = month(Date, label = TRUE, abbr = TRUE), 
+         wday = wday(Date, label=TRUE, abbr=TRUE,
+                     week_start=1))
+```
+
+### Quiz
+
+```{r day, echo=FALSE}
+quiz(
+  question("What does the function `day` do? (You can use `day(ped$Date)` in your RStudio window to check.)",
+    answer("Day of the year"),
+    answer("Day of the month"),
+    answer("Same as `wday()`")),
+  question("What does the function `mday` do?",
+    answer("Day of the year"),
+    answer("Day of the month", correct = TRUE),
+    answer("Same as `wday()`"))
+)
+```
+
+### Make some plots
+
+```{r}
+ped %>% ggplot(aes(x=month, y=Count)) + geom_col()
+```
+
+How would you describe the pattern?
+
+- January has a very low count relative to the other months. Something has to be wrong with the data, because this shouldn't occur.
+- The remaining months have roughly the same counts.
+
+```{r}
+ped %>% ggplot(aes(x=wday, y=Count)) + geom_col()
+```
+
+How would you describe the pattern?
+
+- Friday and Saturday tend to have a few more people walking around than other days.
+
+### What might be wrong with these interpretations?
+
+There might be a different number of days of the week over the year, simply summing the counts might lead to a misinterpretation of pedestrian patterns. Similarly months have different numbers of days.
+
+### Lab exercise
+
+Brainstorm with your table a solution, to answer these questions:
+
+1. Are pedestrian counts different depending on the month?
+2. Are pedestrian counts different depending on the day of the week?
