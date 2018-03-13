@@ -1,0 +1,67 @@
+---
+title: "ETC1010_assignment1"
+author: '5T'
+date: "13/03/18"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Q1.
+```{r}
+library(tidyverse)
+library(readxl)
+library(plyr)
+passengers <- read_xls("data/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+tidy_data <- passengers %>%
+  select(AIRPORT, Year, INBOUND, OUTBOUND, INBOUND__1, OUTBOUND__1) %>%
+  rename(c("INBOUND" = "Domestic_inbound", "OUTBOUND" = "Domestic_outbound", "INBOUND__1" = "International_inbound", "OUTBOUND__1" = "International_outbound"))
+tidier_data <- tidy_data %>%
+  gather(Domestic_inbound, Domestic_outbound, International_inbound, International_outbound, key = "typeofflight_bound", value = "count")
+tidiest_data <- tidier_data %>%
+  separate("typeofflight_bound", c("type_of_flight", "bound")) %>%
+  drop_na(AIRPORT) %>% filter(AIRPORT != "TOTAL AUSTRALIA")
+View(tidiest_data)
+```
+
+Q2.
+a.
+```{r}
+ggplot(tidiest_data, aes(x = type_of_flight)) +
+  geom_bar(aes(weight=count)) +
+  facet_wrap(~Year, ncol = 8)
+```
+
+b.
+```{r}
+tidy_data_drop <- tidy_data %>% 
+  drop_na(AIRPORT) %>% 
+  filter(AIRPORT != "TOTAL AUSTRALIA")
+library(ggplot2)
+library(plotly)
+plot_b <- ggplot(tidy_data_drop, aes(x = Domestic_inbound, y = Domestic_outbound)) +
+  geom_point(mapping = aes(colour = AIRPORT)) +
+  xlab("Domestic inbound") +
+  ylab("Domestic outbound") +
+  facet_wrap(~Year, nrow=4) +
+  theme(legend.position = "none")
+ggplotly(plot_b)
+```
+The airports with the most domestic flights are Sydney, Melbourne and Brisbane. 
+
+c.
+```{r}
+plot_c <- ggplot(tidy_data_drop, aes(x = International_inbound, y = International_outbound)) +
+  geom_point(mapping = aes(colour = AIRPORT)) +
+  xlab("International inbound") +
+  ylab("International outbound") +
+  facet_wrap(~Year, nrow=4) +
+  theme(legend.position = "none")
+ggplotly(plot_c)
+```
+
+Q3.
+From the bar graph, we can see that throughout all the years, the number of flights in total have increased significantly. From our first scatterplot, we can see that the number of domestic flights have been increasing for all airports, with Sydney airport leading in the number of domestic flights. For international flights, only a few number of airports have shown a significant increase of flights, mainly in Sydney, Melbourne and Brisbane. However, Sydney continues to lead in the number of international flights. The plots for domestic flights show roughly equal numbers of inbound and outbound passengers at the airports. International flights, particularly in recent years tend to have more inbound passengers than outbound passengers, which is consistent with Australia's positive rate of immigration.

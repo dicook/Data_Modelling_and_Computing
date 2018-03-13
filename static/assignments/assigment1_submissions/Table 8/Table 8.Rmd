@@ -1,0 +1,91 @@
+---
+title: "Assignment Final"
+author: "Table 8"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+passengers <- read_xls("data/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+```
+
+```{r}
+View(passengers)
+```
+
+
+```{r}
+update1 <- select(passengers, AIRPORT, Year, INBOUND, OUTBOUND, INBOUND__1, OUTBOUND__1)
+```
+
+
+```{r}
+colnames(update1)[colnames(update1)=="INBOUND"] <- "Domestic_Inbound"
+colnames(update1)[colnames(update1)=="OUTBOUND"] <- "Domestic_Outbound"
+colnames(update1)[colnames(update1)=="INBOUND__1"] <- "International_Inbound"
+colnames(update1)[colnames(update1)=="OUTBOUND__1"] <- "International_Outbound"
+```
+
+```{r}
+update1
+```
+
+
+```{r}
+update2<- update1 %>% gather(Domestic_Inbound, Domestic_Outbound, International_Inbound, International_Outbound, key = "flights", value = "revenue")
+```
+
+
+```{r}
+update2
+```
+
+```{r}
+update3 <- update2 %>% 
+  separate("flights", c("type_of_flight","bound"))
+```
+
+
+```{r}
+update3
+```
+
+```{r}
+update5 <- slice(update3, -(1:32))
+```
+
+```{r}
+update5
+```
+
+
+```{r, fig.width =20, fig.height =20}
+ggplot(update5, aes(x=type_of_flight)) + geom_bar(aes(weight= revenue)) + xlab("From Year") + ylab("Revenue Passengers") + ggtitle("Domestic and International Revenue Passengers") + facet_wrap(~ Year, ncol=4)
+```
+
+1) The bar charts above show that as time increases, the gap between revenue earned by domestic flights and international gets bigger. This can be seen where in 1985, revenue earned for domestic flights was approximately $40 million while international flights earned around $10 million. Whereas in 2016, domestic flights around $200 million while international flights earned approximately $75 million. The difference between revenue in 1985 is $30 million and the difference in 2016 is $125 million. This further shows that the difference has gotten wider over the years.
+
+
+```{r}
+update4 <- slice(update1, -(1:32))
+```
+
+
+```{r, fig.width =20, fig.height =20}
+ggplot(update4, mapping = aes(x=Domestic_Inbound, y=Domestic_Outbound, color = AIRPORT)) +
+  geom_point(alpha=1) + 
+  xlab("Domestic Inbound Revenue Passengers") + 
+  ylab("Domestic Outbound Revenue Passengers") + ggtitle("Domestic Inbound vs Domestic Outbound") + facet_wrap(~ Year, ncol=4) 
+```
+
+2) This scatterplot suggests that there are three airports with a significant amount of growth yearly, this is because three points show a lot of growth and goes further away from other airport's points every year. Those three plots are from the Sydney (Blue), Melbourne (Pink), and Brisbane (Brown) airports. There is also a positive correlation for all years whereby when an airport's domestic inbound passenger revenue is high, their domestic outbound passenger revenue is also high.This also means that these airports are doing very well economically and it can be assumed they will continue to perform even better.
+
+```{r, fig.width =20, fig.height =20}
+ggplot(update4, mapping = aes(x=International_Inbound, y=International_Outbound, color = AIRPORT)) +
+  geom_point(alpha=1) + 
+  xlab("International Inbound Revenue Passengers") + 
+  ylab("International Outbound Revenue Passengers") + ggtitle("International Inbound vs International Outbound") + facet_wrap(~ Year, ncol=4) 
+```
+
+3) This scatterplot shows the relationship between International Inbound revenue passengers and International Outbound revenue passenger. Here we can see that Sydney has been achieving great success throughout all the years compared to other airports. However, Melbourne has been growing at a significant speed from 2010 onwards. Brisbane and Perth airports are also among the top when it comes to revenues earned. There is also a positive correlation for all years whereby when an airport's international inbound passenger revenue is high, their international outbound passenger revenue is also high.

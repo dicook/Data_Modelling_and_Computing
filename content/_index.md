@@ -46,6 +46,13 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 
 - Assignment 1: [Instructions](assignments/assignment1.html) [(Rmd)](assignments/assignment1.Rmd) **DUE: Tues Mar 13 in class**
 
+- [Grading assignments](assignments/assignment_marking.csv) This is the team's assignment that you should evaluate, on reproducing and explanations. Enter your feedback in the "Assignment 1 grading" on ED. 
+- You can download the Rmd and html for your evaluation here:
+    - 5T: [Rmd](assignments/assigment1_submissions/5T/5T.Rmd) [html](assignments/assigment1_submissions/5T/5T.html)
+    
+
+
+
 ## Data 
 
 - [music-sub.csv](http://dmac.netlify.com/lectures/data/music-sub.csv)

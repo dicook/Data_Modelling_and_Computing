@@ -1,0 +1,50 @@
+---
+title: "Assignment 1"
+author: "Group 1"
+date: "13/03/2018"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#Tidying Data
+##Extracting Data
+#Data was extracted to R using the following:
+library(tidyverse)
+library(readxl)
+passengers <- read_xls("/Users/anne/Desktop/data/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+
+###Total removed from Airport column using the fllowing:
+passengers_row <- passengers[-1:-32, ]
+
+####Useful columns were carefully selected as below using the following function:
+passengers_select <- passengers_row %>% select(AIRPORT, Year, TOTAL, TOTAL__1, INBOUND, INBOUND__1, OUTBOUND,OUTBOUND__1,INBOUND__2, OUTBOUND__2)
+
+#####Then, the column INBOUND__2 and OUTBOUND__2 was renamed to IN and OUT:
+passenger_rename <- passengers_select %>% rename(IN = `INBOUND__2`, OUT= `OUTBOUND__2`)
+
+#View(passenger_rename)
+#Then, gathered into Bound column: 
+passenger_bound <- passenger_rename %>% gather(BOUND, no_of_passengers, IN:OUT)
+#View(passenger_bound)
+#####Then, the column TOTAL and TOTAL__1 was renamed to DOMESTIC and INTERNATIONAL:
+passenger_rename1 <- passenger_rename %>% rename(DOMESTIC = `TOTAL`, INTERNATIONAL= `TOTAL__1`)
+
+#####A column with heading type_of_flight was creating using the gather(), combining the total domestic and international number of passengers
+passenger_gather <- passenger_rename1 %>% gather(type_of_flight, no_of_passengers, DOMESTIC:INTERNATIONAL) 
+
+######Creating a barchart using the ggplot() as below
+ggplot(passenger_gather, aes(x = type_of_flight, y = no_of_passengers)) + geom_bar(stat = "identity") + facet_wrap(~Year)
+
+########Creating Scatterplot of international inbound vs outbound passengers facetted by yearusing:
+ggplot(passengers, aes(x=INBOUND, y=OUTBOUND))+ geom_point() + xlab("DOMESTICL INBOUND PASSENGERS NUMBERS") + ylab("DOMESTIC OUTBOUND PASSENGERS NUMBERS TWO") + geom_point(stat = "identity") + facet_wrap(~Year)
+
+########Creating Scatterplot of international inbound vs outbound passengers facetted by year using:
+ggplot(passengers, aes(x=INBOUND__1,y=OUTBOUND__1))+ geom_point() + xlab("INTERNATIONAL INBOUND PASSENGERS NUMBERS") + ylab("INTERNATIONAL OUTBOUND PASSENGERS NUMBERS TWO") + geom_point(stat = "identity") + facet_wrap(~Year)
+
+```
+

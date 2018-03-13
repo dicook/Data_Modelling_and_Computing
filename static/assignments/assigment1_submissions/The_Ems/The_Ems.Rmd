@@ -1,0 +1,72 @@
+---
+title: "Assignment 1"
+author: "Emily Ditchfield and Emma Markakis"
+date: "12/03/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!-- load data --> 
+```{r}
+library(tidyverse)
+library(readxl)
+passengers <- read_xls("WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+```
+
+<!--tidy data -->
+```{r}
+flights <- passengers %>%  
+   select(AIRPORT, Year, INBOUND, OUTBOUND, INBOUND__1, OUTBOUND__1)
+flights <- tail(flights, -32)
+flights <- rename(flights, 
+  OUT_INTERNATIONAL = OUTBOUND__1,
+  IN_INTERNATIONAL = INBOUND__1,
+  OUT_DOMESTIC = OUTBOUND,
+  IN_DOMESTIC = INBOUND,
+  airport = AIRPORT,
+  year = Year) %>%
+    gather(type, value, 3:6, na.rm = TRUE) %>%
+    separate(type, c("bound", "type_of_flight"), "_") %>%
+    arrange(airport, year)
+```
+<!--plot 1: barchart -->
+```{r fig1, fig.height = 15}
+ggplot(flights, aes(x = type_of_flight)) +
+    geom_bar(aes(weight = value)) +
+    facet_wrap(~ year, nrow = 8)
+```
+
+<!--plot 2: scatterplot domestic -->
+```{r fig2, fig.height = 15}
+domflights <- flights %>%
+  filter(!grepl("INTERNATIONAL", type_of_flight)) %>%
+  select(airport, year, bound, value) %>%
+  spread(key = bound, value = value)
+
+ggplot(domflights, aes(x = IN, y = OUT)) +
+    geom_point() +
+    facet_wrap(~ year, nrow = 8)
+```
+
+<!--plot 3: scatterplot international-->
+```{r fig3, fig.height = 15}
+intflights <- flights %>%
+  filter(grepl("INTERNATIONAL", type_of_flight)) %>%
+  select(airport, year, bound, value) %>%
+  spread(key = bound, value = value)
+
+ggplot(intflights, aes(x = IN, y = OUT)) +
+    geom_point() +
+    facet_wrap(~ year, nrow = 8)
+```
+
+##What do the plots tell us?
+#####As shown in the first plot, we can see that the number of domestic flights per year has consistently been higher than the number of international flights. Throughout the years between 1985 and 2017, we can see that the number of both domestic and international flights have increased. However, it is clear to see that the number of domestic flights have increased to a much higher value.  
+
+#####Between 1985 and 2017, the three airports with the greatest inbound and outbound domestic flights are Sydney, Melbourne and Brisbane. Considering that these areas are highly populated, it makes sense that these three major airports rapidly increase the number of inbound and outbound flights throughout the years. There is also a small increase in the number of flights coming out of small states including Perth, Canberra and Adelaide. We can assume that the airports that are currently still used are the State capitals.
+
+#####As shown in the third plot, the number of inbound and outbound flights internationally increase almost linearly between 1985 and 2017. Like the domestic flights, the top three international airports are Sydney, Melbourne and Brisbane. However, Sydney consistently remains the most used international airport, which comes as no surprise due to the fact Sydney is a popular tourist and stop over destination. It is also interesting to note that many of the airports remain at zero. From this information, we can conclude that these airports do not offer any international flights.
+

@@ -1,0 +1,102 @@
+---
+title: "Assignment 1"
+author: "Team CJ"
+date: "07/03/2018"
+output: html_document
+---
+
+# Reading in the airport data
+```{r}
+library(readxl)
+library(tidyverse)
+library(ggplot2)
+passengers <- read_xls("data/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+passengers
+```
+# Tidying data
+```{r}
+# Selecting required columns only
+passengers <- select(passengers, AIRPORT, Year, INBOUND, OUTBOUND, INBOUND__1, OUTBOUND__1)
+
+# Removing observations for TOTAL AUSTRALIA 
+passengers <- filter(passengers, AIRPORT != 'TOTAL AUSTRALIA')
+
+## Gathering by domestic and international flights
+passengers <- passengers %>%
+  gather(INBOUND, OUTBOUND, INBOUND__1, OUTBOUND__1, key = type_of_flight, value = passengers) %>%
+  mutate(type_of_flight = sub('INBOUND', 'IN_BOUND', type_of_flight)) %>%
+  mutate(type_of_flight = sub('OUTBOUND', 'OUT_BOUND', type_of_flight)) %>%
+  mutate(type_of_flight = sub('BOUND__1', 'INTERNATIONAL', type_of_flight)) %>%
+  mutate(type_of_flight = sub('BOUND', 'DOMESTIC', type_of_flight)) %>%
+  separate(type_of_flight, c('bound', 'type_of_flight'))
+passengers
+```
+# Visualising data
+## Passengers on domestic vs. international flights
+```{r}
+ggplot(passengers, aes(x = type_of_flight, color = type_of_flight)) +
+  geom_bar(aes(weight = passengers)) +
+  facet_wrap(~ Year) +
+  theme(axis.text.x  = element_text(size=4)) +
+  theme(axis.text.y  = element_text(size=4)) +
+  labs(x = 'Type of Flight', y = 'Passengers') +
+  ggtitle("Number of passengers for domestic and international flights")
+```
+
+## Inbound vs. Outbound Domestic Passengers
+```{r}
+# Filtering data for domestic flights only
+passengers_domestic <- filter(passengers, type_of_flight =="DOMESTIC")
+passengers_domestic <- spread(passengers_domestic, key=bound, value=passengers)
+passengers_domestic_syd <- filter(passengers_domestic, AIRPORT == 'SYDNEY')
+passengers_domestic_melb <- filter(passengers_domestic, AIRPORT == 'MELBOURNE')
+passengers_domestic_bris <- filter(passengers_domestic, AIRPORT == 'BRISBANE')
+
+# Plotting data
+ggplot(data = passengers_domestic) +
+  geom_jitter(mapping = aes(x = IN, y = OUT)) +
+  geom_jitter(data = passengers_domestic_syd, aes(x = IN, y = OUT, color = 'purple')) +
+  geom_jitter(data = passengers_domestic_melb, aes(x = IN, y = OUT, color = 'orange')) +
+  geom_jitter(data = passengers_domestic_bris, aes(x = IN, y = OUT, color = 'red')) +
+  facet_wrap(~ Year) +
+  theme(axis.text.x  = element_text(size=5)) +
+  theme(axis.text.y  = element_text(size=5)) +
+  scale_colour_manual(name = 'Airports', values = c('purple'='purple','orange'='orange', 'red'='red', 'blue'='blue', 'green'='green'), labels = c('Melbourne','Sydney', 'Brisbane')) +
+  ggtitle("Inbound vs. Outbound Domestic Passengers")
+```
+
+
+
+The three outlying airports in all plots are observations from Melbourne, Sydney and Brisbane Airports.
+
+## Inbound vs. Outbound International Passengers
+```{r}
+# Filtering data for international flights only
+passengers_international <- filter(passengers,type_of_flight == "INTERNATIONAL")
+passengers_international <- spread(passengers_international, key=bound, value=passengers)
+passengers_international_syd <- filter(passengers_international, AIRPORT == 'SYDNEY')
+passengers_international_melb <- filter(passengers_international, AIRPORT == 'MELBOURNE')
+passengers_international_bris <- filter(passengers_international, AIRPORT == 'BRISBANE')
+passengers_international_per <- filter(passengers_international, AIRPORT == 'PERTH')
+
+# Plotting data
+ggplot(data = passengers_international) +
+  geom_point(mapping = aes(x = IN, y = OUT)) +
+  geom_point(data = passengers_international_syd, aes(x = IN, y = OUT, color = 'purple')) +
+  geom_point(data = passengers_international_melb, aes(x = IN, y = OUT, color = 'orange')) +
+  geom_point(data = passengers_international_bris, aes(x = IN, y = OUT, color = 'red')) +
+  geom_point(data = passengers_international_per, aes(x = IN, y = OUT, color = 'blue')) +
+  facet_wrap(~ Year) +
+  theme(axis.text.x  = element_text(size=4.5)) +
+  theme(axis.text.y  = element_text(size=4.5)) +
+  scale_colour_manual(name = 'Airports', values = c('purple'='purple','orange'='orange', 'red'='red', 'blue'='blue'), labels = c('Perth','Melbourne','Sydney', 'Brisbane')) +
+  ggtitle("Inbound vs. Outbound International Passengers")
+```
+
+
+# Observations
+From the bar chart, we can see that the total number of passengers for both domestic and international flights has been steadily increasing since 1985. However, the increase is significantly more noticeable with domestic flights - although the number of passengers on domestic flights has always been larger than for international flights, the increase of domestic passengers per year has been increasing at a larger rate than international passengers.
+
+From the scatter plots for the domestic and international flights, the number of passengers in regional airports appear to also be steadily increasing, but passengers at the major Australian airports (Brisbane, Melbourne and Sydney) increase at a much larger rate, with Sydney leading the country in total passengers. Although the total number of passengers from Sydney appeared to increase at a larger rate between 1991 to 2000, travellers from Melbourne have since increased faster to present date, nearly matching Sydney in 2017.
+
+This pattern is a lot more pronounced in the scatter plots for the international flights, with Sydney well and truly leading the way with total number of passengers since 1985. The gap between Sydney and the rest of the country appears to increase significantly as time passes, but traffic at the other major airports has been approaching Sydney's within the last decade. What is also interesting is the increasing number of international passengers departing and arriving in Perth, which has grown significantly within the past 20 years and is rivalling that of Brisbane, which may be a result of the booming mining industry.

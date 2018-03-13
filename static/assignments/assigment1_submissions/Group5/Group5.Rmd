@@ -1,0 +1,88 @@
+---
+title: "Assignment_1"
+author: "Group 5"
+date: "13 March 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Installing Packages - The Beginning
+```{r Airport Passengers, echo=FALSE}
+library(tidyverse)
+#install.packages("reshape")
+require(reshape)
+library(readxl)
+passengers <- read_xls("WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+```
+
+
+Creating the New Table - new_table1 is the data frame, which contains the different variables required for the assignment.
+```{r }
+# new_table with certain indices
+new_table <- passengers[33:3168,]
+
+# without the certain variables
+new_table1 <- select(new_table, -X__1, -Rank, -TOTAL__2, -X__2)
+
+# renaming the variables
+names(new_table1)[1] <- "Airport"
+names(new_table1)[2] <- "Year"
+names(new_table1)[3] <- "DomesticInbound"
+names(new_table1)[4] <- "DomesticOutbound"
+names(new_table1)[5] <- "DomesticTotal"
+names(new_table1)[6] <- "InternationalInbound"
+names(new_table1)[7] <- "InternationalOutbound"
+names(new_table1)[8] <- "InternationalTotal"
+names(new_table1)[9] <- "InboundTotal"
+names(new_table1)[10] <- "OutboundTotal"
+```
+
+
+Bar plots: 
+The bar-chart of the type of flight facetted by year shows an increase in the number of passengers travelling on inbound and outbound fights in both domestic and international flights as years go on. The domestic flights indicate that there has been a positive trend in the number of passengers travelling on domestic flights over the timeframe from 1985-86 (29million) all the way to 2016-17(117million). In terms of the international passengers, we can also observe a strong increase in the number of in and outbound passengers over the years, starting from a little over 5million in 1985-86 to 38million in 2016-17.
+```{r }
+
+ggplot(new_table1, aes(x = Year)) + geom_bar(aes(weight=DomesticTotal)) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + ylab("Domestic Total")
+
+ggplot(new_table1, aes(x = Year)) + geom_bar(aes(weight=InternationalTotal)) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + ylab("International Total")
+
+```
+
+
+Scatter Plot - Domestic
+The scatterplot of the number of domestic inbound vs outbound passengers does not show a significant difference between the two. They both show an increasing trend with a positive correlation, with time and number of passengers coming through. However, there are marginally more flights going in than coming out from the airports. 
+
+The three airports with the most passengers are:
+Sydney: 
+  2016-17: 
+  Inbound 13528670 
+  Outbound 13511876
+Melbourne: 
+  2016-17: 
+  Inbound 12496599
+  Outbound 12431449
+Brisbane: 
+  2016-17: 
+  Inbound 8537777 
+  Outbound 8515004
+```{r }
+
+ggplot(data = new_table1) + geom_point(mapping = aes(x = Year, y = DomesticInbound)) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(data = new_table1) + geom_point(mapping = aes(x = Year, y = DomesticOutbound)) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
+
+
+Scatter Plot - International
+The scatter plot for the number of international inbound vs outbound passengers also do not show a significant difference between the two. They both show an increasing trend as well, both with a positive correlation. By having more flights going out than in, this shows that more people are travelling for a longer period, this could show people going out on holidays for longer periods. It can also identify that people/families may be migrating to different countries, hence there would be more outbound flights than inbound as they do not come back.
+```{r }
+
+ggplot(data = new_table1) + geom_point(mapping = aes(x = Year, y = InternationalInbound)) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplot(data = new_table1) + geom_point(mapping = aes(x = Year, y = InternationalOutbound)) + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```

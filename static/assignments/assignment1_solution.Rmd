@@ -1,0 +1,100 @@
+---
+title: "ETC 1010 Assignment 1"
+author: "SOLUTION"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE, 
+  collapse = TRUE,
+  comment = "",
+  fig.height = 8,
+  fig.width = 12,
+  fig.align = "center",
+  cache = FALSE
+)
+```
+
+# Instructions
+
+- This is a team assignment. You can create your own team, of between 2-4 people. 
+- You need to write a report with answers to each of the questions. 
+- Turn in the `html` output file, and also the `Rmd` file. 
+- Create a team name, and use this on the report
+- Separately you need to provide a separate page to one of the tutors that contains the team name, members of the team, and the % effort from each team member. Your grade for the assignment will be adjusted by % effort. If the effort is different from 1/n, all members need to sign off on this.
+- Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative.
+
+# Exercise
+
+- From the web site [Department of Infrastructure, Regional Development and Cities](https://bitre.gov.au/publications/ongoing/airport_traffic_data.aspx) download the Airport Traffic Data 1985–86 to 2016–17. It is 2.7Mb.
+- Extract the "Airport Passengers" table into R with this code.
+
+```{r readdata}
+library(readxl)
+passengers <- read_xls("data/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+```
+
+- (5pts) Tidy the data, to produce a data set with these columns
+    - airport: all of the airports. (You can remove the TOTAL, because this can be easily recalculated as needed.)
+    - year 
+    - type_of_flight: DOMESTIC, INTERNATIONAL
+    - bound: IN or OUT
+    
+```{r tidydata}
+library(tidyverse)
+passengers <- passengers %>% 
+  filter(!is.na(AIRPORT)) %>%
+  select(airport = AIRPORT,
+         Year, IN_DOM = INBOUND, OUT_DOM = OUTBOUND,
+         IN_INTL = INBOUND__1, 
+         OUT_INTL = OUTBOUND__1) %>%
+  filter(!airport %in%  "TOTAL AUSTRALIA") %>%
+  gather(key = "where", value = "amount", IN_DOM:OUT_INTL) %>%
+  separate(where, into=c("bound", "type_of_flight"))
+```
+
+- (5pts) Use your data to make 
+    - bar chart of domestic and international passengers facetted by year
+    - a scatterplot of domestic inbound vs outbound passengers facetted by year. There are three airports with much higher numbers, which are these three?
+    - a scatterplot of international inbound vs outbound passengers facetted by year
+
+```{r bar, fig.height=8, fig.width=6}
+ggplot(passengers) + 
+  geom_col(aes(x=type_of_flight, y=amount)) + 
+  facet_wrap(~Year, ncol=4)
+```
+    
+```{r scat1}
+passengers %>%
+  filter(type_of_flight == "DOM") %>%
+  spread(key = bound, value = amount) %>%
+  ggplot() + geom_point(aes(x=IN, y=OUT)) +
+  facet_wrap(~Year, ncol=8) +
+  coord_equal()
+passengers %>% 
+  filter(Year == "2016-17", type_of_flight == "DOM", bound == "IN") %>%
+  select(airport, amount) %>%
+  arrange(desc(amount)) %>% top_n(3)
+```
+
+```{r scat2}
+passengers %>%
+  filter(type_of_flight == "INTL") %>%
+  spread(key = bound, value = amount) %>%
+  ggplot() + geom_point(aes(x=IN, y=OUT)) +
+  facet_wrap(~Year, ncol=8) +
+  coord_equal()
+passengers %>% 
+  filter(Year == "2016-17", type_of_flight == "INTL", bound == "IN") %>%
+  select(airport, amount) %>%
+  arrange(desc(amount)) %>% top_n(4)
+```
+
+- (5pts) Write a paragraph explaining what you learn from each of the plots
+
+From both the bar chart and the scatterplot, you can see that the number of flights has been increasing over the years. From the bar chart, you can see that the number of domestic passengers is much larger than the international passengers. From the scatterplot, you can see that the number of inbound flights equals the number of outbound flights, which is what we would expect. There are three much busier domestic airportsm and these can be seen to be Sydney, Melbourne and Brisbane. The pattern of inbound vs outbound international flights is similar to domestic, except that there are four major airports by passenger count: Perth joins the other three in the top.

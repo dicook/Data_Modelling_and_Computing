@@ -1,0 +1,99 @@
+---
+title: "GuangZongYaoZu"
+author: "Shibo Dong, Linguo Yang, Ziqi Hao, Ronghao Zhang"
+date: "12 March 2018"
+output: html_document
+---
+
+## Extract the data
+```{r,echo=TRUE}
+library(readxl)
+passengers <- read_xls("~/R/R working directory/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+```
+
+## Tidy the data
+```{r,echo=TRUE}
+library(dplyr)
+library(tidyr)
+Tidy_data <- passengers%>%
+  filter(AIRPORT != "TOTAL AUSTRALIA")%>%
+  select(AIRPORT,Year,INBOUND,OUTBOUND,INBOUND__1,OUTBOUND__1) %>%
+  rename(DOMESTIC_IN=INBOUND, DOMESTIC_OUT=OUTBOUND, INTERNATIONAL_IN=INBOUND__1,
+         INTERNATIONAL_OUT=OUTBOUND__1)%>%
+  gather(ALL,Number,DOMESTIC_IN,DOMESTIC_OUT,INTERNATIONAL_IN,INTERNATIONAL_OUT,
+         -AIRPORT,-Year)%>%
+  separate(ALL, into = c("Type_of_flight", "Bound"), sep = "_")
+View(head(Tidy_data))
+```
+
+## Barchart
+```{r,echo=TRUE}
+library(dplyr)
+library(tidyr)
+p1 <- passengers %>%
+  subset(select=c(AIRPORT,Year,TOTAL,TOTAL__1))%>%
+  gather(Type_of_flight,AirNum,-AIRPORT,-Year)%>%
+  filter(AIRPORT != "TOTAL AUSTRALIA")%>%
+  mutate(Type_of_flight = sub("TOTAL","DOMESTIC",Type_of_flight))%>%
+  mutate(Type_of_flight = sub("DOMESTIC__1","INTERNATIONAL",Type_of_flight))
+
+library(ggplot2)
+ggplot(p1, aes(x=Type_of_flight, fill=Type_of_flight)) +
+  geom_bar(aes(weight=AirNum)) +
+  facet_wrap(~Year) +
+  scale_y_continuous("AirNum", breaks = c(50000000,100000000,150000000),
+                     labels = c("50m","100m","150m"))
+```
+
+## Scatterplot of domestic passengers
+```{r,echo=TRUE}
+p2 <- passengers %>%
+  subset(select=c(AIRPORT,Year,INBOUND,OUTBOUND))%>%
+  filter(AIRPORT != "TOTAL AUSTRALIA")
+
+library(ggplot2)  
+ggplot(p2, aes(x=INBOUND, y=OUTBOUND)) +
+  geom_point()+
+  facet_wrap(~Year)+
+  scale_x_continuous(breaks=seq(0,15000000,5000000),
+                     labels=seq(0,15,5))+
+  scale_y_continuous(breaks=seq(0,15000000,5000000),
+                     labels=seq(0,15,5))
+```
+
+There are three airports with much higher numbers, which are Sydney, Melbourne and Brisbane.
+
+## Scatterplot of international passengers
+```{r,echo=TRUE}
+
+p3 <- passengers %>%
+  subset(select=c(AIRPORT,Year,INBOUND__1,OUTBOUND__1))%>%
+  filter(AIRPORT != "TOTAL AUSTRALIA")
+
+ggplot(p3, aes(x=INBOUND__1, y=OUTBOUND__1))+  
+  geom_point()+
+  facet_wrap(~Year)+
+  xlab("INBOUND")+
+  ylab("OUTBOUND")+
+  scale_x_continuous(breaks=seq(0,8000000,2000000),
+                     labels=seq(0,8,2))+
+  scale_y_continuous(breaks=seq(0,8000000,2000000),
+                     labels=seq(0,8,2))
+```
+
+## Summary
+From bar charts of the type of flight facetted by year, it can be apparently illustrated that the number of passengers taken domestic flights accounts for more percentage than international flights. Much correctly, the total number of passengers increased dramatically. It is mentionable that passengers who leave for internal destination made more contribution in a total number of flights than an international terminus. Compared with international airlines increased by 33million, the number of taken domestic flights passengers increases from approximately 29 million in 1985-1986 to around 117 million in the year of 2016-2017, which is more rapidly in the same period. The phenomenon of increasing number of passengers has drawn public attention that passengers trend to adopt and accept to take a plane to their destination.
+From the above two scatter plots, it can be clearly seen that the relationship between the inbound and the outbound are linear positive correlation. This conclusion applies whether it is the domestic flight or the international flight. In particular for the domestic flight, the number of the flight that arrivals and departures at sydney, melbourne, and brisbane increased faster than those at other airports as time progressed, implying that these three airports were more busy.
+
+
+
+
+
+
+
+
+
+
+
+
+

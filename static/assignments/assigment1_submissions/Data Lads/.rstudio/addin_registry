@@ -1,0 +1,10 @@
+{
+    "reprex::reprex_addin" : {
+        "binding" : "reprex_addin",
+        "description" : "Run `reprex::reprex()` to prepare a reproducible example for sharing.",
+        "interactive" : true,
+        "name" : "Render reprex",
+        "package" : "reprex",
+        "title" : ""
+    }
+}

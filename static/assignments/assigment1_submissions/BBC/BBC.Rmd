@@ -1,0 +1,125 @@
+---
+title: "Untitled"
+author: "Assignment BBCFinal"
+date: "March 13, 2018"
+output: html_document
+---
+
+```{r}
+
+#Unpacking the tidyverse and allowing for the dataset to be read
+library(tidyverse)
+library(readxl)
+
+#Accessing the passengers excel document
+passengers <- read_excel("data/Airport_Data.xls", sheet = 3, skip = 6)
+
+#Taking out unnecessary columns
+passengers$X__1 <- NULL
+passengers$X__2 <- NULL
+passengers$Rank <- NULL
+passengers$TOTAL <- NULL
+passengers$TOTAL__1 <- NULL
+passengers$TOTAL__2 <- NULL
+passengers$INBOUND__2 <- NULL
+passengers$OUTBOUND__2 <- NULL
+
+#Uniting the International inbound and outbound flights
+passengers1 <- passengers%>% unite(INTER, INBOUND__1, OUTBOUND__1)
+
+#Uniting the Domestic inbound and outbound flights
+passengers2 <-  passengers1%>% unite(DOM, INBOUND, OUTBOUND)
+
+#gathering Domestic and International counts so we can separate them into Inbound and Outbound, whilst making the NAs implicit
+passengers3 <- passengers2%>% gather("DOM", "INTER", key = "type_of_flight", value = "passenger_revenue", na.rm = TRUE)
+
+#separating passenger revenue back to Inbound and Outbound whilst fixing the character representations
+passengers4<- passengers3%>% separate(passenger_revenue, into = c("IN", "OUT"), sep = "_", convert = TRUE)
+
+#Filtering any NAs so they won't be used in the data, and gathering the counts of Domestic and International into one column so it can be used in the bar chart
+passengers5 <- passengers4%>% filter(AIRPORT != "TOTAL_AUSTRALIA") %>% filter(!is.na(IN)) %>% gather(bound, count, IN, OUT)
+
+#Removing Total Airports
+passengers6 <- passengers5[-c(1:33),]
+
+#Creating the Bar chart plot
+ggplot(passengers6, aes(x=type_of_flight, y=count)) + geom_col() + facet_wrap(~Year)
+
+```
+
+The most interesting aspect of the bar charts obtained from the dataset is the varying proportions over the years. Both domestic and international flights show perpetual growth, however domestic flights seem to grow much more quickly between 2002/03 - 2011/12. From 2011 however, international flights grow drastically, whilst domestic flights remain largely consistent. This is likely due to the strong Australian dollar from 2011-2013, which incentivised both international holidays in addition to encouraging overseas business transactions. The higher proportion of international flights could also be attributable to technological aviation advances which have made international travel more affordable and accessible. Thus reducing the financial barrier for family holidays and encouraging further business globalisation. There is an understandable drop in domestic and international flights for the 2001/02 after the September 11 attacks which remains largely uncorrected until 2004/05, where growth is quick for the next 5 years but slows after 2010. This slow may be due to improved interstate and international communication, limiting the need for excessive domestic and international travel for business.
+
+
+```{r}
+
+
+
+
+#Re-Accessing the original passengers excel document
+passengers <- read_excel("data/Airport_Data.xls", sheet = 3, skip = 6)
+
+#Taking out unnecessary columns
+passengers$X__1 <- NULL
+passengers$X__2 <- NULL
+passengers$Rank <- NULL
+passengers$TOTAL <- NULL
+passengers$TOTAL__1 <- NULL
+passengers$TOTAL__2 <- NULL
+passengers$INBOUND__2 <- NULL
+passengers$OUTBOUND__2 <- NULL
+
+#Uniting the International inbound and outbound flights
+passengers1 <- passengers%>% unite(INTERNATIONAL, INBOUND__1, OUTBOUND__1)
+
+#Deleting the International Column because we're analysing Domestic Data
+passengers2 <- select(passengers1, -(INTERNATIONAL), -(AIRPORT))
+
+#Removing Total Airports
+passengers3 <- passengers2[-c(1:33),]
+
+#Creating the Scatterplot
+ggplot(data = passengers3) + geom_point(mapping = aes(x=INBOUND, y=OUTBOUND)) + facet_wrap(~Year)
+
+```
+
+The domestic scatter plots faceted by year shows a strong, positive, linear association between inbound and outbound passengers. This is to be expected as the vast majority of passengers on these domestic flights were either holiday makers or completing business trips, ergo these passengers would complete return flights. The notion of round-trips can be easily seen from the limited number of outliers and strong positive correlation in the scatter plots. The airports with the most activity were Sydney, Melbourne and Brisbane, likely reinforcing the business and holiday maker notion of high correlation between inbound and outbound return flights. From 2009, Sydney and Melbourne increase at a much higher rate than Brisbane, likely attributable to the growth of international flights (as demonstrated in the following paragraph). More individuals must first travel to Sydney and Melbourne in order to catch international flights. This, in turn has also dramatically increased the spread of smaller airports (<50,000,000 passengers per year), as locations such as Perth, Adelaide and Canberra host domestic to international transfers. This increase is especially notable in 2011-2015 plots.
+
+
+
+
+```{r}
+
+#Re-Accessing the original passengers excel document
+passengers <- read_excel("data/Airport_Data.xls", sheet = 3, skip = 6)
+
+#Taking out unnecessary columns
+passengers$X__1 <- NULL
+passengers$X__2 <- NULL
+passengers$Rank <- NULL
+passengers$TOTAL <- NULL
+passengers$TOTAL__1 <- NULL
+passengers$TOTAL__2 <- NULL
+passengers$INBOUND__2 <- NULL
+passengers$OUTBOUND__2 <- NULL
+
+#Uniting the Domestic inbound and outbound flights
+passengers1 <- passengers%>% unite(DOMESTIC, INBOUND, OUTBOUND)
+
+#Deleting the Domestic Column because we're analysing International Data
+passengers2 <- select(passengers1, -(DOMESTIC), -(AIRPORT))
+
+#Removing Total Airports
+passengers3 <- passengers2[-c(1:33),]
+
+#Renaming the INBOUND__1 and OUTBOUND__1 to have a better plot
+passengers4 <- rename(passengers3, INBOUND = INBOUND__1, OUTBOUND = OUTBOUND__1)
+
+#Creating the Scatterplot
+ggplot(data = passengers4) + geom_point(mapping = aes(x=INBOUND, y=OUTBOUND)) + facet_wrap(~Year)
+
+```
+
+Not dissimilar to domestic flights, the scatterplots obtained for international flights showed similar positive and linear correlations. However, Sydney recorded significantly higher international outbound and inbound flights from 1985-2009, which naturally will have influenced the quantity of domestic flights in and outbound from Sydney. From 2009, however, Melbourne’s international flights proportionally increase, as Melbourne’s international terminal develops. Up until 2009, there was limited international activity at Melbourne and Brisbane airports, since 2009 the growth of Sydney has somewhat stunted as Melbourne establishes itself as not only a tourist destination, but also a viable international outbound destination. Especially for travellers from Perth or Adelaide, international transfers are more geographically and financially viable from Melbourne. Moreover, Sydney can not cope with all of Australia’s international travel, hence Sydneys stunted growth. Not surprisingly, there are many airports at the lower end of the spectrum with limited spread (as compared to domestic flights), this can be mainly attributed to the far greater developed business districts in Melbourne, Brisbane, Sydney and Perth.
+
+
+

@@ -1,0 +1,38 @@
+---
+title: "ETC1010 Assignment 1"
+author: "ETC1010"
+date: "13/03/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readxl)
+library(tidyverse)
+passengers <- read_xls("data/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+
+passengers_tidy <- passengers %>%
+  select(AIRPORT, Year, INBOUND, OUTBOUND, INBOUND__1, OUTBOUND__1) %>%
+  rename(DOM_IN=INBOUND, DOM_OUT=OUTBOUND, INTL_IN=INBOUND__1, INTL_OUT=OUTBOUND__1) %>%
+  gather(stuff, count, -AIRPORT, -Year) %>%
+  separate(stuff, c("type_of_flight", "bound")) %>%
+  filter(!is.na(count)) %>%
+  filter(AIRPORT != "TOTAL AUSTRALIA")
+
+ggplot(passengers_tidy, aes(x=type_of_flight, y=count)) +
+  geom_col() +
+  facet_wrap(~Year)
+
+passengers_tidy %>% filter(type_of_flight == "DOM") %>%
+  spread(bound, count) %>%
+  ggplot(aes(x=IN, y=OUT)) + geom_point() +
+  facet_wrap(~Year)
+```
+
+Sydney, Melbourne and Brisbane are the top three airports with the highest total number of passengers. 
+The bar chart of international and domestic flights shows that there are a significantly larger amount of passengers travelling domestically, rather than internationally in Australia. There is on average almost four times as many domestic fliers as there are international fliers in total. 
+The scatterplot of domestic inbound vs outbound passengers shows the strong, positive, linear relationship of the number of inbound vs outbound passengers. This strong correlation follows the logical assumption that for every ‘n’ number of passengers who are on an outbound flight, the same ‘n’ number of passengers would also be recorded as inbound fliers on their journey back to Australia. Any differences in the outbound vs inbound numbers in a year can be attributed to a number of different factors. These factors may include outbound fliers who reside at their destination for periods of longer than year (and hence will be recorded as an inbound flier in the year they return); outbound fliers who are not returning to Australia; and inbound fliers who are not returning to their country of flight origin, amongst other reasons. 
+The scatterplot of international inbound vs outbound passengers also displays similar lineal relationships as that of the domestic fliers. Both scatterplots also show that there is a gradual increase of the number of passengers relative to the year of travel, with numbers of passengers in 2017 greatly surpassing the number of passengers recorded in 1985. Another difference between the international and domestic passengers’ scatterplot are the number of travelers, with there being a significantly greater amount of domestic fliers within Australia, as signified by the denser regions in the domestic scatterplot. This data is supported by the initial bar chart of domestic and international passenger numbers.

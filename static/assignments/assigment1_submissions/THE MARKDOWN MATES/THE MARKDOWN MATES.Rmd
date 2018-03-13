@@ -1,0 +1,60 @@
+---
+title: "Assignment!"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+```
+
+#Assignment 1
+
+##Tidying Data
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(readxl)
+passengers<-read_xls("WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+passengers1 <- passengers[-c(1,4,7,10,11,12,13,14)]
+passengers2 <- filter(passengers1, AIRPORT != "TOTAL AUSTRALIA")
+passengers3 <- gather(passengers2, key = "Bound", value = "Count", -AIRPORT, -Year)
+passengers3 <- mutate(passengers3, TypeOfFlight = Bound)
+passengers4 <- passengers3 %>% mutate(Bound = stringr::str_replace(Bound, "OUTBOUND__1", "OUTBOUND"))
+passengers5 <- passengers4 %>% mutate(Bound = stringr::str_replace(Bound, "INBOUND__1", "INBOUND"))
+passengers6 <- passengers5 %>% mutate(TypeOfFlight = stringr::str_replace(TypeOfFlight, "INBOUND__1", "International"))
+passengers7 <- passengers6 %>% mutate(TypeOfFlight = stringr::str_replace(TypeOfFlight, "INBOUND", "Domestic"))
+passengers8 <- passengers7 %>% mutate(TypeOfFlight = stringr::str_replace(TypeOfFlight, "OUTBOUND__1", "International"))
+passengers9 <- passengers8 %>% mutate(TypeOfFlight = stringr::str_replace(TypeOfFlight, "OUTBOUND", "Domestic"))
+passengers_tidy <- passengers9[c(1,2,3,5,4)]
+passengers_tidy
+```
+
+```{r}
+## Bar graph of flight type, facetted by year
+ggplot(passengers_tidy, aes(x=TypeOfFlight, fill=TypeOfFlight)) + geom_bar(aes(weight=Count)) + facet_wrap(~Year) + xlab("Type of Flight") + ylab("passenger count")
+```
+
+###The bar chart shows an overall growth trend for domestic and international flights for Australian airport. It should also be noted across all years observed there has been a greater amount of domestic flights when compared to international. The ratio of international to domestic flights seems to have remained consistent across the period from 1985 to 2017.
+
+```{r}
+##Scatterplot of domestic inbound vs outbound, facetted by year
+passengers_domestic<-spread(passengers_tidy, key=TypeOfFlight, value= Count)
+passengers_inout<-spread(passengers_tidy, key=Bound, value = Count)
+passengers_inoutdom<-filter(passengers_inout, TypeOfFlight == "Domestic")
+ggplot(passengers_inoutdom, aes(x=INBOUND, y=OUTBOUND)) +geom_point() + facet_grid(~Year) + xlab("Inbound") + ylab("Outbound")
+airpopular<-filter(passengers_inoutdom, Year=="2000-01") 
+arrange(airpopular, desc(OUTBOUND))
+#Sydney, Melbourne then Brisbane are the busiest airports,
+```
+###The scatterplot shows that as the number of domestic inbound flights increase so does that the number of domestic outbound flights.  There is also three airports that clearly have a greater number of flights which are Sydney, Melbourne and Brisbane (in order of number of flights), this is visible by arranging the airpopular dataframe by traffic, in descending order. Also there is a visible upward trend in inbound vs outbound passengers at a similar rate within the larger airports, compared to the smaller which have a more stagnant rate. 
+
+```{r}
+##Scatterplot of international inbound vs outbound passengers, facetted by year
+passengers_int<-filter(passengers_tidy, TypeOfFlight == "International")
+passengers_inoutint<-spread(passengers_int, key=Bound, value = Count)
+ggplot(passengers_inoutint, aes(x=INBOUND, y=OUTBOUND)) + geom_point() + facet_grid(~Year) + xlab("Inbound") + ylab("Outbound")
+airpopularint<-filter(passengers_inoutint, Year=="2000-01") 
+```
+###A scatterplot of international inbound vs outbound passengers shows positive growth overtime. As with the domestic flights the three airports with the most traffic are Sydney followed by Melbourne and then Brisbane, but when international is shown it is visible that Perth as well receives a significant number of international flights. It is seen that Sydney conducts considerably more flights even compared to its closest competitor Melbourne. Ultimately as the number of inbound international flights increase so does outbound flights.
