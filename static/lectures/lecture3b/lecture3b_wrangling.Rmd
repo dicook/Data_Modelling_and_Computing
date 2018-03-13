@@ -120,6 +120,10 @@ ggmap(map) +
    theme_map()
 ```
 
+### Schematic
+
+![](images/join-venn.png)
+
 ## Working with dates
 
 - Working with dates
@@ -131,7 +135,7 @@ ggmap(map) +
 
 ### The problem
 
-How many ways can you think of you write yesterday's date? 
+How many ways can you think of you write last Sunday's date? 
 
 Type them in this [collaborative whiteboard](https://public.etherpad-mozilla.org/p/ETC1010).  
 
@@ -224,3 +228,16 @@ Brainstorm with your table a solution, to answer these questions:
 
 1. Are pedestrian counts different depending on the month?
 2. Are pedestrian counts different depending on the day of the week?
+
+```{r echo=FALSE, eval=FALSE}
+ped_day <- ped %>% group_by(Date) %>%
+  summarise(dayCount=sum(Count, na.rm=TRUE))
+ped_wday <- ped_day %>% 
+  mutate(wday = wday(Date, label=TRUE, abbr=TRUE, week_start=1)) %>%
+  group_by(wday) %>%
+    summarise(m=mean(dayCount, na.rm=TRUE), s=sd(dayCount, na.rm=TRUE))
+ggplot(ped_wday) + geom_errorbar(aes(x=wday, ymin=m-s, ymax=m+s)) + 
+  ylim(c(0, 45000)) + 
+  ylab("Average number of predestrians") + 
+  xlab("Day of week")
+```
