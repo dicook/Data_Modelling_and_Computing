@@ -70,10 +70,6 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
     - YES: [Rmd](assignments/assigment1_submissions/YES/YES.Rmd) [html](assignments/assigment1_submissions/YES/YES.html)
    
 
-
-
-
-
 ## Data 
 
 - [music-sub.csv](http://dmac.netlify.com/lectures/data/music-sub.csv)
