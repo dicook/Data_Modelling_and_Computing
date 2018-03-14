@@ -32,7 +32,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - Week 1: About this course and getting your computer setup nicely [Slide set a](https://ebsmonash.shinyapps.io/lecture1a_intro/) [(Rmd)](lectures/lecture1a/lecture1a_intro.Rmd); [Slide set b](https://ebsmonash.shinyapps.io/lecture1b_intro/) [(Rmd)](lectures/lecture1b/lecture1b_intro.Rmd); [Wednesday exercises](https://ebsmonash.shinyapps.io/lecture1c_intro/) [(Rmd)](lectures/lecture1c/lecture1c_intro.Rmd); Textbook reading: __I Explore__, Sections 2, 3.1-3.3, 4, 5.1-5.2, 6, 7.1-7.3
 - Week 2: Tidy data principles; [Slide set a](https://ebsmonash.shinyapps.io/lecture2a_tidydata/) [(Rmd)](lectures/lecture2a/lecture2a_tidydata.Rmd); [Lab exercises from Tuesday](lectures/Lab_exercises_week-2.html) [(Rmd)](lectures/Lab_exercises_week-2.Rmd) ;[Slide set b](https://ebsmonash.shinyapps.io/lecture2b_tidydata/) [(Rmd)](lectures/lecture2b/lecture2b_tidydata.Rmd); Reading: Chapter 12; Watch: [Jenny Bryan talking about excel sheets, data analysis and R](https://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/jailbreakr-Get-out-of-Excel-free) 20 min video, the important material starts around 10 mins in, and goes to about 15 mins.
 - Week 3: Data cleaning, rearranging and transformation; [Slide set a](https://ebsmonash.shinyapps.io/lecture3a_wrangling/) [(Rmd)](lectures/lecture3a/lecture3a_wrangling.Rmd); [Slide set b](https://ebsmonash.shinyapps.io/lecture3b_wrangling/) [(Rmd)](lectures/lecture3b/lecture3b_wrangling.Rmd); [Why do beginner econometricians get worked up about the wrong things?](http://worthwhile.typepad.com/worthwhile_canadian_initi/2014/03/why-do-people-get-so-worked-about-linear-probability-models.html); Textbook reading: Chapter 5
-- Week 4: Data visualisation
+- Week 4: Data visualisation; Textbook reading: Chapter 3
 - Week 5: Handling missing values 
 - Week 6: Introduction to modeling
 - Week 7: Optimisation 
@@ -46,6 +46,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 
 - Assignment 1: [Instructions](assignments/assignment1.html) [(Rmd)](assignments/assignment1.Rmd) **DUE: Tues Mar 13 in class**
 
+<!--
 - [Peer evaluation assignments](assignments/assignment_marking.csv) This is the team's assignment that you should evaluate, on reproducing and explanations. Enter your feedback in the "Assignment 1 peer evaluation" on ED. ([Data if you need a copy](assignments/data/WebAirport_FY_1986-2017.xls))
 - You can download the Rmd and html for your evaluation here:
     - 5T: [Rmd](assignments/assigment1_submissions/5T/5T.Rmd) [html](assignments/assigment1_submissions/5T/5T.html)
@@ -68,7 +69,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
     - The_Ems: [Rmd](assignments/assigment1_submissions/The_Ems/The_Ems.Rmd) [html](assignments/assigment1_submissions/The_Ems/The_Ems.html)
     - The_Pirates: [Rmd](assignments/assigment1_submissions/The_Pirates/The_Pirates.Rmd) [html](assignments/assigment1_submissions/The_Pirates/The_Pirates.html)
     - YES: [Rmd](assignments/assigment1_submissions/YES/YES.Rmd) [html](assignments/assigment1_submissions/YES/YES.html)
-   
+-->   
 
 ## Data 
 
