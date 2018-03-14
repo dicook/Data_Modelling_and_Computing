@@ -46,10 +46,31 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 
 - Assignment 1: [Instructions](assignments/assignment1.html) [(Rmd)](assignments/assignment1.Rmd) **DUE: Tues Mar 13 in class**
 
-- [Grading assignments](assignments/assignment_marking.csv) This is the team's assignment that you should evaluate, on reproducing and explanations. Enter your feedback in the "Assignment 1 grading" on ED. 
+- [Grading assignments](assignments/assignment_marking.csv) This is the team's assignment that you should evaluate, on reproducing and explanations. Enter your feedback in the "Assignment 1 peer evaluation" on ED. 
 - You can download the Rmd and html for your evaluation here:
     - 5T: [Rmd](assignments/assigment1_submissions/5T/5T.Rmd) [html](assignments/assigment1_submissions/5T/5T.html)
-    
+    - BBC: [Rmd](assignments/assigment1_submissions/BBC/BBC.Rmd) [html](assignments/assigment1_submissions/BBC/BBC.html)
+    - Black_4: [Rmd](assignments/assigment1_submissions/Black_4/Black_4.Rmd) [html](assignments/assigment1_submissions/Black_4/Black_4.html)
+    - CJ: [Rmd](assignments/assigment1_submissions/CJ/CJ.Rmd) [html](assignments/assigment1_submissions/CJ/CJ.html)
+    - Data Lads: [Rmd](assignments/assigment1_submissions/Data Lads/Data Lads.Rmd) [html](assignments/assigment1_submissions/Data Lads/Data Lads.html)
+    - DQ: [Rmd](assignments/assigment1_submissions/DQ/DQ.Rmd) [html](assignments/assigment1_submissions/DQ/DQ.html)
+    - ETC1010: [Rmd](assignments/assigment1_submissions/ETC1010/ETC1010.Rmd) [html](assignments/assigment1_submissions/ETC1010/ETC1010.html)
+    - Group One: [Rmd](assignments/assigment1_submissions/Group One/Group_One.Rmd) [html](assignments/assigment1_submissions/Group One/Group_One.html)
+    - Group1: [Rmd](assignments/assigment1_submissions/Group1/Group1.Rmd)
+    - Group5: [Rmd](assignments/assigment1_submissions/Group5/Group5.Rmd) [html](assignments/assigment1_submissions/Group5/Group5.html)
+    - GuangZongYaoZu: [Rmd](assignments/assigment1_submissions/GuangZongYaoZu/GuangZongYaoZu.Rmd) [html](assignments/assigment1_submissions/GuangZongYaoZu/GuangZongYaoZu.html)
+    - KatTim: [Rmd](assignments/assigment1_submissions/KatTim/KatTim.Rmd) [html](assignments/assigment1_submissions/KatTim/KatTim.html)
+    - LSE(Little_Salt_Egg): [Rmd](assignments/assigment1_submissions/LSE(Little_Salt_Egg)/LSE(Little_Salt_Egg).Rmd) [html](assignments/assigment1_submissions/LSE(Little_Salt_Egg)/LSE(Little_Salt_Egg).html)
+    - MNS2: [Rmd](assignments/assigment1_submissions/MNS2/MNS2.Rmd) [html](assignments/assigment1_submissions/MNS2/MNS2.html)
+    - Raymond & Co.: [Rmd](assignments/assigment1_submissions/Raymond & Co./Raymond & Co..Rmd) [html](assignments/assigment1_submissions/Raymond & Co./Raymond & Co..html)
+    - Table 8: [Rmd](assignments/assigment1_submissions/Table 8/Table 8.Rmd) [html](assignments/assigment1_submissions/Table 8/Table 8.html)
+    - THE MARKDOWN MATES: [Rmd](assignments/assigment1_submissions/THE MARKDOWN MATES/THE MARKDOWN MATES.Rmd) [html](assignments/assigment1_submissions/THE MARKDOWN MATES/THE MARKDOWN MATES.html)
+    - The_Ems: [Rmd](assignments/assigment1_submissions/The_Ems/The_Ems.Rmd) [html](assignments/assigment1_submissions/The_Ems/The_Ems.html)
+    - The_Pirates: [Rmd](assignments/assigment1_submissions/The_Pirates/The_Pirates.Rmd) [html](assignments/assigment1_submissions/The_Pirates/The_Pirates.html)
+    - YES: [Rmd](assignments/assigment1_submissions/YES/YES.Rmd) [html](assignments/assigment1_submissions/YES/YES.html)
+   
+
+
 
 
 
