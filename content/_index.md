@@ -46,7 +46,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 
 - Assignment 1: [Instructions](assignments/assignment1.html) [(Rmd)](assignments/assignment1.Rmd) **DUE: Tues Mar 13 in class**
 
-- [Peer evaluation assignments](assignments/assignment_marking.csv) This is the team's assignment that you should evaluate, on reproducing and explanations. Enter your feedback in the "Assignment 1 peer evaluation" on ED. 
+- [Peer evaluation assignments](assignments/assignment_marking.csv) This is the team's assignment that you should evaluate, on reproducing and explanations. Enter your feedback in the "Assignment 1 peer evaluation" on ED. ([Data if you need a copy](assignments/data/WebAirport_FY_1986-2017.xls))
 - You can download the Rmd and html for your evaluation here:
     - 5T: [Rmd](assignments/assigment1_submissions/5T/5T.Rmd) [html](assignments/assigment1_submissions/5T/5T.html)
     - BBC: [Rmd](assignments/assigment1_submissions/BBC/BBC.Rmd) [html](assignments/assigment1_submissions/BBC/BBC.html)
