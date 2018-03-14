@@ -1,6 +1,6 @@
 ---
 title: "Assignment 1"
-author: "Emily Ditchfield and Emma Markakis"
+author: "The EMs"
 date: "12/03/2018"
 output: html_document
 ---
