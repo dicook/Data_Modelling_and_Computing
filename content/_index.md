@@ -60,7 +60,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
     - Group5: [Rmd](assignments/assigment1_submissions/Group5/Group5.Rmd) [html](assignments/assigment1_submissions/Group5/Group5.html)
     - GuangZongYaoZu: [Rmd](assignments/assigment1_submissions/GuangZongYaoZu/GuangZongYaoZu.Rmd) [html](assignments/assigment1_submissions/GuangZongYaoZu/GuangZongYaoZu.html)
     - KatTim: [Rmd](assignments/assigment1_submissions/KatTim/KatTim.Rmd) [html](assignments/assigment1_submissions/KatTim/KatTim.html)
-    - LSE(Little_Salt_Egg): [Rmd](assignments/assigment1_submissions/LSE(Little_Salt_Egg)/LSE(Little_Salt_Egg).Rmd) [html](assignments/assigment1_submissions/LSE_Little_Salt_Egg_/LSE(Little_Salt_Egg).html)
+    - LSE(Little_Salt_Egg): [Rmd](assignments/assigment1_submissions/LSE(Little_Salt_Egg)/LSE(Little_Salt_Egg).Rmd) [html](assignments/assigment1_submissions/LSE(Little_Salt_Egg)/LSE_Little_Salt_Egg_.html)
     - MNS2: [Rmd](assignments/assigment1_submissions/MNS2/MNS2.Rmd) [html](assignments/assigment1_submissions/MNS2/MNS2.html)
     - Raymond & Co.: [Rmd](assignments/assigment1_submissions/Raymond & Co./Raymond & Co..Rmd) [html](assignments/assigment1_submissions/Raymond & Co./Raymond & Co..html)
     - Table 8: [Rmd](assignments/assigment1_submissions/Table 8/Table 8.Rmd) [html](assignments/assigment1_submissions/Table 8/Table 8.html)
