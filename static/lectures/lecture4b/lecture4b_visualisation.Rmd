@@ -39,15 +39,21 @@ This is a link to the course web site, in case you need to go back and forth bet
 
 ## Coordinate systems
 
-- Cartesian, polar
-- fixed, equal
-- map
-- flip
+- *Cartesian, polar:* most plots are made in Cartesian coordinates. Just a few are in polar coordinates, primarily the pie chart. Polar coordinates use radius and angle to describe position in 2D space. Occasionally measurements like wind (direction and speed) make sense to be plotted in polar coordinates.
+- *fixed, equal:* When variables are made on scales that should be comparable, it may be important to reflect this in the axes limits and page space that the plot takes. 
+- *map:* Maps come in conventional formats, most often with a specific aspect ratio of vertical to horizontal axes, that depends on latitude. 
+- *flip:* Useful for generating a plot with a categorical variable on the x axis and then flipping it sideways to look at.
+
+```{r}
+df <- data.frame(x=runif(100), y=runif(100)*10)
+ggplot(df, aes(x=x, y=y)) + geom_point() + coord_fixed()
+ggplot(df, aes(x=x, y=y)) + geom_point() + coord_fixed(ratio=0.1)
+```
 
 ## Layering
 
-- statistical summaries
-- maps
+- *Statistical summaries:* It is common to layer plots, particularly by adding statistical summaries, like a model fit, or means and standard deviations. The purpose is to show the **trend** in relation to the **variation**. 
+- *Maps:* Commonly maps provide the framework for data collected spatially. One layer for the map, and another for the data.
 
 ## Designing good plots
 
@@ -260,7 +266,7 @@ ggplotly(p)
 7. Make a scatterplot of average kicks against handballs. Overlay a linear model. Add interaction. Which players are more likely to kick vs hand ball? Also handball rather than kick?
 8. Come up with a few more questions to answer on this data. 
 
-```{r eval=FALSE}
+```{r eval=FALSE, echo=FALSE}
 players <- read_csv("data/players.csv")
 teams <- read_csv("data/teams.csv")
 teams <- teams %>% filter(Club != "All Clubs")
