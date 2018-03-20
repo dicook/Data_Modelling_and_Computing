@@ -83,7 +83,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - [plane_N4YRAA.rda](http://dmac.netlify.com/lectures/data/plane_N4YRAA.rda)
 - [airports.csv](http://dmac.netlify.com/lectures/data/airports.csv)
 - [tb.csv](http://dmac.netlify.com/lectures/data/tb.csv) Tuberculosis incidence
-- [TB_notifications_2018-03-18.csv](http://dmac.netlify.com/lectures/data/tb.csv) Up-to-date tuberculosis incidence
+- [TB_notifications_2018-03-18.csv](http://dmac.netlify.com/lectures/data/TB_notifications_2018-03-18.csv) Up-to-date tuberculosis incidence
 - [fly_tbl.csv](http://dmac.netlify.com/lectures/data/fly_tbl.csv) Etiquette of flying
 - [graduate-programs.csv](http://dmac.netlify.com/lectures/data/graduate-programs.csv) US Graduate programs 
 - [ASN00086282.dly](http://dmac.netlify.com/lectures/data/ASN00086282.dly) Melbourne weather
