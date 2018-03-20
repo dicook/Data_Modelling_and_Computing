@@ -1,0 +1,281 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 4,
+                      fig.width = 8,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+```
+
+```{r}
+library(tidyverse)
+```
+
+# Visualising data
+
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.netlify.com](http://dmac.netlify.com)
+
+## Overview
+
+- Coordinate systems
+- Layering: overlaying multiple data sets, or multiple geometric elements
+- Interpreting plots
+- Designing good plots
+- Interactive graphics
+
+## Coordinate systems
+
+- Cartesian, polar
+- fixed, equal
+- map
+- flip
+
+## Layering
+
+- statistical summaries
+- maps
+
+## Designing good plots
+
+- What type of variable should be mapped to what type of plot element
+- Colour palettes
+- Color blindness
+- Pre-attentive
+- Proximity
+- Change blindness
+- Hierarchy of mappings
+
+### Variable types and mapping
+
+```{r vartype, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+vartype <- 
+"| Type of variable | How to map                  | Common errors |
+ |:-----------------|:----------------------------|:--------------|
+| Categorical, qualitative  | Category + count/proportion displayed, often as an area plot  or with a small number of categories mapped to colour or symbol | Not including 0 on the count/proportion axis. Not ordering categories. |
+| Quantitative | Position along an axis | Displaying as a bar, especially when showing mean values. Mapping to colour. |
+| Date/Time | Time-ordered axis, different temporal resolutions to study long term trend, or seasonal patterns. Lines typically connect measurements to indicate temporal dependence | Time order corrupted |
+| Space | Conventional projections of the sphere, map aspect ratio| Wrong aspect ratio |
+"
+cat(vartype, fill=TRUE)
+```
+
+```{r vartype-hux, echo=FALSE, width=120, eval=FALSE}
+library(huxtable)
+vartype <- hux(
+  Type = c("Categorical, qualitative", "Quantitative, numeric"),
+  Mapping = c("Usually summarised by count or proportion,  and category + statistic displayed, often as an area plot;  or with a small number of categories mapped to colour or symbol", "Position along an axis"),
+  add_colnames = TRUE
+) %>%
+  set_align(everywhere, everywhere, c("left", "left")) %>% 
+  set_col_width(1, 0.3) %>% 
+  set_bold(value=c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE), byrow=TRUE) %>%
+  set_wrap(everywhere, 2, TRUE) %>%
+  set_width(10)
+vartype
+```
+
+### Colour palettes 
+
+- Qualitative: categorical variables
+- Sequential: low to high numeric values
+- Diverging: negative to positive values
+
+```{r echo=FALSE, fig.height=7, fig.width=12}
+library(RColorBrewer)
+display.brewer.all()
+```
+
+### Colour blindness
+
+- About 10% of the population have difficulty distonguishing between red and green. 
+- There are several colour blind tested palettes: RColorbrewer has an associated web site [colorbrewer.org](http://colorbrewer2.org) where the palettes are labelled, and the `colorblind` package has all palettes readable by everyone.
+- You can test your color choices for different forms of colorblindness using the `dichromat` package. Below is the same plot usng the default two colour scheme of ggplot, and what it looks like to a person with red/green colorblindness.
+
+
+```{r fig.show='hold', fig.width=8, fig.height=4}
+library(scales)
+df <- data.frame(x=runif(100), y=runif(100), cl=sample(c(rep("A", 50), rep("B", 50))))
+p <- ggplot(data=df, aes(x, y, colour=cl)) + theme_bw() + 
+  geom_point() + theme(legend.position = "none", aspect.ratio=1)
+library(dichromat)
+clrs <- hue_pal()(3)
+p 
+clrs <- dichromat(hue_pal()(3))
+p + scale_colour_manual("", values=clrs) 
+```
+
+### Pre-attentive
+
+Can you find the odd one out?
+
+```{r}
+df <- data.frame(x=runif(100), y=runif(100), cl=sample(c(rep("A", 1), rep("B", 99))))
+ggplot(data=df, aes(x, y, shape=cl)) + theme_bw() + 
+  geom_point() +
+  theme(legend.position="None", aspect.ratio=1)
+```
+
+Is it easier now?
+
+```{r}
+ggplot(data=df, aes(x, y, colour=cl)) + 
+  geom_point() +
+  theme_bw() + 
+  theme(legend.position="None", aspect.ratio=1) +
+  scale_colour_brewer(palette="Dark2")
+```
+
+### Proximity
+
+- Basic rule: place the groups that you want to compare close to each other
+
+```{r echo=FALSE}
+library(tidyverse)
+tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>% 
+  select(country, iso3, year, new_sp_m04:new_sp_fu) %>%
+  gather(stuff, count, new_sp_m04:new_sp_fu) %>%
+  separate(stuff, c("stuff1", "stuff2", "genderage")) %>%
+  select(-stuff1, -stuff2) %>%
+  mutate(gender=substr(genderage, 1, 1), 
+         age=substr(genderage, 2, length(genderage))) %>%
+  select(-genderage)
+
+tb_au <- tb %>% 
+  filter(country == "Australia") %>%
+  filter(!(age %in% c("04", "014", "514", "u"))) %>%
+  filter(year > 1996, year < 2013)
+```
+
+Here are two different arrangements of the tb data. To answer the question "Is the incidence similar for males and females in 2012 across age groups?" the first arrangement is better. It puts males and females right beside each other, so the relative heights of the bars can be seen quickly. The answer to the question would be "No, the numbers were similar in youth, but males are more affected with increasing age."
+
+The second arrangement puts the focus on age groups, and is better to answer the question "Is the incidence similar for age groups in 2012, across gender?" To which the answer would be "No, among females, the incidence is higher at early ages. For males, the incidence is much more uniform across age groups."
+
+```{r echo=TRUE, fig.width=8, fig.height=2}
+tb_au %>% filter(year == 2012) %>%
+  ggplot(aes(x = gender, y = count, fill = gender)) +
+  geom_bar(stat = "identity", position="dodge") +
+  facet_grid( ~ age) +
+  scale_fill_brewer(palette="Dark2")
+```
+
+```{r echo=TRUE, fig.width=8, fig.height=2}
+tb_au %>% filter(year == 2012) %>%
+  ggplot(aes(x = age, y = count, fill = age)) +
+  geom_bar(stat = "identity", position="dodge") +
+  facet_grid( ~ gender) +
+  scale_fill_brewer(palette="Dark2")
+```
+
+### Hierarchy of mappings
+
+1. Position - common scale (BEST): axis system
+2. Position - nonaligned scale: boxes in a side-by-side boxplot
+3. Length, direction, angle: pie charts, regression lines, wind maps
+4. Area: bubble charts
+5. Volume, curvature: 3D plots
+6. Shading, color (WORST): maps, points coloured by numeric variable
+
+[My crowd-sourcing expt](http://visiphilia.org/2016/08/03/CM-hierarchy)
+
+Nice explanation by [Peter Aldous](http://paldhous.github.io/ucb/2016/dataviz/week2.html)
+
+[General plotting advice and a book from Naomi Robbins](https://www.forbes.com/sites/naomirobbins/#2b1e20082a6a)
+
+## Themes
+
+The `ggthemes` package has many different styles for the plots. Other packages such as `xkcd`, `skittles`, `wes anderson`, `beyonce`, `ochre`, ....
+
+```{r}
+library(xkcd)
+ggplot(df, aes(x=x, y=y)) + 
+  geom_point() + 
+  theme_xkcd() +
+  xkcdaxis(c(0,1), c(0,1)) +
+  annotate("text", x=0.5, y=0.5, label="Help, I'm lost in here!", family="xkcd", size=5)
+```
+
+
+## Interactive plots
+
+Interaction on a plot can help de-clutter it, by making labels only show on mouse over. Occasionally it can be useful to zoom into parts of the plot. Often it is useful to change the aspect ratio.
+
+The `plotly` package makes it easy to add interaction to ggplots.
+
+```{r echo=FALSE}
+library(readxl)
+passengers <- read_xls("data/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+library(tidyverse)
+passengers <- passengers %>% 
+  filter(!is.na(AIRPORT)) %>%
+  select(airport = AIRPORT,
+         Year, IN_DOM = INBOUND, OUT_DOM = OUTBOUND,
+         IN_INTL = INBOUND__1, 
+         OUT_INTL = OUTBOUND__1) %>%
+  filter(!airport %in%  "TOTAL AUSTRALIA") %>%
+  gather(key = "where", value = "amount", IN_DOM:OUT_INTL) %>%
+  separate(where, into=c("bound", "type_of_flight"))
+```
+
+```{r}
+library(plotly)
+p <- passengers %>%
+  filter(type_of_flight == "INTL") %>%
+  spread(key = bound, value = amount) %>%
+  ggplot() + geom_point(aes(x=IN, y=OUT, label=airport)) +
+  facet_wrap(~Year, ncol=8) +
+  coord_equal() +
+  scale_x_continuous("Incoming passengers (mil)", breaks=seq(0,8000000,2000000), labels=seq(0,8,2)) +
+  scale_y_continuous("Outgoing passengers (mil)", breaks=seq(0,8000000,2000000), labels=seq(0,8,2))
+ggplotly(p)
+```
+
+## Resources
+
+- Winston Chang (2012) [Cookbook for R](graphics cookbook)
+- Antony Unwin (2014) [Graphical Data Analysis](http://www.gradaanwr.net)
+- Naomi Robbins (2013) [Creating More Effective Charts](http://www.nbr-graphs.com)
+
+## Lab exercises
+
+1. Download the data on the [women's AFL](https://github.com/ropenscilabs/ozwomensport). These are the stats from the inaugural season, 2017. There are two tables, one for players and one for teams. Be careful how you download. It may be easier to download the zip file. 
+2. Make a barchart of the total kicks by team, sorted from highest to lowest. What do you learn?
+3. To compare teams, should you use average or total numbers? Explain your thinking.
+4. Make a scatterplot of average kicks by average handballs? Use an aspect ratio of 1. What do you learn? Make the plot interactive and report the name of the team that has the highest on both variables. 
+5. Make a scatterplot of average frees for by against? Use an aspect ratio of 1. What do you learn? Make the plot interactive and report the name of the team that has the most frees against and fewest for. 
+6. Make a side-by-side boxplot of the players' average kicks by team. What do you learn? Which team had the player with the highest average kicks? Do some teams appear to have "star" players, and others have more even skils in this area?
+7. Make a scatterplot of average kicks against handballs. Overlay a linear model. Add interaction. Which players are more likely to kick vs hand ball? Also handball rather than kick?
+8. Come up with a few more questions to answer on this data. 
+
+```{r eval=FALSE}
+players <- read_csv("data/players.csv")
+teams <- read_csv("data/teams.csv")
+teams <- teams %>% filter(Club != "All Clubs")
+library(forcats)
+teams <- teams %>% mutate(Club = fct_reorder(Club, Kicks_TOT, .desc=TRUE))
+ggplot(teams, aes(x=Club, y=Kicks_TOT)) +
+  geom_col()
+ggplot(teams, aes(x=Kicks_AVG, y=Handballs_AVG)) + geom_point() + theme(aspect.ratio=1)
+ggplot(teams, aes(x=`Frees For_AVG`, y=`Frees Agst_AVG`)) + geom_point() + theme(aspect.ratio=1)
+players <- players %>% mutate(Club = fct_reorder(Club, Kicks_AVG, "median", .desc=TRUE))
+ggplot(players, aes(x=Club, y=Kicks_AVG)) + geom_boxplot()
+p <- ggplot(players, aes(x=Kicks_AVG, y=Handballs_AVG, label=Player)) + geom_point() + geom_smooth(method="lm") + theme(aspect.ratio=1)
+ggplotly()
+```
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
