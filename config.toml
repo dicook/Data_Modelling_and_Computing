@@ -31,4 +31,4 @@ footnotereturnlinkcontents = "↩"
 
 [params]
     description = "A website built through Hugo and blogdown."
-    footer = "&copy; [Di Cook](https://dicook.org) 2017 | [Github](https://github.com/dicook) | [Twitter](https://twitter.com/dicook)"
+    footer = "&copy; [Di Cook](https://dicook.org) 2017-8 | [Github](https://github.com/dicook) | [Twitter](https://twitter.com/dicook)"
