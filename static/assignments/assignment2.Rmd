@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 - This is a team assignment. You can create your own team, of between 2-4 people. 
 - You need to write a report that 
     - details each step in the data cleaning that you have done. Try to do it all in R, if you need help, there are consultation times Thu, Fri, Mon. The data is small enough that you could make all the changes in excel, but if you meet a much larger data set, this would be terribly painful. 
-    - provides some good summary plots of interesting things about the class. Aim for about 2-3 pages, only include what you think are the most intersting things to learn.
+    - provides some good summary plots of interesting things about the class. Aim for about 2-3 pages, only include what you think are the most interesting things to learn.
 - Turn in your cleaned data, the `html` output file, and also the `Rmd` file.
 - Use your team name on the report
 - Separately you need to provide a separate page to one of the tutors that contains the team name, members of the team, and the % effort from each team member. Your grade for the assignment will be adjusted by % effort. If the effort is different from 1/n, all members need to sign off on this.
