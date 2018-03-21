@@ -1,0 +1,82 @@
+id,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,Q11,Q12,Q13,Q14,Q15,Q16,Q17,Q18,Q19,Q20,Q21,Q22,Q23,Q24,Q25,Q26,Q27,Q28,Q29,Q30,Q31,Q32,Q33
+1,B,1,False,Pop,35,Super-speed,C,D,Netflix,2,A,B,10,C,B,F,B,Party,A,False,7,2,21,172,Table Tennis,B,A,B,B,B,A,Spatula,True
+2,D,1/2,False,Anything,10,Flying,C,C,NA,6,B,A,10,A,A,F,A,listen to music,B,True,8,0,21,176,tennis,B,A,A,A,A,A,knife,True
+3,C,6,False,RNB,35,speed,A,D,n/a,2,A,A,0,B,B,F,A,sport,B,True,8,5,20,172,basketball,A,B,B,A,B,B,wok,True
+4,C,12,True,Rock,40,Time travel,A,D,Netflix,1,A,B,5,C,A,F,A,Origami,A,True,6,3,20,158,Hockey,A,B,B,B,A,A,knife,True
+5,C,4,False,Alternative Rock,50,Flight,C,E,Netflix,3,A,B,10,B,A,C,B,Basketball,A,True,6,2,20,182,Basketball,B,A,A,A,B,B,Soup spoon,False
+6,E,5,False,Pop,50,Sleeping forever,A,E,"stream.tv
+",2,B,B,40,D,A,F,A,Sleep,A,True,7,2,23,183,Basketball,C,A,B,B,B,B,Fork,True
+7,C,"4
+",False,popular,112,"forecasting
+",B,E,"no idea
+",1,A,A,40,B,A,B,B,"watch youtube
+",A,True,7,1,22,174,swimming,B,B,B,B,B,B,pan,False
+8,E,1,False,R&B,4,Read minds,C,B,Netflix,2,A,B,20,D,A,F,A,TV,B,True,8,2,23,182,Basketball,B,A,B,A,A,A,Spatula,True
+9,C,1,False,Pop,30,Telekinesis,A,E,Netflix,4,A,B,30,D,A,B,B,Gym,B,True,8,3,20,169,Swimming,A,B,B,B,B,A,Ladle,True
+10,C,"three times
+",True,country music,55,teleportation,C,E,youtube,1,B,A,15,B,A,F,B,watch vedio,A,True,"6
+",3,21,180,tennis,B,A,A,B,B,B,knife,True
+11,E,4,False,alt rock,14,teleporting,B,E,"youtube, netflix",1.5,B,A,15,A,B,F,A,"internet, stretch, water",A,True,9,2,28,200,skiing,B,A,B,B,A,A,tongs,True
+12,B,1,False,classical,35,go back to a past time,C,E,reality show,1.3,A,A,16,C,A,F,B,cook,A,True,8,1,20,167,swimming,A,B,C,B,B,A,pot,True
+13,D,3,False,Pop,20,Teleportation,C,C,Kodi,2,A,B,2,G,A,A,A,Basketball,A,True,8,5,21,170,Basketball,B,B,B,A,B,B,Whisk,True
+14,B,1.5,False,hip-hop,27,predict the future,A,E,phone,1,B,A,20,B,A,F,B,sleep,A,False,8,3,20,157,badminton,A,B,B,B,B,B,knife,True
+15,C,1.5,True,rnb,49,flying,C,D,watchseries,2,B,B,5,A,A,F,A,youtube,A,True,7,3,20,178,mma,B,A,B,B,B,A,spork,True
+16,B,2.5,False,Classical,20,Nothing,B,E,None,2.5,B,B,5,B,B,F,B,Relax,A,False,8,1,20,178,Tennis,B,B,B,A,A,A,None,True
+17,C,5,False,Pop,40,Flight,B,D,Crunchyroll,2.5,B,B,0,A,A,F,A,Card games,A,True,9,6,20,190,Basketball,B,B,C,B,A,A,Grater,False
+18,C,6,False,Indie rock,17,Flying,B,E,Stan,1,A,B,15,B,B,B,A,sleep,A,True,8,4,22,183,basketball,B,A,C,A,A,A,spatula,False
+19,A,1/2,False,popular,10,have another super power,A,D,No television,1,B,A,20,F,A,F,B,gaming,A,True,7,7,18,179,sleep,B,A,B,B,B,B,someone can eat,True
+20,C,5,True,Pop,35,The power to make anything full,C,D,Netlfix,1,B,B,7,C,A,A,A,Sleep,B,True,8,7,20,172,Fencing,A,A,E,A,A,A,Fork,True
+21,B,120,False,pop,70,Never forget,C,E,I do not watch television.,1,B,A,20,B,A,F,B,To listen music,B,True,7,5,24,178,Electronic games and running,A,B,C,B,B,A,refrigerator,True
+22,E,5hrs,False,music,40hrs,fly,A,C,tivo,2,B,B,5,E,B,B,A,sport,A,True,7,3,23,163,swimming,A,B,B,A,A,A,fork,True
+23,B,30,False,Pop music,84,I don't need any super power.,C,E,I don't watch television.,1,B,A,15,A,C,F,A,training my aim in different FPS games.,A,True,8,1,21,181,basketball,B,B,D,B,A,A,knife,True
+24,B,10,False,R&B,20,fly,C,E,optus,2,B,A,20,C,A,A,A,Climbing,B,True,7,2,21,172,Climbing,B,A,C,B,A,A,spoon,False
+25,E,9,False,Electronic,16,Telekinesis,A,E,Netflix,2.5,B,B,$30,D,A,F,A,Read,A,True,7,3,23,165,Tennis,A,B,E,A,A,A,Whisk,True
+26,B,2 hours,False,Rap,"24 Hours
+",Invisible,A,C,Netflix,2,B,A,$5,B,B,A,A,Play games,A,True,7,4,18,168,Soccer,B,B,A,A,B,A,Spoon,True
+27,B,2 hours ( to uni),False,rnb,40 hours,invisibility,C,B,hdonline.is,3,A,A,20,B,B,F,B,social media,A,True,9,1,19,158,netball,A,A,B,A,B,B,fork,True
+28,C,2,True,pop,10,time control,C,B,NA,2,A,A,20,A,A,"A, B",A,video game,A,True,7,5,25,182,swimming,B,A,C,B,B,A,sharper,True
+29,E,0.5,False,Rock and/or Roll,48,Flying,C,D,Netflix,1.5,A,B,20,D,B,F,A,Drink,A,True,7,3,24,167,Gym,B,A,B,B,B,B,spork,True
+30,B,3 hours,False,Depression,35 hours,to never have to sleep,A,C,netflix,3,A,A,20,A,B,F,B,watch tv,B,True,6,2,19,178,skiing,B,A,A,B,B,A,knife,True
+31,C,1,False,Chillhop,55,Omnipresence,C,E,None,1,A,B,0.80,D,B,F,A,Games,A,True,7,1,19,164,Hockey,A,A,B,B,A,A,Chopsticks,True
+32,E,0.5,False,Raga,4,Dig big holes with my hands,A,B,Nothing,1,A,B,2,E,B,F,A,Sleep,A,True,8,2,23,175,Yes,B,A,B,A,A,A,That thing that cuts eggs,True
+33,B,0.25,False,K-Pop,53,To control the probabilities of things happening,C,E,Don't watch television,2,B,A,12,A,A,F,B,Sleep,A,True,5,2,18,163,Badminton,A,B,B,B,B,B,Knife,True
+34,B,0.3,False,pop,20,forecast the future,A,D,internet,2,B,A,25,A,B,B,B,"gym
+internet surfing",B,True,7,3,20,160,swimming,A,A,B,B,B,A,dish washer,True
+35,A,14,False,pop,8,remember everything I saw,C,C,pc,1.5,B,A,15,A,A,F,B,computer games,B,True,6,1,22,182,basketball,B,B,B,B,B,A,coffee cup,True
+36,B,20,False,pop,28,time travel,A,D,stan,1,B,B,2,C,A,"A, B",B,play games,B,True,7,1,19,165,equestrian,A,A,B,B,B,B,pan,True
+37,C,20,False,Pop,40,Time-Reverse,C,E,None,3,A,A,18,A,B,F,B,Study,A,True,6,5,21,176,Basketball,B,B,C,B,B,B,IKEA soup ladle,True
+38,B,0.5 hours,False,R&B,14,Invisibility,A,E,Nothing,3,B,B,8,B,A,F,A,Instagram,B,False,6.5,3,19,I don't know,European Handball,A,A,A,A,A,A,fork,True
+39,E,4,False,Hip Hop,20,Teleportation,A,D,Netflix & Stan,2,A,B,15,D,B,F,B,Sport,B,True,8,7,26,180,AFL,B,B,C,A,B,A,Spatula,True
+40,B,9,False,R&B,Choosing not to answer,Teleportation,A,B,I don't,?,B,A,$15,D,A,F,B,Game,A,True,7,4,19,176,Choosing not to answer,B,B,B,A,B,B,Fork,True
+41,B,30,False,mandopop,50,invisibility,C,C,dont watch,1,B,A,20,A,A,F,B,league of legends,A,True,7,0,19,178,soccer,B,A,A,B,B,B,knife,False
+42,B,2,False,Hiphop,12,freeze time,B,D,Stan,2,A,B,5,G,A,F,B,the office,B,False,9.5,3,19,170,Tennis,B,A,A,A,B,B,Fork,True
+43,C,9,False,Alternative Rock,25,Teleportation,A,E,Netflix,1.5,B,B,10,B,B,E,A,"Read, Play Guitar, Electronics, Sport",B,True,8,3,20,181,AFL,B,B,E,B,A,A,colander,True
+44,B,4,False,"Movie Soundtracks
+",100,Control Time,C,A,Netflix,1,A,A,"7
+",C,B,"A, C",B,This is us and cry,B,True,6,1,19,169,Basketball,B,B,A,B,B,A,a spoon,True
+45,B,10,True,pop music,20,fire,C,D,Netflix,1,B,A,300,A,B,B,A,"Swim, cook",B,True,7,3,22,180,swim,B,A,B,A,A,A,knife,True
+46,C,8,False,-,-,invisible,A,C,netflix,1,B,B,50,D,A,A,A,tv,B,True,8,5,19,152,rowing,A,A,B,B,A,B,spoon,True
+47,E,2,True,RnB,30,Teleportation,A,A,Netflix,3,A,B,5,C,A,A,A,Games,A,True,8,3,23,178,Cricket,B,A,B,A,B,A,Spoon,True
+48,B,20HOUR,False,classical,24HOUR,Magic like Dr Strange,C,D,youtube,5,A,A,$30,A,A,F,B,"Have a trip
+",B,True,8,7,19,163,tennis,A,A,E,B,B,A,knife,True
+49,C,2,False,Pop,15,Fly,C,A,Netflix,2,B,B,20,E,A,F,B,Sport,B,True,8,4,21,170,Soccer,B,A,C,A,B,A,Fridge,False
+50,C,5,False,Jazz,100,Not needing sleep,C,A,none,1.5,A,B,0,D,B,D,A,piano,C,False,9,1,20,180,running,B,A,C,B,B,A,chopstick(s),False
+51,C,2,False,Lo-fi,30,Invisibility,A,D,Netflix,3,B,B,5,A,A,A,A,Play video games,A,True,7,2,21,193,Basketball,B,B,A,A,A,B,Spork,True
+52,B,6,False,Rap,112,Passing with all HD,B,A,Netflix,2.5,A,A,20,D,B,"B, D, E",A,Study more,A,True,8,7,21,155,Football,B,A,B,B,A,A,Knife,True
+53,C,25,False,jazz,10,fly,A,E,Netflix,"1
+",A,A,30,B,A,A,B,listen music,B,False,9,5,19,160,skiing,A,A,C,A,B,B,fork,True
+54,D,6,False,RnB,20,Super Skill,B,E,Foxtel...,1,B,B,16,B,A,"A, B",A,Watch Something/ Light Exercise,A,True,7,5,20,167,Badminton,A,A,B,A,A,A,Icecream scooper,True
+55,B,1,False,"light
+",56,time,A,D,"I don't watch television
+",2,A,A,20,A,C,F,B,gaming,A,True,6,4,22,175,"swimming
+",B,B,C,B,B,B,oven,False
+56,E,4,False,Hip hop,50,fly,A,E,youtube,1,B,B,10,E,B,"A, B, D",A,youtube,A,True,8,2,23,186,afl,B,B,A,A,A,B,knife,True
+57,B,9,False,hip-pop,5,can go to wherever i want in any time,C,C,i don't watch tv,3,A,A,35 dollars,A,A,F,A,play my phone,B,True,8,1,21,160,basketball,A,A,C,B,B,A,pan,True
+58,C,2 hours,False,House,6 hours,Invisibility,A,C,Netflix,3,B,B,$35,B,B,"A, E",A,work,B,True,6.5,3,20,201,Basketball,B,A,B,A,A,B,Coffee Machine,True
+59,A,4/7,True,pop,"72
+",fly,C,D,non,1,B,A,15,A,B,F,B,sleep,A,True,7;30,3days,1997,160,swimming,A,A,E,B,B,A,knife,False
+60,E,8,False,jazz,25,imortality,B,C,youtube,3,B,B,15,A,A,"A, D, F",A,sleep,C,True,5,0,26,196,motorsport,B,A,B,B,B,A,spork,True
+61,C,6,False,hip hop,21,teleporting,A,B,Netflix,2,A,A,20,A,B,F,A,Hang out with friends,A,True,7,12,25,162,Basketball,A,A,B,B,B,A,whisk,True
+62,D,4,False,Techno Opera,15,The ability to turn into a turtle,A,B,dont watch tv,5,B,B,4,C,B,"E, F",B,Meditate,A,True,4,7,22,179,Curling,B,B,A,A,B,B,Oven mitt,True
+63,C,3,False,Jazz,30,Data Analysis,A,C,Netflix,3,B,B,8,B,B,E,A,Your mum,C,True,7,6,XXI,188,Snowboarding,B,B,D,B,A,A,Coffee machine,True
+64,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
