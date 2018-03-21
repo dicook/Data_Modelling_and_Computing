@@ -267,6 +267,7 @@ ggplotly(p)
 8. Come up with a few more questions to answer on this data. 
 
 ```{r eval=FALSE, echo=FALSE}
+library(tidyverse)
 players <- read_csv("data/players.csv")
 teams <- read_csv("data/teams.csv")
 teams <- teams %>% filter(Club != "All Clubs")
