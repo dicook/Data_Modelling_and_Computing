@@ -44,7 +44,7 @@ vis_dat(survey, palette = "cb_safe")
 
 Overview of the tidied class survey data. 
 
-This type of display isa called a "heatmap", displays the data table, with cells coloured according to some other information. In this case it is type of variable, and missingness status. What do we learn?
+This type of display is called a "heatmap", displays the data table, with cells coloured according to some other information. In this case it is type of variable, and missingness status. What do we learn?
 
 - Most of the variables are `character` (text) variables
 - There are several `integer`, `numeric` and `logical` variables.
@@ -73,10 +73,9 @@ What do we learn?
 - Sea temperature has a couple of missings
 - Some rows have a lot of missings
 
-Overall statistics, 3% of possible values are missing. That's not much. BUT, bot air temperature and humidity have more than 10% missing which is too much to ignore.
+Overall statistics, 3% of possible values are missing. That's not much. BUT, both air temperature and humidity have more than 10% missing which is too much to ignore.
 
 ### Numerical summaries
-
 - Proportion of observations missing:
 
 ```{r}
