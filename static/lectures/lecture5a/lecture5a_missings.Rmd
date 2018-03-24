@@ -1,0 +1,338 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 4,
+                      fig.width = 8,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+```
+
+# Handling missing values
+
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.netlify.com](http://dmac.netlify.com)
+
+## Overview
+
+- Data set overviews
+- Missingness patterns
+- Common ways to impute
+- Checking imputed values
+
+## Data set overview
+
+```{r}
+library(tidyverse)
+library(visdat)
+library(naniar)
+survey <- read_csv("data/survey_tidy.csv")
+vis_dat(survey, palette = "cb_safe")
+```
+
+Overview of the tidied class survey data. 
+
+This type of display isa called a "heatmap", displays the data table, with cells coloured according to some other information. In this case it is type of variable, and missingness status. What do we learn?
+
+- Most of the variables are `character` (text) variables
+- There are several `integer`, `numeric` and `logical` variables.
+- Missing values are sporadically located throughout the data. That means that no single variable has a lot of missings, and no single person wrote all missing.
+
+## Missing value patterns
+
+West Pacific Tropical Atmosphere Ocean Data, 1993 & 1997, for improved detection, understanding and prediction of El Nino and La Nina, collected from [http://www.pmel.noaa.gov/tao/index.shtml](http://www.pmel.noaa.gov/tao/index.shtml)
+
+```{r}
+glimpse(oceanbuoys)
+```
+
+The data has 736 observations, and 8 variables. All of the variables are numeric (including year).
+
+### Missingness map
+
+```{r}
+vis_miss(oceanbuoys, sort_miss=TRUE) + theme(aspect.ratio=1)
+```
+
+What do we learn?
+
+- Two variables, air temperature and humidity,  have a large number of missings.
+- Year, latitude and longitude have no missings
+- Sea temperature has a couple of missings
+- Some rows have a lot of missings
+
+Overall statistics, 3% of possible values are missing. That's not much. BUT, bot air temperature and humidity have more than 10% missing which is too much to ignore.
+
+### Numerical summaries
+
+- Proportion of observations missing:
+
+```{r}
+s_miss <- miss_summary(oceanbuoys)
+s_miss$miss_df_prop
+```
+
+- Proportion of variables missing:
+
+```{r}
+s_miss$miss_var_prop
+```
+
+- How many observations have $k$ missings?
+
+```{r}
+s_miss$miss_case_table
+```
+
+- By group
+
+```{r}
+s_miss_group <- oceanbuoys %>% 
+  group_by(year) %>% miss_summary()
+s_miss_group$miss_case_table
+```
+
+### Tend to get ignored by most software
+
+and this is a problem, because results computed on data with missing values might be biased. for example, `ggplot` ignores them, but at least tells you its ignoring them:
+
+```{r warning=TRUE}
+ggplot(oceanbuoys,
+       aes(x = sea_temp_c,
+           y = humidity)) +
+  geom_point() + theme(aspect.ratio=1)
+```
+
+### Add them to plot
+
+
+```{r}
+ggplot(oceanbuoys,
+       aes(x = sea_temp_c,
+           y = humidity)) +
+  scale_colour_brewer(palette="Dark2") +
+  geom_miss_point() + theme(aspect.ratio=1)
+```
+
+By year
+
+```{r}
+ggplot(oceanbuoys,
+       aes(x = sea_temp_c,
+           y = humidity)) +
+  geom_miss_point() + 
+  scale_colour_brewer(palette="Dark2") +
+  facet_wrap(~year) + 
+  theme(aspect.ratio=1) 
+```
+
+### Understanding missing dependencies
+
+```{r}
+ggplot(oceanbuoys,
+       aes(x = sea_temp_c,
+           y = air_temp_c)) +
+  geom_miss_point() + 
+  scale_colour_brewer(palette="Dark2") +
+  facet_wrap(~year) + 
+  theme(aspect.ratio=1)
+```
+
+What do we learn?
+
+- There is a different missingness pattern in each of the years
+- Year needs to be accounted for in finding good substitute values.
+
+
+### Two minute challenge
+
+- Copy and paste the code into your RStudio window, make sure it works for you, and try tweaking it a little
+
+## Shadow matrix
+
+The shadow table is created to mark the location of missings in the original data table. Here, this gets appended to the original data, and then can be used to submet, or colour by different types of missingness.
+
+```{r}
+tao_shadow <- bind_shadow(oceanbuoys)
+tao_shadow
+```
+
+### Relationship with other variables
+
+```{r}
+ggplot(data = tao_shadow,
+       aes(x = wind_ew, y=wind_ns, colour=air_temp_c_NA)) +
+       scale_colour_brewer(palette="Dark2") +
+       geom_point(alpha=0.7) + theme(aspect.ratio=1) 
+```
+
+What do we learn?
+
+- The lowest values of east-west winds have no missing values. Maybe it is less likely to have air temperature missing values when there are light east-west winds?
+
+### Two minute challenge
+
+- In your RStudio window, generate the shadow matrix and make a plot of the winds, coloured by missingness on humidity.
+
+## Strategy
+
+- An small fraction of cases have several missings, drop the cases
+- A variable or two, out of many, have a lot of missings, drop the variables
+- If missings are small in number, but located in many cases and variables, you need to impute these values, to do most analyses
+- Designing the imputation should take into account dependencies that you have seen between missingness and existing variables.
+- For the ocean buoys data this means imputation needs to be done separately by year
+
+## Common ways to impute values
+
+- Simple parametric: use the mean or median of the complete cases for each variable
+- Simple non-parametric: find the $k$ nearest neighbours with a complete value and average these
+- Multiple imputation: Use a statistical distribution, e.g. normal model and simulate a value (or set of values, hot deck imputation) for the missings
+
+### Mean
+
+ignoring year.
+
+```{r}
+tao_shadow <- tao_shadow %>%
+  mutate(sea_temp_c = ifelse(is.na(sea_temp_c), 
+                             mean(sea_temp_c, na.rm=TRUE),
+                             sea_temp_c),
+         air_temp_c = ifelse(is.na(air_temp_c), 
+                             mean(air_temp_c, na.rm=TRUE),
+                             air_temp_c))
+ggplot(tao_shadow,
+       aes(x = sea_temp_c,
+           y = air_temp_c, 
+           colour=air_temp_c_NA)) +
+  geom_point(alpha=0.7) + 
+  facet_wrap(~year) + 
+  scale_colour_brewer(palette="Dark2") +
+  theme(aspect.ratio=1)
+```
+
+What do we learn?
+
+- Oh, this is so wrong!
+- The imputed values are nothing like the complete case values
+
+### by year
+
+```{r}
+t93 <- bind_shadow(oceanbuoys) %>% 
+  filter(year=="1993") %>%
+  mutate(sea_temp_c = ifelse(is.na(sea_temp_c), 
+                             mean(sea_temp_c, na.rm=TRUE),
+                             sea_temp_c),
+         air_temp_c = ifelse(is.na(air_temp_c), 
+                             mean(air_temp_c, na.rm=TRUE),
+                             air_temp_c)) 
+t97 <- bind_shadow(oceanbuoys) %>% 
+  filter(year=="1997") %>%
+  mutate(sea_temp_c = ifelse(is.na(sea_temp_c), 
+                             mean(sea_temp_c, na.rm=TRUE),
+                             sea_temp_c),
+         air_temp_c = ifelse(is.na(air_temp_c), 
+                             mean(air_temp_c, na.rm=TRUE),
+                             air_temp_c))
+ 
+tao_shadow <- bind_rows(t93, t97)  
+
+ggplot(tao_shadow,
+       aes(x = sea_temp_c,
+           y = air_temp_c, 
+           colour=air_temp_c_NA)) +
+  geom_point(alpha=0.7) + 
+  facet_wrap(~year) + 
+  scale_colour_brewer(palette="Dark2") +
+  theme(aspect.ratio=1)
+```
+
+What do we learn?
+
+- The imputed values are closer to the complete case values
+- However, they form a rigid line, mismatching the variation 
+- and they extend outside the range of complete values. This is a problem in that the imputed air temperature value for these high sea temperature cases is lower than we would expect, and thus possibly impeding good model fitting
+
+### Two minute challenge
+
+- In your RStudio window, run the code above. Change it to plot sea temperature against humidity, with colour representing missing humidity values. What do you learn about the imputations?
+
+
+###  Nearest neighbors imputation
+
+```{r}
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("impute")
+library(impute)
+tao_impute <- bind_shadow(oceanbuoys) %>%
+  arrange(year, sea_temp_c, air_temp_c) %>%
+  select(sea_temp_c, air_temp_c) 
+tao_impute <- impute.knn(as.matrix(tao_impute), 5)
+tao_shadow <- bind_shadow(oceanbuoys) %>%
+  arrange(year, sea_temp_c, air_temp_c) %>%
+  mutate(sea_temp_c = tao_impute$data[,1],
+         air_temp_c = tao_impute$data[,2])
+ggplot(tao_shadow,
+       aes(x = sea_temp_c,
+           y = air_temp_c, 
+           colour=air_temp_c_NA)) +
+  geom_point(alpha=0.7) + 
+  facet_wrap(~year) + 
+  scale_colour_brewer(palette="Dark2") +
+  theme(aspect.ratio=1)
+```
+
+### by year
+
+```{r}
+tao_impute_93 <- bind_shadow(oceanbuoys) %>%
+  arrange(year, sea_temp_c, air_temp_c) %>%
+  filter(year=="1993") %>%
+  select(sea_temp_c, air_temp_c) 
+tao_impute_93 <- impute.knn(as.matrix(tao_impute_93), 5)
+tao_impute_97 <- bind_shadow(oceanbuoys) %>%
+  arrange(year, sea_temp_c, air_temp_c) %>%
+  filter(year=="1997") %>%
+  select(sea_temp_c, air_temp_c)
+tao_impute_97 <- impute.knn(as.matrix(tao_impute_97), 5)
+tao_impute <- rbind(tao_impute_93$data, tao_impute_97$data)
+tao_shadow <- bind_shadow(oceanbuoys) %>%
+  arrange(year, sea_temp_c, air_temp_c) %>%
+  mutate(sea_temp_c = tao_impute[,1],
+         air_temp_c = tao_impute[,2])
+ggplot(tao_shadow,
+       aes(x = sea_temp_c,
+           y = air_temp_c, 
+           colour=air_temp_c_NA)) +
+  geom_point(alpha=0.5) + 
+  facet_wrap(~year) + 
+  scale_colour_brewer(palette="Dark2") +
+  theme(aspect.ratio=1)
+```
+
+### Two minute challenge
+
+- In your RStudio window, run the code above. Change it to plot sea temperature against humidity, with colour representing missing humidity values. What do you learn about the imputations?
+
+## Lab exercise
+
+- Take a look at the class survey data.
+- Summarise the missingness patterns. Which variables have mssings, how many,...
+- Strategise a way to impute the missing values. For numeric variables, we can use a mean value to impute the missing. What statistic would you suggest for a categorical variable? Or a logical variable?
+- Do your best to impute all the missings for this data.
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
