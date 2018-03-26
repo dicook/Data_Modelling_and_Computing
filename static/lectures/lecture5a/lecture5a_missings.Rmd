@@ -271,7 +271,8 @@ What do we learn?
 
 ###  Nearest neighbors imputation
 
-```{r}
+```{r eval=FALSE}
+# This is Di's preferred method
 #source("https://bioconductor.org/biocLite.R")
 #biocLite("impute")
 library(impute)
@@ -296,6 +297,7 @@ ggplot(tao_shadow,
 ### by year
 
 ```{r}
+library(impute)
 tao_impute_93 <- bind_shadow(oceanbuoys) %>%
   arrange(year, sea_temp_c, air_temp_c) %>%
   filter(year=="1993") %>%
