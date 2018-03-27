@@ -1,0 +1,275 @@
+---
+title: "Assignment2"
+author: "Little Salt Egg"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+library(stringr)
+survey <- read_csv("data/survey.csv")
+
+survey <- survey %>%
+  filter(id != 64)
+
+survey1 <- survey %>% 
+  mutate(
+    Q1 = case_when(
+      Q1 == "A" ~ "1", Q1 == "B" ~ "2", Q1 == "C" ~ "3",  Q1 == "D" ~ "4", TRUE ~ "Other"
+    ),
+    Q2 = if_else(Q2 %in% c("1/2", "4/7"), NA_character_, Q2),
+    Q2 = if_else(Q2 == "three times\n", "3", Q2),
+    Q2 = as.numeric(gsub("([0-9]+).*$", "\\1", Q2)),
+    Q3 = as.logical(Q3),
+    Q4 = stringr::str_to_lower(Q4),
+    Q4 = case_when(
+      str_detect(Q4, "^hip") ~ "hip hop",
+      str_detect(Q4, "^pop") ~ "pop",
+      str_detect(Q4, "^rock") ~ "rock",
+      str_detect(Q4, "^alt") ~ "alternative rock",
+      Q4 == "rnb" ~ "r&b",
+      TRUE ~ Q4
+    ),
+
+    Q5 = if_else(Q5 %in% c("-", "Choosing not to answer"), NA_character_, Q5),
+    Q5 = as.numeric(gsub("([0-9]+).*$", "\\1", Q5)),
+    Q6 = stringr::str_to_lower(Q6),
+    Q6 = case_when(
+      str_detect(Q6, "^fl") ~ "flying",
+      str_detect(Q6, "^control") ~ "time control",
+      str_detect(Q6, "^time$") ~ "time control",
+      str_detect(Q6, "^forecast") ~ "forecasting",
+      str_detect(Q6, "predict the future") ~ "forecasting",
+      str_detect(Q6, "^invisib") ~ "invisibility",
+      str_detect(Q6, "^teleport") ~ "teleportation",
+      str_detect(Q6, "remember everything i saw") ~ "never forget",
+      str_detect(Q6, "dig big holes with my hands") ~ "dig holes",
+      TRUE ~ Q6
+    ),
+    Q6 = if_else(Q6 %in% c("can go to wherever i want in any time"), "time travel", Q6),
+    Q6 = if_else(Q6 %in% c("go back to a past time", "time-reverse", "freeze time"), "time control", Q6),
+    Q6 = if_else(Q6 %in% c("i don't need any super power.", "nothing"), NA_character_, Q6),
+    Q6 = if_else(Q6 %in% c("the ability to turn into a turtle"), "turtle", Q6),
+    Q6 = if_else(Q6 %in% c("the power to make anything full"), "full", Q6),
+    Q6 = if_else(Q6 %in% c("to control the probabilities of things happening"), "probability control", Q6),
+    Q6 = if_else(Q6 %in% c("to never have to sleep", "not needing sleep"), "no sleep", Q6),
+    
+    Q7 = case_when(
+      Q7 == "A" ~ "two sizes too big", Q7 == "B" ~ "one size too small", TRUE ~ "neither of these"
+    ),
+    Q8 = case_when(
+      Q8 == "A" ~ "[0,3)", Q8 == "B" ~ "[3,6)", Q8 == "C" ~ "[6,9)",  Q8 == "D" ~ "[9,12)", TRUE ~ "More than 12"
+    ),
+    Q9 = stringr::str_to_lower(Q9),
+    Q9 = case_when(
+      str_detect(Q9, "^no") ~ NA_character_,
+      str_detect(Q9, "^i do") ~ NA_character_,
+      str_detect(Q9, "^do") ~ NA_character_,
+      str_detect(Q9, "^n/a") ~ NA_character_,
+      str_detect(Q9, "^netflix") ~ "netflix",
+      str_detect(Q9, "^youtube") ~ "youtube",
+      str_detect(Q9, "^hdonline") ~ "hdonline",
+      str_detect(Q9, "^stream") ~ "stream",
+      str_detect(Q9, "^foxtel") ~ "foxtel",
+      TRUE ~ Q9
+    ),
+    Q10 = as.numeric(if_else(Q10 == "?", "NA", Q10)),
+    Q11 = case_when(
+      Q11 == "A" ~ "elective", Q11 == "B" ~ "core"
+    ),
+    
+    Q12 = case_when(
+      Q12 == "A" ~ "single", Q12 == "B" ~ "double"
+    ),
+    Q13 = str_remove(Q13, "\\$"),
+    Q13 = case_when(
+      Q13 == "35 dollars" ~ "35",
+      TRUE ~ Q13),
+    Q14 = case_when(
+      Q14 == "A" ~ "0", Q14 == "B" ~ "1", Q14 == "C" ~ "2",  Q14 == "D" ~ "3", Q14 == "E" ~ "4", Q14 == "F" ~ "5",
+      Q14 == "F" ~ ">5"
+    ),
+    
+    Q15 = case_when(
+      Q15 == "A" ~ "cucumbers", Q15 == "B" ~ "carrots", TRUE ~ "neither"
+    ),
+    
+    Q16 = case_when(
+      Q16 == "A" ~ "dog", Q16 == "B" ~ "cat", Q16 == "C" ~ "rabbit",  Q16 == "D" ~ "bird", Q16 == "E" ~ "reptile", 
+      TRUE ~ "other"
+    ),
+    
+    Q17 = case_when(
+      Q17 == "A" ~ "yes", Q17 == "B" ~ "no"
+    ),
+    
+    Q18 = stringr::str_to_lower(Q18),
+    Q18 = case_when(
+      str_detect(Q18, "games$") ~ "games",
+      str_detect(Q18, "game$") ~ "games",
+      str_detect(Q18, "^gam") ~ "games",
+      str_detect(Q18, "music$") ~ "music",
+      str_detect(Q18, "youtube$") ~ "youtube",
+      str_detect(Q18, "^gym") ~ "gym",
+      str_detect(Q18, "^read") ~ "read",
+      str_detect(Q18, "^tv") ~ "tv",
+      str_detect(Q18, "^watch") ~ "watch something",
+      str_detect(Q18, "^study") ~ "study more",
+      TRUE ~ Q18
+    ),
+    Q18 = if_else(Q18 %in% c("league of legends"), "games", Q18),
+    Q18 = if_else(Q18 %in% c("swim, cook"), "swim", Q18),
+    Q18 = if_else(Q18 %in% c("instagram"), "social media", Q18),
+    Q18 = if_else(Q18 %in% c("internet, stretch, water"), "internet", Q18),
+    Q18 = if_else(Q18 %in% c("training my aim in different fps games."), "games", Q18),
+    
+    Q19 = case_when(
+      Q19 == "A" ~ "Windows", Q19 == "B" ~ "Mac", Q19 == "C" ~ "Linux", TRUE ~ "Other"
+    ),
+    Q20 = as.logical(Q20),
+    
+    Q21 = if_else(Q21 == "7;30", "7.5", Q21),
+    Q21 = as.numeric(gsub("([0-9]+).*$", "\\1", Q21)),
+    Q22 = as.numeric(gsub("([0-9]+).*$", "\\1", Q22)),
+    Q23 = as.numeric(if_else(Q23 %in% c("XXI", "1997"), "21", Q23)),
+    Q24 = as.numeric(if_else(Q24 %in% c("I don't know"), NA_character_, Q24)),
+    Q24 = as.numeric(Q24),
+    
+    Q25 = stringr::str_to_lower(Q25),
+    Q25 = case_when(
+      str_detect(Q25, "^swim$") ~ "swimming",
+      str_detect(Q25, "choosing not to answer") ~ NA_character_,
+      str_detect(Q25, "yes") ~ NA_character_,
+      str_detect(Q25, "electronic games and running") ~ "running",
+      TRUE ~ Q25
+    ),
+    
+    Q26 = case_when(
+      Q26 == "A" ~ "female", Q26 == "B" ~ "male", TRUE ~ "prefer not to answer"
+    ),
+    
+    Q27 = case_when(
+      Q27 == "A" ~ "fridge", Q27 == "B" ~ "pantry"
+    ),
+    
+    Q28 = case_when(
+      Q28 == "A" ~ "0", Q28 == "B" ~ "1-5", Q28 == "C" ~ "6-10",  Q28 == "D" ~ "10-20", TRUE ~ ">20"
+    ),
+    
+    Q29 = case_when(
+      Q29 == "A" ~ "yes", Q29 == "B" ~ "no"
+    ),
+    
+    Q30 = case_when(
+      Q30 == "A" ~ "no", Q30 == "B" ~ "yes"
+    ),
+    
+    Q31 = case_when(
+      Q31 == "A" ~ "yes", Q31 == "B" ~ "no"
+    ),
+    
+    Q32 = stringr::str_to_lower(Q32),
+    Q32 = case_when(
+      str_detect(Q18, "spoon$") ~ "spoon",
+      str_detect(Q18, "^chopstick") ~ "chopstick",
+      TRUE ~ Q32
+    ),
+    Q32 = if_else(Q32 %in% c("that thing that cuts eggs"), "egg beater", Q32),
+    Q32 = if_else(Q32 %in% c("fridge"), "refrigerator", Q32),
+    Q32 = if_else(Q32 %in% c("none"), NA_character_, Q32),
+    Q32 = if_else(Q32 %in% c("ikea soup ladle"), "ladle", Q32),
+    
+    Q33 = as.logical(Q33)
+  )
+```
+
+```{r}
+library(ggplot2)
+height <- survey1 %>% select(Q24, Q26) %>%
+  filter(!Q26 %in% c("prefer not to answer")) %>%
+  filter(!Q24 %in% c(NA_character_))
+  ggplot(data = height, mapping = aes(x = Q26, y = Q24, fill = Q26)) +
+  geom_boxplot() +
+    xlab("gender") +
+    ylab("height") +
+    theme(aspect.ratio = 1) +
+    scale_fill_brewer(palette="Dark2")
+
+```
+
+#Graph 1
+The boxplot provides us information regarding the relationship between height and gender of the class based on question 26 of the survey. We can see that gender is at the x-axis and height is at the y-axis. Females are also represented by the green box while males are represented by the orange box. 
+
+The plot shows that there is 1 outlier value from the female's heights so 1 female may be a lot taller than normal females. There are also 5 outlier values (4 taller and 1 shorter) for the male's height. This suggests that there are 4 males that are a lot taller than normal males and 1 male that is a lot shorter than normal males. The median height for females is 165cm and the median height for males is 178cm. This means that the centre height for females and males is 165cm and 178 cm without the heights being influenced by outliers. Additionally, 25% of females are at least 160 cm while 25% of males are at least 175 cm. 75% of females are also at least 167 cm while 75% of males are at least 182 cm.
+
+In conclusion, we can see that males are a lot taller than females due to the significant difference in averages as seen on the box plot. This is obvious as most males would naturally be taller than females in the university student age range.
+
+```{r}
+study_time <- survey1 %>% select(Q8, Q12)
+  ggplot(data = study_time, mapping = aes(x = Q8, fill = Q12)) +
+    geom_bar(position = "dodge") +
+    xlab("study time per week") +
+    theme(aspect.ratio = 1) +
+    scale_fill_brewer(palette="Dark2")
+```
+
+#Graph 2
+The bar chart for Question 12 shows the connection between the type of degree and amount of study time per week. The green bars represent the students that are taking double degrees while the orange bars represent students taking single degrees. 
+
+As seen from the chart, among the students that study 0 to 3 hours a week and 9 to 12 hours a week, the amount of people that take double degrees is higher than single degrees. However, this not the case for students that study 3 to 6 hours a week as there is a higher number of students that study for a single degree than a double degree in this category. 
+
+Interestingly, students that study 6 to 9 hours a week and more than 12 hours a week have the same number of students for each type of degree. This proposes that the degree type does not influence study hours when it comes to students that study 6 to 9 hours and more than 12 hours. As a conclusion, most people may assume that students that study for double degrees study more than single degrees, however, from this chart we can see that there is no significant connection between the degree type and study time per week.
+
+```{r}
+coding_experience <- survey1 %>% select(Q17, Q30)
+  ggplot(data = coding_experience, mapping = aes(x = Q17, y = Q30)) +
+    geom_count(aes(color = ..n..)) +
+    xlab("prior coding experience") +
+    ylab("struggling with this unit") +
+    theme(aspect.ratio = 1)
+```
+
+#Graph 3
+Question 17 asks students whether they have prior coding experience and Question 30 asks students about whether they are struggling with this unit. We have put Question 17 on the x-axis and Question 30 on the y-axis.
+
+There are four points in the chart which are: students who have no prior coding experience but don't struggle with this unit, students who have no prior coding experience and are struggling with this unit, students who have prior coding experience and don't struggle with this unit, students who have prior coding experience but are struggling with this unit. 
+
+With regards to the chart, the more students who choose that point, the bigger the points will be, and the colour of the points tend to get lighter as more people choose the point. Therefore, in this chart, we can see that the top left point is the largest and lightest with approximately 25 students. 
+
+On the other hand, the smallest and darkest point lies on the group of students who have no prior coding experience and are not struggling with this unit. That point suggests that few to no students chose that option since it is very small and dark. However, this is reasonable since students will not feel comfortable about a unit if they are not familiar with it.
+
+The second largest point indicates that there are around 20 students who have experience and are not worried about this unit. This can be seen where the colour of this point is slightly darker than the point on the top left. The top right point indicates that there are about 15 students who chose both "yes" when it comes to experience with coding and struggling with the unit.
+
+```{r}
+library(forcats)
+superpower <- survey1 %>% select(Q6) %>%
+  filter(!Q6 %in% c(NA_character_)) %>%
+  count(Q6) %>%
+  mutate(Q6 = fct_reorder(Q6, n, .desc = TRUE))
+superpower <- ggplot(data = superpower, mapping = aes(x = Q6, y = n, fill = Q6)) +
+    geom_col(
+    show.legend = FALSE,
+    width = 1
+  ) + 
+  theme(aspect.ratio = 1) +
+  labs(x = NULL, y = NULL)
+
+superpower + coord_flip()
+superpower + coord_polar()
+```
+
+#Graph 4 & 5
+The bar chart illustrates the superpowers that students from ETC1010 in Semester 1 2018 want to own if they could. There are 25 observations in this variable.
+
+It can be seen from the bar chart that "flying" is the most popular superpower with 12 people writing it as the answer. "teleportation", "invisibility" and "time control" are also popular, where they were written 8 times, 7 times and 6 times respectively. Also, "forecasting", "time travel", "telekinesis", "no sleep" and "never forget" have been written by more than one person. All the remaining answers were chosen by only one person.
+
+We have found that many superpowers are related to "time", like "time control", "no sleep", "speed", "super-speed" and "time travel". We assume that this is because our sample consisted of students who need a lot of time to study. Students would hope to have more time control and more time to learn and complete their homework. This also proposes that students want to enjoy their youth while they still can. The most popular superpower is "flying". This proposes that students who took part in the survey are mostly seeking for freedom and adventure. 
+
+The following polar coordinates from the chart make the difference more obvious. We can see more clearly the difference in the number of times each superpower was chosen.
+
+
+

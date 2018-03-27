@@ -1,0 +1,428 @@
+---
+title: "Assignment 2"
+output: html_document
+author: The pirates
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+options(warn=-1)
+library(tidyverse)
+library(stringr)
+survey <- read_csv("survey.csv")
+
+obs <- nrow(survey)
+
+```
+
+```{r}
+#Cleaning Q32
+trans32 <-survey["Q32"]
+trans32 <- t(trans32)
+
+#replace
+trans32[grep("Ladl",trans32,ignore.case=TRUE)] <- "Ladle"
+trans32[grep("^Spat",trans32,ignore.case=TRUE)] <- "Spatula"
+trans32[grep("^Kni",trans32,ignore.case=TRUE)] <- "Knife"
+trans32[grep("Spoo",trans32,ignore.case=TRUE)] <- "Spoon"
+trans32[grep("fri",trans32,ignore.case=TRUE)] <- "Fridge"
+trans32[grep("chop",trans32,ignore.case=TRUE)] <- "Chopsticks"
+trans32[grep("none",trans32,ignore.case=TRUE)] <- NaN
+trans32[grep("some",trans32,ignore.case=TRUE)] <- NaN
+trans32[grep("thing",trans32,ignore.case=TRUE)] <- NaN
+
+trans32 <- t(trans32)
+trans32 <- tolower(trans32)
+survey["Q32"] <- trans32
+
+```
+
+```{r}
+#Cleaning Q25
+trans25 <-survey["Q25"]
+trans25 <- t(trans25)
+
+#replace
+trans25[grep("swim",trans25,ignore.case=TRUE)] <- "Swimming"
+trans25[grep("Football",trans25,ignore.case=TRUE)] <- "Soccer"
+trans25[grep("yes",trans25,ignore.case=TRUE)] <- NaN
+trans25[grep("choosing",trans25,ignore.case=TRUE)] <- NaN
+trans25[grep("electronic",trans25,ignore.case=TRUE)] <- NaN
+
+trans25 <- t(trans25)
+trans25 <- tolower(trans25)
+survey["Q25"] <- trans25
+```
+
+```{r}
+#cleaning Q24
+trans24 <-survey["Q24"]
+
+trans24 <- as.numeric(as.character(trans24$Q24)) #converts too numeric
+
+survey["Q24"] <- trans24
+
+```
+
+```{r}
+#Cleaning Q23
+trans23 <-survey["Q23"]
+##trans23 <- t(trans23)
+
+trans23 <- as.numeric(as.character(trans23$Q23))
+
+#below loop looks for an age entered as a D.O.B and calcs age
+for(i in 1:obs){
+  if(!is.na(as.numeric(as.character(trans23[i])))){
+    if((trans23[i] > 1000)){
+      trans23[i] <- 2018 - trans23[i]
+    }
+  }
+}
+
+survey["Q23"] <- trans23
+```
+
+```{r}
+#Cleaning Q22
+trans22 <-survey["Q22"]
+for(i in 1:obs){
+  if(is.na(as.numeric(trans22[i,1]))){
+    trans22[i,1] <- as.numeric(gsub("([^0-9]+)", "", trans22[i,1])) #extracts numbers from string
+  }
+}
+trans22 <- as.numeric(as.character(trans22$Q22))
+survey["Q22"] <- trans22
+```
+
+```{r}
+#Cleaning Q21
+#removed non sensical answers like 7;30, typo? or misread question? too hard to know so just removed
+trans21 <-survey["Q21"]
+trans21 <- as.numeric(as.character(trans21$Q21))
+survey["Q21"] <- trans21
+```
+
+```{r}
+#cleaning 2
+trans2 <- survey["Q2"]
+
+for(i in 1:obs){
+  if(is.na(as.numeric(as.character(trans2[i,1])))){ 
+    if(grepl("/", as.character(trans2[i,1]))){ #calcs decimal from fraction
+      num = as.numeric(substr(as.character(trans2[i,1]),1,1))
+      den = as.numeric(substr(as.character(trans2[i,1]),3,3))
+      trans2[i,1] = num/den
+    }
+    if(grepl("h", as.character(trans2[i,1]))||grepl("H", as.character(trans2[i,1])) ){
+      trans2[i,1] <- as.numeric(gsub("([0-9]+).*$", "\\1", trans2[i,1])) #extracts numbers from string
+    }
+  }
+}
+
+#remove values greater than 24
+for(i in 1:obs){
+  if(!is.na(trans2[i,1])){
+    if(as.numeric(trans2[i,1]) > 24){ trans2[i,1] <- NA}
+  }
+}
+
+survey["Q2"] <- trans2
+```
+
+```{r}
+#cleaning 4
+trans4 <- survey["Q4"]
+for(i in 1:obs){
+  trans4[i,1] <- tolower(trans4[i,1]) #converts to lowercase
+  if(grepl("hip", as.character(trans4[i,1]))){ #accounts for differnt ways of saying hip hop
+    trans4[i,1] <- "hip hop"
+  }
+  #removes music string from responses
+  if(grepl("music", as.character(trans4[i,1]))){
+    x <- unlist(strsplit(as.character(trans4[i,1]), " "))
+    x <- x[!x %in% "music"]
+    if(!is_empty(x)){trans4[i,1] <- as.character(x)}
+    else{ trans4[i,1] = NA}
+  }
+}
+survey["Q4"] <- trans4
+```
+
+```{r}
+#cleaning 5
+trans5 <- survey["Q5"]
+for(i in 1:obs){
+  #for answers with 'hours'
+  if(grepl("h", as.character(trans5[i,1]))||grepl("H", as.character(trans5[i,1])) ){
+      trans5[i,1] <- as.numeric(gsub("([0-9]+).*$", "\\1", trans5[i,1])) #extracts numbers from string
+  }
+  if((!is.na(as.numeric(trans5[i,1])))&&(as.numeric(trans5[i,1])>168)){trans5[i,1] <- NA} #remove non-sensical answers, answer over 168
+}
+survey["Q5"] <- trans5
+```
+
+```{r}
+#cleaning 9
+trans9 <- survey["Q9"]
+for(i in 1:obs){
+  trans9[i,1] <- tolower(trans9[i,1]) #converts to lowercase
+  #removes people who dont watch tv
+  if((grepl("n/a", as.character(trans9[i,1])))||grepl("dont", as.character(trans9[i,1]))||grepl("don't", as.character(trans9[i,1]))||grepl("none", as.character(trans9[i,1]))||grepl("nothing", as.character(trans9[i,1]))||grepl("do not", as.character(trans9[i,1]))||grepl("no", as.character(trans9[i,1]))){
+    trans9[i,1] <- NA
+  }
+}
+survey["Q9"] <- trans9
+
+```
+
+```{r}
+#cleaning 10
+trans10 <- survey["Q10"]
+for(i in 1:obs){
+  if(is.na(as.numeric(trans10[i,1]))){trans10[i,1] <- NA} #convets strings to na
+}
+
+survey["Q10"] <- trans10
+
+```
+
+```{r}
+#cleaning 13
+trans13 <- survey["Q13"]
+for( i in 1:obs){
+  if(grepl("$", as.character(trans13[i,1]))||grepl("dollars", as.character(trans13[i,1])) ){
+      trans13[i,1] <- as.numeric(gsub("([^0-9]+)", "", trans13[i,1])) #extracts numbers from string
+  }
+}
+survey["Q13"] <- trans13
+
+```
+
+```{r}
+#cleaning 1
+trans1 <- survey["Q1"]
+for( i in 1:obs){
+  if(!is.na(trans1[i,1])){
+    if(trans1[i,1]=="A"){trans1[i,1] <- 1}
+    if(trans1[i,1]=="B"){trans1[i,1] <- 2}
+    if(trans1[i,1]=="C"){trans1[i,1] <- 3}
+    if(trans1[i,1]=="D"){trans1[i,1] <- 4}
+    if(trans1[i,1]=="E"){trans1[i,1] <- "other"}
+  }
+}
+survey["Q1"] <- trans1
+```
+
+```{r}
+#cleaning 26 - Load survey data into a column vector. Iterate through each element replacing A, B and C with Female, Male and NA respectively. Finally overwrite the relevant column in the survey data with the updated column vector.
+trans26 <- survey["Q26"]
+for( i in 1:obs){
+  if(!is.na(trans26[i,1])){
+    if(trans26[i,1]=="A"){trans26[i,1] <- "Female"}
+    if(trans26[i,1]=="B"){trans26[i,1] <- "Male"}
+    if(trans26[i,1]=="C"){trans26[i,1] <- NA}
+  }
+}
+survey["Q26"] <- trans26
+```
+
+```{r}
+#cleaning 8 - Load survey data into a column vector. Iterate through each element replacing A, B, C, D and E with 0-3, 3-6, 6-9, 9-12 and 12+ respectively. Finally overwrite the relevant column in the survey data with the updated column vector.
+trans8 <- survey["Q8"]
+for( i in 1:obs){
+  if(!is.na(trans8[i,1])){
+    if(trans8[i,1]=="A"){trans8[i,1] <- "0-3"}
+    if(trans8[i,1]=="B"){trans8[i,1] <- "3-6"}
+    if(trans8[i,1]=="C"){trans8[i,1] <- "6-9"}
+    if(trans8[i,1]=="D"){trans8[i,1] <- "9-12"}
+    if(trans8[i,1]=="E"){trans8[i,1] <- "12+"}
+  }
+}
+survey["Q8"] <- trans8
+```
+
+```{r}
+trans5 <- survey["Q5"]
+trans5 <- as.numeric(as.character(trans5$Q5))
+survey["Q5"] <- trans5
+```
+
+```{r}
+#Plot 1
+#Create data frame with all relevant survey data so it can be manipulated without consequence.
+df <- data.frame(
+  age = survey["Q23"],
+  hangout = survey["Q22"],
+  gender = survey["Q26"],
+  studyTime = survey["Q8"]
+)
+#Rename columns so they are comprehendable.
+colnames(df) <- c("Age", "No. of catch ups per week", "Gender", "studyTime")
+#Initialize vector. Iterate through all elements of dataframe and append to vector a boolean such that any row with an NA is excluded from the data
+
+df$studyTime_f = factor(df$studyTime, levels=c('0-3','3-6','6-9','9-12','12+'))
+#plot
+ggplot(na.omit(df), aes(x = Age, y = `No. of catch ups per week`, fill = Gender)) +
+  geom_bar(stat = "identity") +
+  facet_grid(~ studyTime_f) +
+  ggtitle("# of catch ups per week based on gender, age and weekly study time") +
+  scale_y_continuous(expand = c(0,0)) + #Fixes y-axis starting below 0
+  scale_fill_brewer(palette="Dark2") +
+  scale_x_continuous(limits=c(17, 30))
+```
+
+Plot 1 : No. of catch ups per week based on gender, age and time spent studying per week
+
+From the graph, we can see that there are only males that spend on average 0-3 hours of studying a week. We can also observe an upwards trend for females when it comes to number of hours studied per week, with predominantly females in the 12+ hours spent on studying a week facet. The people who tend to study about 6-9 hours a week generally spend fewer hours to catch up with friends too, this may indicate that these student tend to enjoy a more balanced along with more personal down time. The ages are predominantly around the 18-24 year olds, which is reasonable as we are all university student. However there is one student who is about 28 years of age, this could indicate that there might be a masters student in our class.
+
+```{r}
+#Plot 2
+#Create data frame with all relevant survey data so it can be manipulated without consequence.
+df <- data.frame(
+  water = survey["Q10"],
+  food = survey["Q13"]
+)
+#Rename columns so they are comprehendable.
+colnames(df) <- c("Water drank per day (L)", "Average amount spent on food each day ($)")
+df$`Average amount spent on food each day ($)` <- mapply(df$`Average amount spent on food each day ($)`, FUN=as.numeric)
+df$`Water drank per day (L)` <- mapply(df$`Water drank per day (L)`, FUN=as.numeric)
+
+ggplot(data=na.omit(df), aes(x=`Water drank per day (L)`, y=`Average amount spent on food each day ($)`)) + ggtitle("Daily amount spent on food Vs Water consumed") +
+  geom_point() #+ geom_smooth()
+
+#plot excluding outlier
+ggplot(data=na.omit(df), aes(x=`Water drank per day (L)`, y=`Average amount spent on food each day ($)`)) + ggtitle("Daily amount spent on food Vs Water consumed") + geom_smooth() +
+geom_point() + scale_y_continuous(limits = c(0, 80))
+
+```
+
+From the plot above, we plotted the average amount spent on food each day against litres of water drank per day. We can clearly see a downward trend indicating that the more water someone drinks, a lower amount of money is spent on food each day. This may be due to these students practicing a more liquid diet and filling themselves up with water instead of food. We can also observe that students in the class generally do not take in the adequate daily fluid intake of about 3.7 litres. Student drink about on average 3 litres or less per day, with majority of the student drinking on average 1 litre per day. The student who drinks 1 litre of water per day and spent about $80 on food might be someone who lives a luxurious life, spending great amounts on breakfast, lunch and dinner. 
+
+```{r}
+#Plot 3
+#Declare names array to track sports and freq array to count how many times a sport is chosen.
+names = c("0")
+freq = c(0)
+
+#Initialize vector. Iterate through all elements of dataframe and append to vector a boolean such that any row with an NA is excluded from the data
+rows_to_keep = c()
+for (i in 1:obs) {
+  if(!(is.na(survey["Q25"][i, 1]))){
+    if(survey["Q25"][i, 1]=="nan" || survey["Q25"][i, 1]=="sleep") {
+      rows_to_keep[i] = FALSE
+    } else {
+      rows_to_keep[i] = TRUE
+    }
+  } else {
+    rows_to_keep[i] = FALSE
+  }
+}
+data <- survey["Q25"][rows_to_keep,]
+
+#Variable used to continue through a nested loop
+success = FALSE
+#Iterate through all elements of data
+for (i in 1:obs) {
+  if(!(is.na(data[i, 1]))) {
+    #Check if sport has already been added to names array
+    for (j in 1:length(names)) {
+      if (data[i, 1]==names[j]) {
+        #if so, then increase the count for that sport and continue to the next element.
+        freq[j] = freq[j]+1
+        success = TRUE
+        break
+      }
+    }
+    if (success) {
+      success = FALSE
+    } else {
+      #if not, a new elements needs to be added to names array for the sport and a count of 1 added for it in the freq array.
+      if (names[j]=="0") {
+        names[j] = data[i, 1]
+        freq[j] = 1
+      } else {
+        names[j+1] = data[i, 1]
+        freq[j+1] = 1
+      }
+    }
+  }
+}
+#Create data frame with all relevant survey data so it can be manipulated without consequence.
+df <- data.frame(
+  unlist(names),
+  unlist(freq)
+)
+#Rename columns so they are comprehendable.
+colnames(df) <- c("Favourite sport", "Count")
+
+pie(freq, labels=names, main="Favourite sports")
+```
+
+From the pie chart above,  we can see that majority of the class's favourite sport is basketball. There is a good variety of favourite sports in the class as well, a total of 22 different sport is shown above. The data also suggests that there are a lot more people interested in swimming than in AFL, despite the AFL being one of the most watched sports in Australia. However, this may be due to the difficult physical requirements of the sport. There is also a good balance between outdoor sports and indoor sports, from around 12 of the sports are generally played outdoors such as snowboarding and motorsport; to around 10 of the sports that are indoors such as fencing and basketball. 
+```{r}
+#Plot of age vs height faceted by gender, also shows if fav sport is bball or not
+
+df <- data.frame(
+  age = survey["Q23"],
+  height = survey["Q24"],
+  favourite_sport = survey["Q25"],
+  gender = survey["Q26"]
+)
+
+for( i in 1:nrow(df)){
+  if(grepl("basketball", as.character(df[i,3])))
+    df[i,3] = TRUE
+  else df[i,3] = FALSE
+}
+
+ggplot(na.omit(df), aes(x=Q23, y=Q24, colour = Q25)) + ggtitle("Are people who prefer basketball taller than average?") +
+  geom_point() + facet_wrap(~Q26) + labs(x = 'Age', y = 'Height', colour = 'Basketball is favourite sport')
+
+```
+
+From the scatterplot above, we plotted height against age, while faceting gender, along with colour coding to see if basketball was a student's favourite sport. It can be observed that there is some correlation between height and if basketball is a student's favourite sport for male student, as the students who chose basketball as their favourite sport are situated in the upper half of the graph except for a couple of exceptions. Majority of females did not have basketball as a favourite sport, and it may be due to females resorting more towards netball, which has a similar style to basketball.
+```{r}
+df <- data.frame(
+  favourite_sport = survey["Q25"],
+  aus_open = survey["Q29"]
+)
+
+aus_open_and_tennis <- 0
+open_count <- 0
+for (i in 1:obs) {
+  if(grepl("A", as.character(df[i,2]))){
+    open_count = open_count + 1
+    if(grepl("tennis", as.character(df[i,1]))&&!grepl("table", as.character(df[i,1]))){
+      aus_open_and_tennis = aus_open_and_tennis + 1
+    }
+  }
+}
+
+pie_parts <- c(nrow(df)-open_count, aus_open_and_tennis, open_count-aus_open_and_tennis)
+lbs <- c("Did not attend", "Attended and prefers tennis", "Attended but does not prefer tennis")
+pie(pie_parts, labels = lbs, main = 'Do people who attended the AUS open prefer tennis to other sports?')
+
+
+```
+
+It can be seen from the pie chart that majority of the students in this class did not attend the AUS open, and this shows the lack of interest in the sport in our class. The chart also shows that many students went to the Australian Open but did not prefer tennis to other sports, this may be due to casual tennis fans who attends the Australian open more for the experience and the fun of it rather than their love for the sport. This may also suggest that the annual Australian Open is an event so popular that it manages to attract all casual sports fans.
+
+```{r}
+library(forcats)
+
+df <- data.frame(
+  yearOfStudy = survey["Q1"],
+  internet = survey["Q5"]
+)
+
+colnames(df) <- c("Year at uni", "Hours spent on internet in a week")
+
+ggplot(data=na.omit(df), aes(x=`Year at uni`, y=`Hours spent on internet in a week`)) +
+  geom_boxplot() +
+  ggtitle("In which year of uni do students spend most time on the internet?")
+```
+
+From the graph, we can say 2nd and 3rd year students spend the most time on the internet.  This may be attributed to more online study and recreation required to survive 2nd and 3rd year.  As this is a commerce unit, most degree lengths will be 3 years.  Students falling into the 4th year and other category are most likely double degree or part time students.  Interestingly there is a large variation in the hours spent online for 1st years which may suggest most 1st years may not be as studious or spend most of their free time getting involved in university social activities.  

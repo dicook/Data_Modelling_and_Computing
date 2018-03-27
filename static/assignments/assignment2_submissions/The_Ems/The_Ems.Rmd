@@ -1,0 +1,369 @@
+---
+title: "Assignment 2"
+author: "Emily Ditchfield and Emma Markakis"
+date: "25/03/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!-- load data --> 
+```{r}
+library(tidyverse)
+library(stringr)
+survey <- read_csv("survey.csv", na = c("n/a", "NA")) %>%
+  filter(id != 64)
+```
+
+<!-- Q1 tidying data -->
+```{r}
+survey <- survey %>% 
+  mutate(Q1 = sub("A", "1", Q1)) %>%
+  mutate(Q1 = sub("B", "2", Q1)) %>%
+  mutate(Q1 = sub("C", "3", Q1)) %>%
+  mutate(Q1 = sub("D", "4", Q1)) %>%
+  mutate(Q1 = sub("E", "Other", Q1))
+```
+
+<!-- Q2 tidying data -->
+```{r}
+survey <- survey %>% 
+  mutate(Q2 = sub("1/2", "0.5", Q2)) %>%
+  mutate(Q2 = sub(" hours", "", Q2)) %>%
+  mutate(Q2 = sub("\n", "", Q2)) %>%
+  mutate(Q2 = sub("hrs", "", Q2)) %>%
+  mutate(Q2 = sub("HOUR", "", Q2)) %>%
+  mutate(Q2 = sub("4/7", "0.57", Q2)) %>%
+  mutate(Q2 = sub("three times", "", Q2)) %>%
+  mutate(Q2 = sub(" ( to uni)", "", Q2)) %>%
+  mutate(Q2 = as.numeric(Q2))
+```
+
+<!-- Q4 tidying data -->
+```{r}
+survey <- survey %>% 
+  mutate(Q4 = str_to_lower(Q4)) %>%
+  mutate(Q4 = sub("-", "", Q4)) %>%
+  mutate(Q4 = sub("rnb", "r&b", Q4)) %>%
+  mutate(Q4 = sub("pop music", "pop", Q4)) %>%
+  mutate(Q4 = sub("popular", "pop", Q4)) %>%
+  mutate(Q4 = sub("country music", "country", Q4)) %>%
+  mutate(Q4 = sub("alt rock", "alternative rock", Q4)) %>%
+  mutate(Q4 = sub("hiphop", "hip hop", Q4)) %>%  
+  mutate(Q4 = sub("hippop", "hip hop", Q4)) %>%
+  mutate(Q4 = sub("rock and/or roll", "rock", Q4)) %>%
+  mutate(Q4 = na_if(Q4, "")) %>%
+  mutate(Q4 = na_if(Q4, "anything")) %>%
+  mutate(Q4 = na_if(Q4, "depression")) %>%
+  mutate(Q4 = na_if(Q4, "music"))
+```
+
+<!-- Q5 tidying data -->
+```{r}
+survey <- survey %>% 
+  mutate(Q5 = sub("HOURS", "", Q5)) %>%
+  mutate(Q5 = sub("hrs", "", Q5)) %>%
+  mutate(Q5 = sub(" hours", "", Q5)) %>%
+  mutate(Q5 = sub(" Hours", "", Q5)) %>%
+  mutate(Q5 = na_if(Q5, "Choosing not to answer")) %>%
+  mutate(Q5 = as.numeric(Q5))
+```
+
+<!-- Q6 tidying data -->
+```{r}
+survey <- survey %>% 
+  mutate(Q6 = str_to_lower(Q6)) %>%
+  mutate(Q6 = sub("can go to wherever i want in any time", "time travel", Q6)) %>%
+  mutate(Q6 = sub("control time", "time control", Q6)) %>%
+  mutate(Q6 = sub("dig big holes with my hands", "dig big holes", Q6)) %>%
+  mutate(Q6 = sub("to never have to sleep", "not needing sleep", Q6)) %>%
+  mutate(Q6 = sub("flying", "fly", Q6)) %>%
+  mutate(Q6 = sub("flight", "fly", Q6)) %>%
+  mutate(Q6 = sub("forecast the future", "forecasting", Q6)) %>%
+  mutate(Q6 = sub("freeze time", "time control", Q6)) %>%
+  mutate(Q6 = sub("time", "time control", Q6)) %>%
+  mutate(Q6 = sub("time-reverse", "time control", Q6)) %>%
+  mutate(Q6 = sub("go back to a past time", "time travel", Q6)) %>%
+  mutate(Q6 = sub("invisible", "invisibility", Q6)) %>%
+  mutate(Q6 = sub("never forget", "memory", Q6)) %>%
+  mutate(Q6 = sub("remember everything i saw", "memory", Q6)) %>%
+  mutate(Q6 = sub("super-speed", "speed", Q6)) %>%
+  mutate(Q6 = sub("teleporting", "teleportation", Q6)) %>%
+  mutate(Q6 = na_if(Q6, "have another super power")) %>%
+  mutate(Q6 = na_if(Q6, "i don't need any super power.")) %>%
+  mutate(Q6 = na_if(Q6, "nothing")) %>%
+  mutate(Q6 = na_if(Q6, ""))
+```
+
+
+<!-- Q9 tidying data -->
+```{r}
+survey <- survey %>% 
+  mutate(Q9 = str_to_lower(Q9)) %>%
+  mutate(Q9 = sub("i do not watch television.", "none", Q9)) %>%
+  mutate(Q9 = sub("i don't watch television.", "none", Q9)) %>%
+  mutate(Q9 = sub("i don't watch television", "none", Q9)) %>%
+  mutate(Q9 = sub("don't watch television", "none", Q9)) %>%
+  mutate(Q9 = sub("i don't watch tv", "none", Q9)) %>% 
+  mutate(Q9 = sub("i don't", "none", Q9)) %>%
+  mutate(Q9 = sub("dont watch tv", "none", Q9)) %>% 
+  mutate(Q9 = sub("dont watch", "none", Q9)) %>%
+  mutate(Q9 = sub("no idea", "none", Q9)) %>% 
+  mutate(Q9 = sub("no television", "none", Q9)) %>%
+  mutate(Q9 = sub("non$", "none", Q9)) %>%
+  mutate(Q9 = sub("nothing", "none", Q9)) %>%
+  mutate(Q9 = sub("crunchyroll", "internet", Q9)) %>%
+  mutate(Q9 = sub("hdonline.is", "internet", Q9)) %>%
+  mutate(Q9 = sub("pc", "internet", Q9)) %>%
+  mutate(Q9 = sub("phone", "internet", Q9)) %>%
+  mutate(Q9 = sub("stream.tv", "internet", Q9)) %>%
+  mutate(Q9 = sub("watchseries", "internet", Q9)) %>%
+  mutate(Q9 = sub("\\...", "", Q9)) %>%
+  mutate(Q9 = sub(" & stan", "", Q9)) %>%
+  mutate(Q9 = sub(", netflix", "", Q9)) %>%
+  mutate(Q9 = na_if(Q9, "reality show"))
+```
+
+<!-- Q10 tidying data -->
+```{r}
+survey <- survey %>% 
+  mutate(Q10 = as.numeric(Q10))
+```
+
+<!-- Q13 tidying data -->
+```{r}
+survey <- survey %>% 
+  mutate(Q13 = sub("\\$", "", Q13)) %>%
+  mutate(Q13 = sub(" dollars", "", Q13))
+```
+
+<!-- Q14 tidying data -->
+```{r}
+survey <- survey %>% 
+  mutate(Q14 = sub("A", "0", Q14)) %>%
+  mutate(Q14 = sub("B", "1", Q14)) %>%
+  mutate(Q14 = sub("C", "2", Q14)) %>%
+  mutate(Q14 = sub("D", "3", Q14)) %>%
+  mutate(Q14 = sub("E", "4", Q14)) %>%
+  mutate(Q14 = sub("F", "5", Q14))%>%
+  mutate(Q14 = sub("G", "more than 5", Q14))
+```
+
+<!-- Q15 tidying data -->
+```{r}
+survey <- survey %>%
+  mutate(Q15 = sub("A", "Cucumbers", Q15))%>%
+  mutate(Q15 = sub("B", "Carrots", Q15))%>%
+  mutate(Q15 = sub("C", "Neither", Q15))
+```
+
+
+<!-- Q17 tidying data -->
+```{r}
+survey <- survey %>%
+  mutate(Q17 = sub("A", "Yes", Q17))%>%
+  mutate(Q17 = sub("B", "No", Q17))
+```
+
+<!-- Q18 tidying data -->
+```{r}
+survey <- survey %>%
+  mutate(Q18 = str_to_lower(Q18)) %>%
+  mutate(Q18 = sub("party", "Party", Q18)) %>%
+   mutate(Q18 = sub("listen to music", "Listen to Music", Q18))%>%
+  mutate(Q18 = sub("sport", "Play Sport", Q18))%>%
+  mutate(Q18 = sub("origami", "Origami", Q18))%>%
+  mutate(Q18 = sub("basketball", "Play Basketball", Q18))%>%
+  mutate(Q18 = sub("sleep", "Sleep", Q18))%>%
+  mutate(Q18 = sub("watch youtube", "Watch Youtube", Q18))%>%
+  mutate(Q18 = sub("tv", "Watch Television", Q18))%>%
+  mutate(Q18 = sub("gym", "Go to the Gym", Q18))%>%
+  mutate(Q18 = sub("watch vedio", "Watch Vedio", Q18))%>%
+  mutate(Q18 = sub("stretch", "Stretch", Q18))%>%
+  mutate(Q18 = sub("internet", "Surf the Internet", Q18))%>%
+  mutate(Q18 = sub("water", "Drink Water", Q18))%>%
+  mutate(Q18 = sub("cook", "Cook", Q18))%>%
+  mutate(Q18 = sub("youtube", "Watch Youtube", Q18))%>%
+  mutate(Q18 = sub("relax", "Relax", Q18))%>%
+  mutate(Q18 = sub("card games", "Play Card Games", Q18))%>%
+  mutate(Q18 = sub("gaming", "Play Games", Q18))%>%
+  mutate(Q18 = sub("to listen music", "Listen to Music", Q18))%>%
+  mutate(Q18 = sub("training my aim in different fps games.", "Play Games", Q18))%>%
+  mutate(Q18 = sub("climbing", "Go Climbing", Q18))%>%
+  mutate(Q18 = sub("read", "Read", Q18))%>%
+  mutate(Q18 = sub("play games", "Play Games", Q18))%>%
+  mutate(Q18 = sub("social media", "Go on Social Media", Q18))%>%
+  mutate(Q18 = sub("video game", "Play Games", Q18))%>%
+  mutate(Q18 = sub("drink", "Drink", Q18))%>%
+  mutate(Q18 = sub("watch tv", "Watch Television", Q18))%>%
+  mutate(Q18 = sub("games", "Play Games", Q18))%>%
+  mutate(Q18 = sub("computer games", "Play Games", Q18))%>%
+  mutate(Q18 = sub("study", "Study", Q18))%>%
+  mutate(Q18 = sub("instagram", "Go on Social Media", Q18))%>%
+  mutate(Q18 = sub("game", "Play Games", Q18))%>%
+  mutate(Q18 = sub("league of legends", "Play Games", Q18))%>%
+  mutate(Q18 = sub("the office", "Watch Television", Q18))%>%
+  mutate(Q18 = sub("play guitar", "Play Guitar", Q18))%>%
+  mutate(Q18 = sub("electronics", "Play Electronics", Q18))%>%
+  mutate(Q18 = sub("this is us and cry", "Watch Television", Q18))%>%
+  mutate(Q18 = sub("swim", "Go for a Swim", Q18))%>%
+  mutate(Q18 = sub("have a trip", "Go away on a trip", Q18))%>%
+  mutate(Q18 = sub("piano", "Play Piano", Q18))%>%
+  mutate(Q18 = sub("play video games", "Play Games", Q18))%>%
+  mutate(Q18 = sub("study more", "Study", Q18))%>%
+  mutate(Q18 = sub("listen music", "Listen to Music", Q18))%>%
+  mutate(Q18 = sub("watch something", "Watch Something", Q18))%>%
+  mutate(Q18 = sub("light exercise", "Light Exercise", Q18))%>%
+  mutate(Q18 = sub("play my phone", "Play on my Phone", Q18))%>%
+  mutate(Q18 = sub("work", "Work", Q18))%>%
+  mutate(Q18 = sub("hang out with friends", "Hang out with Friends", Q18))%>%
+  mutate(Q18 = sub("meditate", "Meditate", Q18))%>%
+  mutate(Q18 = sub("your mum", "Your Mum", Q18))%>%
+  mutate(Q18 = na_if(Q18, ""))
+```
+
+<!-- Q19 tidying data --> 
+```{r}
+survey <- survey %>%
+  mutate(Q19 = sub("A", "Windows", Q19))%>%
+  mutate(Q19 = sub("B", "Mac", Q19))%>%
+  mutate(Q19 = sub("C", "Linux", Q19))%>%
+  mutate(Q19 = sub("D", "Other", Q19))
+```
+
+<!-- Q21 tidying data -->
+```{r}
+survey <- survey %>%
+  mutate(Q21 = sub("7;30", "7.3", Q21))
+```
+
+<!-- Q22 tidying data -->
+```{r}
+survey <- survey %>%
+  mutate(Q22 = sub("days", "", Q22))%>%
+  mutate(Q22 = na_if(Q22, ""))
+```
+
+<!-- Q23 tidying data -->
+```{r}
+survey <- survey %>%
+  mutate(Q23 = sub("1997", "21", Q23))%>%
+  mutate(Q23 = sub("XXI", "22", Q23))%>%
+  mutate(Q23 = na_if(Q23, ""))
+```
+
+
+<!-- Q24 tidying data -->
+```{r}
+survey <- survey %>%
+  mutate(Q24 = sub("I don't know", "",Q24))%>%
+  mutate(Q24 = na_if(Q24, ""))
+```
+
+<!-- Q25 tidying data -->
+```{r}
+survey <- survey %>%
+  mutate(Q25 = str_to_lower(Q25))%>%
+  mutate(Q25 = sub("table tennis","Table Tennis", Q25))%>%
+  mutate(Q25 = sub("tennis","Tennis", Q25))%>%
+  mutate(Q25 = sub("basketball","Basketball", Q25))%>%
+  mutate(Q25 = sub("hockey","Hockey", Q25))%>%
+  mutate(Q25 = sub("swimming","Swimming", Q25))%>%
+  mutate(Q25 = sub("skiing","Skiing", Q25))%>%
+  mutate(Q25 = sub("badminton","Badminton", Q25))%>%
+  mutate(Q25 = sub("mma","MMA", Q25))%>%
+  mutate(Q25 = sub("sleep","Sleep", Q25))%>%
+  mutate(Q25 = sub("fencing","Fencing", Q25))%>%
+  mutate(Q25 = sub("electronic games","Electronic Games", Q25))%>%
+  mutate(Q25 = sub("running","Running", Q25))%>%
+  mutate(Q25 = sub("climbing","Climbing", Q25))%>%
+  mutate(Q25 = sub("soccer","Soccer", Q25))%>%
+  mutate(Q25 = sub("netball","Netball", Q25))%>%
+  mutate(Q25 = sub("gym","Gym", Q25))%>%
+  mutate(Q25 = sub("equestrian","Equestrian", Q25))%>%
+  mutate(Q25 = sub("european handball","European Handball", Q25))%>%
+  mutate(Q25 = sub("afl","AFL", Q25))%>%
+  mutate(Q25 = sub("swim","Swimming", Q25))%>%
+  mutate(Q25 = sub("rowing","Rowing", Q25))%>%
+  mutate(Q25 = sub("cricket","Cricket", Q25))%>%
+  mutate(Q25 = sub("motorsport","Motorsport", Q25))%>%
+  mutate(Q25 = sub("curling","Curling", Q25))%>%
+  mutate(Q25 = sub("Choosing not to answer","",Q25))%>%
+  mutate(Q25 = sub("Yes","",Q25))%>%
+  mutate(Q25 = na_if(Q25, ""))
+```
+
+<!-- Q32 tidying data -->
+```{r}
+survey <- survey %>%
+  mutate(Q32 = str_to_lower(Q32))%>%
+  mutate(Q32 = sub("spatula", "Spatula", Q32)) %>%
+  mutate(Q32 = sub("knife", "Knife", Q32)) %>% 
+  mutate(Q32 = sub("wok", "Wok", Q32)) %>%
+  mutate(Q32 = sub("soup spoon", "Soup Spoon", Q32)) %>%
+  mutate(Q32 = sub("fork", "Fork", Q32)) %>%
+  mutate(Q32 = sub("pan", "Pan", Q32)) %>%
+  mutate(Q32 = sub("ladle", "Ladle", Q32)) %>%
+  mutate(Q32 = sub("tongs", "Tongs", Q32)) %>%
+  mutate(Q32 = sub("pot", "Pot", Q32)) %>%
+  mutate(Q32 = sub("whisk", "Whisk", Q32)) %>%
+  mutate(Q32 = sub("spork", "Spork", Q32)) %>%
+  mutate(Q32 = sub("none", "", Q32)) %>%
+  mutate(Q32 = sub("grater", "Grater", Q32)) %>%
+  mutate(Q32 = sub("someone can eat", "", Q32)) %>%
+  mutate(Q32 = sub("refrigerator", "Refrigerator", Q32)) %>%
+  mutate(Q32 = sub("spoon", "Spoon", Q32)) %>%
+  mutate(Q32 = sub("sharper", "Sharper", Q32)) %>%
+  mutate(Q32 = sub("chopsticks", "chopsticks", Q32)) %>%
+  mutate(Q32 = sub("dish washer", "Dishwasher", Q32)) %>%
+  mutate(Q32 = sub("coffee cup", "Coffee Cup", Q32)) %>%
+  mutate(Q32 = sub("colander", "Colander", Q32)) %>%
+  mutate(Q32 = sub("a", "", Q32)) %>%
+  mutate(Q32 = sub("(s)", "", Q32)) %>%
+  mutate(Q32 = sub("oven", "Oven", Q32)) %>%
+  mutate(Q32 = sub("oven mitt", "Oven Mitt", Q32)) %>%
+  mutate(Q32 = sub("coffee machine", "Coffee Machine", Q32)) %>%
+  mutate(Q32 = sub("icecream scooper", "Icecream Scooper", Q32)) %>%
+  mutate(Q32 = sub("ikea soup ladle", "IKEA Soup Ladle", Q32)) %>%
+  mutate(Q32 = sub("that thing that cuts eggs", "That thing that cuts eggs", Q32)) %>%
+  mutate(Q32 = na_if(Q32, ""))
+```
+
+## Tidying the Data 
+
+####To begin tidying the data, the tidyverse and stringr libraries need to be loaded. Once they have been loaded, as well as the dataset ‘survey’, we can begin tidying the data. 
+
+####For Q1, the answers from the survey were clean, however we needed to rename the variables from A,..,E to 1,2,3,4 and other. To do this, we used mutate. The mutate function, allows us to add new variables, using the pre-existing data. By using ‘sub’, we called upon a variable and reassigned it a new name. For example from the code, mutate (Q1 = sub(“A”, “1”, Q1), we have called the variable ‘A’ and renamed it 1. This makes it more understandable when plotting the graph as shown in figure 1, as the question was ‘What year of uni are you in?’, and 1 is a more realistic answer than A.
+
+####For Q2, we also used the mutate function, however this time used it to fix problems in the data. This includes changing the value of 1/2 to 0.5 and 4/7 to 0.57, to keep the dataset consistent. We also used the mutate function to remove parts of the data that were non-numeric. This includes the addition of the words ‘hours’, ‘hrs’ and ‘HRS’. The following code, mutate (Q2 = sub(“HOUR”, “”, Q2)), shows how we have renamed the value of HOUR to a space, so that R doesn’t see 1 HOUR as a different value to 1. 
+
+####Similar to Q2, Q4 had a number of problems within the dataset that needed to be fixed. These problems arose from the users inputting different spelling and capitalisations. An example of this is from the answer ‘hip hop’. Hip hop, was entered a number of different ways, varying in upper and lower case letters, and whether the word was hyphenated or the was a space in between. To begin, we converted all strings inputted to lower case letters. From there we mutated all the variables into one of each, so that there was only one variable to represent hip hop, country music, etc.  We then used the na_if function, so that any variables that contained a space, ‘anything’, ‘depression’ or ‘music’ were not considered in the dataset.
+
+####For Q5, any data recorded as “choosing not to answer” was considered not a number, so was not counted in the data. Like Q2, we used the mutate function to remove the different forms of the word ‘hours’.
+
+####For both Q6 and Q9, we used this same technique to group all similar variables so that they wouldn’t appear as different ones on the dataset. Any data that appeared to be an outlier, was changed to be not a number. 
+
+
+####Like Q1, Q14, Q15, Q17 and Q19 required the variables to be mutated and renamed so that the answers were understandable to the reader. 
+
+####For Q18, we converted all strings to lower case letters as the difference in case would appear as two separate variables. We then mutated all variables so that each variable represented only one activity. 
+
+####For Q21, Q22 and Q23, the data required tidying, by eliminated all unnecessary variables. These include the addition of the words ‘days’ and the age represented in roman numerals.
+
+
+
+##Interesting Facts about the ETC1010 class
+
+####Upon analysing the data provided from the class survey, it is clear to see that the majority of students are in either second year or third year, as shown in figure 1. This is further shown in figure 2, as we can see that the majority of students are aged between 19 and 21, the age of second and third year students.  The age of this cohort makes sense when looking at figure 3, as we can see that over half of the students are doing a double degree, thus taking this elective at a latter stage.  From these students, over 2/3 are male, with the remainder being either female or deciding not to answer. The class all participate in a wide variety of sports, ranging from soccer, equestrian and curling. Their love of sport is evident, as it is the second most popular activity that these students undergo when they are taking a break from studying.  
+
+####Overall, the class of ETC1010 for semester 1 seem to be enjoying the unit so far, like cheese and put tomato sauce in the fridge. 
+
+```{r}
+ggplot(survey, aes(x= Q1))+ geom_bar() + ggtitle("What Year of Uni are you in?")
+ggplot(survey, aes(x = Q23)) + geom_bar() + ggtitle("What is your age?")
+ggplot(survey, aes(x = Q12)) + geom_bar() + ggtitle("Are you studying a single or double degree?")
+ggplot(survey, aes(x = Q25)) + geom_bar() + ggtitle("What is your favourite Sport?")
+ggplot(survey, aes(x = Q18)) + geom_bar() + ggtitle("What do you like to do in your spare time?")
+```

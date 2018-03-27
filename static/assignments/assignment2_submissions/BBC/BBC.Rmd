@@ -1,0 +1,371 @@
+---
+title: "Assignment 2 BBCS"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+library(stringr)
+survey <- read_csv("survey.csv", na = c("n/a", "NA"))%>%
+    filter(id!=64)
+```
+##Travel time mutations
+As Question 2 accepted free text response, the data was tidied to ensure appropriate continuous analysis and display could occur, for exmaple, ommitting fractions and "hours" from answers.
+
+```{r}
+survey2 <- survey%>% 
+    mutate(Q2 = sub("\n", "", Q2))%>%
+    mutate(Q2 = sub("1/2", "0.5", Q2))%>% 
+    mutate(Q2 = sub("hours", "", Q2))%>% 
+    mutate(Q2 = sub("\n", "", Q2))%>% 
+    mutate(Q2 = sub("hrs", "", Q2))%>% 
+    mutate(Q2 = sub("HOUR", "", Q2))%>%
+    mutate(Q2 = sub("4/7","0,57", Q2))%>%
+    mutate(Q2 = sub("three times", "", Q2))%>%
+    mutate(Q2 = sub("112", "", Q2))%>%
+    mutate(Q2 = as.numeric(Q2))
+```
+##Travel time and time spent studying:
+
+```{r}
+ggplot(survey2, aes(x=Q2)) + geom_histogram() + scale_x_discrete(name = "Travel time to University (hrs/week)")
+```
+
+This bar chart demonstrates the hours spent commuting to Monash University each week. The graph is positively skewed suggesting that commute times somewhat influence University choice. 
+
+```{r}
+ggplot(survey2, aes(x=Q2)) + geom_histogram() + scale_x_continuous(limits=c(0,40))
+```
+
+To properly examine the commute times, this bar chart has been limited in the y-axis to appropriately demonstrate the more feasible travel reports: namely omitting the reported 120hour weekly commute (10 hours of transit per day, assuming 5 days of university, hardly common!).
+
+```{r}
+ggplot(survey2, aes(y=Q2, x=Q8)) + geom_boxplot() + scale_y_continuous(name = "Commute to University (hrs)", limits=c(0,20)) + scale_x_discrete(name = "Hours spent studying", breaks=c("A","B","C", "D", "E"), labels=c("[0,3)", "[3,6)", "[6,9)", "[9,12)",">12"))
+```
+
+This box plot examines the interesting correlation of whether longer commute times are endured by students who study more during the week. This plot demonstrates increasing deviations in time taken to get to and from University and time spent studying. Interestingly, those who reported spending less than 3 hours on their studies spent longer in transit to and from university than those who study between 3-12 hours per week. This suggests lower transit times encourage students to spend more of their free time on study. 
+
+##Favourite genre of music
+
+
+```{r}
+survey4<- survey2%>%
+    mutate(Q4 = sub("\n", "", Q4))%>%
+    mutate(Q4 = sub("RNB", "R&B", Q4))%>%
+    mutate(Q4 = sub("rnb", "R&B", Q4))%>%
+    mutate(Q4 = sub("RnB", "R&B", Q4))%>%
+    mutate(Q4 = sub("alt rock", "Alternative Rock", Q4))%>%
+    mutate(Q4 = sub("popular", "Pop", Q4))%>%
+    mutate(Q4 = sub("pop", "Pop", Q4))%>%
+    mutate(Q4 = sub("Pop music", "Pop", Q4))%>%
+    mutate(Q4 = sub("Pop Music", "Pop", Q4))%>%
+    mutate(Q4 = sub("country music", "Country Music", Q4))%>%
+    mutate(Q4 = sub("classical", "Classical", Q4))%>%
+    mutate(Q4 = sub("hip-hop", "Hip-Hop", Q4))%>%
+    mutate(Q4 = sub("Hiphop", "Hip-Hop", Q4))%>%
+    mutate(Q4 = sub("hip-pop", "Hip-Hop", Q4))%>%
+    mutate(Q4 = sub("Hip Hop", "Hip-Hop", Q4))%>%
+    mutate(Q4 = sub("Hip hop", "Hip-Hop", Q4))%>%
+    mutate(Q4 = sub("hip hop", "Hip-Hop", Q4))%>%
+    mutate(Q4 = sub("hip-Pop", "Hip-Hop", Q4))%>%
+    mutate(Q4 = sub("music", "Anything", Q4))%>%
+    mutate(Q4 = sub("mandopop", "Mando Pop", Q4))%>%
+    mutate(Q4 = sub("jazz", "Jazz", Q4))%>%
+    mutate(Q4 = sub("light", "Light", Q4))
+
+ggplot(survey4, aes(x=Q4)) + geom_bar() + coord_flip() + scale_x_discrete(name = "Genres")
+```
+
+Permitting user input has resulted in the majority of genres recording small counts. A multiple choice answer template would make the data more significant. Naturally, “Pop” is the most popular genre, followed by R&B which shares many similarities and songs as “pop”. Many of these genres could be grouped together in broader categories, for example “Rock and Roll”, “Rock”, “Alt Rock” to give a more representative count of “Rock” music tastes.
+
+
+##Time spent on the internet
+First the data is mutated to permit analysis and display.
+```{r}
+survey5 <- survey4%>%
+    mutate(Q5 = sub("\n", "", Q5))%>%
+    mutate(Q5 = sub("Choosing not to answer", "", Q5))%>%
+    mutate(Q5 = sub("HOUR", "", Q5))%>%
+    mutate(Q5 = sub("hours", "", Q5))%>%
+    mutate(Q5 = sub("Hours", "", Q5))%>%
+    mutate(Q5 = sub("hrs", "", Q5))%>%
+    mutate(Q5 = sub("-", "", Q5))%>%
+    mutate(Q5 = as.numeric(Q5))
+
+ggplot(survey5, aes(x=Q5)) + geom_histogram() + scale_x_discrete(name = "Time spent on internet (hrs/week)")
+```
+
+This graph shows positively skewed data, with the vast majority spending less than 55 hours per week on the internet. It's interesting to see that there's a few (4) people who spend >100 hours per week on the internet, which is >14 hours a day. This would infer that there are some people who mis-estimated the amount they spend on the internet, skewing the data or hopefully have NBN in their area.
+
+
+##Superpowers
+
+The tidying process was, similar to previous questions, a matter of semantics.
+```{r}
+survey6 <- survey5%>%
+    mutate(Q6 = sub("\n", "", Q6))%>%
+    mutate(Q6 = sub("Flying", "Flight", Q6))%>%
+    mutate(Q6 = sub("fly", "Flight", Q6))%>%
+    mutate(Q6 = sub("Fly", "Flight", Q6))%>%
+    mutate(Q6 = sub("speed", "Super-Speed", Q6))%>%
+    mutate(Q6 = sub("Super-Super-speed", "Super-Speed", Q6))%>%
+    mutate(Q6 = sub("Super-Super-Speed", "Super-Speed", Q6))%>%
+    mutate(Q6 = sub("forecasting", "Prediction", Q6))%>%
+    mutate(Q6 = sub("forecast the future", "Prediction", Q6))%>%
+    mutate(Q6 = sub("prediction", "Prediction", Q6))%>%
+    mutate(Q6 = sub("predict the future", "Prediction", Q6))%>%
+    mutate(Q6 = sub("teleporting", "Teleportation", Q6))%>%
+    mutate(Q6 = sub("teleportation", "Teleportation", Q6))%>%
+    mutate(Q6 = sub("go back to a past time", "Control Time", Q6))%>%
+    mutate(Q6 = sub("Control Time travel", "Control Time", Q6))%>%
+    mutate(Q6 = sub("time control", "Control Time", Q6))%>%
+    mutate(Q6 = sub("time", "Control Time", Q6))%>%
+    mutate(Q6 = sub("Time-Reverse", "Control Time", Q6))%>%
+    mutate(Q6 = sub("Time travel", "Control Time", Q6))%>%
+    mutate(Q6 = sub("Control Control Time", "Control Time", Q6))%>%
+    mutate(Q6 = sub("fire", "Fire", Q6))%>%
+    mutate(Q6 = sub("freeze Control Time", "Freeze Time", Q6))%>%
+    mutate(Q6 = sub("imortality", "Immortality", Q6))%>%
+    mutate(Q6 = sub("invisibility", "Invisibility", Q6))%>%
+    mutate(Q6 = sub("invisible", "Invisibility", Q6))%>%
+    mutate(Q6 = sub("Invisible", "Invisibility", Q6))%>%
+    mutate(Q6 = sub("Never forget", "Never Forgetting", Q6))%>%
+    mutate(Q6 = sub("can go to wherever i want in any Control Time", "Control Time", Q6))%>%
+    mutate(Q6 = sub("have another super power", "Have another Super Power", Q6))
+
+ggplot(survey6, aes(x=Q6)) + geom_bar() + coord_flip()
+```
+
+Due to the sheer number of x variables, a coord_flip() was utilised to neatly display the data. There were many overlaps in answers, hence displaying a wider range of data. The ability to fly was most popular, followed equally by teleportation, invisibility, and controlling time. It's interesting to see that there is not a single consensus on what the best superpower to have would be.
+
+##Hours spent studying
+Hours spent studying has been used to compare results in "time getting to university". The following bar chart shows how much time ETC1010 students spend studying. A somewhat additional question that could help facet the data would be an individual's study load, as the university guidelines differ depending on how many units a student takes. Nevertheless, university guidelines state for 4 units of study, a student should spend 'at least another 24 hours studying'. The data is somewhat promising in this area, however multiple choice categories with wider domains would better expose this, especially when corrected/faceted based on study load.
+
+```{r}
+
+    ggplot(survey6, aes(x=Q8)) + geom_bar() + scale_x_discrete(name = "Hours spent studying", breaks=c("A","B","C", "D", "E"), labels=c("[0,3)", "[3,6)", "[6,9)", "[9,12)",">12"))
+```
+
+##Preferred streaming service
+```{r}
+survey9 <- survey6%>%
+    mutate(Q9 = sub("\n", "", Q9))%>%
+    mutate(Q9 = sub("no idea", "None", Q9))%>%
+    mutate(Q9 = sub("No television", "None", Q9))%>%
+    mutate(Q9 = sub("I do not watch television", "None", Q9))%>%
+    mutate(Q9 = sub("I don't watch television", "None", Q9))%>%
+    mutate(Q9 = sub("I don't watch television.", "None", Q9))%>%
+    mutate(Q9 = sub("Don't watch television", "None", Q9))%>%
+    mutate(Q9 = sub("I don't", "None", Q9))%>%
+    mutate(Q9 = sub("Nothing", "None", Q9))%>%
+    mutate(Q9 = sub("I don't", "None", Q9))%>%
+    mutate(Q9 = sub("i don't watch tv", "None", Q9))%>%
+    mutate(Q9 = sub("non", "None", Q9))%>%
+    mutate(Q9 = sub("none", "None", Q9))%>%
+    mutate(Q9 = sub("dont watch tv", "None", Q9))%>%
+    mutate(Q9 = sub("Nonee", "None", Q9))%>%
+    mutate(Q9 = sub("None.", "None", Q9))%>%
+    mutate(Q9 = sub("dont watch", "None", Q9))%>%
+    mutate(Q9 = sub("stream.tv", "Stream.Tv", Q9))%>%
+    mutate(Q9 = sub("youtube", "YouTube", Q9))%>%
+    mutate(Q9 = sub("netflix", "Netflix", Q9))%>%
+    mutate(Q9 = sub("Netlfix", "Netflix", Q9))%>%
+    mutate(Q9 = sub("reality show", "Reality Show", Q9))%>%
+    mutate(Q9 = sub("phone", "Phone", Q9))%>%
+    mutate(Q9 = sub("watchseries", "Watchseries", Q9))%>%
+    mutate(Q9 = sub("tivo", "TiVo", Q9))%>%
+    mutate(Q9 = sub("optus", "Optus", Q9))%>%
+    mutate(Q9 = sub("hdonline.is", "HDOnline.is", Q9))%>%
+    mutate(Q9 = sub("internet", "Internet", Q9))%>%
+    mutate(Q9 = sub("pc", "PC", Q9))%>%
+    mutate(Q9 = sub("stan", "Stan", Q9))%>%
+    mutate(Q9 = sub("Foxtel...", "Foxtel", Q9))%>%
+    mutate(Q9 = sub("n/a", "", Q9))
+
+ggplot(survey9, aes(x=Q9)) + geom_bar() + coord_flip() + scale_x_discrete(name="Streaming service preference")
+```
+
+In accordance with Q5, which examined how long students spend on the internet, other than studying we can clearly see the allocation of time to streaming services, or lack thereof. Apart from Stan and YouTube, which recorded 3 and 4 respectively, Netflix's monopolistic domination of the online entertainment market is evident. Nevertheless, many students opt for no streaming service, which only reinforces the monopoly of Netflix - It's Netflix or nothing.
+
+
+##Daily water intake
+```{r}
+survey10 <- survey9%>%
+    mutate(Q10 = sub("\n", "", Q10))%>%
+    mutate(Q10 = sub("?", "", Q10))%>%
+    mutate(Q10 = as.numeric(Q10))
+```
+
+```{r}
+ggplot(survey10, aes(x=Q10)) + geom_histogram()
+```
+
+The answers for this section are quite interesting. The recommended daily water intake is between 2.5 to 4 liters per day (including food). The positively skewed data is no surprise, but the number of students who consume less than 2 liters per day is quite significant. Perhaps there are not enough drink taps around university? Or new initatives should educate on the effects of low water consumption on a regular basis. 
+
+#Money spent on food per day
+```{r}
+survey13 <- survey10%>%
+    mutate(Q13 = sub("\n", "", Q13))%>%
+    mutate(Q13 = sub("$", "", Q13))%>%
+    mutate(Q13 = sub("dollars", "", Q13))%>%
+    mutate(Q13 = as.numeric(Q13))
+```
+
+```{r}
+ggplot(survey13, aes(x=Q13)) + geom_histogram()
+```
+
+Perhaps the argument of "avocado on toast = no home deposit" is true! Without the outlier of spending 300 dollars per day on food, the vast majority spend less than 25 dollars per day. Based on the assumption that the majority of first and second year students still live at home, this data comes at no surprise. Another interesting comparrison could be a survey of Monash food outlets to determine the median lunch price.
+
+#Taking a break from study
+This question involved a significant amount of tidying.
+
+```{r}
+survey18 <- survey13%>%
+    mutate(Q18 = sub("\n", "", Q18))%>%
+    mutate(Q18 = sub("listen music", "Listen to Music", Q18))%>%
+    mutate(Q18 = sub("listen to music", "Listen to Music", Q18))%>%
+    mutate(Q18 = sub("To Listen to Music", "Listen to Music", Q18))%>%
+    mutate(Q18 = sub("computer games", "Gaming", Q18))%>%
+    mutate(Q18 = sub("gaming", "Gaming", Q18))%>%
+    mutate(Q18 = sub("play video games", "Gaming", Q18))%>%
+    mutate(Q18 = sub("video game", "Gaming", Q18))%>%
+    mutate(Q18 = sub("Games", "Gaming", Q18))%>%
+    mutate(Q18 = sub("Game", "Gaming", Q18))%>%
+    mutate(Q18 = sub("Play games", "Gaming", Q18))%>%
+    mutate(Q18 = sub("play games", "Gaming", Q18))%>%
+    mutate(Q18 = sub("Play Gamings", "Gaming", Q18))%>%
+    mutate(Q18 = sub("play my phone", "Play Games on my Phone", Q18))%>%
+    mutate(Q18 = sub("cook", "Cook", Q18))%>%
+    mutate(Q18 = sub("gyminternet surfing", "Gym & Internet", Q18))%>%
+    mutate(Q18 = sub("internet, stretch, water", "Internet, Stretch & Drink Water", Q18))%>%
+    mutate(Q18 = sub("piano", "Piano", Q18))%>%
+    mutate(Q18 = sub("social media", "Look on Social Media", Q18))%>%
+    mutate(Q18 = sub("Study", "More Studying", Q18))%>%
+    mutate(Q18 = sub("More Studying more", "More Studying", Q18))%>%
+    mutate(Q18 = sub("sleep", "Sleep", Q18))%>%
+    mutate(Q18 = sub("sport", "Physical Activities", Q18))%>%
+    mutate(Q18 = sub("Sport", "Physical Activities", Q18))%>%
+    mutate(Q18 = sub("the office", "Watch the Office", Q18))%>%
+    mutate(Q18 = sub("To listen music", "Listen to Music", Q18))%>%
+    mutate(Q18 = sub("This is us and cry", "Cry", Q18))%>%
+    mutate(Q18 = sub("training my aim in different FPS games", "Train my aim in different FPS Games", Q18))%>%
+    mutate(Q18 = sub("watch tv", "Watch Television", Q18))%>%
+    mutate(Q18 = sub("TV", "Watch Television", Q18))%>%
+    mutate(Q18 = sub("tv", "Watch Television", Q18))%>%
+    mutate(Q18 = sub("watch vedio", "Watch Videos", Q18))%>%
+    mutate(Q18 = sub("work", "Work", Q18))%>%
+    mutate(Q18 = sub("your mum", "Your Mum", Q18))%>%
+    mutate(Q18 = sub("league of legends", "League of Legends", Q18))%>%
+    mutate(Q18 = sub("youtube", "Watch YouTube", Q18))%>%
+    mutate(Q18 = sub("watch Watch YouTube", "Watch YouTube", Q18))
+
+ggplot(survey18, aes(x=Q18)) + geom_bar() + coord_flip()
+```
+
+The coord_flip() function was employed due to the high number of differing answers. Interestingly, Netflix does not appear on to be a "break from study", yet YouTube browsing has 4 answers, calling into question the validity of Q9. Nevertheless, this graph explains some of the variation in Q5, which looked at how much time students spend on the internet, as the most popular pass time was Gaming. As anticipated, there are a wide range of pass times.
+
+
+```{r}
+survey19 <- survey18
+```
+
+``` {r}
+survey20 <- survey19 %>%
+  mutate(Q20 = sub("\n", "", Q20))
+```
+
+``` {r}
+survey21 <- survey20 %>%
+  mutate(Q21 = sub("\n", "", Q21)) %>%
+  mutate(Q21 = sub("7;30", "7.5", Q21)) %>%
+  mutate(Q21 = as.numeric(Q21))
+```
+
+```{r}
+survey22 <- survey21 %>%
+  mutate(Q22 = sub("\n", "", Q22)) %>%
+  mutate(Q22 = sub("3days", "3", Q22)) %>%
+  mutate(Q22 = as.numeric(Q22))
+```
+
+``` {r}
+survey23 <- survey22 %>%
+  mutate(Q23 = sub("\n", "", Q23)) %>%
+  mutate(Q23 = sub("1997", "21", Q23)) %>%
+  mutate(Q23 = sub("XXI", "21", Q23)) %>%
+  mutate(Q23 = as.numeric(Q23))
+
+```
+
+```{r}
+survey24 <- survey23 %>%
+  mutate(Q24 = sub("\n", "", Q24)) %>%
+  mutate(Q24 = sub("I don't know", "", Q24)) %>%
+  mutate(Q24 = as.numeric(Q24))
+
+ggplot(survey24, aes(y=Q24, x=Q26)) + geom_boxplot() + scale_x_discrete(name = "Gender", breaks=c("A","B","C"), labels=c("Female", "Male", "Other")) + scale_y_discrete(name="Height (cm)")
+```
+
+This bar chart shows the height differences based on gender. Utilising data from both Q24 and Q26, the heights of Males in ETC1010 are significantly higher than that of females. The deviations, however, are consistent across genders.
+
+```{r}
+survey25 <- survey24 %>%
+  mutate(Q25 = sub("\n", "", Q25)) %>%
+  mutate(Q25 = sub("Yes", "", Q25)) %>%
+  mutate(Q25 = sub("swimming", "Aquatics", Q25)) %>%
+  mutate(Q25 = sub("Swimming", "Aquatics", Q25)) %>%
+  mutate(Q25 = sub("swim", "Aquatics", Q25)) %>%
+  mutate(Q25 = sub("tennis", "Tennis", Q25)) %>%
+  mutate(Q25 = sub("basketball", "Basketball", Q25)) %>%
+  mutate(Q25 = sub("motorsport", "Motorsport", Q25)) %>%
+  mutate(Q25 = sub("afl", "Football", Q25)) %>%
+  mutate(Q25 = sub("skiing", "Skiing", Q25)) %>%
+  mutate(Q25 = sub("running", "Running", Q25)) %>%
+  mutate(Q25 = sub("rowing", "Rowing", Q25)) %>%
+  mutate(Q25 = sub("soccer", "Soccer", Q25)) %>%
+  mutate(Q25 = sub("equestrian", "Equestrian", Q25)) %>%
+  mutate(Q25 = sub("netball", "Netball", Q25)) %>%
+  mutate(Q25 = sub("Electronic games and running", "Electronic Games and Running", Q25)) %>%
+  mutate(Q25 = sub("sleep", "Sleeping", Q25)) %>%
+  mutate(Q25 = sub("mma", "MMA", Q25)) %>%
+  mutate(Q25 = sub("badminton", "Badminton", Q25)) %>%
+  mutate(Q25 = sub("AFL", "Football", Q25))
+```
+
+
+```{r}
+survey32 <- survey25 %>%
+  mutate(Q32 = sub("\n", "", Q32)) %>%
+  mutate(Q32 = sub("a spoon", "Spoon", Q32)) %>%
+  mutate(Q32 = sub("Icecream scooper", "Ice Cream Scoop", Q32)) %>%
+  mutate(Q32 = sub("coffee cup", "Coffee Cup", Q32)) %>%
+  mutate(Q32 = sub("Coffee machine", "Coffee Machine", Q32)) %>%
+  mutate(Q32 = sub("colander", "Colander", Q32)) %>%
+  mutate(Q32 = sub("dish washer", "Dish Washer", Q32)) %>%
+  mutate(Q32 = sub("fork", "Fork", Q32)) %>%
+  mutate(Q32 = sub("IKEA soup ladle", "Ladle", Q32)) %>%
+  mutate(Q32 = sub("knife", "Knife", Q32)) %>%
+  mutate(Q32 = sub("oven","Oven", Q32)) %>%
+  mutate(Q32 = sub("Oven mitt","Oven Mitt", Q32)) %>%
+  mutate(Q32 = sub("pan","Pan", Q32)) %>%
+  mutate(Q32 = sub("pot","Pot", Q32)) %>%
+  mutate(Q32 = sub("refrigerator","Refrigerator", Q32)) %>%
+  mutate(Q32 = sub("sharper","Sharpener", Q32)) %>%
+  mutate(Q32 = sub("someone can eat","", Q32)) %>%
+  mutate(Q32 = sub("spoon","Spoon", Q32)) %>%
+  mutate(Q32 = sub("spatula","Spatula", Q32)) %>%
+  mutate(Q32 = sub("spork","Spork", Q32)) %>%
+  mutate(Q32 = sub("That thing that cuts eggs","Knife", Q32)) %>%
+  mutate(Q32 = sub("tongs","Tongs", Q32)) %>%
+  mutate(Q32 = sub("whisk","Whisk", Q32)) %>%
+  mutate(Q32 = sub("wok","Wok", Q32))
+survey32$Q32[50] <- "Chopsticks"
+  
+```

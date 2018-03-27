@@ -1,0 +1,218 @@
+---
+title: "Assignment 2"
+author: "ETC1010"
+date: "25/03/2018"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(stringr)
+survey <- read_csv("./data/survey.csv",
+                   na = c("n/a", "NA")) %>%
+  filter(id != 64)
+survey <- survey %>%
+  mutate(Q2 = sub("1/2", "0.5", Q2)) %>%
+  mutate(Q2 = sub(" hours", "", Q2)) %>%
+  mutate(Q2 = sub("\n", "", Q2)) %>%
+  mutate(Q2 = sub("hrs", "", Q2)) %>%
+  mutate(Q2 = sub("HOUR", "", Q2)) %>%
+  mutate(Q2 = sub("4/7", "0.57", Q2)) %>%
+  mutate(Q2 = sub("three times", "", Q2))
+survey$Q2[27] <- "2.0"
+survey <- survey %>% mutate(Q2 = as.numeric(Q2))
+
+survey <- survey %>%
+  mutate(Q10 = sub("?", "", Q10))
+survey <- survey %>% mutate(Q10 = as.numeric(Q10))
+
+survey <- survey %>%
+  mutate(Q5 = sub("40hrs", "40", Q5)) %>%
+  mutate(Q5 = sub("24 Hours", "24", Q5)) %>%
+  mutate(Q5 = sub("40 hours", "40", Q5)) %>%
+  mutate(Q5 = sub("35 hours", "35", Q5)) %>%
+  mutate(Q5 = sub("Choosing not to answer", "", Q5)) %>%
+  mutate(Q5 = sub("24HOUR", "24", Q5)) %>%
+  mutate(Q5 = sub("6 hours", "6", Q5))
+survey <- survey %>% mutate(Q5 = as.numeric(Q5))
+
+survey <- survey %>%
+  mutate(Q4 = sub("pop", "Pop", Q4)) %>%
+  mutate(Q4 = sub("Popular", "Pop", Q4)) %>%
+  mutate(Q4 = sub("alt rock", "Alternative Rock", Q4)) %>%
+  mutate(Q4 = sub("country music", "Country music", Q4)) %>%
+  mutate(Q4 = sub("classical", "Classical", Q4)) %>%
+  mutate(Q4 = sub("hip-hop", "Hip-Hop", Q4)) %>%
+  mutate(Q4 = sub("rnb", "RNB", Q4)) %>%
+  mutate(Q4 = sub("music", "", Q4)) %>%
+  mutate(Q4 = sub("Rock and/or Roll", "Rock", Q4)) %>%
+  mutate(Q4 = sub("RnB", "RNB", Q4)) %>%
+  mutate(Q4 = sub("hip-Pop", "Hip Hop", Q4)) %>%
+  mutate(Q4 = sub("Hip hop", "Hip Hop", Q4)) %>%
+  mutate(Q4 = sub("jazz", "Jazz", Q4)) %>%
+  mutate(Q4 = sub("hip hop", "Hip Hop", Q4))
+
+survey <- survey %>%
+  mutate(Q6 = sub("Flying", "Flight", Q6)) %>%
+  mutate(Q6 = sub("Super-speed", "Super Speed", Q6)) %>%
+  mutate(Q6 = sub("speed", "Super Speed", Q6)) %>%
+  mutate(Q6 = sub("teleportation", "Teleportation", Q6)) %>%
+  mutate(Q6 = sub("teleporting", "Teleportation", Q6)) %>%
+  mutate(Q6 = sub("go back to a past time", "Time travel", Q6)) %>%
+  mutate(Q6 = sub("predict the future", "forecasting", Q6)) %>%
+  mutate(Q6 = sub("flight", "Flight", Q6)) %>%
+  mutate(Q6 = sub("flying", "Flight", Q6)) %>%
+  mutate(Q6 = sub("fly", "Flight", Q6)) %>%
+  mutate(Q6 = sub("Invisible", "Invisibility", Q6)) %>%
+  mutate(Q6 = sub("invisibility", "Invisibility", Q6)) %>%
+  mutate(Q6 = sub("time control", "Control Time", Q6)) %>%
+  mutate(Q6 = sub("to never have to sleep", "Not Needing Sleep", Q6)) %>%
+  mutate(Q6 = sub("forecast the future", "forecasting", Q6)) %>%
+  mutate(Q6 = sub("Time-Reverse", "Control Time", Q6)) %>%
+  mutate(Q6 = sub("freeze time", "Control Time", Q6)) %>%
+  mutate(Q6 = sub("invisible", "Invisibility", Q6)) %>%
+  mutate(Q6 = sub("Fly", "Flight", Q6)) %>%
+  mutate(Q6 = sub("Not needing sleep", "Not Needing Sleep", Q6)) %>%
+  mutate(Q6 = sub("time", "Control Time", Q6)) %>%
+  mutate(Q6 = sub("Control Time travel", "Time Travel", Q6)) %>%
+  mutate(Q6 = sub("can go to wherever i want in any Control Time", "Time Travel", Q6)) %>%
+  mutate(Q6 = sub("imortality", "Immortality", Q6))
+
+survey <- survey %>%
+  mutate(Q9 = sub("netflix", "Netflix", Q9)) %>%
+  mutate(Q9 = sub("no idea", "None", Q9)) %>%
+  mutate(Q9 = sub("No television", "None", Q9)) %>%
+  mutate(Q9 = sub("I do not watch television.", "None", Q9)) %>%
+  mutate(Q9 = sub("I don't watch television.", "None", Q9)) %>%
+  mutate(Q9 = sub("Nothing", "None", Q9)) %>%
+  mutate(Q9 = sub("Don't watch television", "None", Q9)) %>%
+  mutate(Q9 = sub("stan", "Stan", Q9)) %>%
+  mutate(Q9 = sub("none", "None", Q9)) %>%
+  mutate(Q9 = sub("Foxtel...", "Foxtel", Q9)) %>%
+  mutate(Q9 = sub("i don't watch tv", "None", Q9)) %>%
+  mutate(Q9 = sub("non", "None", Q9)) %>%
+  mutate(Q9 = sub("dont watch tv", "None", Q9))
+
+survey$Q13[25] <- "30"
+survey$Q13[26] <- "5"
+survey$Q13[40] <- "15"
+survey$Q13[48] <- "30"
+survey$Q13[57] <- "35"
+survey$Q13[58] <- "35"
+
+survey <- survey %>%
+  mutate(Q18 = sub("sleep", "Sleep", Q18)) %>%
+  mutate(Q18 = sub("youtube", "Watch youtube", Q18)) %>%
+  mutate(Q18 = sub("To listen music", "listen to music", Q18)) %>%
+  mutate(Q18 = sub("gaming", "Play video games", Q18)) %>%
+  mutate(Q18 = sub("video game", "Play video games", Q18)) %>%
+  mutate(Q18 = sub("Play games", "Play video games", Q18)) %>%
+  mutate(Q18 = sub("Games", "Play video games", Q18)) %>%
+  mutate(Q18 = sub("computer games", "Play video games", Q18)) %>%
+  mutate(Q18 = sub("Game", "Play video games", Q18)) %>%
+  mutate(Q18 = sub("Sport", "sport", Q18)) %>%
+  mutate(Q18 = sub("TV", "watch tv", Q18)) %>%
+  mutate(Q18 = sub("tv", "watch tv", Q18)) %>%
+  mutate(Q18 = sub("play games", "Play video games", Q18)) %>%
+  mutate(Q18 = sub("listen music", "listen to music", Q18))
+survey$Q18[7] <- "Watch youtube"
+survey$Q18[19] <- "Play video games"
+survey$Q18[55] <- "Play video games"
+survey$Q18[8] <- "watch tv"
+survey$Q18[30] <- "watch tv"
+survey$Q18[51] <- "Play video games"
+
+survey$Q21[59] <- "7.3"
+survey$Q22[59] <- "3"
+survey$Q23[59] <- "21"
+survey$Q23[63] <- "21"
+
+survey <- survey %>%
+  mutate(Q24 = sub("I don't know", "", Q24))
+
+survey <- survey %>%
+  mutate(Q25 = sub("tennis", "Tennis", Q25)) %>%
+  mutate(Q25 = sub("basketball", "Basketball", Q25)) %>%
+  mutate(Q25 = sub("swimming", "Swimming", Q25)) %>%
+  mutate(Q25 = sub("Choosing not to answer", "", Q25)) %>%
+  mutate(Q25 = sub("Yes", "", Q25)) %>%
+  mutate(Q25 = sub("swim", "Swimming", Q25)) %>%
+  mutate(Q25 = sub("soccer", "Soccer", Q25)) %>%
+  mutate(Q25 = sub("badminton", "Badminton", Q25)) %>%
+  mutate(Q25 = sub("afl", "AFL", Q25))
+
+survey <- survey %>%
+  mutate(Q32 = sub("knife", "Knife", Q32)) %>%
+   mutate(Q32 = sub("fork", "Fork", Q32)) %>%
+   mutate(Q32 = sub("a spoon", "Spoon", Q32)) %>%
+   mutate(Q32 = sub("spoon", "Spoon", Q32)) %>%
+   mutate(Q32 = sub("Fridge", "refrigerator", Q32))
+survey$Q32[50] <- "Chopsticks"
+
+survey <- survey %>%
+  mutate(Q18 = str_to_lower(Q18)) %>%
+  mutate(Q6 = str_to_lower(Q6)) %>%
+  mutate(Q9 = str_to_lower(Q9)) %>%
+  mutate(Q25 = str_to_lower(Q25)) %>%
+  mutate(Q32 = str_to_lower(Q32)) %>%
+  mutate(Q4 = str_to_lower(Q4))
+```
+
+```{r}
+ggplot(survey, aes(x=Q25)) +
+  geom_bar()+ coord_flip() +
+labs( x = "Type of sport", y = "count",
+title ="Q25: What is your favourite sport?")
+```
+
+The 25th question of the survey asked students about their favourite sport. The top three most popular favourite sports were basketball, swimming and tennis respectively. These three sports totaled to be more than a third of the surveyed answers, meaning that approximately 44% of the class would say that basketball, swimming or tennis was their favourite sport. There was again, much variation in the answers and a majority of the categories had only one individual choose it as their favourite sport. Some of these less popular sports include: equestrian, fencing and european handball. Overall, it can be said that there was a large variety of "favourite sports" observed from the class.
+```{r}
+survey <- survey %>%
+  mutate(Q1 = sub("A", "1", Q1)) %>%
+  mutate(Q1 = sub("B", "2", Q1)) %>%
+  mutate(Q1 = sub("C", "3", Q1)) %>%
+  mutate(Q1 = sub("D", "4", Q1)) %>%
+  mutate(Q1 = sub("E", "Other", Q1))
+ggplot(survey, aes(x= Q1)) + geom_bar() +xlab("Q1: What year of uni are you in?")
+```
+
+This graph shows the count of responses regarding what year of university the classmates are currently studying in. The graph indicates that the majority of classmates are currently in their second and third years of university, with second year being slightly more common. This is most likely the case because ETC1010 is a prerequisite unit to other data analytics units, and would typically be completed during second or third year. There is also a substantial number of respondents who are in a year of uni other than first, second, third or fourth. This could be the case if their degree extends beyond the typical length, or if these classmates have been underloading units or are enrolled part time.
+```{r}
+survey <- survey %>% mutate(Q21 = as.numeric(Q21))
+ggplot(survey, aes(x = Q21)) +
+  geom_density(fill = "black", alpha = 0.5) + xlab("Q21: How many hours do you sleep one day on average?")
+```
+
+This graph shows the density of answers to the question "How many hours do you sleep one day on average". From the graph we can see that the distribution is approximately bimodal, with a peak at 7 hours and another at 8 hours of sleep. This is most likely the case because 6 to 8 hours of sleep per night is the common recommendation. The distribution is also slightly negatively skewed, with the density being more concentrated towards the upper end of the x axis, indicating that more of our classmates sleep longer hours than shorter.
+```{r}
+library(plotly)
+survey <- survey %>% mutate(Q23 = as.numeric(Q23)) %>%
+  mutate(Q24 = as.numeric(Q24))
+ggplot(survey, aes(x = Q23, y = Q24)) +
+  geom_point() + theme(aspect.ratio = 1) + geom_smooth(se = FALSE) + xlab("Q23: What's your age?") + ylab("Q24: How tall are you?")
+ggplotly()
+```
+
+This graph shows the correlation between the respondent's age and height. The points are clumped in a moderately positive correlation, indicating that as age increases, so does height. This is expected because as people age they grow. Additionally, most of the points are clustered between age 20 and 23, indicating that the majority of our classmates are within this age group. Moreover, the majority of the points are concentrated around the 180cm and 160cm areas, which is most likely the average height for male and female classmates respectively. There is also an outlier at age 28 and height 200cm which is causing the line of best fit to rapidly increase towards the higher ages. Considering the average height, this person is exceptionally tall. The same can be said for the person at age 20 and height 201cm.
+```{r}
+survey <- survey %>% mutate(Q23 = as.numeric(Q23)) %>%
+  mutate(Q21 = as.numeric(Q21))
+ggplot(survey, aes(x = Q23, y = Q21)) +
+  geom_point() + theme(aspect.ratio = 1) + geom_smooth(se = FALSE)
+```
+
+This scatterplot demonstrates the relationship between the sample's age and the number of hours of sleep that an individual gets per night. The data appears to demonstrate a non linear relationship as displayed by the line of best fit however still maintains a positive direction despite the association being weak suggesting that as individuals grow older they require a greater amount of sleep. The data however remains reasonably spread out within the sample with outliers skewing the data in both directions. This data however may not be generalised to a wider population as major issues such as a small sample size and the lack of a method to validify the results exists, preventing these results from being statistically significant.
+```{r}
+ggplot(survey, aes(x=Q6), fill=variable) +
+  geom_bar()+ coord_flip() +
+labs( x = "Type of superpower", y = "count",
+title ="Q6: If you could have a superpower, what would it be?")
+```
+
+For the 6th question asking "if you could have a superpower, what would it be?", there were a wide array of answers submitted from the class. While the answers did vary, the most popoularly desired superpower was flight, with a total of 12 individuals stating that as their preferred power. This was closely followed by teleportation, invisibility and time control. Each with their respective votes of 8, 7 and 5. Despite these values, the majority of the individuals surveyed provided answers that only they had chosen, including "omniprescence", "reading minds" and "the ability to turn into a turtle". From these observations, we can say that there was a large variation of responses. 

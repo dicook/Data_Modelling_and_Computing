@@ -1,0 +1,160 @@
+---
+title: "Assignment2"
+author: "Group 1"
+date: "26/03/2018"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+```{r}
+#library(readr)
+#library(stringr)
+library(tidyverse)
+#library(dplyr)
+#Use the read.csv function to read the csv data
+
+ass2 <- read_csv("survey.csv")
+
+#select the coloum 1,3,8 that we are going to analyze with the select function
+ass2ch <- ass2 %>% select(Q1,Q3,Q8)
+
+#Use the mutate function to replace the choice. Change the "A" "B" "C" "D" into "1" "2" "3" "4" in Q1 and change "E" into "other". Replace the change and change the  "A" "B" "C" "D" "E" into "1" "2" "3" "4" "5"
+ass2st <- ass2ch %>% mutate(Q1 = sub("A", "1", Q1)) %>% 
+mutate(Q1 = sub("B", "2", Q1)) %>%
+mutate(Q1 = sub("C", "3", Q1)) %>% 
+mutate(Q1 = sub("D", "4", Q1)) %>%
+mutate(Q1 = sub("E", "other", Q1)) %>% 
+mutate(Q8 = sub("A", "1", Q8)) %>% 
+mutate(Q8 = sub("B", "2", Q8)) %>% 
+mutate(Q8 = sub("C", "3", Q8)) %>% 
+mutate(Q8 = sub("D", "4", Q8)) %>% 
+mutate(Q8 = sub("E", "5", Q8))
+  
+#Use the function of fill to fill the missing value NA with the nearest value of Q1, Q2, Q3
+ass2fill <- fill(ass2st, Q1, Q3, Q8)
+
+#Use the ggplot and geom_bar function to plot the bar chart of Q1 and Q8 individually and use xlab and ylab function to lable the x axis and y axis 
+
+ggplot(data = ass2fill) +geom_bar(mapping = aes(x = Q1))+ xlab("the year of student") + ylab("the person of the choice(persons)") 
+
+#Clean the graph and then plot again with the ggplot and geom_bar function
+ggplot(data = ass2fill) +geom_bar(mapping = aes(x = Q8)) +xlab("the spending hour of study(hours)") + ylab("the person of the choice(persons)")
+
+#From the bar chart of them，we can see the most of our classmates come from year 2 and 3 as most of us may still find their interest. Besides, it may because this uni is not every easy for the freshman. Apart from that, the hours spending in study shows us that most of the students study quite hard and considering most of us is in year2 and 3 so consequently it may reveal that the study load is quite heavy in year2 and 3.   
+
+
+#Data for Q10 & Q21 was selected to analyse water consume in litres per day and number of hours sleep per day for students in the class.
+#The function below was used to select the our two variables:
+survey <- read_csv("survey.csv")
+survey_select <- survey %>% select(Q10,Q21)
+survey_select21 <- survey %>% select(Q21)
+survey_select10 <- survey %>% select(Q10)
+
+#Then, the data was cleaned using the mutate function. Data was also turned to numeric form.
+survey_select10 <- survey_select10 %>% mutate(Q10 = sub("?", "", Q10)) %>% mutate(Q10 = as.numeric(Q10))
+#Column 63, 64 and 40 was taken out from Q10 and column 64 for Q21 to plot a  Histogram
+survey_select10 <- survey_select10[-c(63, 64, 40), ] 
+survey_select21 <- survey_select21 %>% 
+mutate(Q21 = sub("6\n", "6", Q21)) %>%
+mutate(Q21 = sub("7;30", "7.5", Q21)) %>% 
+mutate(Q21 = as.numeric(Q21))
+survey_select21 <- survey_select21[-c(64), ]
+
+#The variables were renamed:
+survey_select10<- rename(survey_select10, Litres = Q10)
+survey_select21<- rename(survey_select21,Hours = Q21)
+
+#Therefore, the data was plot using ggplot, geom_histogram()
+ggplot(data=survey_select10, aes(x=Litres)) + geom_histogram() + xlab("Litres") + ylab("Number of students") + labs(title="Water consumption per day")
+ggplot(data=survey_select21) + geom_bar(mapping = , aes(x=Hours), width = 0.8) + xlab("Hours") + ylab("Number of students") + labs(title="Number of hours sleep per day")
+
+##Analysis for Water consumption per day by a typical monash student:
+#The histogram is positively skewed. Which means a large number of occurrences in the lower, left side and few in the upper, right side. All values are greater than zero and therefore it can be concluded that more students drink less than 3L of water per day but more or equal to 1L.
+
+##Analysis for Number of hours sleep per day by a typical monash student:
+#The barchart is negatively skewed or skewed to the left which means a large number of occurrences in the upper, right side and few in the lower, left side. The average student sleeps per day is 7-8hrs.
+ 
+#Q4 &Q24
+#library(readr)
+#library(stringr)
+#library(tidyverse)
+#library(plotly)
+survey <- read_csv("survey.csv")
+survey = survey[-64,]
+
+## As row 64 was not in excel, it appears as NA in R, therefore I used this function to omit this row entirely.
+
+
+survey <- survey %>% mutate(Q22 = sub("3days", "3", Q22))
+
+## I used the mutate function in order to change 3days to 3, as this makes the values consistent throughout the survey, in column "Q22", as all the other values were a single number.
+ colnames(survey)[colnames(survey)=="Q22"] <- "Times_per_week"
+
+## Renamed the rows using the colnames function in order to make the barchart more visually understandable.
+
+ggplot(survey,aes(x=Times_per_week)) + geom_bar() + labs(title="Times per week individuals catch up with friends") + ylab("Number of Students")
+
+##Used ggplot to make a barchart for data visualisation
+## Repeated these steps for Column "Q23"
+survey <- survey %>% 
+mutate(Q23 = sub("XXI", "21", Q23)) %>%
+mutate(Q23 = sub("1997", "20", Q23))
+
+colnames(survey)[colnames(survey)=="Q23"] <- "Age"
+ggplot(survey,aes(x=Age)) + geom_bar() + labs(title="Ages of Class") + ylab("Number of Students")
+
+## As shown by the bar chart for Q22 (How many times a week do you catch up with friends),
+##the bar chart indicates that most of the class catches up with their friends 3 times a week
+## the amount of people that catch up with their friends once and twice a week are the same
+## there does not seem to be a specific trend in the class.
+
+## As shown by the bar chart for Q23 (What is your age), The bar chart indicates a trend,where the age in the class is most concentrated at ages 19,20, and 21, with the most students at age 20, and 19 and 21 being equal. Ages 22 and 23 were also almost equally common as each other. 
+# Ages 18,24,25,26 and 28 were all the uncommon ages. 28 was the least common age with only 1 person
+ 
+#get the data from the "survey" excel
+q4<-survey%>%select(Q4)
+ 
+#use mutate function which can edit and update the data.change all pop music type into "Pop",change all hip-hop music type into "Hip-hop",and adjust and append other variable's format.
+q4 <- q4 %>% mutate(Q4 = sub("Pop", "pop", Q4)) %>%
+  mutate(Q4 = sub("popular", "pop", Q4)) %>%
+  mutate(Q4 = sub("Pop music", "pop", Q4)) %>%
+  mutate(Q4 = sub("pop music", "pop", Q4)) %>%
+  mutate(Q4 = sub("Jazz", "jazz", Q4)) %>%
+  mutate(Q4 = sub("music", "Anything", Q4)) %>%
+  mutate(Q4 = sub("RnB", "RNB", Q4)) %>%
+  mutate(Q4 = sub("rnb", "RNB", Q4)) %>%
+  mutate(Q4 = sub("R&B", "RNB", Q4)) %>%
+  mutate(Q4 = sub("Rock and/or Roll", "RNB", Q4)) %>%
+  mutate(Q4 = sub("alt rock", "Alternative Rock", Q4)) %>%
+  mutate(Q4 = sub("Classical", "classical", Q4)) %>%
+  mutate(Q4 = sub("Hip Hop", "hip-hop", Q4)) %>%
+  mutate(Q4 = sub("Hiphop", "hip-hop", Q4)) %>%
+  mutate(Q4 = sub("Hip hop", "hip-hop", Q4)) %>%
+  mutate(Q4 = sub("hip-pop", "hip-hop", Q4)) %>%
+  mutate(Q4 = sub("hip hop", "hip-hop", Q4))
+ 
+#delete the missing value
+q4<-na.omit(q4)
+ 
+#use ggplot build a bar chart and the x-axis stands for different type of music that interveiwee's like,and y-axis stands for the number of the interveiwees.
+ggplot(data = q4) + geom_bar(mapping = aes(x = Q4))
+ 
+#build a new file called "q24" and select the "Q24 column" from "survey" file then put "Q24 column" into new file "q24"
+q24<-survey%>%select(Q24)
+ 
+#use MUTATE function to change the "I don' know" into "NA"
+q24<-q24%>% mutate(Q24 = sub("I don't know", "NA", Q24))
+ 
+#delete the NA
+q24<-na.omit(q24)
+q24<-q24[-38,]
+ 
+#use ggplot build a bar chart and the x-axis stands for different interveiwee's heights,and y-axis stands for the number of the interveiwees.
+ggplot(data = q24) +geom_bar(mapping = aes(x = Q24))
+ 
+ 
+ 
+# q4 Bar chart seem simple, but it is interesting because it reveals the people's different preferences in listening to music.It is obviously that most of people prefer to listen pop music and R&B take the second place which is same as hip-hop's persentage in the preference of music
+# q24 Bar chart indicates that most height of interviewees is 178cm and the 160cm, 172cm, 180cm, 182cm height of interviewees are very popular.Therefore,the height between 158cm-183cm takes the dominant position in the interviewees.
+```
