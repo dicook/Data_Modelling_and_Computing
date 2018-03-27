@@ -1,0 +1,189 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 4,
+                      fig.width = 8,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+```
+
+# Check your knowledge day
+
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.netlify.com](http://dmac.netlify.com)
+
+## Overview
+
+- Back to first week examples
+- Let's see if you can get them to work now
+
+## Healthy environment checkup
+
+![](images/you-never-know-what-you-have-until-you-clean-your-7648854.png)
+
+## STOP
+
+**Does your RStudio Window look like mine??**
+
+## Reading audio
+
+The tuneR package allows you to read in various formats of audio files. 
+
+```{r}
+library(tidyverse)
+library(tuneR)
+m1 <- readWave("data/data3.wav")
+m1 <- extractWave(m1, from = 25000, to = 75000)
+m1_df <- data.frame(t=1:length(m1@left), 
+                    left=m1@left, 
+                    right=m1@right)
+m2 <- readWave("data/statistics1.wav")
+m2 <- extractWave(m2, from = 25000, to = 75000)
+m2_df <- data.frame(t=1:length(m2@left), 
+                    left=m2@left, 
+                    right=m2@right)
+```
+
+### Compute statistics
+
+```{r}
+m1_df <- m1_df %>% gather(channel, value, left, right) %>%
+  mutate(word="data")
+m2_df <- m2_df %>% gather(channel, value, left, right) %>%
+  mutate(word="statistics")
+m_df <- bind_rows(m1_df, m2_df)
+m_df
+m_df %>% filter(channel == "left") %>%
+  group_by(word) %>%
+  summarise(m = mean(value), s = sd(value), 
+            mx = max(value), mn = min(value))
+```
+
+### Five minute challenge
+
+- Check that the code works for you
+- Read in the 6 audio files ``data1.wav`, `data2.wav`, `data3.wav`, `statistics1.wav`, `statistics2.wav`, `statistics3.wav`.
+- Compute the mean, standard deviation, minimum and maximum for each, and make a data frame with 6 rows (one for each of the audio files), and 5 columns (one for each of the stats, plus a word label `data` or `statistics`)
+- Make a scatterplot of mean against standard deviation, with points coloured by word
+
+```{r eval=FALSE}
+files <- c("data/data1.wav", "data/data2.wav", "data/data3.wav",
+           "data/statistics1.wav", "data/statistics2.wav", "data/statistics3.wav")
+audio_df <- NULL
+for (i in 1:6) {
+  m1 <- readWave(files[i])
+  m1 <- extractWave(m1, from = 25000, to = 75000)
+  m1_df <- data.frame(t=1:length(m1@left), 
+                    left=m1@left, 
+                    right=m1@right)
+  m_df <- m1_df %>% 
+    summarise(m = mean(left), s = sd(left), 
+            mx = max(left), mn = min(left)) %>%
+    mutate(word = substr(files[i], 6, 9))
+  audio_df <- bind_rows(audio_df, m_df)
+}
+ggplot(audio_df, aes(x=m, y=s, colour=word)) + geom_point()
+```
+
+## Climate change
+
+### CO2 monitoring
+
+- Data is collected at a number of locations world wide. 
+- See [Scripps Inst. of Oceanography](http://scrippsco2.ucsd.edu/data/atmospheric_co2) 
+- Let's pull the data from the web and take a look ...
+- 
+- Recordings from South Pole (SPO), Kermadec Islands (KER), La Jolla Pier, California (LJO), Point Barrow, Alaska (PTB).
+
+### Read data and plot
+
+This code reads the data directly from the web site. 
+
+```{r CO2, fig.width=10, fig.height=5}
+CO2.ptb <- read_csv("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ptb.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+  mutate(lat = 71.3, lon = -156.6, stn = "ptb")
+
+CO2.ljo <- read_csv("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ljo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+  mutate(lat = 32.9, lon = -117.3, stn = "ljo")
+
+CO2.spo <- read_csv("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+  mutate(lat = -90.0, lon = 0, stn = "spo")
+
+CO2.ker <- read_csv("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ker.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+  mutate(lat = -29.2, lon = -177.9, stn = "ker")
+```
+
+Now compile into one data set, and plot
+
+```{r fig.height=8}
+library(forcats)
+CO2.all <- bind_rows(CO2.ker, CO2.ljo, CO2.ptb, CO2.spo)
+
+CO2.all <- CO2.all %>% mutate(stn = fct_reorder(stn, lat, .desc=TRUE))
+ggplot(CO2.all, aes(x=date, y=co2, colour=stn)) + 
+  geom_line() + facet_wrap(~stn, ncol=1)
+```
+
+### Five minute challenge
+
+- Get the code to run for you
+- Make the plots
+- Adjust the limits of the plot to filter out the strange Alaska value
+
+## Text analysis
+
+### Analysing tweets
+
+Is it possible to distinguish tweets coming from Donald Trump's phone vs his staff's phone? With a twitter api you can collect all tweets between certain times, from different people, with different hashtags, ... David Robinson wrote a [post](http://varianceexplained.org/r/trump-tweets/) during last year's US election cycle doing just this. Here's a re-creation of his analysis.
+
+Tweets from @realDonaldTrump were collected and passed through a sentiment analysis.
+
+```{r}
+library(lubridate)
+#load(url("http://varianceexplained.org/files/trump_tweets_df.rda"))
+load("data/trump_tweets_df.rda")
+trump_tweets_df
+tweets <- trump_tweets_df %>%
+  select(id, statusSource, text, created) %>%
+  extract(statusSource, "source", "Twitter for (.*?)<") %>%
+  filter(source %in% c("iPhone", "Android"))
+tweets %>%
+  count(source, hour = hour(with_tz(created, "EST"))) %>%
+  mutate(percent = n / sum(n)*100) %>%
+  ggplot(aes(hour, percent, color = source)) +
+  geom_line() +
+  labs(x = "Hour of day (EST)",
+       y = "% of tweets",
+       color = "")
+```
+
+### Five minute challenge
+
+- Try out the code for yourself
+- Which type of phone tweets the most in this time?
+- Count the number of times the word "crazy" is used in the tweets
+- Is there a difference in the frequency of "crazy" between the phones?
+
+```{r eval=FALSE}
+ggplot(tweets, aes(x=source)) + geom_bar()
+
+tweets <- tweets %>% mutate(crazy = str_detect(text, "crazy"))
+ggplot(tweets, aes(x=source, fill=crazy)) + geom_bar()
+```
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
