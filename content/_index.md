@@ -78,8 +78,12 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - [Pedestrian_sensor_locations.csv](http://dmac.netlify.com/lectures/data/Pedestrian_sensor_locations.csv)
 - [ped.rda](http://dmac.netlify.com/lectures/data/ped.rda) Melbourne Central pedestrian counts for 2017
 - [rates.csv](http://dmac.netlify.com/lectures/data/rates.csv) Cross rates for different currencies
+- [data1.wav](http://dmac.netlify.com/lectures/data/data1.wav)
+- [data2.wav](http://dmac.netlify.com/lectures/data/data2.wav)
 - [data3.wav](http://dmac.netlify.com/lectures/data/data3.wav)
 - [statistics1.wav](http://dmac.netlify.com/lectures/data/statistics1.wav)
+- [statistics2.wav](http://dmac.netlify.com/lectures/data/statistics2.wav)
+- [statistics3.wav](http://dmac.netlify.com/lectures/data/statistics3.wav)
 - [pisa_au.rda](http://dmac.netlify.com/lectures/data/pisa_au.rda) Programme for International student assessment
 - [plane_N4YRAA.rda](http://dmac.netlify.com/lectures/data/plane_N4YRAA.rda)
 - [airports.csv](http://dmac.netlify.com/lectures/data/airports.csv)
@@ -88,6 +92,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - [fly_tbl.csv](http://dmac.netlify.com/lectures/data/fly_tbl.csv) Etiquette of flying
 - [graduate-programs.csv](http://dmac.netlify.com/lectures/data/graduate-programs.csv) US Graduate programs 
 - [ASN00086282.dly](http://dmac.netlify.com/lectures/data/ASN00086282.dly) Melbourne weather
+
 
 ## [2017 Project Description](project/project-ETC1010.pdf) 
 
