@@ -79,7 +79,7 @@ m_df %>% filter(channel == "left") %>%
 - Compute the mean, standard deviation, minimum and maximum for each, and make a data frame with 6 rows (one for each of the audio files), and 5 columns (one for each of the stats, plus a word label `data` or `statistics`)
 - Make a scatterplot of mean against standard deviation, with points coloured by word
 
-```{r eval=FALSE}
+```{r eval=FALSE, echo=FALSE}
 files <- c("data/data1.wav", "data/data2.wav", "data/data3.wav",
            "data/statistics1.wav", "data/statistics2.wav", "data/statistics3.wav")
 audio_df <- NULL
@@ -177,7 +177,7 @@ tweets %>%
 - Count the number of times the word "crazy" is used in the tweets
 - Is there a difference in the frequency of "crazy" between the phones?
 
-```{r eval=FALSE}
+```{r eval=FALSE, echo=FALSE}
 ggplot(tweets, aes(x=source)) + geom_bar()
 
 tweets <- tweets %>% mutate(crazy = str_detect(text, "crazy"))

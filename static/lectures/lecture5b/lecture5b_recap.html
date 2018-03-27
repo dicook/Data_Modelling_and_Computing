@@ -115,22 +115,6 @@ m_df</code></pre>
 <li>Compute the mean, standard deviation, minimum and maximum for each, and make a data frame with 6 rows (one for each of the audio files), and 5 columns (one for each of the stats, plus a word label <code>data</code> or <code>statistics</code>)</li>
 <li>Make a scatterplot of mean against standard deviation, with points coloured by word</li>
 </ul>
-<pre class="r"><code>files &lt;- c(&quot;data/data1.wav&quot;, &quot;data/data2.wav&quot;, &quot;data/data3.wav&quot;,
-           &quot;data/statistics1.wav&quot;, &quot;data/statistics2.wav&quot;, &quot;data/statistics3.wav&quot;)
-audio_df &lt;- NULL
-for (i in 1:6) {
-  m1 &lt;- readWave(files[i])
-  m1 &lt;- extractWave(m1, from = 25000, to = 75000)
-  m1_df &lt;- data.frame(t=1:length(m1@left), 
-                    left=m1@left, 
-                    right=m1@right)
-  m_df &lt;- m1_df %&gt;% 
-    summarise(m = mean(left), s = sd(left), 
-            mx = max(left), mn = min(left)) %&gt;%
-    mutate(word = substr(files[i], 6, 9))
-  audio_df &lt;- bind_rows(audio_df, m_df)
-}
-ggplot(audio_df, aes(x=m, y=s, colour=word)) + geom_point()</code></pre>
 </div>
 </div>
 <div id="section-climate-change" class="section level2">
@@ -214,10 +198,6 @@ tweets %&gt;%
 <li>Count the number of times the word “crazy” is used in the tweets</li>
 <li>Is there a difference in the frequency of “crazy” between the phones?</li>
 </ul>
-<pre class="r"><code>ggplot(tweets, aes(x=source)) + geom_bar()
-
-tweets &lt;- tweets %&gt;% mutate(crazy = str_detect(text, &quot;crazy&quot;))
-ggplot(tweets, aes(x=source, fill=crazy)) + geom_bar()</code></pre>
 </div>
 </div>
 <div id="section-share-and-share-alike" class="section level2">
