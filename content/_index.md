@@ -51,7 +51,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - You can download the Rmd and html for your evaluation here:
     - 5T: [Rmd](assignments/assignment2_submissions/5T/5T.Rmd) [html](assignments/assignment2_submissions/5T/5T.html)
     - BBC: [Rmd](assignments/assignment2_submissions/BBC/BBC.Rmd) [html](assignments/assignment2_submissions/BBC/BBC.html)
-    - Black_4: [Rmd](assignments/assigment2_submissions/Black_4/Black_4.Rmd) [html](assignments/assignment2_submissions/Black_4/Black_4.html)
+    - Black_4: [Rmd](assignments/assignment2_submissions/Black_4/Black_4.Rmd) [html](assignments/assignment2_submissions/Black_4/Black_4.html)
     - CJ: [Rmd](assignments/assignment2_submissions/CJ/CJ.Rmd) [html](assignments/assignment2_submissions/CJ/CJ.html)
     - Data Lads: [Rmd](assignments/assignment2_submissions/Data Lads/Data Lads.Rmd) [html](assignments/assignment2_submissions/Data Lads/Data Lads.html)
     - DQ: [Rmd](assignments/assignment2_submissions/DQ/DQ.Rmd) [html](assignments/assignment2_submissions/DQ/DQ.html)
