@@ -68,7 +68,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
     - OTN: [Rmd](assignments/assignment2_submissions/OTN/OTN.Rmd) [html](assignments/assignment2_submissions/OTN/OTN.html)
     - Raymond & Co: [Rmd](assignments/assignment2_submissions/Raymond & Co/Raymond & Co.Rmd) [html](assignments/assignment2_submissions/Raymond & Co/Raymond & Co.html)
     - The_Ems: [Rmd](assignments/assignment2_submissions/The_Ems/The_Ems.Rmd) [html](assignments/assignment2_submissions/The_Ems/The_Ems.html)
-    - The Markdown Mates: [Rmd](assignments/assignment2_submissions/The Markdown Mates/The Markdown Mates.Rmd) [html](assignments/assignment2_submissions/The Markdown Mates/The Markdown Mates.html)
+    - The Markdown Mates: [Rmd](assignments/assignment2_submissions/The_Markdown_Mates/The_Markdown_Mates.Rmd) [html](assignments/assignment2_submissions/The_Markdown_Mates/The_Markdown_Mates.html)
     - The_pirates: [Rmd](assignments/assignment2_submissions/The_pirates/The_pirates.Rmd) [html](assignments/assignment2_submissions/The_pirates/The_pirates.html)
     - YES: [Rmd](assignments/assignment2_submissions/YES/YES.Rmd) [html](assignments/assignment2_submissions/YES/YES.html)
 
