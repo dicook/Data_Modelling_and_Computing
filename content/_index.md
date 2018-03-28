@@ -58,7 +58,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
     - ETC1010: [Rmd](assignments/assignment2_submissions/ETC1010/ETC1010.Rmd) [html](assignments/assignment2_submissions/ETC1010/ETC1010.html)
     - Group One: [Rmd](assignments/assignment2_submissions/Group-One/Group-One.Rmd) [html](assignments/assignment2_submissions/Group-One/Group-One.html)
     - Group1: [Rmd](assignments/assignment2_submissions/Group1/Group1.Rmd)
-    - Group2: [Rmd](assignments/assignment2_submissions/Group2/Group2.Rmd) [html](assignments/assignment2_submissions/Group2/Group2.html)
+    - Group2: [Rmd](assignments/assignment2_submissions/Group2/Group2.rmd) [html](assignments/assignment2_submissions/Group2/Group2.html)
     - Group5: [Rmd](assignments/assignment2_submissions/Group5/Group5.Rmd) [html](assignments/assignment2_submissions/Group5/Group5.html)
     - GuangZongYaoZu: [Rmd](assignments/assignment2_submissions/GuangZongYaoZu/GuangZongYaoZu.Rmd) [html](assignments/assignment2_submissions/GuangZongYaoZu/GuangZongYaoZu.html)
     - HDgroup: [Rmd](assignments/assignment2_submissions/HDgroup/HDgroup.Rmd) [html](assignments/assignment2_submissions/HDgroup/HDgroup.html)
