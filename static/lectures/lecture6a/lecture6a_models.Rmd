@@ -1,0 +1,378 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 6,
+                      fig.width = 6,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+```
+
+# Introduction to modeling
+
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.netlify.com](http://dmac.netlify.com)
+
+## Overview
+
+- Why models?
+- Linear models and correlation
+- Model fit, and predictions
+- Model basics in R
+
+<!--
+- Diagnostics
+- Inference
+- Optimisation
+-->
+
+## Why models?
+
+- a simple low-dimensional summary of a dataset
+- **family of models** express a relationship between different variables.
+- allows us to predict outcomes of interest, given other variables!
+- **prediction** is critical in many fields
+
+### Model families
+
+- A **model family** is the functional form that describes a relationship between an outcome $(Y)$ and an input, covariate, pre-determined variable $(X)$, e.g.
+    - $f(X)=b_0 + b_1 X +b_2 X^2+...+b_p X^p$
+    - $f(X)=b_0\exp(b_1X)$
+    - $f(X_1, X_2)=b_0 + b_1 X_1 + b_2 X_1^2 + b_3 X_2$
+- The **fitted model** makes this explicit ($e$ is the residual)
+    - $y_i = 2+3x_i+x_i^2-2x_i^3+e_i, i=1, ...., n$ **or** $\widehat{y}=2+3x+x^2-2x^3$
+    - $y_i=3\exp(2x_i)+e_i$ **or** $\widehat{y}=3\exp(2x)$
+    - $y_i=-5 + 4 x_{i1} - 2 x_{i1}^2 + 10x_{i2}+e_i$ **or** $\widehat{y}=-5 + 4 x- 2 x^2+ 10x$
+
+```{r fig.width=8, fig.height=2.5}
+library(tidyverse)
+library(gridExtra)
+# This sets the domain of the function to be -1, 1
+# and randomly generates values in this domain
+x <- runif(100, -1, 1)
+df <- tibble(x, y=2+3*x+x^2-2*x^3+rnorm(100)*0.2)
+p1 <- ggplot(df, aes(x=x, y=y)) + geom_point()
+df <- tibble(x, y=3*exp(2*x)+rnorm(100)*0.5)
+p2 <- ggplot(df, aes(x=x, y=y)) + geom_point()
+x1 <- runif(200, -1, 1)
+x2 <- runif(200, -1, 1)
+df <- tibble(x1, x2, y=-5+4*x1-2*x1^2+10*x2+rnorm(200)*0.1)
+p3 <- ggplot(df, aes(x=x1, y=x2, colour=y)) + geom_point(size=3, alpha=0.5) + theme(aspect.ratio=1)
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+### Your turn
+
+- Try the sample code to generate data with different functional forms
+- Change the domain of the explanatory variable, and see what happens to the shape of the data
+- Make up some new functions, and simulate some samples
+
+## Linear models
+
+### Correlation vs linear model
+
+- Linear association between two variables can be described by correlation, but 
+- a multiple regression model can describe linear relationship between a response variable and many explanatory variables. 
+
+For two variables $X, Y$, correlation is:
+
+$$r=\frac{\sum_{i=1}^{n} (x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2}\sqrt{\sum_{i=1}^{n}(y_i-\bar{y})^2}} = \frac{cov(X,Y)}{s_xs_y}$$
+
+### Correlation
+
+```{r echo=FALSE}
+library(mvtnorm)
+df <- tibble(r=seq(-0.9, 0.9, 0.1))
+vfun <- function(df) {
+  vc <- matrix(c(1, df$r, df$r, 1), ncol=2, byrow=TRUE)
+  d <- as_tibble(rmvnorm(100, mean=c(0,0), vc))
+  return(d)
+}
+smp <- df %>%
+  split(.$r) %>%
+  map(vfun)
+smp_df <- bind_rows(smp) %>% mutate(r = rep(df$r, rep(100, 19)))
+ggplot(smp_df, aes(x=V1, y=V2)) + geom_point(alpha=0.5) +
+  facet_wrap(~r, ncol=5, labeller = "label_both") + 
+  theme(aspect.ratio=1) +
+  xlab("X") + ylab("Y")
+```
+
+### Simple regression
+
+$$y_i=\beta_0+\beta_1x_{i}+\varepsilon_i, ~~~ i=1, \dots, n$$
+
+where (least squares) estimates for $\beta_0, \beta_1$ are:
+
+$$b_1 = r\frac{s_y}{s_x}, ~~~~~~~~ b_0=\bar{y}-b_1\bar{x}$$
+
+Slope is related to correlation, but it also depends on the
+variation of observations, in both of the variables. 
+
+```{r echo=FALSE}
+b1 <- smp %>% map_dbl(~ coefficients(lm(V2 ~ V1, data=.x))[2]) 
+sample_r <- smp %>% map_dbl(~ cor(.x$V1, .x$V2))
+df2 <- tibble(b1=b1, rs=sample_r, r=names(b1), V1=0, V2=4) %>%
+  mutate(r=fct_relevel(r, as.character(df$r)))
+smp_df$r <- fct_relevel(as.character(smp_df$r), as.character(df$r))
+ggplot(smp_df, aes(x=V1, y=V2)) + geom_point(alpha=0.5) +
+  facet_wrap(~r, ncol=5, labeller = "label_both") + 
+  theme(aspect.ratio=1) + geom_smooth(method="lm") + 
+  xlab("X") + ylab("Y") + 
+  geom_text(data=df2, aes(x=V1, y=V2, 
+    label=paste0("b1=", b1=round(b1, 2), ", r=", r=round(rs, 2))), 
+    size=3)
+```
+
+### Multiple regression model
+
+$$y_i=\beta_0+\beta_1x_{i1}+\dots +\beta_px_{ip}+\varepsilon_i, ~~~ i=1, \dots, n$$
+where $\varepsilon$ is a sample from a normal distribution, $N(0, \sigma^2)$.
+
+### What a model says
+
+- The fitted model allows us to predict a value for the response, e.g.
+    - Suppose $\widehat{y}=2+3x+x^2-2x^3$, then for $x=0.5, \widehat{y}=2+3*0.5+0.5^2-2*0.5^3=3.5$
+    - Suppose $\widehat{y}=3\exp(2x)$, then for $x=-1, \widehat{y}=3\exp(2*(-1))=0.406$
+- How useful the model prediction is depends on the residual error. If the model explains little of the relationship then the residual error will be large and predictions less useful.
+- Predictions within the domain of the explanatory variables used to fit the model will be more reliable than **extrapolating** outside the domain. Particularly this is true for nonlinear models. 
+
+```{r cor-quiz, echo=FALSE}
+library(mvtnorm)
+df1 <- rmvnorm(100, sigma=matrix(c(1,0.6,0.6,1),
+               ncol=2, byrow=TRUE))
+df2 <- rmvnorm(100, sigma=matrix(c(1,-0.7,-0.7,1),
+               ncol=2, byrow=TRUE))
+df3 <- rmvnorm(100, sigma=matrix(c(1,0.4,0.4,1),
+               ncol=2, byrow=TRUE))
+df <- data.frame(x1=c(df1[,1], df2[,1], df3[,1]), 
+                 x2=c(df1[,2], df2[,2], df2[,2]), 
+                 group=c(rep("A", 100), rep("B", 100), rep("C", 100)))
+ggplot(df, aes(x=x1, y=x2)) + geom_point() +
+  facet_wrap(~group) +
+  theme(aspect.ratio=1)
+quiz(
+  question("Which plot has correlation about -0.7?",
+    answer("A"),
+    answer("B", correct = TRUE),
+    answer("C")),
+  question("Which plot has correlation about 0.6?",
+    answer("A", correct = TRUE),
+    answer("B"),
+    answer("C")),
+  question("Which plot has correlation about 0.4?",
+    answer("A"),
+    answer("B"),
+    answer("C", correct = TRUE))
+)
+```
+
+## Let's fit a model to CO2
+
+```{r}
+CO2.spo <- read_csv("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+  mutate(lat = -90.0, lon = 0, stn = "spo") %>%
+  filter(flg==0)
+ggplot(CO2.spo, aes(x=date, y=co2)) + geom_point()
+```
+
+### Try a linear fit
+
+```{r}
+CO2.spo
+```
+
+- Use the `day` variable as the explanatory variable. 
+- It needs to be re-scaled to start from 1 until the number of days in the time frame. 
+- Subtract the number of the earliest day
+
+```{r}
+CO2.spo <- CO2.spo %>% mutate(day0=day-min(day))
+summary(CO2.spo$day)
+summary(CO2.spo$day0)
+```
+
+```{r co2quiz, echo=FALSE}
+quiz(
+  question("What is the domain of this data?",
+    answer("1960-2018"),
+    answer("310-405"),
+    answer("0-21718", correct = TRUE))
+)
+```
+
+```{r}
+co2_fit <- lm(co2~day0, data=CO2.spo)
+library(broom)
+tidy(co2_fit)
+```
+
+Then the fitted model will be:
+
+$$\widehat{co2}=302.778+0.00421\times day0$$
+
+### Predict from the model
+
+- For day0=10000 
+- the model predicts co2 to be 302.778+0.00421*10000 = 344.878. 
+
+```{r co2date, echo=FALSE}
+quiz(
+  question("What date is day0=10000? (Hint: use filter and select on the data to work it out)",
+    answer("1984-11-02"),
+    answer("1984-11-01", correct = TRUE),
+    answer("1994-11-02"))
+)
+```
+
+### Plot the model
+
+```{r}
+co2_model <- augment(co2_fit, CO2.spo)
+ggplot(co2_model, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+```
+
+### Examine residuals
+
+- **Residuals** are calculated for each observed $y$ by computing the difference: $y_i-\widehat{y_i}$.
+- Plotting the residuals against fitted values (or x in simple linear models) can reveal problems with the fit.
+
+```{r}
+ggplot(co2_model, aes(x=date, y=.std.resid)) + 
+  geom_point() 
+```
+
+### Assessment of fit
+
+- The relationship between co2 and day0 is nonlinear!
+- The linear model does a reasonable job of explaining the increasing trend over time, but it especially mismatches the observed data at the ends, and middle of the time period.
+
+### Your turn
+
+- Try to add a quadratic term (in day0), or more, to the model to improve the fit. 
+- Hints: (1) you may want to centre the day0 values, or even standardise them, to get a nice quadratic form, (2) If the fit is good, your residual vs fitted plot should have values evenly spread above and below 0, and relatively even across the time span. 
+
+```{r echo=FALSE, results='hide', fig.show='hide'}
+CO2.spo <- CO2.spo %>%
+  mutate(day0sq=(day0-median(day0))^2)
+co2_fit2 <- lm(co2~day0+day0sq, data=CO2.spo)
+tidy(co2_fit2)
+co2_model2 <- augment(co2_fit2, CO2.spo)
+ggplot(co2_model2, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+ggplot(co2_model2, aes(x=date, y=.std.resid)) + 
+  geom_point() 
+```
+
+## Model basics in R
+
+- Formula
+    - `response ~ explanatory` specifies the reponse variable and explanatory variable from the data
+    - e.g. `y ~ x1+x2+x3` three explanatory variables to be used to model response, main effects only
+    - `y ~ x1*x2*x3` include interaction terms
+    - `y ~ x - 1` specifies to force model to go through 0, that $b_0$ will be set to 0.
+- Extract components using the broom package
+    - `tidy` extracts the coefficients
+    - `augment` extracts residuals and fitted values, and pointwise diagnostics
+    - `glance` extracts model fit summaries
+
+## Seasonality
+
+### Your turn
+
+- Below we have a plot the residuals on a short time frame, you can see that there is some seasonality. Values are high in spring, and low in autumn! 
+- Brainstorm with your table members - yes, please talk with each other - ideas on how to fit a model that takes seasonality into account. There are multiple solutions, and maybe some that we haven't thought of.
+
+```{r echo=FALSE}
+library(lubridate)
+ggplot(filter(co2_model2, year(date)>2002, year(date)<2005), aes(x=date, y=.std.resid)) + 
+  geom_point()
+```
+
+## Predict co2 at another location
+
+### Your turn
+
+Using your model, built using values collected the south pole sensor, see how well it fits values from Point Barrow, Alaska. 
+
+1. Download the data. You can use almost the same code as for SPO by replacing "spo" with "ptb".
+2. The code below is a way to fit new data. It needs a bit of modification.
+
+```
+co2_model_ptb <- augment(co2_fit2, newdata=CO2.ptb)
+```
+
+3. Plot the data, and overlay the fitted model. You can use code like this.
+
+```
+ggplot(co2_model, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+```
+
+<!--
+
+By optimisation, of $\sum_i (y_i-(b_0+b_1x_{i1}+\dots +b_px_{ip}))^2$, we found the line of best fit, and parameter estimates $(b_0, b_1, \dots, b_p, \hat{\sigma})$ for the "true" (population) model. 
+
+For a simple linear model (one explanatory variable),
+
+$$b_1 = r \frac{s_y}{s_y}$$ 
+
+is the *slope*
+
+$$b_0 = \bar{y} - b_1 \bar{x}$$
+is the *intercept*, and
+
+$$\mbox{MSE} = \frac{1}{n}\sum_{i=1}^{n} (y_i - (b_0+b_1x_{i1}+\dots +b_px_{ip}))^2$$ 
+
+is an estimate of $\sigma^2$, and also called the *mean squared error*.
+
+### Normal residuals
+
+The assumption is that $\varepsilon \sim N(0, \sigma^2)$ implies that 
+
+$$y|x_1, \dots, x_p \sim N(b_0+b_1x_{1}+\dots +b_px_{p}, \sigma^2)$$
+
+```{r}
+set.seed(5)
+b0 <- 15
+b1 <- -2
+e <- rnorm(100, 0, 0.5)
+x <- sort(runif(100))
+y <- b0 + b1*x + e
+df <- data.frame(x, y, e)
+#ggplot(df, aes(x, y)) + 
+#  geom_point() +
+#  geom_abline(intercept=b0, slope=b1)
+norm_curves <- data.frame(x=seq(-1.5,1.5,0.1),
+     e=dnorm(seq(-1.5,1.5,0.1), 0, 0.5)/10) 
+
+ggplot(df, aes(x, y)) + 
+  geom_point() +
+  geom_abline(intercept=b0, slope=b1, colour="orange") + 
+  geom_path(data=norm_curves, aes(x=0.5+e, y=x+14), colour="orange") + 
+  geom_path(data=norm_curves, aes(x=0.25+e, y=x+14.5), colour="orange") + 
+  geom_path(data=norm_curves, aes(x=0.75+e, y=x+13.5), colour="orange")
+```
+
+Regardless of the value of $x$ the distribution of points above and below the line should be the same, and symmetric. And as you get further form the line, there should be less points. 
+-->
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.

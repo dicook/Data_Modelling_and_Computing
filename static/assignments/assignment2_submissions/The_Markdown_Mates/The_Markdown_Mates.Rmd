@@ -1,0 +1,292 @@
+---
+title: "Assignment 2 - The Markdown Mates"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(stringr)
+alpha = "[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ()$-'
+]"
+```
+
+
+
+Tidying data and loading
+```{r}
+results <- read.csv("survey.csv", na.strings=c(""," ","NA"))
+
+# Removing random letters and characters from data which shouldnt have these values
+results <- results %>% mutate(Q2 = str_replace_all(Q2, alpha, ""))
+results <- results %>% mutate(Q5 = str_replace_all(Q5, c("-" = "", " " = "")))
+results <- results %>% mutate(Q5 = str_replace_all(Q5, alpha, ""))
+results <- results %>% mutate(Q13 = str_replace_all(Q13, alpha, ""))
+results <- results %>% mutate(Q22 = str_replace_all(Q22, alpha, ""))
+results <- results %>% mutate(Q24 = str_replace_all(Q24, alpha, ""))
+results <- results %>% mutate(Q4 = str_replace_all(Q4, c("-" = "", " " = "")))
+
+# Making everything lower case will improve readability and any IsSuEs WiTh CaPiTaL LeTtErS
+results$Q4 <- str_to_lower(results$Q4)
+results$Q9 <- str_to_lower(results$Q9)
+results$Q32 <- str_to_lower(results$Q32)
+results$Q6 <- str_to_lower(results$Q6)
+results$Q25 <- str_to_lower(results$Q25)
+results$Q18 <- str_to_lower(results$Q18)
+
+# Making values consistent
+results<- results %>% mutate(Q4 = str_replace_all(Q4, c("hippop" = "hiphop", "popmusic" = "pop", "alternativerock" = "altrock", "popular" = "pop", "r&b" = "rnb", "anything" = "all", "rockand/orroll" = "rock")))
+ 
+# Altering values to be consistent
+results<- results %>% mutate(Q9 = str_replace_all(Q9, c("\\." = "", "n/a" = NA_character_, "no idea" = NA_character_, "television" = "tv")))
+results$Q9[c(12, 21, 23, 32, 33, 38, 40, 41, 55, 57, 59, 62)] <- "none"
+
+# Creating NA values
+results<- results %>% mutate(Q25 = str_replace_all(Q25, c("yes" = NA_character_ , "choosing not to answer" = NA_character_, "electronic games and running" = NA_character_)))
+results$Q32[c(19, 28, 32)] <- NA_character_
+
+# Altering values to be consistent
+results <- results %>% mutate(Q32 = str_replace_all(Q32, c("[()]"= "", "ikea soup " = "", "a " = "" )))
+results <- results %>% mutate(Q2 = str_replace_all(Q2, "1/2", "0.5"))
+results <- results %>% mutate(Q2 = str_replace_all(Q2, "4/7", "0.57"))
+results <- results %>% mutate(Q21 = str_replace_all(Q21, "7;30", "7.5"))
+results <- results %>% mutate(Q23 = str_replace_all(Q23, "XXI", "21"))
+
+#removing empty row
+results<-results[-c(64),]
+```
+
+Recoding data and collect similiar or identical values for variables
+```{r}
+#Transforming character values for Q1 into levels with corresponding numerical values. Then change type to character and replace the numerical value "5" with "Other".
+levels(results$Q1)<-1:5
+results$Q1 <- as.character(results$Q1)
+results$Q1[results$Q1==5]<-"Other"
+
+#Recoding character values for Q14 into levels with numerical values for number of Sam's known. Then change 6 to >5.
+levels(results$Q14)<-0:6
+results$Q14 <- as.character(results$Q14)
+results$Q14[results$Q14==6]<-"More than 5"
+
+#Recoding values for Q12 to type of degree studied.
+results$Q12<-as.character(results$Q12)
+results$Q12[results$Q12=="A"]<-"Single"
+results$Q12[results$Q12=="B"]<-"Double"
+
+#Recoding answers for Q15 from characters to preferred vegetable.
+results$Q15<-as.character(results$Q15)
+results$Q15[results$Q15=="A"]<-"Cucumbers"
+results$Q15[results$Q15=="B"]<-"Carrots"
+
+#Recoding single character answers for Q29 to response.
+results$Q29<-as.character(results$Q29)
+results$Q29[results$Q29=="A"]<-"Yes"
+results$Q29[results$Q29=="B"]<-"No"
+
+#Recoding single character answers for Q17 to response.
+results$Q17<-as.character(results$Q17)
+results$Q17[results$Q17=="A"]<-"Yes"
+results$Q17[results$Q17=="B"]<-"No"
+ 
+#Recoding single character answers for Q30 to response.
+results$Q30<-as.character(results$Q30)
+results$Q30[results$Q30=="A"]<-"No"
+results$Q30[results$Q30=="B"]<-"Yes"
+
+#Recoding single character answers for Q31 to response.
+results$Q31<-as.character(results$Q31)
+results$Q31[results$Q31=="A"]<-"Yes"
+results$Q31[results$Q31=="B"]<-"No"
+
+#Collecting similar or identical super powers for Q6, into common names.
+results$Q6[results$Q6=="invisible"]<-"invisibility"
+results$Q6[results$Q6=="fly"]<-"flying"
+results$Q6[results$Q6=="flight"]<-"flying"
+results$Q6[results$Q6=="teleport"]<-"teleportation"
+results$Q6[results$Q6=="can go to wherever i want in any time"]<-"teleportation"
+results$Q6[results$Q6=="control time"]<-"time control"
+results$Q6[results$Q6=="time travel"]<-"time control"
+results$Q6[results$Q6=="go back to a past time"]<-"time control"
+results$Q6[results$Q6=="time-reverse"]<-"time control"
+results$Q6[results$Q6=="freeze time"]<-"time control"
+results$Q6[results$Q6=="time"]<-"time control"
+results$Q6[results$Q6=="teleporting"]<-"teleportation"
+results$Q6[results$Q6=="read minds"]<-"telekinesis"
+results$Q6[results$Q6=="fire"]<-"magic"
+results$Q6[results$Q6=="magic like dr strange"]<-"magic"
+results$Q6[results$Q6=="remember everything i saw"]<-"photographic memory"
+results$Q6[results$Q6=="forecast the future"]<-"forecasting"
+results$Q6[results$Q6=="to control the probabilities of things happening"]<-"probabiltiy manipulation"
+results$Q6[results$Q6=="never forget"]<-"photographic memory"
+results$Q6[results$Q6=="predict the future"]<-"forecasting"
+results$Q6[results$Q6=="speed"]<-"super-speed"
+results$Q6[results$Q6=="nothing"]<-"No super powers"
+results$Q6[results$Q6=="imortality"]<-"immortality"
+results$Q6[results$Q6=="not needing sleep"]<-"No Sleep"
+results$Q6[results$Q6=="sleeping forever"]<-"Constant Sleep"
+results$Q6[results$Q6=="to never have to sleep"]<-"No Sleep"
+results$Q6[results$Q6=="i don't need any super powers"]<-"No super powers"
+results$Q6[results$Q6=="dig big holes with my hands"]<-"shovels for hands"
+results$Q6[results$Q6=="the ability ro turn into a turtle"]<-"turtle transformation"
+results$Q6[results$Q6=="i don't need any super power."]<-"No super powers"
+results$Q6[results$Q6=="forecasting"]<-"forecasting"
+
+#creating multiple value answer for Q9.
+results$Q9[results$Q9=="youtube, netflix"]<-"Multiple"
+results$Q9[results$Q9=="netflix & stan"]<-"Multiple"
+
+#removing other answers for observations with multiple answers for Q16.
+results$Q16 <- as.character(results$Q16)
+results$Q16[results$Q16=="A"]<-"Dog"
+results$Q16[results$Q16=="B"]<-"Cat"
+results$Q16[results$Q16=="C"]<-"Rabbit"
+results$Q16[results$Q16=="D"]<-"Bird"
+results$Q16[results$Q16=="E"]<-"Reptile"
+results$Q16[results$Q16=="F"]<-"Other"
+results$Q16[results$Q16=="A, B"]<-"Multiple"
+results$Q16[results$Q16=="A, C"]<-"Multiple"
+results$Q16[results$Q16=="B, D, E"]<-"Multiple"
+results$Q16[results$Q16=="A, B, D"]<-"Multiple"
+results$Q16[results$Q16=="A, E"]<-"Multiple"
+results$Q16[results$Q16=="A, D, F"]<-"Multiple"
+results$Q16[results$Q16=="E, F"]<-"Multiple"
+
+#Tidying up answers/data for Q18, using similar method to Q6. Colleting and renaming similar or identical activities
+results$Q18[results$Q18=="gaming"]<-"video games"
+results$Q18[results$Q18=="play games"]<-"video games"
+results$Q18[results$Q18=="training my aim in different fps games."]<-"video games"
+results$Q18[results$Q18=="video"]<-"video games"
+results$Q18[results$Q18=="games"]<-"video games"
+results$Q18[results$Q18=="computer games"]<-"video games"
+results$Q18[results$Q18=="game"]<-"video games"
+results$Q18[results$Q18=="league of legends"]<-"video games"
+results$Q18[results$Q18=="play video games"]<-"video games"
+results$Q18[results$Q18=="listen to music"]<-"music"
+results$Q18[results$Q18=="to listen music"]<-"music"
+results$Q18[results$Q18=="listen music"]<-"music"
+results$Q18[results$Q18=="tv"]<-"TV or Streaming"
+results$Q18[results$Q18=="watch youtube"]<-"TV or Streaming"
+results$Q18[results$Q18=="watch vedio"]<-"TV or Streaming"
+results$Q18[results$Q18=="youtube"]<-"TV or Streaming"
+results$Q18[results$Q18=="watch tv"]<-"TV or Streaming"
+results$Q18[results$Q18=="the office"]<-"TV or Streaming"
+results$Q18[results$Q18=="this is us and cry"]<-"TV or Streaming"
+results$Q18[results$Q18=="basketball"]<-"Sports or gym"
+results$Q18[results$Q18=="gym"]<-"Sports or gym"
+results$Q18[results$Q18=="sport"]<-"Sports or gym"
+results$Q18[results$Q18=="climbing"]<-"Sports or gym"
+results$Q18[results$Q18=="gym"]<-"Sports or gym"
+results$Q18[results$Q18=="have a trip"]<-"Travel"
+results$Q18[results$Q18=="hang out with friends"]<-"socialize"
+results$Q18[results$Q18=="your mum"]<-"socialize"
+results$Q18[results$Q18=="instagram"]<-"social media"
+results$Q18[results$Q18=="play my phone"]<-"social media"
+results$Q18[results$Q18=="internet, stretch, water"]<-"Multiple"
+results$Q18[results$Q18=="gym internet surfing"]<-"Multiple"
+results$Q18[results$Q18=="read, play guitar, electronics, sport"]<-"Multiple"
+results$Q18[results$Q18=="swim, cook"]<-"Multiple"
+results$Q18[results$Q18=="watch something/ light exercise"]<-"Multiple"
+results$Q18[results$Q18=="watch something/ light exercise"]<-"Multiple"
+
+#Recoding Q19 answers from letters to OS
+results$Q19<-as.character(results$Q19)
+results$Q19[results$Q19=="A"]<-"Windows"
+results$Q19[results$Q19=="B"]<-"Mac"
+results$Q19[results$Q19=="C"]<-"Linux"
+results$Q19[results$Q19=="D"]<-"Other"
+
+#Recoding Q7 answers from letters to answer choices
+results$Q7<-as.character(results$Q7)
+results$Q7[results$Q7=="A"]<-"Two sizes too big"
+results$Q7[results$Q7=="B"]<-"one size too small"
+results$Q7[results$Q7=="C"]<-"Neither"
+
+#Recoding Q8 answers from letters to hour ranges
+results$Q8 <- as.character(results$Q8)
+results$Q8[results$Q8=="A"]<-"0-3"
+results$Q8[results$Q8=="B"]<-"3-6"
+results$Q8[results$Q8=="C"]<-"6-9"
+results$Q8[results$Q8=="D"]<-"9-12"
+results$Q8[results$Q8=="E"]<-">12"
+
+#Recoding Q11 answers from letters to choice selected/
+results$Q11<-as.character(results$Q11)
+results$Q11[results$Q11=="A"]<-"elective"
+results$Q11[results$Q11=="B"]<-"core"
+
+#recoding Q26 answers from letters to genders or not answered
+results$Q26<-as.character(results$Q26)
+results$Q26[results$Q26=="A"]<-"Female"
+results$Q26[results$Q26=="B"]<-"Male"
+results$Q26[results$Q26=="c"]<-"Not answered"
+
+#recoding Q27 answers to location of tomato sauce
+results$Q27<-as.character(results$Q27)
+results$Q27[results$Q27=="A"]<-"Fridge"
+results$Q27[results$Q27=="B"]<-"Pantry"
+
+#recoding Q27 to number of books read
+results$Q28<-as.character(results$Q28)
+results$Q28[results$Q28=="A"]<-"0"
+results$Q28[results$Q28=="B"]<-"1-5"
+results$Q28[results$Q28=="C"]<-"6-10"
+results$Q28[results$Q28=="D"]<-"10-20"
+results$Q28[results$Q28=="E"]<-">20"
+
+#recoding outlier in Q23, from year of birth to age in year.
+results$Q23[results$Q23=="1997"]<-"21"
+```
+
+Graphing interesting facts and observations about data and classmates, with accompanying summaries.
+```{r}
+#Graphing preferred super powers, after recoding similar answers.
+library(ggplot2)
+results_Q6<-within(results,Q6<-factor(Q6, levels=names(sort(table(Q6),increasing=TRUE))))
+ggplot(results_Q6, aes(Q6, fill=Q6)) + geom_bar() + coord_flip() +ggtitle("Preferred Super Power") + theme(axis.text= element_blank())
+```
+
+
+A large array of preferred super powers were stated. With more conventional superpowers such as flying, teleportation, time control and invisibility being the post popular. There were 12 'powers' that received only one vote, some of which include "passing with all HD" and "constant Sleeping". This suggests our class would be a very varied group of Superheros.
+
+```{r}
+#Graphing type of degree being undertaken by classmates against year level.
+ggplot(results, aes(Q12, fill=Q1)) + geom_bar() + xlab("Type of Degree") + labs(fill="Current year of uni") + ggtitle("Type of degree vs Year")
+```
+
+
+Similarly single or double degree is plotted against year at uni. Of those doing a double degree most are third year students while majority of students doing a single degree are second year. This shows an interesting dynamic of our class. It should be noted of students doing a single degree very few are 4th or "other" year which may sugguests students are promptly completing their degrees.
+
+```{r}
+#Graphing core vs elective subject, proportioned by year level.
+ggplot(results, aes(Q11, fill=Q1)) + geom_bar(position="fill") + xlab("Core or Elective") + labs(fill="Current year of uni") + ggtitle("Type of unit vs year at uni")
+```
+
+
+Above is shown if a student is doing this unit as a core or an elective, against their year at uni.  Interestingly there is no first-year students doing it as an elective. Of students doing this unit as a core majority are second year opposed to an elective where majority are third year. 
+
+```{r}
+#Graphing food spending per day
+Q13 = filter(results, Q13 != "300")
+ggplot(Q13, aes(x = as.numeric(as.character(Q13)))) + geom_bar() + labs(x = "Average Daily Spend on Food", y = "Students") + ggtitle("Daily Food Spend")
+```
+
+
+When average amount of money spent on food is graphed it is visible that majority of students spend between $10 to $20 on average while there are fewer that spend a lot of money ($50) than compared to no money, this may suggest students in this class are rather financially sensible.
+
+```{r}
+#Graphing how students are coping with the unit
+barchartData <- select(results, Q17, Q30)
+barchartData <- barchartData %>% mutate(Q17 = str_replace_all(Q17, c("A" = "Yes", "B" = "No")))
+ggplot(barchartData, aes(Q30, fill = Q17)) + geom_bar(position = "fill") + labs(x = "Are you struggling?", y = "") + scale_fill_discrete(name="Prior coding experience?") + ggtitle("ETC1010 and Coding Experience")
+```
+
+
+When are you struggling with the unit is graphed against have you had prior coding experience it is visible that a very vast majority of students that aren't struggling have previously coded. Opposed to students that are struggling where majority haven't coded before. Suggesting previous experience is vital to struggling or not in this unit
+
+```{r}
+write_csv(results, path="tidied data.csv")
+```
+

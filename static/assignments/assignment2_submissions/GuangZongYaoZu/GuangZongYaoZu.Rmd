@@ -1,0 +1,170 @@
+---
+title: "GuangZongYaoZu"
+author: "Shibo Dong, Linguo Yang, Ziqi Hao, Ronghao Zhang"
+date: "26 March 2018"
+output: html_document
+---
+
+## Tidy the Data
+
+We have selected id and 17 variables for analysis.
+```{r, echo=TRUE}
+library(tidyverse)
+survey <- read.csv("~/R/R working directory/survey.csv")
+survey <- survey %>%
+  filter(id != "64") %>%
+  select(id,Q1,Q7,Q11,Q12,Q14,Q15,Q17,Q19,Q21,Q23,Q24,Q26,Q27,Q29,Q30,Q31,Q33)
+```
+
+We replaced all the variables with its corresponding value, and convert some strange value into NA.
+```{r}
+survey <- survey %>%
+  mutate(Q1 = 
+           case_when(
+             Q1 == "A" ~ "1",
+             Q1 == "B" ~ "2",
+             Q1 == "C" ~ "3",
+             Q1 == "D" ~ "4",
+             TRUE~"Other"),
+         Q7 = 
+           case_when(
+             Q7 == "A" ~ "Two size too big",
+             Q7 == "B" ~ "One size too small",
+             Q7 == "C" ~ "Neither of these"),
+         Q11 = 
+           case_when(
+             Q11 == "A" ~ "Elective",
+             Q11 == "B" ~ "Core"),
+         Q12 = 
+           case_when(
+             Q12 == "A" ~ "Single",
+             Q12 == "B" ~ "Double"),
+         Q15 = 
+           case_when(
+             Q15 == "A" ~ "Cucumbers",
+             Q15 == "B" ~ "Carrots",
+             Q15 == "C" ~ "Neither"),
+         Q14 = 
+           case_when(
+             Q14 == "A" ~ "0",
+             Q14 == "B" ~ "1",
+             Q14 == "C" ~ "2",
+             Q14 == "D" ~ "3",
+             Q14 == "E" ~ "4",
+             Q14 == "F" ~ "5",
+             TRUE~"More than 5"),
+         Q17 = 
+           case_when(
+             Q17 == "A" ~ "Yes",
+             Q17 == "B" ~ "No"),
+         Q19 = 
+           case_when(
+             Q19 == "A" ~ "Windows",
+             Q19 == "B" ~ "Mac",
+             Q19 == "C" ~ "Linux",
+             Q19 == "D" ~ "Other"),
+         Q21 = 
+           case_when(
+             Q21 == "7;30" ~ 7.5,
+             TRUE ~ as.numeric(Q21)),
+         Q26 = 
+           case_when(
+             Q26 == "A" ~ "F",
+             Q26 == "B" ~ "M",
+             TRUE ~ "NA"),
+         Q27 = 
+           case_when(
+             Q27 == "A" ~ "Fridge",
+             Q27 == "B" ~ "Pantry"),
+         Q29 = 
+           case_when(
+             Q29 == "A" ~ "Yes",
+             Q29 == "B" ~ "No"),
+         Q30 = 
+           case_when(
+             Q30 == "A" ~ "No",
+             Q30 == "B" ~ "Yes"),
+         Q31 = 
+           case_when(
+             Q31 == "A" ~ "Yes",
+             Q31 == "B" ~ "No")
+         ) %>%
+  mutate( Q23 = sub("1997","21",Q23)) %>%
+  mutate( Q23 = sub("XXI","",Q23)) %>%
+  mutate(Q23 = as.numeric(Q23)) %>%
+  mutate( Q24 = sub("I don't know","",Q24)) %>%
+  mutate(Q24 = as.numeric(Q24))
+head(survey)
+```
+
+## Analysis and Summary
+
+```{r}
+
+library(ggplot2)
+ggplot(survey, aes(x=Q23, y=Q24)) +
+  geom_point() +
+  geom_jitter(aes(color=Q23)) +
+  geom_smooth() +
+  theme(aspect.ratio = 1) +
+  ylab("Height") +
+  xlab("Age") 
+```
+
+**1)** Here is a scatter diagram illustrates that the age of students enjoys a weakly positive relationship with students¡¯ height. Furthermore, it is interesting to mention that there are two outliers located around 21st years old with over 2m height.
+
+```{r}
+ggplot(survey, aes(x=Q19, y=Q24)) +
+  geom_boxplot(aes(fill=Q19)) +
+  theme(aspect.ratio = 1) +
+  ylab("Height") +
+  xlab("System") +
+  guides(fill=guide_legend(title=NULL))
+```
+
+**2)** Then we operated a boxplot which consists of types of operating system and students¡¯ height. It can be proved that students who used Linux are taller than Mac users. According to section**1**, we assumed that students used Linux tend to be older because there is a definite correlation between age and height. Thus, we did part**3**.
+
+```{r}
+ggplot(survey, aes(x=Q19, y=Q23)) +
+  geom_boxplot(aes(fill=Q19)) +
+  theme(aspect.ratio = 1) +
+  guides(fill=guide_legend(title=NULL)) +
+  ylab("Age") +
+  xlab("System")
+```
+
+**3)** As we expected, boxplot demonstrated that Linux users are older than Mac user due to a positive correlation between age and height. Therefore, Linux system is less and less popular among uni students as time goes on rather than Mac from those phenomena.
+
+
+
+```{r}
+ggplot(survey, aes(x=Q30, y=Q31)) +
+  geom_point() +
+  geom_jitter(aes(color=Q30)) +
+  ylab("Like this unit") +
+  xlab("Struggle with unit")
+```
+
+**4)** Another interesting point is that four students, who dislike ETC1010 but excel at ETC1010, do exist. It suggests that those four students could appreciate highly academic record with little enthusiasm even no at all. 
+Furthermore, the reason why some of the students struggle with ETC1010 but keep passion on it must be that precise lecturer and patient and capable tutors with amazing ideas.
+
+
+```{r}
+library(vcd)
+mosaic(~ Q29 + Q12, data = survey)
+```
+
+**5)** We designed this mosaic plot based on questions 12 and 29 after we tidied the data. As shown, the problem is whether a person with a single degree or a double degree has been to the Australian Open. A student who has dual degrees and has been to the Australian Open are approximately twice as many as those who have a single degree and have been to the Australian Open. It is in contrast to what we thought in advance. Usually, we believe that student who has a single degree have more free time compared with a student who has double Degrees, which means that they are more likely to go to the Australian Open. However, this is not the case. From this, we can estimate that student who has double degrees will do better in time management and pay attention to extracurricular activities.
+
+
+```{r}
+ggplot(survey, aes(x = Q14,  fill = Q26)) +
+  geom_bar() +
+  facet_wrap( ~ Q1) +
+  scale_fill_brewer(palette="Dark2") + 
+  coord_polar() +
+  guides(fill=guide_legend(title="Gender")) +
+  xlab("How many Sam you know")
+```
+
+**6)** The rose charts above is about how many ¡°Sam¡± do you know as a friend differs from gender and uni years. Students who are in uni two and three years are more likely to have a friend named Sam. More specifically, ¡°Sam¡± is more popular in the second-grade female students than males. In contrast, male students in their third-grade know more ¡°Sam¡± than females.

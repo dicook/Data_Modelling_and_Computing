@@ -1,0 +1,463 @@
+---
+title: "YES assignment 2"
+output:
+  html_document: default
+---
+
+## Team Name: YES
+This is the knitted html file made from Rmarkdown. 
+
+The file contains the following:
+
+1) Pre-processing code
+2) Question List
+3) Description of the data pre-processing (tidying) component
+4) Data analysis code
+5) Description of the data analysis component
+6) Conclusion of the discussion
+
+## The coding component of assignment 2
+```{r setup, include=TRUE, echo= TRUE}
+
+
+## The code incorporated has two sections:
+ ## - The data pre-processing (tidying) section
+ ## - The data analysis section
+options(warn=-1)
+
+## Loading Libraries
+library(tidyverse)
+library(stringr)
+library(plotly)
+
+# Reading data -- This part has been copied from Di Cook's code
+survey <- read_csv("survey.csv",
+                   na = c("n/a", NA)) %>%
+  filter(id != 64) ## Exclude 64 as it is all N/A
+
+## Q1 Does not need to be cleaned
+survey <- survey %>%
+  mutate(Q1 = sub("A","1", Q1)) %>%
+  mutate(Q1 = sub("B","2", Q1)) %>%
+  mutate(Q1 = sub("C","3", Q1)) %>%
+  mutate(Q1 = sub("D","4", Q1)) %>%
+  mutate(Q1 = sub("E","Other", Q1))
+
+
+## Cleaning Q2 
+survey <- survey %>%
+  mutate(Q2 = sub("1/2", "0.5", Q2)) %>%
+  mutate(Q2 = sub(" hours", "", Q2)) %>%
+  mutate(Q2 = sub("\n", "", Q2)) %>%
+  mutate(Q2 = sub("hrs", "", Q2)) %>%
+  mutate(Q2 = sub("HOUR", "", Q2)) %>%
+  mutate(Q2 = sub("4/7", "0.57", Q2)) %>%
+  mutate(Q2 = sub("three times", "", Q2))
+
+survey$Q2[10] <- NA
+survey$Q2[27] <- "2.0"
+
+## Q3 Does not need to be cleaned
+
+## Cleaning Q4 - Converting to lower case before processing the data
+survey <- survey %>% 
+    mutate(Q4 = tolower(Q4))
+
+survey <- survey %>%
+ mutate(Q4 = sub("r&b", "rnb", Q4)) %>%
+ mutate(Q4 = sub("alt rock", "alternative rock", Q4)) %>%
+ mutate(Q4 = sub("popular", "pop", Q4)) %>%
+ mutate(Q4 = sub("music", "", Q4)) %>%
+ mutate(Q4 = sub("-", "", Q4)) %>%
+ mutate(Q4 = sub("rock and/or roll", "rock", Q4))
+
+survey$Q4[22] <- NA
+survey$Q4[46] <- NA
+ 
+## Cleaning Q5    
+survey <- survey %>%
+ mutate(Q5 = sub("Hours", "", Q5)) %>%
+ mutate(Q5 = sub("hours", "", Q5)) %>%
+ mutate(Q5 = sub("Hour", "", Q5)) %>%
+ mutate(Q5 = sub("hour", "", Q5)) %>%
+ mutate(Q5 = sub("hrs", "", Q5)) %>%
+ mutate(Q5 = sub("HOUR", "", Q5)) %>%
+ mutate(Q5 = sub("-", NA, Q5)) %>%
+ mutate(Q5 = sub("Choosing not to answer", NA, Q5))
+
+## Cleaning Q6
+survey <- survey %>% 
+    mutate(Q6 = tolower(Q6))
+
+survey <- survey %>%
+ mutate(Q6 = sub("flying", "fly", Q6)) %>%
+ mutate(Q6 = sub("fly", "flying", Q6)) %>% ## converts to the noun
+ mutate(Q6 = sub("teleporting", "teleportation", Q6)) %>%
+ mutate(Q6 = sub("super-speed", "speed", Q6)) %>%
+ mutate(Q6 = sub("invisible", "invisibility", Q6)) 
+
+## Cleaning Q7
+survey <- survey %>%
+  mutate(Q7 = sub("A","two sizes too big", Q7)) %>%
+  mutate(Q7 = sub("B","one size too small", Q7)) %>%
+  mutate(Q7 = sub("C","neither of these", Q7)) 
+
+## Cleaning Q8
+survey <- survey %>%
+  mutate(Q8 = sub("A","0 to 3", Q8)) %>%
+  mutate(Q8 = sub("B","3 to 6", Q8)) %>%
+  mutate(Q8 = sub("C","6 to 9", Q8)) %>%
+  mutate(Q8 = sub("D","9 to 12", Q8)) %>%
+  mutate(Q8 = sub("E","More than 12", Q8)) 
+
+## Cleaning Q9
+survey <- survey %>% 
+    mutate(Q9 = tolower(Q9))
+
+survey <- survey %>%
+ mutate(Q9 = sub("no idea", NA, Q9)) %>%
+ mutate(Q9 = sub("none", NA, Q9)) %>%
+ mutate(Q9 = sub("i do not watch television.", NA, Q9)) %>%  
+ mutate(Q9 = sub("i don't watch television.", NA, Q9)) %>%  
+ mutate(Q9 = sub("don't watch television", NA, Q9)) %>%  
+ mutate(Q9 = sub("pc", NA, Q9)) %>%  
+ mutate(Q9 = sub("nothing", NA, Q9)) %>%
+ mutate(Q9 = sub("i don't watch tv", NA, Q9)) %>%  
+ mutate(Q9 = sub("dont watch tv", NA, Q9)) %>%
+ mutate(Q9 = sub("i don't", NA, Q9)) %>%  
+ mutate(Q9 = sub("dont watch", NA, Q9)) 
+
+## Cleaning Q10
+survey <- survey %>%
+ mutate(Q10 = sub("\\?", NA, Q10)) ## Replacing question marks with NA
+
+survey <- survey %>%
+  mutate(Q10 = sub(" ", "",Q10)) ## Deleting empty spaces
+
+## Cleaning Q11 
+survey <- survey %>%
+  mutate(Q11 = sub("A","elective", Q11)) %>%
+  mutate(Q11 = sub("B","core", Q11)) 
+
+## Cleaning Q12 
+survey <- survey %>%
+  mutate(Q12 = sub("A","single", Q12)) %>%
+  mutate(Q12 = sub("B","double", Q12)) 
+  
+## Cleaning Q13
+survey <- survey %>%
+ mutate(Q13 = sub("$", "", Q13)) %>%
+ mutate(Q13 = sub("dollars", "", Q13)) %>%
+ mutate(Q13 = sub(" ", "", Q13)) ## Deleting empty spaces
+
+## CLeaning Q14 
+survey <- survey %>%
+  mutate(Q14 = sub("A","0", Q14)) %>%
+  mutate(Q14 = sub("B","1", Q14)) %>%
+  mutate(Q14 = sub("C","2", Q14)) %>%
+  mutate(Q14 = sub("D","3", Q14)) %>%
+  mutate(Q14 = sub("E","4", Q14)) %>%
+  mutate(Q14 = sub("F","5", Q14)) %>%
+  mutate(Q14 = sub("G","more than 5", Q14))
+
+## CLeaning Q15 
+survey <- survey %>%
+  mutate(Q15 = sub("A","cucumbers", Q15)) %>%
+  mutate(Q15 = sub("B","carrots", Q15)) %>%
+  mutate(Q15 = sub("C","neither", Q15)) 
+
+## CLeaning Q16 
+survey <- survey %>%
+  mutate(Q16 = sub("A","dog", Q14)) %>%
+  mutate(Q16 = sub("B","cat", Q14)) %>%
+  mutate(Q16 = sub("C","rabbit", Q14)) %>%
+  mutate(Q16 = sub("D","bird", Q14)) %>%
+  mutate(Q16 = sub("E","reptile", Q14)) %>%
+  mutate(Q16 = sub("F","other", Q14))
+ 
+## CLeaning Q17 
+survey <- survey %>%
+  mutate(Q17 = sub("A","yes", Q17)) %>%
+  mutate(Q17 = sub("B","no", Q17))
+
+## Cleaning Q18
+survey <- survey %>% 
+    mutate(Q18 = tolower(Q18))
+
+survey <- survey %>%
+  mutate(Q18 = sub(".*music.*","music",Q18)) ## replaces any expression containing "music" with music
+
+## Q19 and Q20 does not need to be cleaned
+## CLeaning Q19 
+survey <- survey %>%
+  mutate(Q19 = sub("A","Windows", Q19)) %>%
+  mutate(Q19 = sub("B","Mac", Q19)) %>%
+  mutate(Q19 = sub("C","Linux", Q19)) %>%
+  mutate(Q19 = sub("D","Other", Q19)) 
+
+## Q20 does not need to be cleaned
+
+## Cleaning Q21
+survey <- survey %>%
+  mutate(Q21 = sub(" ","",Q21)) %>%
+  mutate(Q21 = sub("7;30","7.5",Q21))
+
+## Cleaning Q22
+survey <- survey %>%
+  mutate(Q22 = sub("days","",Q22)) %>%
+  mutate(Q22 = sub(" ","",Q22))
+
+## Cleaning Q23
+survey <- survey %>%
+  mutate(Q23 = sub("XXI","21",Q23)) %>%
+  mutate(Q23 = sub("1997","21",Q23))
+
+## Cleaning Q24
+survey <- survey %>%
+  mutate(Q24 = sub("I don't know",NA,Q24))
+
+## Cleaning Q25
+survey <- survey %>% 
+    mutate(Q25 = tolower(Q25))
+
+survey <- survey %>%
+  mutate(Q25 = sub("yes",NA,Q25)) %>%
+  mutate(Q25 = sub("Choosing not to answer",NA,Q25)) 
+
+## CLeaning Q26 
+survey <- survey %>%
+  mutate(Q26 = sub("A","female", Q26)) %>%
+  mutate(Q26 = sub("B","male", Q26)) %>%
+  mutate(Q26 = sub("C","prefer not to answer", Q26))
+
+## CLeaning Q27 
+survey <- survey %>%
+  mutate(Q27 = sub("A","fridge", Q27)) %>%
+  mutate(Q27 = sub("B","pantry", Q27)) 
+
+## CLeaning Q28 
+survey <- survey %>%
+  mutate(Q28 = sub("A","0", Q28)) %>%
+  mutate(Q28 = sub("B","1 to 5", Q28)) %>%
+  mutate(Q28 = sub("C","6 to 10", Q28)) %>%
+  mutate(Q28 = sub("D","10 to 20", Q28)) %>%
+  mutate(Q28 = sub("E","more than 20", Q28))
+
+## CLeaning Q29 
+survey <- survey %>%
+  mutate(Q29 = sub("A","yes", Q29)) %>%
+  mutate(Q29 = sub("B","no", Q29)) 
+   
+## CLeaning Q30 
+survey <- survey %>%
+  mutate(Q30 = sub("A","yes", Q30)) %>%
+  mutate(Q30 = sub("B","no", Q30)) 
+
+## CLeaning Q31 
+survey <- survey %>%
+  mutate(Q31 = sub("A","yes", Q31)) %>%
+  mutate(Q31 = sub("B","no", Q31)) 
+
+## Cleaning Q32
+survey <- survey %>% 
+    mutate(Q32 = tolower(Q32))
+
+survey <- survey %>%
+  mutate(Q32 = sub("soup spoon","soup ladle",Q32)) %>%
+  mutate(Q32 = sub("someone.*",NA,Q32)) %>%
+  mutate(Q32 = sub("the thing.*","egg slicer",Q32)) %>%
+  mutate(Q32 = sub("ikea ","",Q32)) %>%
+  mutate(Q32 = sub("a spoon","spoon",Q32)) %>%
+  mutate(Q32 = sub("chopstick(s)","chopsticks",Q32)) 
+  
+## Q33 Does not need to be cleaned
+
+## Writing the data file in a .csv format
+write.csv(survey, file = "YES_group_survey_data_cleaned.csv", row.names = FALSE)
+
+```
+
+
+RMarkdown Reference sheet: https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf
+
+Question List:
+---------------------------------------------------------
+This section contains all the questions that were asked in the survey. M/C represents multiple choice and true/false answers. This is created for the convenience of the user to reference back to the question sheet. 
+
+- Q1: Which Year of Uni? M/C
+- Q2: Time spent commuting to uni?
+- Q3: Attended Ed Sheeran's concert? M/C
+- Q4: Favourite music genre?
+- Q5: Time spent on internet every week?
+- Q6: Super power?
+- Q7: Shirt sizes? M/C
+- Q8: Time spent studying per week? M/C
+- Q9: Streaming service for TV?
+- Q10: Litres of water drunk?
+- Q11: Core or elective? M/C
+- Q12: Single or double degree? M/C
+- Q13: Dollar amount spent on food per day?
+- Q14: Know Sam? M/C
+- Q15: Cucumber or carrots? M/C
+- Q16: What pets? M/C
+- Q17: Prior coding experience? M/C
+- Q18: Break from study?
+- Q19: OS? M/C
+- Q20: Support same sex marriage? M/C
+- Q21: Hours slept in one day? 
+- Q22: How many times spent on catching up with friends?
+- Q23: Age?
+- Q24: Height?
+- Q25: Favourite sport?
+- Q26: Gender? M/C
+- Q27: Tomato sauce in fridge or pantry? M/C
+- Q28: Number of books read? M/C
+- Q29: Been to Aus Open? M/C
+- Q30: Struggling with unit? M/C
+- Q31: Like ETC1010? M/C
+- Q32: Kitchen Utensil?
+- Q33: Cheese? M/C
+
+Description of the pre-processing (tidying) component:
+---------------------------------------------------------
+The survey questions that were posted in ETC1010 has a variety of data types that could be used as an input. These include:
+
+- Multiple choice questions 
+- True/False questions (denoted by a multiple choice format of A or B)
+- Numeric value (data with strings had to be removed)
+- String attributes (single value)
+- String attributes (multiple values)
+
+The major changes to the data set has been made:
+
+- All string attributes have been converted to lower case to simplify the replacement of strings (if cases were kept as the original, different permutations of lower and upper cases was required to remove a string. Example: Rock, ROCK, rock, RoCK...)
+- Numeric values that contained alphabetical and special case characters were removed
+- Some user-input answers were replaced with NA as it did not represent a suitable answer (Example: "I don't know")
+- Some string inputs (in music genre question) had "listening to music" which has been converted to "music" by analysing the rows that had the word "music" in its description
+
+
+Some things to note:
+
+- Outliers have not been removed from the data pre-processing stage as it can be analysed during the data analysis part of the assignment. 
+- Multi-valued attributes (example: Basketball, soccer) as one string was kept in its original form as it required advanced data pre-processing techniques to separate the value into different binary columns
+- Although the data has been cleaned to a tidy format (spelling correction, erasing of special characters), not all possible combinations of a word has been checked which could compromise the data analysis component (non existing-example: rocks, rock, rck). The different variations of the same word will become different values 
+
+Description of the data analysis component:
+---------------------------------------------------------
+A variety of multiple choice and numerical data were chosen for analysis. Questions pertaining to peoples' choices and opinions surrounding this unit (ETC1010) such as Question 8, 11, 17 and 30 were explored as well as Questions 5 and 21. These questions in particular were used as the aim of our data analysis was to uncover interesting correlations and trends revolving around the type of people that excelled in programming and data analytic subjects such as this. 
+
+
+```{r plot1, include=TRUE, echo= TRUE}
+## Data analysis component
+survey <- survey %>% mutate(Q5 = as.numeric(Q5))
+survey <- survey %>% mutate(Q21 = as.numeric(Q21))
+plot_1 <- ggplot(survey,aes(x=Q21, y=Q5, label=Q30, fill = Q8)) + 
+    geom_point(size=2, shape=23) +
+    facet_wrap(~Q8, ncol=5) +
+    ggtitle("Time Spent Studying") +
+    xlab("Hours Slept per day (Hours)") +
+    ylab("Time Spent on Internet per week (Hours)") +
+    coord_equal()
+
+ggplotly(plot_1)
+```
+
+
+
+From plot 1 we observe the relationship bewteen sleep, study and internet time. General trends from the scatter plot include:
+
+- People that study more tend to have greater variance in the time they spend on the internet
+- People that study more tend to have more standard hours of sleep 7-8 hours.
+- The class generally spends a lower amount of time on the internet and tends to have more conservative sleeping hours.
+
+
+
+
+```{r plot2, include=TRUE, echo= TRUE}
+## Data analysis component
+plot_2 <- ggplot(survey,aes(x=Q30, fill = Q8)) + 
+    geom_bar() +
+    facet_wrap(~Q8, ncol=5) +
+    ggtitle("How many hours do you study?") +
+    xlab("Do you struggle with this unit?") +
+    coord_equal()
+ggplotly(plot_2)
+```
+
+
+From plot 2 we are relating the classes amount of hours studied to whether or not they struggle with this unit or not. From the bar plot we see that:
+
+- Generally, people that study more do not struggle with this unit.
+- Despite this, the above trend also applies to students that do struggle with this unit. Hence people that study more tend to struggle with this unit as well. 
+- These two points are conflicting though may reflect that the class is divided in their mindset and approach towards ETC1010. Some students may feel that they struggle with the unit though may perform well while others may feel they do not struggle though only have aspirations to pass the course. Hence struggle may not be indicative of performance,  
+
+
+
+```{r plot3, include=TRUE, echo= TRUE}
+## Data analysis component
+plot_3 <- ggplot(survey,aes(x=Q17, fill = Q30)) + 
+    geom_bar() +
+    facet_grid(Q11 ~ Q30, labeller = label_both) +
+    ggtitle("Relationship betwen core/elective mindset and unit struggle") +
+    xlab("Do you have prior coding experience?") +
+    coord_equal()
+ggplotly(plot_3)
+```
+
+
+From plot 3 we dive further into this exploration of the mindset of struggle and its relation to our choices of how we approach this subject. From the bar plot we observe that:
+
+- Tackling this unit as a core/elective does not really influence whether a students struggles or not. We see that despite having no coding experience, students that choose this unit as a core feel that they do not struggle while students that do have backgrounds in coding struggle with this unit as a core. 
+- A majority of students do not struggle with this unit while possessing no background in coding.
+- More students with a background in coding struggle with this unit.
+- These results are perplexing though may give credence to more complex notions of how students perceive themselves in terms of goals for the subject and what equates, personally, to them as difficult or not. 
+
+
+
+```{r plot4, include=TRUE, echo= TRUE}
+## Data analysis component
+plot_4 <- ggplot(survey,aes(x=Q8, fill = Q11)) + 
+    geom_bar() +
+    facet_wrap(~Q11, ncol=2) +
+    ggtitle("Is this course a core or an elective for you?") +
+    xlab("Time Spent Studying (Hours)?") +
+    coord_equal()
+ggplotly(plot_4)
+
+```
+
+
+From plot 4 we observe a more traditional looking pattern where:
+
+- Students that have this unit as a core tend to study more than students that have it as an elective.
+
+
+
+```{r plot5, include=TRUE, echo= TRUE}
+## Data analysis component
+plot_5 <- ggplot(survey,aes(x=Q8, fill = Q17)) + 
+    geom_bar() +
+    facet_grid(Q17 ~ Q30,labeller = label_both) +
+    ggtitle("Relationship between study, struggle and prior coding experience") +
+    xlab("Time Spent Studying (Hours)?") +
+    coord_equal()
+ggplotly(plot_5)
+
+```
+
+
+From plot 5 we finally observe the connection between prior coding experience, struggle and time spent studying. Observations include:
+
+- Only 1 student with no background in coding struggles with this unit and they study more than 12 hours a day. This is logical in the sense that a student that struggles with coding, without coding experience requires more hours of practise in order to stop strugging. 
+- Students with no background in coding and that do not struggle with the unit tend to study more.
+- Students with a background in coding that do struggle in the unit also tend to study more as well.
+Students that have a background in coding that do not struggle tend to have varied studying hours. 
+- From these observations we see that dichotomous mindset surface again, where our backgrounds may define how we perceive struggle. Students with no coding experience prior to the unit may approach coding very differently to those that have coded before, and thus posess different expectations of what they want to achieve out of coding. Furthermore, those that have not coded before may have different reactions to stress, from solving code problems, and thus may be less neurotic about the process and accumulate less stress than those that have coded before. Hence they perceive the unit as less of a struggle in comparison to those with coding experience.
+
+
+Conclusion of the discussion:
+---------------------------------------------------------
+Overall, the findings in this assignment highlights that students are struggling with the unit even with programming experience while people with no programming experience are not struggling. This could be a notiion highlighting people's perspective of struggling is different as some people's prior programming experience, hence having different expectations of the unit. Lastly, there could also be another reason of struggling with R as it encapsulates a different language compared to other 3rd generation languages such as C, MATLAB, python etc. Hence, people with no programming experience have no prior knowledge to any language syntax so they are more open to learning something new. 
+
+
+
