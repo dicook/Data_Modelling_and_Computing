@@ -593,6 +593,14 @@ ggplot(survey, aes(x=Q32)) + geom_bar() + coord_flip()
 
 ## Top picks of the plots
 
+* The Markdown Mates
+
+```{r}
+ggplot(survey, aes(x=Q30, fill = Q17)) + geom_bar(position = "fill") + labs(x = "Prior coding experience?", y = "") + scale_fill_brewer(name="Are you struggling?", palette="Dark2") 
+```
+
+If this is your first coding experience, then you are finding it difficult.
+
 * Group One
 
 ```{r}
@@ -602,13 +610,13 @@ ggplot(survey) +
   ylab("Time Spent on Internet (Hours)")
 ```
 
-The graph can be divided into two parts. First is students spending 0-3 hours studying. Their time spent on the internet is typically much higher, than the other groups, ranging from 30 hours to 90 hours. For the remaining students, there is a positive relationship between time spent on study and on the internet. The reason for this general trend might be that studying needs internet as well. The exception in the first group however (studying up to only 3 hours) is that this time on the internet is spent procrastinating (eg streaming tv shows or online games). This extreme internet use takes away from study time.
+The graph can be divided into two parts. First is students spending 0-3 hours studying. Their time spent on the internet is typically much higher, than the other groups, ranging from 30 hours to 90 hours. For the remaining students, there is a positive relationship between time spent on study and on the internet. The reason for this general trend might be that studying needs internet as well. The exception in the first group however (studying up to only 3 hours) is that this time on the internet is spent procrastinating (eg streaming tv shows or online games). This extreme internet use takes away from study time. **Problem with this interpretation is that the group reporting only 0-3 hours studying is really tiny, only five students, and of these three are spnding a lot of time on the internet.**
 
 ```{r}
 ggplot(survey) + 
   geom_bar(aes(x = Q30, fill = Q31), position = "fill") +
   xlab("Struggling with the Unit")  +
-  scale_fill_discrete(name="Enjoy the Unit")
+  scale_fill_brewer(name="Enjoy the Unit", palette="Dark2")
 ```
 
 The graph shows that for students struggling with this unit, half of them likes this unit and half do not like it. This indicates that simply struggling is not enough of a reason not to like it, there must be other factors at play. For students not struggling with it however, the majority of them likes it. This is probably as the unit is easy for them and does not require much work.
@@ -627,6 +635,10 @@ Clearly two results can be stated: either the cohort cares for unique pets, or m
 
 A pie chart was not applied, because too many options would lead to the data being unreadable.
 
+```{r eval=FALSE, echo=FALSE}
+devtools::install_github("hadley/emo")
+```
+
 * Bandicoot `r emo::ji("wink")`
 
 ```{r}
@@ -639,3 +651,141 @@ prodplot(survey, ~ Q17 + Q1, mosaic("h")) +
 1. All of the first-year students have no prior coding experience. 
 2. There are more sophomores than freshmen enrolled in the class.
 3. More senior level you are in Uni, more likely you have prior coding experience. 
+
+## Appendix: Stuart's advanced cleaning code
+
+### Read in the data
+```{r}
+# code "n/a" as NA
+# last row is all NA so filter that out
+survey <- read_csv("./data/survey.csv", 
+                   na = c("n/a", "NA")) %>%
+  filter(id != 64)
+```
+
+### Tidying the data
+
+So begins the fun-filled process of tidying up the data
+
+```{r}
+# Q1 is ok
+# Q2 should be a double
+# - trim white space
+# - delete any non number ('three times' should be missing as not proper answer)
+# - parse fractions as integers
+# Q3 should be logical
+# Q4 turn make everything lower case
+# replace any hyphen with white space
+# replace any instance of 'music' with white space
+# replace rnb with r&b
+# replace alt rock with alternative rock
+# replace rock and/or roll with rock
+# replace popular with pop
+# fix up all hip hop variants
+# trim any white space
+# replace empty string with NA
+# Q5 similar strat to to Q2
+# Q6 like Q4 fun times
+# Q7, Q8 are fine 
+# Q9 more fun string processing
+# Q10 simple removing 
+# Q11, Q12 ok
+# Q13, trim whitespace, remove dollar sign and dollar
+# Q14, Q15 ok
+# Q16 - E is possibly a missing value but will leave it
+# Q17 ok
+# Q18 is a mess and I'm leaving it
+# Q19 ok
+# Q20 set to logical
+# Q21 same as Q10
+# Q22, Q23, Q24 same as Q21
+# Q25 fix up spelling
+# Q26 - Q31 are ok
+# Q32 put to lower case , remove punctation marks
+# Q33 change to logical
+survey <- survey %>%
+  mutate(Q2 = Q2 %>% 
+           str_trim() %>%
+           str_remove_all("[:alpha:]") %>%
+           str_remove_all("\\(|\\)") %>%
+           str_split("\\/") %>%
+           map_dbl(function(.) {
+             if (length(.) == 2) return(as.numeric(.[1]) / as.numeric(.[2]))
+             return(as.numeric(.))
+           }),
+         Q3 = as.logical(Q3),
+         Q4 = Q4 %>%
+           str_to_lower() %>%
+           str_replace("-", " ") %>%
+           str_replace("music", " ") %>%
+           str_replace("rnb", "r&b") %>% 
+           str_replace("alt rock", "alternative rock") %>% 
+           str_replace("rock and\\/or roll", "rock") %>%
+           str_replace("popular", "pop") %>% 
+           str_replace("hiphop", "hip hop") %>% 
+           str_replace("hip pop", "hip hop") %>% 
+           str_trim(),
+         Q4 = if_else(str_length(Q4) == 0, NA_character_, Q4),
+         Q5 = Q5 %>% 
+           str_trim() %>%
+           str_remove_all("[:alpha:]") %>%
+           str_remove_all("-") %>%
+           as.numeric(),
+         Q6 = Q6 %>%
+           str_to_lower() %>%
+           str_replace("invisibility", "invisible") %>%
+           str_replace("teleporting", "teleportation") %>%
+           str_replace("fly$", "flight") %>%
+           str_replace("flying", "flight") %>% 
+           str_replace("go back to a past time", "time travel") %>% 
+           str_replace("can go to wherever i want in any time", "time travel") %>% 
+           str_replace("to never have to sleep", "not needing sleep") %>% 
+           str_replace("forecast the future", "forecasting") %>% 
+           str_replace("predict the future", "forecasting") %>% 
+           str_replace("time control", "control time") %>% 
+           str_replace("^time$", "control time") %>% 
+           str_replace("freeze time", "control time") %>% 
+           str_replace("time-reverse", "control time") %>% 
+           str_trim(),
+         Q9 = str_to_lower(Q9),
+         Q9 = if_else(str_detect(Q9, "dont|don't|do not|no"), 
+                      "none",Q9, NA_character_) %>% 
+           str_replace("netlfix", "netflix") %>% 
+           str_remove("\n") %>% 
+           str_remove("\\.{3}"),
+         Q10 = Q10 %>% 
+           str_remove("\\?") %>% 
+           str_remove("\n") %>% 
+           as.numeric(),
+         Q13 = Q13 %>% 
+           str_remove("\\$") %>% 
+           str_remove("dollars") %>% 
+           as.numeric(),
+         Q18 = str_to_lower(Q18),
+         Q20 = as.logical(Q20),
+         Q21 = Q21 %>% 
+           str_remove("\n") %>% 
+           str_replace(";", ".") %>% 
+           as.numeric(),
+         Q22 = Q22 %>% 
+           str_remove("days") %>% 
+           as.integer(),
+         Q23 = Q23 %>% 
+           str_replace("1997", "21") %>% 
+           str_remove("[:alpha:]") %>% 
+           as.integer(),
+         Q24 = Q24 %>% 
+           str_remove("[:alpha:]") %>% 
+           as.integer(),
+         Q25 = str_to_lower(Q25) %>% 
+           str_replace("^swim$", "swimming") %>% 
+           str_remove("choosing not to answer") %>% 
+           str_remove("yes"),
+         Q25 = if_else(str_length(Q25) == 0, NA_character_, Q25),
+         Q32 = Q32 %>% 
+           str_to_lower() %>% 
+           str_remove("[:punct:]"),
+         Q33 = as.logical(Q33))
+
+visdat::vis_dat(survey)
+```
