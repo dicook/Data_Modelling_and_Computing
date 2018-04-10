@@ -277,6 +277,14 @@ ggplot(co2_model2, aes(x=date, y=co2)) +
   geom_line(aes(y=.fitted), colour="blue")
 ggplot(co2_model2, aes(x=date, y=.std.resid)) + 
   geom_point() 
+co2_fit3 <- lm(co2~day0+I(day0^2), data=CO2.spo)
+tidy(co2_fit3)
+co2_model3 <- augment(co2_fit3, CO2.spo)
+ggplot(co2_model3, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+ggplot(co2_model3, aes(x=date, y=.std.resid)) + 
+  geom_point() 
 ```
 
 ## Model basics in R
@@ -321,6 +329,17 @@ co2_model_ptb <- augment(co2_fit2, newdata=CO2.ptb)
 
 ```
 ggplot(co2_model, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+```
+
+```{r eval=FALSE}
+CO2.ptb <- read_csv("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ptb.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+  mutate(lat = -90.0, lon = 0, stn = "ptb") %>%
+  filter(flg==0)
+CO2.ptb <- CO2.ptb %>% mutate(day0 = day - min(CO2.spo$day))
+co2_model_ptb <- augment(co2_fit3, newdata=CO2.ptb)
+ggplot(co2_model_ptb, aes(x=date, y=co2)) + 
   geom_point() + 
   geom_line(aes(y=.fitted), colour="blue")
 ```

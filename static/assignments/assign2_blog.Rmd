@@ -1,0 +1,280 @@
+---
+title: "Graphics guidelines: Tidying plots"
+author: "Stuart Lee; Di Cook"
+date: "10 April 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+```
+
+In ETC1010 we have spent a lot of time talking about the concepts of tidying
+data and how to implement our tidying steps with the packages available
+in the `tidyverse`. We have also discussed how this concept
+integrates with the grammar of graphics via the `ggplot2` package. The
+grammar of graphics gives us a descriptive language for creating plots and
+as a result gives us a lot of flexibility in their design. In this document,
+we'll use examples from different submissions in assignment 2 to give some
+principles for 'tidying' plots. Here we consider a plot 'effective' if it 
+communicates it's message with clarity and concision. 
+
+Recall that in assignment 2, you were tasked with analyzing data from
+a class survey and reporting with graphs some insights you made about your
+fellow classmates. In the remainder of the document, we'll discuss how to
+improve on the design of some graphics in the context of this survey and
+the graphics you presented in your report.
+
+
+We'll start by loading in the tidy version of the survey:
+
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+survey <- read_csv("http://dmac.netlify.com/assignments/data/survey_tidy.csv")
+```
+
+## Relative comparisons, or the importance of normalising
+
+A large part of data science work consists of counting and multiplying and
+hence when we are presenting graphs its important that we present the results
+of these tasks appropriately. In lectures we discussed both bar charts
+and '100%' charts (which are stacked bar charts but with proportions 
+instead of counts). Consider a bar chart of question 30 
+in the survey:
+
+```{r}
+ggplot(survey, aes(x = Q30)) +
+  geom_bar() +
+  xlab("Are you struggling with this unit?")
+```
+
+Because we are viewing a single categorical variable, the viewer knows
+the denominator (the total number of people in both categories) is fixed and
+thus it is easy to see which group is bigger by comparing the heights of the
+bars. 
+
+Now let's add an additional variable, Q31, to visualize in conjunction with Q30
+to produce a stacked bar chart.
+
+```{r}
+ggplot(survey, aes(x = Q30, fill = Q31)) +
+  geom_bar() +
+  xlab("Are you struggling with this unit?") +
+  scale_fill_brewer(name="Do you enjoy this unit?", palette="Dark2")
+```
+
+The viewer is now asked to make relative judgement between the same coloured
+rectangles between the answers to "Are you struggling with this unit?" but this
+is no longer appropriate since the denominators are no longer fixed. It's 
+difficult to see that relatively more people who are not struggling with ETC1010 are
+enjoying the unit compared to those who are struggling.
+We need to normalise the counts within each category of Q30 to be able to compare 
+the answers to Q31 (resulting in 100% chart):
+
+```{r}
+# normalise by the total number of responses  to  Q31 within each 
+# category of Q30
+ggplot(survey, aes(x = Q30, fill = Q31)) +
+  geom_bar(position = "fill") + 
+  xlab("Are you struggling with this unit?") +
+  ylab("Proportion") +
+  scale_fill_brewer(name="Do you enjoy this unit?", palette="Dark2")
+```
+
+Using the `position = fill` argument modifies the count to a proportion
+and results in a clearer plot. 
+
+An alternative to these kinds of plots that generalizes to more than two
+categorical variables is the mosaic plot, which invites the reader
+to make comparisons between sizes of areas.
+
+Here's a redesign of the 100% chart as a mosaic chart using the R package
+`productplots`:
+
+```{r}
+library(productplots)
+prodplot(survey, ~ Q30 + Q31, mosaic("v")) + 
+  aes(fill = Q30) +
+  scale_fill_brewer(palette = "Dark2") + xlab("Are you struggling with this unit?")
+library(ggmosaic)
+ggplot(survey) +
+  geom_mosaic(aes(x = product(Q30), fill = Q31)) +
+  scale_fill_brewer(palette = "Dark2") + 
+  xlab("Are you struggling with this unit?") +
+  ylab("Do you enjoy this unit?")
+```
+
+The areas of each rectangle, represent the normalized counts in each 
+combination of categories. We can see the same results as the stacked
+bar chart above - that is for students struggling with this unit about half
+like the unit, while students who are not struggling about 4/5 enjoy the unit.
+
+## Chunking 
+
+For readability of plots, it often makes sense break up information
+dense graphics into smaller "chunks", especially if there are no
+constraints on the number of plots you can show your reader. You could 
+think of facetting as a built in way the grammar facilitates this process,
+but there's also nothing stopping you from creating an 'ensemble' of plots.
+
+Let's take the previous example - a complex plot of the interaction between
+Q30, Q31, and Q17 could be achieved with facetting as follows:
+
+
+```{r}
+
+q17_labeller <- c("no" = "I have NO coding experience",
+                  "yes" = "I have coding experience")
+
+ggplot(survey, aes(x = Q30, fill = Q31)) +
+  geom_bar(position = "fill") + 
+  xlab("Are you struggling with this unit?") +
+  ylab("Proportion") +
+  scale_fill_brewer(name="Do you enjoy this unit?", palette="Dark2") +
+  facet_grid(~ Q17, labeller = labeller(Q17 = q17_labeller))
+```
+
+This plot has packaged a lot of information and puts the focus on making
+comparisons between answers to Q17 (Do you have prior coding experience?),
+we could instead make plots looking at combinations of the three variables
+above.
+
+```{r}
+p1 <- ggplot(survey, aes(x = Q31, fill = Q17)) +
+  geom_bar(position = "fill") +
+  xlab("Do you enjoy this unit?") +
+  ylab("Proportion") + 
+  scale_fill_brewer(name="Do you have prior coding experience?", palette="Dark2")+
+  theme(legend.position = "top")
+
+p2 <- ggplot(survey, aes(x = Q30, fill = Q31)) +
+  geom_bar(position = "fill") + 
+  xlab("Are you struggling with this unit?") +
+  ylab("Proportion") + 
+  scale_fill_brewer(name="Do you enjoy this unit?", palette="Dark2")+
+  theme(legend.position = "top")
+p3 <- ggplot(survey, aes(x = Q17, fill = Q30)) +
+  geom_bar(position = "fill") + 
+  xlab("Do you have prior coding experience?") +
+  ylab("Proportion") + 
+  scale_fill_brewer(name="Are you struggling with this unit?", palette="Dark2")+
+  theme(legend.position = "top")
+
+  
+p1
+p2
+p3
+```
+
+In this approach we learn the same things as the facetted plot, plus can
+make additional comparisons as we are longer forced to compare between
+the categories in Q17.
+
+Remember one purpose of plots is to communicate what you've found in the
+data to the reader - a more complex plot forces a reader to take longer
+to understand your findings and has a narrow viewpoint. Breaking a complex plot
+into chunks allows your reader to slowly gain a richer understanding of the data.
+
+## Ordering
+
+Which is easier to read. This:
+
+```{r}
+ggplot(survey, aes(x=Q6), fill=variable) +
+  geom_bar() + coord_flip() +
+labs( x = "Type of superpower", y = "count",
+title ="Q6: If you could have a superpower, what would it be?")
+```
+or this:
+
+```{r}
+library(forcats)
+ggplot(survey, aes(x=fct_infreq(Q6)), fill=variable) +
+  geom_bar() + coord_flip() +
+labs( x = "Type of superpower", y = "count",
+title ="Q6: If you could have a superpower, what would it be?")
+```
+
+## Proximity vs proportion
+
+The purpose is to examine the relationship between year in school and hours spent studying each week. 
+
+Original: "We can see overall 3rd year students put a lot more hours into study per week. This could perhaps be due to increased workload during the 3rd year as opposed to 1st year.""
+
+```{r}
+ggplot(survey) +
+  geom_bar(aes(x=Q1)) +
+  facet_wrap(~Q8) 
+```
+
+To answer this question you need to look at the distribution of hours studying, within each year. Facet by year in school, and then make a bar chart in each facet. You can see that most students are in year 2 or 3, and the counts increase over hours spent studying. Both years have this pattern. 
+
+```{r}
+ggplot(survey) +
+  geom_bar(aes(x=Q8)) +
+  facet_wrap(~Q1) 
+```
+
+Because numbers are so small in all other groups, drop them, and focus only on years 2 and 3. Then we will make a mosaic plot to directly compare proportions in each hour category, by year. We can see that there is not much difference in the time spent studying each week by year. There is a very small increase for year 3 in the more than 12 hours, and decreases in 6-9, 9-12 hours. That means that there is a hint that third year students are studying more.
+
+```{r}
+survey %>% filter(Q1 %in% c(2,3)) %>%
+  ggplot() + geom_mosaic(aes(product(Q8), fill=Q1)) +
+  scale_fill_brewer("Year", palette="Dark2") +
+  xlab("Hours spent studying each week")
+```
+
+## Beware of small counts with boxplots
+
+Interpretation: People spending few study hours are spending too much time on the internet.
+
+```{r}
+ggplot(data = survey) +
+  geom_boxplot(mapping = aes(x = Q8, y = Q5, fill = Q8)) +
+  ylab('Hours spent studying') +
+  xlab('Hours spent on the internet') +
+  ggtitle('Time spent studying vs. on the internet per week')
+```
+
+Correction: There's only three students in the category, of spending too much time on the web and too little time studying.
+
+```{r}
+library(plotly)
+plot_1 <- ggplot(survey, aes(x=Q8, y=Q5, label=Q30, colour = Q8)) + 
+    geom_point(size=2, alpha=0.5) +
+    #facet_wrap(~Q8, ncol=5) +
+    #ggtitle("Time Spent Studying") +
+    xlab("Time Spent Studying") +
+    ylab("Time Spent on Internet per week (Hours)") +
+  theme(legend.position="none")
+
+ggplotly(plot_1)
+```
+
+## Conditioning
+
+The question is: how does core or elective vary by year in school. 
+
+This:
+
+```{r}
+ggplot(survey, aes(Q11, fill=Q1)) + geom_bar(position="fill") + xlab("Core or Elective") + labs(fill="Current year of uni") + ggtitle("Type of unit vs year at uni")
+```
+
+or this:
+
+```{r}
+ggplot(survey, aes(Q1, fill=Q11)) + geom_bar(position="fill") + 
+  xlab("Current year of uni") + 
+  scale_fill_brewer("Core or Elective", palette="Dark2") + 
+  ggtitle("Type of unit vs year at uni")  
+```
+
+or this:
+
+```{r}
+ggplot(survey) + geom_mosaic(aes(product(Q1), fill=Q11)) + 
+  xlab("Current year of uni") + 
+  scale_fill_brewer("Core or Elective", palette="Dark2") + 
+  ggtitle("Type of unit vs year at uni")  
+```
