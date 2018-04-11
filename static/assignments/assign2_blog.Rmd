@@ -92,10 +92,6 @@ Here's a redesign of the 100% chart as a mosaic chart using the R package
 `productplots`:
 
 ```{r}
-library(productplots)
-prodplot(survey, ~ Q30 + Q31, mosaic("v")) + 
-  aes(fill = Q30) +
-  scale_fill_brewer(palette = "Dark2") + xlab("Are you struggling with this unit?")
 library(ggmosaic)
 ggplot(survey) +
   geom_mosaic(aes(x = product(Q30), fill = Q31)) +
