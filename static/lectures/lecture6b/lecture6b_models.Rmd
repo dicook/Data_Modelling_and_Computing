@@ -158,6 +158,42 @@ All of these statistics indicate the model 2 is substantially a better fit than 
 - For the co2 model fitting from yesterday, examine the model fit statistics for the linear model vs the one with a quadratic term. What do they indicate is the better fit?
 - Try fitting the seasonal pattern with one of the ideas you came up with yesterday. Use the model fit statistics, and residual plots, to determine if the model is better than the quadratic model.
 
+```{r}
+library(tidyverse)
+library(broom)
+CO2.spo <- read_csv("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+  mutate(lat = -90.0, lon = 0, stn = "spo") %>%
+  filter(flg==0)
+CO2.spo <- CO2.spo %>% mutate(day0=day-min(day))
+co2_fit1 <- lm(co2~day0, data=CO2.spo)
+co2_fit2 <- lm(co2~day0+I(day0^2), data=CO2.spo)
+glance(co2_fit1)
+glance(co2_fit2)
+library(lubridate)
+CO2.spo <- CO2.spo %>% mutate(month=month(date, label = TRUE, abbr = TRUE))
+co2_fit3 <- lm(co2~day0+I(day0^2)+month, data=CO2.spo)
+glance(co2_fit3)
+co2_model3 <- augment(co2_fit3, CO2.spo)
+ggplot(co2_model3, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+ggplot(filter(co2_model3, year(date)>1975, year(date)<1987),
+       aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue") 
+tidy(co2_fit3)
+co2_fit4 <- lm(co2~day0*month+I(day0^2)*month, data=CO2.spo)
+glance(co2_fit4)
+co2_model4 <- augment(co2_fit4, CO2.spo)
+ggplot(co2_model4, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+ggplot(filter(co2_model4, year(date)>1965, year(date)<1972),
+       aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue") 
+```
+
 <!--
 - Diagnostics
 - Inference

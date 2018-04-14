@@ -342,6 +342,12 @@ co2_model_ptb <- augment(co2_fit3, newdata=CO2.ptb)
 ggplot(co2_model_ptb, aes(x=date, y=co2)) + 
   geom_point() + 
   geom_line(aes(y=.fitted), colour="blue")
+# This will give the wrong model fit because day is not calculated correctly
+CO2.ptb <- CO2.ptb %>% mutate(day0 = day - min(day))
+co2_model_ptb2 <- augment(co2_fit3, newdata=CO2.ptb)
+ggplot(co2_model_ptb2, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
 ```
 
 <!--

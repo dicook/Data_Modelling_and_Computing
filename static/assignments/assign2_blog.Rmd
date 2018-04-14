@@ -1,42 +1,46 @@
 ---
-title: "Graphics guidelines: Tidying plots"
-author: "Stuart Lee; Di Cook"
-date: "10 April 2018"
+title: "Rookie mistakes and how to fix them when making plots of data"
+author: "Stuart Lee and Di Cook"
+date: "13 April 2018"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE, fig.align = "center")
-suppressPackageStartupMessages(library(tidyverse))
-survey <- read_csv("http://dmac.netlify.com/assignments/data/survey_tidy.csv")
+knitr::opts_chunk$set(echo = FALSE, 
+                      message = FALSE, 
+                      warning = FALSE, 
+                      error = FALSE,
+                      fig.align = "center")
+library(tidyverse)
+library(gridExtra)
+library(ggmosaic)
+survey <- read_csv("data/survey_tidy.csv")
 ```
  
-In this document, we'll use examples from different submissions in assignment 2
-to provide principles for 'tidying' plots:
+In this assignment, the focus was to practice data cleaning. Students suggested questions to build a class survey, to get to know the interests of other class members, and then completed the composed survey. After cleaning the data, a few summary plots of interesting aspects of the data were made. There are some common mistakes that rookies often make when constructing data plots: packing too much into a single graphic, leaving categorical variables unordered, reversing norms for response and explanatory variables, conditioning in wrong order, plotting counts when proportions should be the focus, not normalizing by counts, using a boxplot for small sample size.
 
-- Reducing complexity
-- Ordering
-- Comparing counts
-- Sample sizes and aggregation
-- Conditioning 
+This is an explanation of how to avoid common mistakes. We have taken example plots from different group submissions for the assignment, and show how to re-work the plot so that it is more effective at communicating the intended information. The fixes follow these basic principles: 
+
+- Reduce complexity
+- Order
+- Comparing proportions rather than counts
+- Sample size appropriate plots
+- Order of conditioning 
 
 Please don't be discouraged if you see one of the plots you made in this
 document, you all did a great job of creating plots and these are suggestions
 to take your creations and make them better!
 
-## Reducing complexity
+## Reduce complexity
 
-For readability of plots, it often makes sense break up information
-dense graphics into smaller "chunks", especially if there are no
-constraints on the number of plots you can show your reader. You could 
-think of facetting as a built in way the grammar facilitates this process,
-but there's also nothing stopping you from creating an 'ensemble' of plots.
+There is a temptation to pack as much as possible in a single plot. After all, you only get to put a small number of plots in a report. This makes it harder to read anything from the plot, and thus more difficult for the reader to learn about the data. 
 
-Let's look at an example complex plot of the interaction between
-Q30, Q31, and Q17 could be achieved with facetting as follows:
+It is better to break up information dense graphics into smaller chunks. If there is a constraint on the number of plots you can put in a report, you could make an ensemble graphic containing a number of plots, which would count as a single plot. Facetting is an inbuilt way that the grammar of graphics facilitates chunking, to make an ensemble of plots.
 
+Let's look at an example of an overly complex plot of the interaction between
+three variables - Q30, Q31, and Q17. There's a lot going on in this plot.
 
-```{r}
+```{r fig.caption="Overly complex plot of three variables - Q30, Q31, and Q17."}
 
 q17_labeller <- c("no" = "I have NO coding experience",
                   "yes" = "I have coding experience")
@@ -49,143 +53,183 @@ ggplot(survey, aes(x = Q30, fill = Q31)) +
   facet_grid(~ Q17, labeller = labeller(Q17 = q17_labeller))
 ```
 
-This plot has packaged a lot of information and puts the focus on making
-comparisons between answers to Q17 (Do you have prior coding experience?).
+We interpret the information that we want to communicate is: *how enjoyment of the unit, and whether you are struggling, depends on having prior coding experience or not*. The chunks are the three pairwise combinations of the three variables. This is a good start to tackling the primary purpose.
 
-We could instead make plots looking at combinations of the three variables
-above.
 
-```{r}
-p1 <- ggplot(survey, aes(x = Q31, fill = Q17)) +
+```{r fig.width=12, fig.height=4}
+p1 <- ggplot(survey, aes(x = Q17, fill = Q31)) +
   geom_bar(position = "fill") +
-  xlab("Do you enjoy this unit?") +
+  xlab("Do you have prior coding experience?") +
   ylab("Proportion") + 
-  scale_fill_brewer(name="Do you have prior coding experience?", palette="Dark2")+
-  theme(legend.position = "top")
+  scale_fill_brewer(name="Do you enjoy this unit?", palette="Paired") +
+  theme(legend.position = "bottom", aspect.ratio = 1)
 
 p2 <- ggplot(survey, aes(x = Q30, fill = Q31)) +
   geom_bar(position = "fill") + 
   xlab("Are you struggling with this unit?") +
   ylab("Proportion") + 
-  scale_fill_brewer(name="Do you enjoy this unit?", palette="Dark2")+
-  theme(legend.position = "top")
+  scale_fill_brewer(name="Do you enjoy this unit?", palette="Paired")+
+  theme(legend.position = "bottom", aspect.ratio = 1)
+
 p3 <- ggplot(survey, aes(x = Q17, fill = Q30)) +
   geom_bar(position = "fill") + 
   xlab("Do you have prior coding experience?") +
   ylab("Proportion") + 
-  scale_fill_brewer(name="Are you struggling with this unit?", palette="Dark2")+
-  theme(legend.position = "top")
+  scale_fill_brewer(name="Are you struggling with this unit?", palette="Set1", direction=-1) +
+  theme(legend.position = "bottom", aspect.ratio = 1)
 
-  
-p1  + theme(aspect.ratio = 1) 
-p2 + theme(aspect.ratio = 1)
-p3 + theme(aspect.ratio = 1)
+grid.arrange(p1, p2, p3, ncol=3)
 ```
 
-In this approach we learn the same things as the facetted plot, plus can
-make additional comparisons as we are longer forced to compare between
-the categories in Q17.
+From the three pairwise plots we learn:
+
+1. Prior coding experience leads to more likely enjoying the class.
+2. Struggling with the unit tends to lead to less enjoyment.
+3. Prior coding experience strongly indicates less struggling.
+
+It may be better to also reflect the sample sizes in each group, using a mosaic plot.
+
+```{r fig.width=12, fig.height=4}
+p1 <- ggplot(survey) +
+  geom_mosaic(aes(x = product(Q17), fill = Q31)) +
+  xlab("Do you have prior coding experience?") +
+  ylab("Proportion") + 
+  scale_fill_brewer(name="Do you enjoy this unit?", palette="Paired", direction=-1) +
+  theme(legend.position = "bottom", aspect.ratio = 1)
+
+p2 <- ggplot(survey) +
+  geom_mosaic(aes(x = product(Q30), fill = Q31)) +
+  xlab("Are you struggling with this unit?") +
+  ylab("Proportion") + 
+  scale_fill_brewer(name="Do you enjoy this unit?", palette="Paired", direction=-1)+
+  theme(legend.position = "bottom", aspect.ratio = 1)
+
+p3 <- ggplot(survey) +
+  geom_mosaic(aes(x = product(Q17), fill = Q30)) +
+  xlab("Do you have prior coding experience?") +
+  ylab("Proportion") + 
+  scale_fill_brewer(name="Are you struggling with this unit?", palette="Set1", direction=-1) +
+  theme(legend.position = "bottom", aspect.ratio = 1)
+
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+Now let's put it all into one plot again. Using the mosaic plot, prior coding experience (Q17), and struggling (Q31) are woven into the horizontal axis, and enjoyment (Q30) is mapped to colour, and splits the vertical bars. 
+
+```{r}
+ggplot(survey) +
+  geom_mosaic(aes(x = product(Q30, Q17), fill = Q31), divider=ddecker()) +
+  xlab("Struggling:Prior coding experience") +
+  ylab("Proportion") + 
+  scale_fill_brewer(name="Do you enjoy this unit?", palette="Paired", direction=-1) +
+  theme(legend.position = "bottom")
+```
+
+What do we learn?
+
+1. There are few people with no coding experience and are not struggling. 
+2. The largest group of unhappy class members have no prior coding experience, and are struggling.
+3. Most people who have prior coding experience and are not struggling, are enjoying the class. 
+4. About a third of the students who have prior coding experience, and struggling with the class, are unhappy.
 
 Remember one purpose of plots is to communicate what you've found in the
 data to the reader - a more complex plot forces a reader to take longer
 to understand your findings and has a narrow viewpoint. Breaking a complex plot
 into chunks allows your reader to slowly gain a richer understanding of the data.
 
-## Ordering
+## Order
 
 Which is easier to read. This:
 
 ```{r}
 ggplot(survey, aes(x=Q6), fill=variable) +
   geom_bar() + coord_flip() +
-labs( x = "Type of superpower", y = "count",
-title ="Q6: If you could have a superpower, what would it be?")
+  labs(x = "", y = "count",
+       title ="What would your superpower?")
 ```
+
 or this:
 
 ```{r}
 library(forcats)
 ggplot(survey, aes(x=fct_infreq(Q6)), fill=variable) +
   geom_bar() + coord_flip() +
-labs( x = "Type of superpower", y = "count",
-title ="Q6: If you could have a superpower, what would it be?")
+  labs(x = "", y = "count",
+  title ="What would your superpower?")
 ```
 
-In the first plot, we have to spend more time searching for what
-the most frequent category is, and it isn't immediately obvious what 
-the second or third most popular superpower is. By reordering the y-axis
-by the count this information is immediately perceived, and the less interesting
-information is pushed to the bottom of the axis.
+In an unordered bar chart, the reader has to spend more time searching for which is the most frequent category, and it isn't immediately obvious what the second or third most popular superpower is. 
 
+By reordering the categories by the count, this information is more readily available to the reader.
 
-## Comparing counts
+It is hard to re-order! And hence, taking the extra time to make this happen can be dispiriting. However, it is realy **easy** with the **forcats** package. Simply use the `fct_infreq` function when you set the x variable in ggplot:
 
-In lectures we discussed both bar charts
-and '100%' charts (which are stacked bar charts but with proportions 
-instead of counts). Consider examining the relationship between degree type
-and hours studied.
+```
+aes(x=fct_infreq(Q6)), fill=variable)
+```
 
-Here's one groups plot to explore that relationship:
+## Comparing proportions rather than counts
+
+The plot below was submitted to show examine if the hours studied by students differed whether they were doing a single or double degree. The expectation would be that double degree students need to spend more time studying. 
 
 ```{r}
 ggplot(survey, aes(x = Q8, fill = Q12)) +
   geom_bar(position = "dodge") +
   xlab("How many hours do you study per week?") +
-  theme(aspect.ratio = 1) +
   scale_fill_brewer("Type of degree?", palette = "Dark2")
 ```
 
-Because we are viewing a the explantory variable along the x-axis, 
-the viewer knows the denominator (the total number of people within a category:
-[0,3) up to more than 12), and we can easily compare within a category
-along the x-axis by seeing the differences in heights of the bar.
+It is helpful to think about which is the explanatory variable and which the response. Here it would be: degree type is explaining study hours. Therefore we need to examine study hours, conditional on degree type. 
 
-However, to compare between categories the viewer has to make relative 
-judgements between the same coloured rectangles between the answers to 
-"Type of degree?" but this is no longer appropriate since the denominators 
-are different. It's  difficult to see that relatively more people in single
-degrees study 3-6 hours compared to people in single degrees that study 6-9 
-hours. We need to normalise the counts within each category of Q30 to be able 
-to compare the answers to Q12 (resulting in 100% chart):
+The plot above would be ok to answer this question, *if the same total number of students were doing single vs double degrees*. It almost is, but because there is a different number of students in each category, the counts for study hours for each degree type cannot be directly compared. We need to examine *proportion of single degree students in each of the study times, and similarly for double degree students*. 
+
+This would correspond to the plot below.
 
 ```{r}
-ggplot(survey, aes(x = Q8, fill = Q12)) +
-  geom_bar(position = "fill") +
-  xlab("How many hours do you study per week?") +
+ggplot(survey, aes(x = Q12, fill = Q8)) +
+  geom_bar(position = "fill") + 
+  scale_y_reverse() +
+  xlab("Degree type") +
+  theme(aspect.ratio = 1) +
+  scale_fill_brewer("Study hours", palette = "Dark2")
+```
+
+The problem that we have in digesting the proportions from this plot, is that only the very bottom group (0-3, more than 12) and top groups are easy to compare. The rest start and end at different positions, and hence the height of the bars difficult to compare. 
+
+Ideally the bars for degree type, would be side-by-side for each study hour category. That's very close to the original design, with the exception that the heights of the bars should represent proportions. 
+
+```{r}
+p1 <- ggplot(survey, aes(x = Q8, fill = Q12)) +
+  geom_bar(position = "dodge") +
+  xlab("Hours study per week") +
+  scale_fill_brewer("Type of degree", palette = "Dark2") +
+  ggtitle("Original") +
+  theme(legend.position="bottom")
+
+p2 <- survey %>% select(Q12, Q8) %>% 
+  group_by(Q12) %>% count(Q8) %>%
+  spread(Q12, n) %>% 
+  mutate(double=double/sum(double), 
+         single=single/sum(single)) %>%
+  gather("Q12", "prop", single, double) %>%
+  ggplot(aes(x=Q8, y=prop, fill=Q12)) + geom_bar(stat="identity", position="dodge") +
+  xlab("Hours study per week") +
   ylab("Proportion") +
-  theme(aspect.ratio = 1) +
-  scale_fill_brewer("Type of degree?", palette = "Dark2")
+  scale_fill_brewer("Type of degree", palette = "Dark2") +
+  ggtitle("Correctly comparing proportions") +
+  theme(legend.position="bottom")
+grid.arrange(p1, p2, ncol=2)
 ```
 
+What do we learn?
 
-An alternative to the 100% chart that generalizes to more than two
-categorical variables is the mosaic plot, which invites the reader
-to make comparisons between areas.
+1. Both degree type students tend to put a lot of study time in each week.
+2. Double degree students are not putting in more study time than single degree students. 
 
-Here's a redesign of the 100% chart as a mosaic chart using the R package
-`ggmosaic`:
+Here's another plot submitted to study a similar relationship, study by year in university. The group summary was:
 
-```{r}
-library(ggmosaic)
-ggplot(survey) +
-  geom_mosaic(aes(x = product(Q8), fill = Q12)) +
-  scale_fill_brewer("Type of degree", palette = "Dark2") + 
-  xlab("How many hours do you study per week?") 
-```
-
-The width of each rectangle along the x-axis represents the total number of
-responses to each category of question 8, and the heights represent the proportion
-of responses to Q12. From this plot we can immediatly see that the majority
-of students study more than 6 hours per week regardless of degree type.
-
-
-Here's another example. We would like to use examine the relationship between 
-year in school and hours spent studying each week. 
-
-From the plot below a group stated:
-
-> "We can see overall 3rd year students put a lot more hours into study per week. 
-This could perhaps be due to increased workload during the 3rd year as opposed to 1st year."
+*"We can see overall 3rd year students put a lot more hours into study per week. 
+This could perhaps be due to increased workload during the 3rd year as opposed to 1st year."*
 
 ```{r}
 ggplot(survey) +
@@ -193,12 +237,9 @@ ggplot(survey) +
   facet_wrap(~Q8) 
 ```
 
-To answer the original question you need to look at the distribution of hours studying, 
-within each year. 
+To answer the original question you need to look at the distribution of hours studying, within each year. 
 
-Facet by year in school, and then make a bar chart in each facet. You can see that 
-most students are in year 2 or 3, and the counts increase over hours spent studying. 
-Both years have this pattern. 
+Facet by year in school, and then make a bar chart in each facet. You can see that most students are in year 2 or 3, and the counts increase over hours spent studying. Both years have this pattern. 
 
 ```{r}
 ggplot(survey) +
@@ -207,22 +248,30 @@ ggplot(survey) +
 ```
 
 Because numbers are so small in all other groups, drop them, 
-and focus only on years 2 and 3. Then we will make a mosaic plot to 
-directly compare proportions in each hour category, by year. We can see that 
-there is not much difference in the time spent studying each week by year. There
-is a very small increase for year 3 in the more than 12 hours, and decreases in
-6-9, 9-12 hours. That means that there is a hint that third year
-students are studying more.
+and focus only on years 2 and 3. Then we need to do the same calculations as the previous problem, to compare proportion in each study time, within year.
 
 ```{r}
 survey %>% filter(Q1 %in% c(2,3)) %>%
-  ggplot() + geom_mosaic(aes(product(Q8), fill=Q1)) +
-  scale_fill_brewer("Year", palette="Dark2") +
-  xlab("Hours spent studying each week")
+  select(Q1, Q8) %>% 
+  group_by(Q1) %>% count(Q8) %>%
+  spread(Q1, n) %>% 
+  mutate(`2`=`2`/sum(`2`), 
+         `3`=`3`/sum(`3`)) %>%
+  gather("Q1", "prop", `2`, `3`) %>%
+  ggplot(aes(x=Q8, y=prop, fill=Q1)) + 
+  geom_bar(stat="identity", position="dodge") +
+  xlab("Hours study per week") +
+  ylab("Proportion") +
+  scale_fill_brewer("Year", palette = "Dark2") 
 ```
 
+What do we learn?
 
-## Sample size and aggregation
+1. Both years spend long hours studying
+2. More third years report spending more than 12 hours, but its a fairly small difference in proportions. And by contrast the proportions for second years is higher in the next two most study time groups.
+3. Its hard to argue that the third years are spending more time studying.
+
+## Sample size appropriate plots
 
 When a plot performs a statistical transformation of a variable, be aware
 of the sample size used to calculate the transformation. In a boxplot
@@ -258,14 +307,12 @@ Correction: There's only three students in the category, of spending too much
 time on the web and too little time studying.
 
 
-## Conditioning
+## Order of conditioning
 
 We should condition the response variable (or the variable we
-are trying to understand) by other variables we think will explain the
-response. This allows us to make comparisons within the response varaible
-by our explanotory variable(s).
+are trying to understand) by other variables we think will explain the response. This allows us to examine how the response varies by levels of the explanatory variable. 
 
-Final example: how does core or elective vary by year in school. 
+Goal: how does core or elective vary by year in school. 
 
 Which plot is appropriate here?
 
@@ -273,7 +320,7 @@ This:
 
 ```{r}
 ggplot(survey, aes(Q11, fill=Q1)) + geom_bar(position="fill") + 
-  xlab("Core or Elective") + labs(fill="Current year of uni") + 
+  xlab("") + labs(fill="Current year of uni") + 
   ggtitle("Type of unit vs year at uni")
 ```
 
@@ -282,7 +329,7 @@ or this:
 ```{r}
 ggplot(survey, aes(Q1, fill=Q11)) + geom_bar(position="fill") + 
   xlab("Current year of uni") + 
-  scale_fill_brewer("Core or Elective", palette="Dark2") + 
+  scale_fill_brewer("", palette="Dark2") + 
   ggtitle("Type of unit vs year at uni")  
 ```
 
@@ -291,6 +338,16 @@ or this:
 ```{r}
 ggplot(survey) + geom_mosaic(aes(product(Q1), fill=Q11)) + 
   xlab("Current year of uni") + 
-  scale_fill_brewer("Core or Elective", palette="Dark2") + 
+  scale_fill_brewer("", palette="Dark2") + 
   ggtitle("Type of unit vs year at uni")  
 ```
+
+Explanatory variable is year in school, and response is core/elective. This tells us that either of the latter two plots is better than the first.
+
+Because the counts are different in the years in school variable, the last plot (mosaic) is better. It let's us know that there are few students in years 1 and 4. 
+
+What do we learn? There are a few more third year students doing this as an elective.
+
+## Summary
+
+Making effective plots can tell you a LOT about data. Its hard! Its an under-rated but very powerful skill to develop.
