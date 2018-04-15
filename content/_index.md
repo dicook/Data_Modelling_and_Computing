@@ -35,7 +35,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - Week 4: Data visualisation: [Slide set a](https://ebsmonash.shinyapps.io/lecture4a_visualisation/) [(Rmd)](lectures/lecture4a/lecture4a_visualisation.Rmd); [Slide set b](https://ebsmonash.shinyapps.io/lecture4b_visualisation/) [(Rmd)](lectures/lecture4b/lecture4b_visualisation.Rmd); Textbook reading: Chapter 3
 - Week 5: Handling missing values: [Slide set a](https://ebsmonash.shinyapps.io/lecture5a_missings/) [(Rmd)](lectures/lecture5a/lecture5a_missings.Rmd); [Slide set b](https://ebsmonash.shinyapps.io/lecture5b_recap/) [(Rmd)](lectures/lecture5b/lecture5b_recap.Rmd); Texbook reading: Chapter 14 (particularly 14.4.5 Replacing matches, 14.2.3, 14.2.4)
 - Week 6: Introduction to modeling: [Slide set a](https://ebsmonash.shinyapps.io/lecture6a_models/) [(Rmd)](lectures/lecture6a/lecture6a_models.Rmd); [Slide set b](https://ebsmonash.shinyapps.io/lecture6b_models/) [(Rmd)](lectures/lecture6b/lecture6b_models.Rmd); Texbook reading: Chapter 23, sections 1 and 2; [Company testimonials on using R](https://github.com/ThinkR-open/companies-using-r)
-- Week 7: Optimisation 
+- Week 7: Intermediate models; Texbook reading: Chapter 23, sections 3 and 4
 - Week 8: Advanced modeling
 - Week 9: Model diagnostics
 - Week 10: Summaries and decision making
@@ -88,6 +88,8 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - [statistics2.wav](http://dmac.netlify.com/lectures/data/statistics2.wav)
 - [statistics3.wav](http://dmac.netlify.com/lectures/data/statistics3.wav)
 - [pisa_au.rda](http://dmac.netlify.com/lectures/data/pisa_au.rda) Programme for International student assessment
+- [pisa_au_sub.rda](http://dmac.netlify.com/lectures/lecture7a/data/pisa_au_sub.rda) PISA Australia subset
+- [PISA_Codebook_CMB.xlsx](http://dmac.netlify.com/lectures/data/PISA_Codebook_CMB.xlsx) Codebook for Programme for International student assessment
 - [plane_N4YRAA.rda](http://dmac.netlify.com/lectures/data/plane_N4YRAA.rda)
 - [airports.csv](http://dmac.netlify.com/lectures/data/airports.csv)
 - [tb.csv](http://dmac.netlify.com/lectures/data/tb.csv) Tuberculosis incidence
