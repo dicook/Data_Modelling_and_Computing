@@ -1,0 +1,63 @@
+---
+title: "ETC 1010 Assignment 3"
+author: "Di Cook"
+output: html_document
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE, 
+  collapse = TRUE,
+  comment = "",
+  fig.height = 8,
+  fig.width = 12,
+  fig.align = "center",
+  cache = FALSE
+)
+```
+
+
+
+# Instructions
+
+- This is a team assignment, of between 2-4 people. You can work with the same team from the previous assignments, or you can create a new team. 
+- You need to write a report that 
+    - provides a selection of good overview plots 
+    - produces the best model you can make
+    - summarise the model numerically, including equations that would make it easy for others to apply to new data
+    - justify your model based on goodness-of-fit statistics, residual plots, and plots of the model.
+- Turn in `html` output file, and also the `Rmd` file, and a file documenting the team name, team members and %effort by each.
+- Use your team name on the report
+- Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your summaries, explanations and justifications understandable and informative.
+
+# Exercise
+
+- Read in the Melbourne housing data (originally pulled from https://www.kaggle.com/anthonypino/melbourne-housing-market)
+- Focus ONLY on the variables Price, Rooms, Type, Distance, Bedroom2, Bathroom 
+- Make a missing values summary, and a strategy for dealing with the missings
+- Make some good plots summarising the relationship between price
+- Build your model, explaining your choices of transformations, variable selection, interactions 
+- Summarise your final model, and justify why you think it is the best
+
+# Help
+
+- You can read the data in with this code:
+
+```{r eval=FALSE}
+library(tidyverse)
+houses <- read_csv("data/Melbourne_housing_FULL.csv")
+```
+- Think about missing values handling, and what would be most appropriate
+- You may need ot make some transformations of variables
+- Some interactions could by important, but not all
+
+# Grading
+
+Points for the assignment will be based on:
+
+- Whether the Rmd file, can take the data file as provided, and produce the data summaries, model fitting and model summaries
+- Good choices of initial summary plots and explanations
+- Choices made in the model building are reasonable and well explained
+- Model summaries are clear and understandable
