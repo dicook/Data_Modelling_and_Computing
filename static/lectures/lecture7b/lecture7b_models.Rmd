@@ -1,0 +1,258 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 6,
+                      fig.width = 6,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+library(tidyverse)
+library(broom)
+library(gridExtra)
+```
+
+# Intermediate models
+
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.netlify.com](http://dmac.netlify.com)
+
+## Overview
+
+- Recap: transformations, interaction between quantitative variables, missing values
+- Model visualisation
+- Inference
+- Model building
+
+## Recap: transformations, interaction between quantitative variables, missing values
+
+### Transformations
+
+- Numerical variables, whether they are explanatory or response, work better for modeling if they are reasonably spread out. If they are right- or left-skewed the model puts more weight on the extreme values. 
+- Categorical variables may need to be re-levelled to balance classes, or remove low count classes.
+
+```{r fig.width=6, fig.height=3}
+x <- runif(100)
+df <- tibble(x, y=5-2*x+rnorm(100), x2=(2*x)^10)
+p1 <- ggplot(df, aes(x=x2, y=y)) + geom_point() + 
+  geom_smooth(method="lm", se=FALSE) +
+  ggtitle("Less stable base for model")
+p2 <- ggplot(df, aes(x=x, y=y)) + geom_point() + 
+  geom_smooth(method="lm", se=FALSE) +
+  ggtitle("Ideal base for model")
+grid.arrange(p1, p2, ncol=2)
+```
+
+### Interaction between quantitative variables
+
+- Interactions for two quantitative variables in a model, can be thought of as allowing the paper sheet (model) to curl.
+
+```{r fig.width=6, fig.height=3}
+library(viridis)
+x1 <- runif(500)
+x2 <- runif(500)
+df <- tibble(x1, x2, y1=5-2*x1+4*x2+rnorm(500)*0.5,
+             y2=5-2*x1+4*x2+10*(-x1)*x2+rnorm(500)*0.5)
+p1 <- ggplot(df, aes(x=x1, y=x2, colour=y1)) + 
+  geom_point(size=5, alpha=0.5) + 
+  scale_colour_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
+  ggtitle("Flat sheet: no interaction")
+p2 <- ggplot(df, aes(x=x1, y=x2, colour=y2)) + 
+  geom_point(size=5, alpha=0.5) + 
+  scale_colour_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
+  ggtitle("Curled sheet: needs an interaction term")
+grid.arrange(p1, p2, ncol=2)
+```
+
+### Missing values
+
+```{r}
+load("data/pisa_au_sub.rda")
+library(visdat)
+pisa_au_science2 <- pisa_au %>% 
+  select(science, science_fun, science_time) 
+vis_dat(pisa_au_science2)
+library(naniar)
+miss_summary(pisa_au_science2)
+```
+
+```{r miss, echo=FALSE}
+quiz(
+  question("How many cases were dropped when missings were removed in the model?",
+    answer("1067"),
+    answer("2302", correct = TRUE), 
+    answer("9687"))
+)
+```
+
+- A missing value anywhere, means that row of values can't be used for the model fitting
+- Strategies: 
+    - Variables with many missings are better not to be used
+    - Observations (rows) with many missings are better to be dropped
+    - Cases with missing reponse values can't be used
+    - If there are a few sporadic missings then maybe imputation should be done so that the rest of the row of data can be used in the model
+    
+
+## Model visualisation
+
+- Plot the model with the data, where possible
+- Observed vs fitted values: to examine the model goodness of fit 
+- Fitted vs explanatory variables: to examine variable importance
+- Residuals vs fitted: to examine what the model hasn't captured, and an assumptions behind the model 
+
+### Two quantitative explanatory variables
+
+- Two models are fitted to the data generated in the last section `df <- tibble(x1, x2,  y2=5-2*x1+4*x2+10*(-x1)*x2+rnorm(500)*0.5)`, that data that exhibits some interatction. - What happens when we fit a model, with and without an interaction term.
+
+```{r}
+mod1 <- lm(y2 ~ x1+x2, data=df)
+mod2 <- lm(y2 ~ x1*x2, data=df)
+
+tidy(mod1)
+tidy(mod2)
+
+glance(mod1)
+glance(mod2)
+```
+
+- The model fitting the interaction is much better. 
+- A couple of ways to plot the model, as a surface (tile plot) or holding one variable fixed, and showing the other.
+
+#### Method 1
+
+Using the tile approach. A grid of the explanatory variable is displayed, with fitted value mapped to the colour filling the cell. 
+
+```{r fig.width=6, fig.height=3}
+grid <- expand.grid(x1=seq(0,1,0.1), x2=seq(0,1,0.1))
+mod1_a <- augment(mod1, newdata=grid)
+mod2_a <- augment(mod2, newdata=grid)
+
+p1 <- ggplot(mod1_a, aes(x=x1, y=x2, fill=.fitted)) +
+  geom_tile() +  scale_fill_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position="none") 
+p2 <- ggplot(mod2_a, aes(x=x1, y=x2, fill=.fitted)) +
+  geom_tile() +  scale_fill_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position="none") 
+grid.arrange(p1, p2, ncol=2)
+```
+
+Same data, quite different fits. 
+
+#### Method 2
+
+Fix the level of variable 1, plot the response vs the other variable. Re-do for each of the levels of variable 1.
+
+```{r fig.width=6, fig.height=6}
+p1 <- ggplot(mod1_a, aes(x=x1, y=.fitted, colour=x2, group=x2)) +
+  geom_line() +  scale_colour_viridis() + 
+  theme(legend.position="none") + ggtitle("Model 1: no interaction")
+p2 <- ggplot(mod2_a, aes(x=x1, y=.fitted, colour=x2, group=x2)) +
+  geom_line() +  scale_colour_viridis() + 
+  theme(legend.position="none") + ggtitle("Model 2: with an interaction") 
+p3 <- ggplot(mod1_a, aes(x=x2, y=.fitted, colour=x1, group=x1)) +
+  geom_line() +  scale_colour_viridis() + 
+  theme(legend.position="none") + ggtitle("Model 1: no interaction")
+p4 <- ggplot(mod2_a, aes(x=x2, y=.fitted, colour=x1, group=x1)) +
+  geom_line() +  scale_colour_viridis() + 
+  theme(legend.position="none") + ggtitle("Model 2: with an interaction") 
+grid.arrange(p1, p2, p3, p4, ncol=2)
+```
+
+The models are clearly quite different. And the interaction term makes it a much better fit. 
+
+### Observed vs fitted
+
+```{r fig.width=6, fig.height=3}
+mod1_a2 <- augment(mod1, df)
+mod2_a2 <- augment(mod2, df)
+p1 <- ggplot(mod1_a2, aes(x=.fitted, y=y2)) +
+  geom_point() + ggtitle("Model 1")
+p2 <- ggplot(mod2_a2, aes(x=.fitted, y=y2)) +
+  geom_point() + ggtitle("Model 2")
+grid.arrange(p1, p2, ncol=2)
+```
+
+What do we learn? *Model 2 has a much closer, stronger relationship between observed and fitted values. Its the better fit.* 
+
+### Residuals vs fitted
+
+```{r fig.width=6, fig.height=3}
+p1 <- ggplot(mod1_a2, aes(x=.fitted, y=.std.resid)) +
+  geom_point() + ggtitle("Model 1")
+p2 <- ggplot(mod2_a2, aes(x=.fitted, y=.std.resid)) +
+  geom_point() + ggtitle("Model 2")
+grid.arrange(p1, p2, ncol=2)
+```
+
+What do we learn? *There is some nonlinear structure and heteroskedasticity, that has been missed by model 1.* 
+
+## Inference
+
+Predictive model means that you want to apply what you've learned to new data. To do this well, you need an understanding of how the model might change if you had different sample. Ideally, you want to know how it would behave if you could see it fitted to all possible samples.
+
+There are a couple of ways to approach this:
+
+1. Make some parametric assumptions, $\varepsilon \sim N(0, \sigma^2)$. These can be used to produce confidence intervals for the model's parameter estimates. Then we can determine if we believe the population parameter is different from 0, statistically significant, and hence the variable is an important predictor of the response.
+2. Use resampling methods. Take a bootstrap sample, sampling observations with replacement, re-fit the model. Repeat this many times. The variation in parameter estimates can be used to compute confidence intervals, and hence determine if the population parameter is significantly different from 0. 
+
+*One assumption that cannot be avoided is that the observations are independent draws from a population distribution.* Generally, the model predictions can be used, but the confidence intervals will not accurately reflect the variation of the model for new samples. An approach that takes the dependence between observations into account for confidence intervals is needed, e.g. autoregressive error model for data like the CO2. 
+
+### Five minute challenge
+
+- Fit the model with `science` score as the response and `science_fun` (categorical), `science_time` (numeric), `gender` and `anxtest`. Use an interaction for gender and anxtest, but not for the other variables. 
+- Print out the model coefficients table. 
+- Based on the parametric approach, which variables are important for predicting science score.
+
+```{r eval=FALSE}
+library(labelled)
+load("data/pisa_au_sub.rda")
+pisa_au_science <- pisa_au %>% 
+  filter(science_fun < 5) %>%
+  filter(!is.na(science_time)) %>%
+  filter(!is.na(anxtest)) %>%
+  select(science, science_fun, science_time, gender, anxtest) %>%
+  mutate(science_fun = to_factor(science_fun, ordered=TRUE, drop_unused_labels = TRUE)) %>%
+  mutate(science_time = as.numeric(science_time)) %>%
+  filter(science_time>0) %>%
+  mutate(log_science_time = log10(science_time)) %>%
+  mutate(science_fun_c = factor(science_fun, ordered=FALSE))
+sci_lm <- lm(science ~ science_fun_c + science_time + gender*anxtest, data=pisa_au_science)
+tidy(sci_lm)
+```
+
+
+## Model building
+
+Goal: The simplest model possible that provides similar predictive accuracy to most complex model.
+
+Approach: 
+
+- Start simply, fit main effects models (single best variable, adding several more variables independently) and try to understand the effect that each has in the model. 
+- Explore transformations. 
+- Check model diagnostics, residual plots
+- Explore two variable interactions, and understand effect on model
+- Explore three variable interactions
+- Use model goodness of fit to help decide on final. There may be more than one model that are almost equally as good.
+
+*Aside:* Ideally, values of explanatory variables cover all possible combinations in their domain. There should *not be any association between explanatory variables*. If there is, then the there is more uncertainty in the parameter estimates. Its like building a table with only two legs, that table would be a bit wobbly, and unstable. A work around is to first regress one explanatory variable on the other, and add the residuals from this fit to the model, instead of the original variable. That is, suppose $X_1, X_2$ are strongly linearly associated, then model $X_2\sim b_0+b_1X_1+e$, and use $e$ (call it $X^*_2$) in the model instead of $X_2$. You would then only be using the part of $X_2$ that is not related to $X_1$ to expand the model. This approach can be used for multiple explanatory variables that are associated. 
+
+### 15 minute challenge
+
+Explore adding these variables to the model: tvs, books, breakfast (actually feel free to choose others), to examine effects on science scores.
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.

@@ -174,7 +174,7 @@ library(labelled)
 pisa_au_science <- pisa_au %>% 
   filter(science_fun < 5) %>%
   filter(!is.na(science_time)) %>% 
-  select(science, science_fun, science_time) %>%
+  select(science, science_fun, science_time, stuweight) %>%
   mutate(science_fun = to_factor(science_fun, ordered=TRUE, drop_unused_labels = TRUE)) %>%
   mutate(science_time = as.numeric(science_time)) %>%
   filter(science_time>0)
@@ -232,12 +232,14 @@ mod2 <- lm(science~science_time*science_fun, data=pisa_au_science)
 
 Model 2 has an interaction term. This means that the slope will be allowed to vary for the different levels of the categorical variables, science_fun.
 
+*Note:* Ordered factors are treated as "numeric" in the default model fit, so we should convert `science_fun` to be an unordered categorical variable. Also, `science_time` is heavily skewed so should be transformed.
+
 ```{r}
 pisa_au_science <- pisa_au_science %>%
   mutate(log_science_time = log10(science_time)) %>%
   mutate(science_fun_c = factor(science_fun, ordered=FALSE))
-mod1 <- lm(science~log_science_time+science_fun_c, data=pisa_au_science)
-mod2 <- lm(science~log_science_time*science_fun_c, data=pisa_au_science)
+mod1 <- lm(science~log_science_time+science_fun_c, data=pisa_au_science, weights = stuweight)
+mod2 <- lm(science~log_science_time*science_fun_c, data=pisa_au_science, weights = stuweight)
 tidy(mod1)
 tidy(mod2)
 ```
@@ -311,17 +313,17 @@ tidy(mod2)
 
 With a categorical variable, and an interaction, the best summary is to write out the model equation for each level of the variable:
 
-- Strongly disagree: $447.49+2.75 x_1$
-- Disagree: $447.49-118.44+(2.75+64.90)x_1=329.05+67.65x_1$
-- Agree: $447.49-195.57+(2.75+110.93)\times x_1=251.92+113.68x_1$
-- Strongly agree: $447.49-111.96+(2.75+94.12)\times x_1=335.53+96.87x_1$
+- Strongly disagree: $463.33-.0040 x_1$
+- Disagree: $463.33-151.88+(-.0040+78.64)x_1$
+- Agree: $463.33-151.88+(-.0040+98.41)\times x_1$
+- Strongly agree: $463.33-122.49+(-.0040+96.9)\times x_1$
 
 ### Prediction
 
 For a new observation, where `science_time`=360 and `science_fun` is Agree, what would you expect the science score to be?
 
 1. Science time needs to be logged.
-2. $251.92+113.68log10(360)=542.5$
+2. $311.45+98.4log10(360)=563$
 
 ### Interpretation: 5 minute challenge
 
@@ -331,7 +333,7 @@ For a new observation, where `science_time`=360 and `science_fun` is Agree, what
 
 ### 15 minute challenge
 
-- Re-fit the model using the original numeric scale for `science_fun`. How does the resulting  model differ?
+- Re-fit the model using the original numeric scale for `science_fun`. How does the resulting model differ?
 - Include an interaction between `science_time` and `science_fun` using the numeric scale for `science_fun`. How does the model differ from model 2 above, that uses a categorical scale, and interaction.
 
 ## Share and share alike

@@ -128,7 +128,7 @@ ggplot(pisa_mod, aes(x=reorder(state, science), y=science)) +
 pisa_au_science &lt;- pisa_au %&gt;% 
   filter(science_fun &lt; 5) %&gt;%
   filter(!is.na(science_time)) %&gt;% 
-  select(science, science_fun, science_time) %&gt;%
+  select(science, science_fun, science_time, stuweight) %&gt;%
   mutate(science_fun = to_factor(science_fun, ordered=TRUE, drop_unused_labels = TRUE)) %&gt;%
   mutate(science_time = as.numeric(science_time)) %&gt;%
   filter(science_time&gt;0)
@@ -152,53 +152,53 @@ ggplot(pisa_au_science, aes(x=science_time, y=science,
 <tr>
 <td>
 
-<div id="htmlwidget-95aa4763f6026e81e990" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-cf1a21b09f7bae073151" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-95aa4763f6026e81e990">{"x":{"question":"How would you describe the relationship between science score and time spent studying?","answers":[{"option":"Weak","correct":true,"message":null},{"option":"Moderate","correct":false,"message":null},{"option":"Strong","correct":false,"message":null}],"label":"pipeline-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"How would you describe the relationship between science score and time spent studying?","a":[{"option":"Weak","correct":true,"message":null},{"option":"Moderate","correct":false,"message":null},{"option":"Strong","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-cf1a21b09f7bae073151">{"x":{"question":"How would you describe the relationship between science score and time spent studying?","answers":[{"option":"Weak","correct":true,"message":null},{"option":"Moderate","correct":false,"message":null},{"option":"Strong","correct":false,"message":null}],"label":"pipeline-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"How would you describe the relationship between science score and time spent studying?","a":[{"option":"Weak","correct":true,"message":null},{"option":"Moderate","correct":false,"message":null},{"option":"Strong","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-29e7516ec9fb622a796d" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-23b2a0704c39a3fc8f7b" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-29e7516ec9fb622a796d">{"x":{"question":"What do these lines of code do?   <code>filter(science_fun &lt; 5) %&gt;%\n  filter(!is.na(science_time))<\/code>","answers":[{"option":"Remove missing values","correct":true,"message":null},{"option":"Remove extreme values, and missing values","correct":false,"message":null},{"option":"I have no idea","correct":false,"message":null}],"label":"pipeline-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What do these lines of code do?   <code>filter(science_fun &lt; 5) %&gt;%\n  filter(!is.na(science_time))<\/code>","a":[{"option":"Remove missing values","correct":true,"message":null},{"option":"Remove extreme values, and missing values","correct":false,"message":null},{"option":"I have no idea","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-23b2a0704c39a3fc8f7b">{"x":{"question":"What do these lines of code do?   <code>filter(science_fun &lt; 5) %&gt;%\n  filter(!is.na(science_time))<\/code>","answers":[{"option":"Remove missing values","correct":true,"message":null},{"option":"Remove extreme values, and missing values","correct":false,"message":null},{"option":"I have no idea","correct":false,"message":null}],"label":"pipeline-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What do these lines of code do?   <code>filter(science_fun &lt; 5) %&gt;%\n  filter(!is.na(science_time))<\/code>","a":[{"option":"Remove missing values","correct":true,"message":null},{"option":"Remove extreme values, and missing values","correct":false,"message":null},{"option":"I have no idea","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-77862c5c4e1076af7331" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-ea37d5aca45041f20e6f" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-77862c5c4e1076af7331">{"x":{"question":"Why was <code>science_time<\/code> transformed to a log scale?","answers":[{"option":"It has a right-skewed distribution.","correct":true,"message":null},{"option":"It has a left-skewed distribution.","correct":false,"message":null},{"option":"It is symmetric","correct":false,"message":null}],"label":"pipeline-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Why was <code>science_time<\/code> transformed to a log scale?","a":[{"option":"It has a right-skewed distribution.","correct":true,"message":null},{"option":"It has a left-skewed distribution.","correct":false,"message":null},{"option":"It is symmetric","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-ea37d5aca45041f20e6f">{"x":{"question":"Why was <code>science_time<\/code> transformed to a log scale?","answers":[{"option":"It has a right-skewed distribution.","correct":true,"message":null},{"option":"It has a left-skewed distribution.","correct":false,"message":null},{"option":"It is symmetric","correct":false,"message":null}],"label":"pipeline-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Why was <code>science_time<\/code> transformed to a log scale?","a":[{"option":"It has a right-skewed distribution.","correct":true,"message":null},{"option":"It has a left-skewed distribution.","correct":false,"message":null},{"option":"It is symmetric","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-a634c527451270ede272" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-2748e43930e9152716c7" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-a634c527451270ede272">{"x":{"question":"Why were 0 values of <code>science_time<\/code> removed?","answers":[{"option":"It could be argued that these are most likely missing values","correct":true,"message":null},{"option":"They are outliers affecting the modeling","correct":false,"message":null},{"option":"No-one would be able to study science 0 minutes per week","correct":false,"message":null}],"label":"pipeline-4","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Why were 0 values of <code>science_time<\/code> removed?","a":[{"option":"It could be argued that these are most likely missing values","correct":true,"message":null},{"option":"They are outliers affecting the modeling","correct":false,"message":null},{"option":"No-one would be able to study science 0 minutes per week","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-2748e43930e9152716c7">{"x":{"question":"Why were 0 values of <code>science_time<\/code> removed?","answers":[{"option":"It could be argued that these are most likely missing values","correct":true,"message":null},{"option":"They are outliers affecting the modeling","correct":false,"message":null},{"option":"No-one would be able to study science 0 minutes per week","correct":false,"message":null}],"label":"pipeline-4","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Why were 0 values of <code>science_time<\/code> removed?","a":[{"option":"It could be argued that these are most likely missing values","correct":true,"message":null},{"option":"They are outliers affecting the modeling","correct":false,"message":null},{"option":"No-one would be able to study science 0 minutes per week","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 </table>
@@ -214,21 +214,22 @@ ggplot(pisa_au_science, aes(x=science_time, y=science,
 <pre><code>mod1 &lt;- lm(science~science_time+science_fun, data=pisa_au_science)
 mod2 &lt;- lm(science~science_time*science_fun, data=pisa_au_science)</code></pre>
 <p>Model 2 has an interaction term. This means that the slope will be allowed to vary for the different levels of the categorical variables, science_fun.</p>
+<p><em>Note:</em> Ordered factors are treated as “numeric” in the default model fit, so we should convert <code>science_fun</code> to be an unordered categorical variable. Also, <code>science_time</code> is heavily skewed so should be transformed.</p>
 <pre class="r"><code>pisa_au_science &lt;- pisa_au_science %&gt;%
   mutate(log_science_time = log10(science_time)) %&gt;%
   mutate(science_fun_c = factor(science_fun, ordered=FALSE))
-mod1 &lt;- lm(science~log_science_time+science_fun_c, data=pisa_au_science)
-mod2 &lt;- lm(science~log_science_time*science_fun_c, data=pisa_au_science)
+mod1 &lt;- lm(science~log_science_time+science_fun_c, data=pisa_au_science, weights = stuweight)
+mod2 &lt;- lm(science~log_science_time*science_fun_c, data=pisa_au_science, weights = stuweight)
 tidy(mod1)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"249.25591","3":"14.824437","4":"16.81385","5":"1.174052e-62"},{"1":"log_science_time","2":"87.65783","3":"6.257115","4":"14.00930","5":"3.286329e-44"},{"1":"science_fun_cDisagree","2":"33.25252","3":"3.166820","4":"10.50029","5":"1.139855e-25"},{"1":"science_fun_cAgree","2":"63.65322","3":"2.808865","4":"22.66154","5":"3.748111e-111"},{"1":"science_fun_cStrongly agree","2":"108.15275","3":"3.318621","4":"32.58966","5":"1.897338e-222"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"267.67909","3":"14.636287","4":"18.28873","5":"1.259015e-73"},{"1":"log_science_time","2":"83.80455","3":"6.175756","4":"13.56993","5":"1.308060e-41"},{"1":"science_fun_cDisagree","2":"31.75873","3":"3.153024","4":"10.07247","5":"9.275505e-24"},{"1":"science_fun_cAgree","2":"63.11582","3":"2.802022","4":"22.52510","5":"7.170303e-110"},{"1":"science_fun_cStrongly agree","2":"104.35334","3":"3.250201","4":"32.10674","5":"3.001395e-216"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code>tidy(mod2)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"447.494799","3":"40.67255","4":"11.002380","5":"5.214727e-28"},{"1":"log_science_time","2":"2.752606","3":"17.38667","4":"0.158317","5":"8.742099e-01"},{"1":"science_fun_cDisagree","2":"-118.443185","3":"53.06113","4":"-2.232203","5":"2.562171e-02"},{"1":"science_fun_cAgree","2":"-195.567906","3":"45.73207","4":"-4.276384","5":"1.915630e-05"},{"1":"science_fun_cStrongly agree","2":"-111.962517","3":"52.71510","4":"-2.123918","5":"3.369937e-02"},{"1":"log_science_time:science_fun_cDisagree","2":"64.896168","3":"22.72069","4":"2.856258","5":"4.294721e-03"},{"1":"log_science_time:science_fun_cAgree","2":"110.928587","3":"19.53520","4":"5.678395","5":"1.394228e-08"},{"1":"log_science_time:science_fun_cStrongly agree","2":"94.124451","3":"22.38769","4":"4.204294","5":"2.639777e-05"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"4.633345e+02","3":"43.50881","4":"10.649211503","5":"2.365354e-26"},{"1":"log_science_time","2":"-3.995844e-03","3":"18.60566","4":"-0.000214765","5":"9.998286e-01"},{"1":"science_fun_cDisagree","2":"-1.518829e+02","3":"55.46131","4":"-2.738538689","5":"6.181258e-03"},{"1":"science_fun_cAgree","2":"-1.667660e+02","3":"48.13726","4":"-3.464385383","5":"5.334771e-04"},{"1":"science_fun_cStrongly agree","2":"-1.224884e+02","3":"53.60320","4":"-2.285094215","5":"2.232632e-02"},{"1":"log_science_time:science_fun_cDisagree","2":"7.864348e+01","3":"23.75214","4":"3.311006323","5":"9.326154e-04"},{"1":"log_science_time:science_fun_cAgree","2":"9.840520e+01","3":"20.56815","4":"4.784348761","5":"1.737805e-06"},{"1":"log_science_time:science_fun_cStrongly agree","2":"9.693076e+01","3":"22.78145","4":"4.254811516","5":"2.109641e-05"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -280,13 +281,13 @@ grid.arrange(p1, p2, ncol=2)</code></pre>
 <pre class="r"><code>glance(mod1)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"0.1237893","2":"0.1234696","3":"92.25865","4":"387.2077","5":"1.741725e-312","6":"5","7":"-65186.19","8":"130384.4","9":"130428.2","10":"93313305","11":"10963"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"0.1232009","2":"0.122881","3":"387.1382","4":"385.1085","5":"6.872522e-311","6":"5","7":"-66705.89","8":"133423.8","9":"133467.6","10":"1643090595","11":"10963"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code>glance(mod2)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"0.1265533","2":"0.1259955","3":"92.12562","4":"226.8557","5":"3.61355e-316","6":"8","7":"-65168.86","8":"130355.7","9":"130421.4","10":"93018948","11":"10960"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"0.125131","2":"0.1245723","3":"386.7648","4":"223.9415","5":"2.61948e-312","6":"8","7":"-66693.8","8":"133405.6","9":"133471.3","10":"1639473527","11":"10960"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <ul>
@@ -299,15 +300,15 @@ grid.arrange(p1, p2, ncol=2)</code></pre>
 <pre class="r"><code>tidy(mod2)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"447.494799","3":"40.67255","4":"11.002380","5":"5.214727e-28"},{"1":"log_science_time","2":"2.752606","3":"17.38667","4":"0.158317","5":"8.742099e-01"},{"1":"science_fun_cDisagree","2":"-118.443185","3":"53.06113","4":"-2.232203","5":"2.562171e-02"},{"1":"science_fun_cAgree","2":"-195.567906","3":"45.73207","4":"-4.276384","5":"1.915630e-05"},{"1":"science_fun_cStrongly agree","2":"-111.962517","3":"52.71510","4":"-2.123918","5":"3.369937e-02"},{"1":"log_science_time:science_fun_cDisagree","2":"64.896168","3":"22.72069","4":"2.856258","5":"4.294721e-03"},{"1":"log_science_time:science_fun_cAgree","2":"110.928587","3":"19.53520","4":"5.678395","5":"1.394228e-08"},{"1":"log_science_time:science_fun_cStrongly agree","2":"94.124451","3":"22.38769","4":"4.204294","5":"2.639777e-05"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"4.633345e+02","3":"43.50881","4":"10.649211503","5":"2.365354e-26"},{"1":"log_science_time","2":"-3.995844e-03","3":"18.60566","4":"-0.000214765","5":"9.998286e-01"},{"1":"science_fun_cDisagree","2":"-1.518829e+02","3":"55.46131","4":"-2.738538689","5":"6.181258e-03"},{"1":"science_fun_cAgree","2":"-1.667660e+02","3":"48.13726","4":"-3.464385383","5":"5.334771e-04"},{"1":"science_fun_cStrongly agree","2":"-1.224884e+02","3":"53.60320","4":"-2.285094215","5":"2.232632e-02"},{"1":"log_science_time:science_fun_cDisagree","2":"7.864348e+01","3":"23.75214","4":"3.311006323","5":"9.326154e-04"},{"1":"log_science_time:science_fun_cAgree","2":"9.840520e+01","3":"20.56815","4":"4.784348761","5":"1.737805e-06"},{"1":"log_science_time:science_fun_cStrongly agree","2":"9.693076e+01","3":"22.78145","4":"4.254811516","5":"2.109641e-05"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>With a categorical variable, and an interaction, the best summary is to write out the model equation for each level of the variable:</p>
 <ul>
-<li>Strongly disagree: <span class="math inline">\(447.49+2.75 x_1\)</span></li>
-<li>Disagree: <span class="math inline">\(447.49-118.44+(2.75+64.90)x_1=329.05+67.65x_1\)</span></li>
-<li>Agree: <span class="math inline">\(447.49-195.57+(2.75+110.93)\times x_1=251.92+113.68x_1\)</span></li>
-<li>Strongly agree: <span class="math inline">\(447.49-111.96+(2.75+94.12)\times x_1=335.53+96.87x_1\)</span></li>
+<li>Strongly disagree: <span class="math inline">\(463.33-.0040 x_1\)</span></li>
+<li>Disagree: <span class="math inline">\(463.33-151.88+(-.0040+78.64)x_1\)</span></li>
+<li>Agree: <span class="math inline">\(463.33-151.88+(-.0040+98.41)\times x_1\)</span></li>
+<li>Strongly agree: <span class="math inline">\(463.33-122.49+(-.0040+96.9)\times x_1\)</span></li>
 </ul>
 </div>
 <div id="section-prediction" class="section level3">
@@ -315,7 +316,7 @@ grid.arrange(p1, p2, ncol=2)</code></pre>
 <p>For a new observation, where <code>science_time</code>=360 and <code>science_fun</code> is Agree, what would you expect the science score to be?</p>
 <ol style="list-style-type: decimal">
 <li>Science time needs to be logged.</li>
-<li><span class="math inline">\(251.92+113.68log10(360)=542.5\)</span></li>
+<li><span class="math inline">\(311.45+98.4log10(360)=563\)</span></li>
 </ol>
 </div>
 <div id="section-interpretation-5-minute-challenge" class="section level3">
