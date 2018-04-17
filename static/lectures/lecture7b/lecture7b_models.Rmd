@@ -223,13 +223,12 @@ pisa_au_science <- pisa_au %>%
   filter(science_fun < 5) %>%
   filter(!is.na(science_time)) %>%
   filter(!is.na(anxtest)) %>%
-  select(science, science_fun, science_time, gender, anxtest) %>%
-  mutate(science_fun = to_factor(science_fun, ordered=TRUE, drop_unused_labels = TRUE)) %>%
+  select(science, science_fun, science_time, gender, anxtest, stuweight) %>%
   mutate(science_time = as.numeric(science_time)) %>%
   filter(science_time>0) %>%
   mutate(log_science_time = log10(science_time)) %>%
   mutate(science_fun_c = factor(science_fun, ordered=FALSE))
-sci_lm <- lm(science ~ science_fun_c + science_time + gender*anxtest, data=pisa_au_science)
+sci_lm <- lm(science ~ science_fun_c + science_time + gender*anxtest, data=pisa_au_science, weights=stuweight)
 tidy(sci_lm)
 ```
 

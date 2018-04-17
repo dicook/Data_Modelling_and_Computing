@@ -163,6 +163,13 @@ tidy(pisa_lm)[,1:2] %>%
 - Compute the weighted means for each state. Are these the same as the fitted model?
 - Fit a no-intercept model. How does this compare with the current model?
 
+```{r}
+pisa_au %>% group_by(state) %>% 
+  summarise(m = weighted.mean(science, stuweight, na.rm=T))
+pisa_lm2 <-lm(science~state-1, data=pisa_au, weight=stuweight)
+tidy(pisa_lm2)
+```
+
 ## Interactions
 
 ### Categorical and continuous variable
@@ -335,6 +342,44 @@ For a new observation, where `science_time`=360 and `science_fun` is Agree, what
 
 - Re-fit the model using the original numeric scale for `science_fun`. How does the resulting model differ?
 - Include an interaction between `science_time` and `science_fun` using the numeric scale for `science_fun`. How does the model differ from model 2 above, that uses a categorical scale, and interaction.
+
+```{r}
+mod3 <- lm(science~log_science_time+science_fun, data=pisa_au_science, weights = stuweight)
+mod4 <- lm(science~log_science_time*science_fun, data=pisa_au_science, weights = stuweight)
+tidy(mod3)
+tidy(mod4)
+```
+
+```{r}
+pisa_au_science <- pisa_au %>% 
+  filter(science_fun < 5) %>%
+  mutate(science_fun_n = as.numeric(science_fun)) %>%
+  filter(!is.na(science_time)) %>% 
+  select(science, science_fun, science_time, science_fun_n, stuweight) %>%
+  mutate(science_fun = to_factor(science_fun, ordered=TRUE, drop_unused_labels = TRUE)) %>%
+  mutate(science_time = as.numeric(science_time)) %>%
+  filter(science_time>0) %>%
+  mutate(log_science_time = log10(science_time)) %>%
+  mutate(science_fun_c = factor(science_fun, ordered=FALSE))
+mod5 <- lm(science~log_science_time+science_fun_n, data=pisa_au_science, weights = stuweight)
+mod6 <- lm(science~log_science_time*science_fun_n, data=pisa_au_science, weights = stuweight)
+tidy(mod5)
+tidy(mod6)
+```
+
+```{r lab-exercise}
+pisa_au_science <- pisa_au %>% 
+  filter(science_fun < 5) %>%
+  filter(!is.na(science_time)) %>%
+  filter(!is.na(anxtest)) %>%
+  select(science, science_fun, science_time, gender, anxtest, stuweight) %>%
+  mutate(science_fun_c = to_factor(science_fun, ordered=FALSE, drop_unused_labels = TRUE)) %>%
+  mutate(science_time = as.numeric(science_time)) %>%
+  filter(science_time>0) %>%
+  mutate(log_science_time = log10(science_time)) 
+sci_lm <- lm(science ~ science_fun_c + science_time + gender*anxtest, data=pisa_au_science, weights = stuweight)
+tidy(sci_lm)
+```
 
 ## Share and share alike
 
