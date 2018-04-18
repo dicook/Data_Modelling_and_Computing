@@ -208,15 +208,42 @@ There are a couple of ways to approach this:
 1. Make some parametric assumptions, $\varepsilon \sim N(0, \sigma^2)$. These can be used to produce confidence intervals for the model's parameter estimates. Then we can determine if we believe the population parameter is different from 0, statistically significant, and hence the variable is an important predictor of the response.
 2. Use resampling methods. Take a bootstrap sample, sampling observations with replacement, re-fit the model. Repeat this many times. The variation in parameter estimates can be used to compute confidence intervals, and hence determine if the population parameter is significantly different from 0. 
 
+Compute confidence intervals using the `confint_tidy` function in the `broom` package:
+
+```{r echo=FALSE}
+library(labelled)
+load("data/pisa_au_sub.rda")
+pisa_au_science <- pisa_au %>% 
+  filter(science_fun < 5) %>%
+  filter(!is.na(science_time)) %>%
+  filter(!is.na(cars)) %>%
+  select(science, science_fun, science_time, cars, stuweight) %>%
+  mutate(science_time = as.numeric(science_time)) %>%
+  filter(science_time>0) %>%
+  mutate(log_science_time = log10(science_time)) %>%
+  mutate(science_fun_c = factor(science_fun, ordered=FALSE))
+sci_lm <- lm(science ~ science_fun_c + science_time + cars, data=pisa_au_science, weights=stuweight)
+tidy(sci_lm)
+```
+
+```{r}
+confint_tidy(sci_lm)
+sci_coefs <- bind_cols(tidy(sci_lm), confint_tidy(sci_lm))
+ggplot(filter(sci_coefs, term != "(Intercept)"), aes(x=term, y=estimate)) + 
+  #geom_vline(xintercept=0, colour="white", size=3) +
+  geom_point() + 
+  geom_errorbar(aes(ymin=conf.low, ymax=conf.high))
+```
+
 *One assumption that cannot be avoided is that the observations are independent draws from a population distribution.* Generally, the model predictions can be used, but the confidence intervals will not accurately reflect the variation of the model for new samples. An approach that takes the dependence between observations into account for confidence intervals is needed, e.g. autoregressive error model for data like the CO2. 
 
 ### Five minute challenge
 
 - Fit the model with `science` score as the response and `science_fun` (categorical), `science_time` (numeric), `gender` and `anxtest`. Use an interaction for gender and anxtest, but not for the other variables. 
-- Print out the model coefficients table. 
-- Based on the parametric approach, which variables are important for predicting science score.
+- Print out the model coefficients table, and 95% confidence intervals.
+- Based on the parametric approach, which terms in the model are important for predicting science score.
 
-```{r eval=FALSE}
+```{r echo=FALSE}
 library(labelled)
 load("data/pisa_au_sub.rda")
 pisa_au_science <- pisa_au %>% 
