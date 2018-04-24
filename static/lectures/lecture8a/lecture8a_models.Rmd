@@ -119,7 +119,7 @@ quiz(
 ## Fit all countries
 
 ```{r echo=TRUE}
-library("purrr")
+library(purrr)
 by_country <- gapminder2 %>% 
   select(country, year1950, lifeExp, continent) %>%
   group_by(country, continent) %>% 
