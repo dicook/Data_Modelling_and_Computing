@@ -1,0 +1,198 @@
+---
+title: "ETC1010 Assignment 3"
+author: "ETC1010"
+date: "23/04/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(readr)
+Melbourne_housing_FULL <- read_csv("data/Melbourne_housing_FULL.csv")
+housing_filtered_missing <- Melbourne_housing_FULL %>%
+  select(Price, Rooms, Type, Distance, Bedroom2, Bathroom)
+```
+
+#MISSING VALUES SUMMARY
+```{r}
+library(naniar)
+miss_summary(housing_filtered_missing)
+```
+```{r}
+vis_miss(housing_filtered_missing, sort_miss=TRUE) + theme(aspect.ratio=1)
+```
+
+As seen above 11.5% of the values within the dataset are missing values, and they are solely within the variables Bathroom, Bedroom2 and Price. Since the number of missing values within these variables is large (at least 20% for each variable), our strategy for dealing with the missing values is to remove all observations with N/A and only analyse the remaining present values.
+
+#CODE FOR THE STRATEGY TO DEAL WITH MISSING VALUES
+```{r}
+housing_filtered <- housing_filtered_missing %>%
+  filter(!is.na(Price)) %>%
+  filter(!is.na(Bedroom2)) %>%
+  filter(!is.na(Bathroom))
+```
+
+#PLOT FOR RELATIONSHIP BETWEEN PRICE AND ROOMS
+```{r}
+ggplot(housing_filtered, aes(x=factor(Rooms), y=Price)) + geom_boxplot() +
+  geom_smooth(method="lm", se=FALSE) + theme(aspect.ratio=1)
+```
+
+The plot shows that the values for price are positively skewed, indicating that a log transformation should be used to make the distribution more even and normal. This would also assist in making the best model. The plot also shows that there are very few values for Rooms that are greater than 8 rooms, which is understandable as a house having more than 8 rooms is highly uncommon. Hence, values greater than 8 rooms can be considered outliers and will be filtered from the model because they distort the results.
+
+#PLOT FOR RELATIONSHIP BETWEEN LOG_PRICE AND ROOMS<8
+```{r}
+house_1 <- housing_filtered %>%
+  filter(Rooms < 8)
+house_2 <- house_1 %>%
+  mutate(log_Price = log10(Price))
+
+ggplot(house_2, aes(x=factor(Rooms), y=log_Price)) + geom_boxplot() +
+  geom_smooth(method="lm", se=FALSE) + theme(aspect.ratio=1)
+
+```
+
+Once price has been transformed into the log of price and rooms has been restricted to observations less than 8 the distribution is much neater and would more effectively fit a good model estimator. This is evident as the R squared value is greater for the amended model by about 5%. This plot also shows that as the number of rooms increases, so does the mean change in price until 6 rooms where begins to decrease at 5 rooms. The plot also shows that the IQR slightly increases as the number of rooms increases up until 5 rooms, where it then decreases.
+
+#MODEL OF PRICE AND ROOMS
+```{r}
+house_lm <- lm(Price ~ Rooms, data=housing_filtered)
+library(broom)
+glance(house_lm)
+```
+
+#MODEL OF LOG_PRICE AND ROOMS<8
+```{r}
+house_lm <- lm(log_Price ~ Rooms, data=house_2)
+glance(house_lm)
+```
+
+It is plausible that number of rooms would have an effect on the housing price as more rooms generally mean a larger building and area of land.
+
+The R squared value of this model indicates that about 25% of the variation in the log of price is explained by the variable rooms when restricted to observations with less than 8 rooms. This is quite low so the model can be improved.
+
+#PLOT FOR RELATIONSHIP BETWEEN LOG_PRICE AND TYPE
+```{r}
+ggplot(house_2, aes(x=factor(Type), y=log_Price)) + geom_boxplot() +
+  geom_smooth(method="lm", se=FALSE) + theme(aspect.ratio=1)
+```
+
+There are no extreme outliers or any evidence of a skewed distribution, so no filtering of range of transformations are required for these variables. The plot shows that houses have the highest log of price, followed by townhouses and units respectively. The plot also shows that the IQR of these 3 housing types are relatively the same and that townhouses have the lowest range in log of price. 
+
+#MODEL OF LOG_PRICE, ROOMS<8 AND TYPE
+```{r}
+house_lm <- lm(log_Price ~ Rooms + Type, data=house_2)
+glance(house_lm)
+```
+
+It is plausible that the type of housing would have an effect on the housing price as units and townhouses are generally smaller than houses both in terms of indoor and outdoor space.
+
+The R squared and adjusted R squared of this model are greater than the previous model by about 5% indicating that the addition of the Type variable to the model increases its goodness of fit and can explain a larger proportion of the variation in the log of price, where the model can explain about 30% of variation. This model also has a lower deviance which reinforces that it is a better model than the previous one.
+
+#PLOT OF RELATIONSHIP BETWEEN LOG_PRICE AND DISTANCE
+```{r}
+ggplot(house_2, aes(x=log_Price, y=Distance)) + geom_point(alpha=0.7) +
+  geom_smooth(method="lm", se=FALSE) + theme(aspect.ratio=1)
+```
+
+The plot shows that there is a negative relationship between distance and the log of price, indicating that as distance from the CBD decreases, the log of price increases. This is plausible as housing prices are generally more expensive the closer the building is to the CBD because there is more competition for buildings and land that is closest to the CBD.
+
+#MODEL OF LOG_PRICE, ROOMS<8, TYPE AND DISTANCE
+```{r}
+house_lm <- lm(log_Price ~ Rooms + Type + Distance, data=house_2)
+glance(house_lm)
+```
+
+The R squared and adjusted R squared of this model are greater than the previous model by about 19% indicating that the addition of the Distance variable to the model increases its goodness of fit and can explain a larger proportion of the variation in the log of price, where the model can explain about 49% of variation. This model also has a lower deviance which reinforces that it is a better model than the previous one.
+
+#PLOT OF RELATIONSHIP BETWEEN LOG_PRICE AND BEDROOM2
+```{r}
+ggplot(house_2, aes(x=factor(Bedroom2), y=log_Price)) + geom_boxplot() +
+  geom_smooth(method="lm", se=FALSE) + theme(aspect.ratio=1)
+```
+
+This plot shows that there are very few observations greater than 7 bedrooms. These can be considered outliers and be filtered out because they distort the distribution and hinder analysis. Additionally, observations with 0 bedrooms cannot be filtered out because there is the possibility of studio housing layouts that do not have an enclosed bedroom.
+
+The plot also shows that the IQR is relatively equal for all numbers of bedrooms except 1 bedroom which is slightly narrower. The plot also shows that as the number of bedrooms increases, so does the mean log of price until 6 bedrooms where it begins to decrease. Again, this is plausible because housing with more bedrooms and therefore rooms are generally larger in size.
+
+#PLOT OF RELATIONSHIP BETWEEN LOG_PRICE AND BEDROOM2<8
+```{r}
+house_3 <- house_2 %>%
+  filter(Bedroom2< 8)
+
+ggplot(house_2, aes(x=factor(Bedroom2), y=log_Price)) + geom_boxplot() +
+  geom_smooth(method="lm", se=FALSE) + theme(aspect.ratio=1)
+```
+
+#MODEL OF LOG_PRICE, ROOMS<8, TYPE, DISTANCE AND BEDROOM2
+```{r}
+house_lm <- lm(log_Price ~ Rooms + Type + Distance + Bedroom2, data=house_2)
+glance(house_lm)
+```
+
+#MODEL OF LOG_PRICE, ROOMS<8, TYPE, DISTANCE AND BEDROOM2<8
+```{r}
+house_lm <- lm(log_Price ~ Rooms + Type + Distance + Bedroom2, data=house_3)
+glance(house_lm)
+```
+
+The R squared and adjusted R squared are marginally higher for the model with bedroom2 restricted to less than 8 bedrooms, indicating that the model's goodness of fit benefits from the restriction. This is reinforced by the marginally lower devariance in the model with bedroom2 less than 8 bedrooms.
+
+The R squared and adjusted R squared are also marginally higher than the preivous model without the variable bedroom2, indicating that the addition of the bedroom2<8 variable to the model increases its goodness of fit and can explain a larger proportion of the variation in the log of price, where the model can explain about 49% of variation. This model also has a lower deviance which reinforces that it is a better model than the previous one.
+
+#PLOT OF RELATIONSHIP BETWEEN LOG_PRICE AND BATHROOM
+```{r}
+ggplot(house_3, aes(x=factor(Bathroom), y=log_Price)) + geom_boxplot() +
+  geom_smooth(method="lm", se=FALSE) + theme(aspect.ratio=1)
+```
+
+The plot shows that there are very few observations that have greater than 6 bathrooms, however they only extend to 7 which is insufficient to be filtered out as an extreme outlier. Hence, no filtering will be required for the variable bathroom.
+
+The plot also shows that the IQR is relatively equal for all numbers of bathrooms except 5 bedroom which is slightly narrower. The plot also shows that as the number of bathrooms increases, so does the mean log of price. Again, this is plausible because housing with more bathrooms and therefore rooms are generally larger in size.
+
+#MODEL OF LOG_PRICE, ROOMS<8, TYPE, DISTANCE, BEDROOM2<8 AND BATHROOM
+```{r}
+house_lm <- lm(log_Price ~ Rooms + Type + Distance + Bedroom2 + Bathroom, data=house_3)
+glance(house_lm)
+```
+
+The R squared and adjusted R squared of this model are greater than the previous model by about 3% indicating that the addition of the Bathroom variable to the model increases its goodness of fit and can explain a larger proportion of the variation in the log of price, where the model can explain about 52% of variation. This model also has a lower deviance which reinforces that it is a better model than the previous one.
+
+#MODEL OF LOG_PRICE, ROOMS * BEDROOM2, TYPE, DISTANCE AND BATHROOM
+```{r}
+house_lm <- lm(log_Price ~ Rooms*Bedroom2 + Type + Distance + Bathroom, data=house_3)
+glance(house_lm)
+```
+
+It is plausible that there would be an interaction term between rooms and bedroom2 because as the number of bedrooms increases, so do the number of rooms. The addition of this interaction term is also justified because the R squared and adjusted R squared of this model are marginally greater than the previous model, indicating that the addition of the interaction term between rooms and bedroom2 to the model increases its goodness of fit and can explain a larger proportion of the variation in the log of price, where the model can explaina bout 52% of variation. This model also has a lower deviance which reinforces that it is a better model than the previous one.
+
+#MODEL OF LOG_PRICE, ROOMS * BEDROOM2 * BATHROOM, TYPE AND DISTANCE
+```{r}
+house_lm <- lm(log_Price ~ Rooms*Bedroom2*Bathroom + Type + Distance, data=house_3)
+glance(house_lm)
+```
+
+It is plausible that there would be an interaction term between rooms and bedroom2 and bathroom because as the number of bathrooms increases, so do the number of rooms and number of bedrooms that can be accommodated for. The addition of this interaction term is also justified because the R squared and adjusted R squared of this model are marginally greater than the previous model, indicating that the addition of the interaction term between rooms, bedroom2 and bathroom to the model increases its goodness of fit and can explain a larger proportion of the variation in the log of price, where the model can explaina bout 53% of variation. This model also has a lower deviance which reinforces that it is a better model than the previous one.
+
+#MODEL OF LOG_PRICE, ROOMS * BEDROOM2 * BATHROOM * TYPE AND DISTANCE
+```{r}
+house_lm <- lm(log_Price ~ Rooms*Bedroom2*Bathroom*Type + Distance, data=house_3)
+glance(house_lm)
+```
+
+It is plausible that there would be an interaction term between rooms, bedroom2, bathroom and type because the number of bedrooms and bathrooms will determine the number of total rooms, which will in turn determine the total size of the housing, which determines the possible type of housing. E.g. Units are generally small in square footage, so it would be expected that they would have fewer rooms than a house. The addition of this interaction term is also justified because the R squared and adjusted R squared of this model are marginally greater than the previous model, indicating that the addition of the interaction term between rooms, bedroom2, bathroom and type to the model increases its goodness of fit and can explain a larger proportion of the variation in the log of price, where the model can explaina bout 54% of variation. This model also has a lower deviance which reinforces that it is a better model than the previous one.
+
+#MODEL OF LOG_PRICE, ROOMS * BEDROOM2 * BATHROOM * TYPE * DISTANCE
+```{r}
+house_lm <- lm(log_Price ~ Rooms*Bedroom2*Bathroom*Type*Distance, data=house_3)
+glance(house_lm)
+```
+
+It is plausible that there would be an interaction term between rooms, bedroom2, bathroom, type and distance because the number of bedrooms and bathrooms will determine the number of total rooms, which will in turn determine the total size of the housing, which determines the possible type of housing which also determines the distance of the housing from the CBD. E.g. Units are generally small in square footage, so it would be expected that they would have fewer rooms than a house, and since units inhabit less area, they would use less of the competitive CBD land than a house. The addition of this interaction term is also justified because the R squared and adjusted R squared of this model are marginally greater than the previous model, indicating that the addition of the interaction term between rooms, bedroom2, bathroom, type and distance to the model increases its goodness of fit and can explain a larger proportion of the variation in the log of price, where the model can explaina bout 55% of variation. This model also has a lower deviance which reinforces that it is a better model than the previous one.
+
+#WHY THIS IS THE BEST MODEL
+Given the variables Rooms, Bedroom2, Bathroom, Type and Distance, lm(log_Price ~ Rooms*Bedroom2*Bathroom*Type*Distance, data=house_3) is the best model to predict the log of price because they all have a plausible effect on the log of price of housing. Additionally, this model has the best goodness of fit measures amongst the models that have been prevously tested as the R squared and adjusted R squared is the highest and the deviance is the lowest.

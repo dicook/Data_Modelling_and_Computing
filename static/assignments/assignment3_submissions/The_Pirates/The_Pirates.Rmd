@@ -1,0 +1,243 @@
+---
+title: "Assignment 3- The Pirates"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(magrittr)
+library(visdat)
+library(naniar)
+library(dplyr)
+library(ggplot2)
+library(broom)
+```
+##1.
+
+```{r}
+data <- read_csv("data/Melbourne_housing_FULL.csv")
+```
+
+#2.
+```{r}
+rData <- data %>% select(Price, Rooms, Type, Distance, Bedroom2, Bathroom)
+```
+
+#3.
+```{r}
+vis_dat(rData, palette = "cb_safe")
+vis_miss(rData, sort_miss=TRUE)
+summary(rData)
+miss_summary(rData)
+
+#From this it is clear that almost all the missing data is of type integer and it is in price, bedroom and bathroom.
+#Also, 13.8% of the data is missing.
+
+#For the single case where distance is missing, several other variables are also missing. In this case it is best to remove the
+#observation:
+
+rData2 <- complete.cases(rData[, "Distance"])
+rData <- rData[rData2, ]
+
+#As price is the response variable it is best to omit observations where it is missing. Note that 40.3% of observations contain at least one missing value,
+#and removing observations where price is missing removes 21.8% of observations.
+
+rData2 <- rData %>% filter(!is.na(Price))
+```
+
+#4.
+#The remaining missing values will be imputed using nearest neighbours method.
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("impute")
+```{r}
+library(impute)
+tao <- bind_shadow(rData2) %>%
+  mutate(Bedroom2 = ifelse(is.na(Bedroom2), 
+                           mean(Bedroom2, na.rm=TRUE),
+                           Bedroom2),
+         Bathroom = ifelse(is.na(Bathroom), 
+                           mean(Bathroom, na.rm=TRUE),
+                           Bathroom))
+tao_impute1 <- bind_shadow(tao) %>%
+  arrange(Price, Bedroom2, Bathroom) %>%
+  select(Price, Bedroom2, Bathroom) 
+summary(tao_impute1)
+tao_impute <- impute.knn(as.matrix(tao_impute1), 5)
+tao_shadow <- bind_shadow(rData2) %>%
+  mutate(Price = tao_impute$data[,1],
+         Bedroom2 = tao_impute$data[,2],
+         Bathroom = tao_impute$data[,3])
+```
+
+
+#Plots showing imputed values
+```{r}
+#Plotting relationship between price and number of bedrooms highlighting imputed values
+ggplot(tao_shadow,
+       aes(x = Bedroom2,
+           y = Price, 
+           colour = Bedroom2_NA)) +
+  geom_point(alpha=0.7) + facet_wrap(~Type, ncol=2) +
+  scale_colour_brewer(palette = "Dark2") +
+  theme(aspect.ratio = 1)
+
+#Plotting relationship between price and number of bathrooms highlighting imputed values
+ggplot(tao_shadow,
+       aes(x = Bathroom,
+           y = Price,
+           colour = Bathroom_NA)) +
+  geom_point(alpha=0.7) + facet_wrap(~Type, ncol=2) + 
+  scale_colour_brewer(palette="Dark2") +
+  theme(aspect.ratio=1)
+
+#Relationship between price and distance - doesn't look like there is a relationship 
+ggplot(tao_shadow,
+       aes(x = Distance,
+           y = Price,
+           colour=Type)) +
+  geom_point(alpha=0.7) + facet_wrap(~Type, ncol=2) + 
+  scale_colour_brewer(palette="Dark2") +
+  theme(aspect.ratio=1)
+
+#Relationship between price and number of rooms - not sure this makes a lot of sense, I'd assume more rooms would result in bigger price
+ggplot(tao_shadow,
+       aes(x = Rooms,
+           y = Price,
+           colour=Type)) +
+  geom_point(alpha=0.7) + facet_wrap(~Type, ncol=2) + 
+  scale_colour_brewer(palette="Dark2") +
+  theme(aspect.ratio=1)
+
+#Relationship between price and type of house
+ggplot(tao_shadow,
+       aes(x = Type,
+           y = Price)) +
+  geom_point(alpha=0.7) + 
+  scale_colour_brewer(palette="Dark2") +
+  theme(aspect.ratio=1)
+
+ggplot(tao_shadow, aes(x=Bedroom2, y=Bathroom)) + geom_point() ##Interaction between bedroom and bathroom??
+```
+
+#5. Build linear model
+```{r}
+library(modelr)
+library(viridis)
+library(base)
+library(grid)
+library(stats)
+#Model 1
+model1 <- lm(Price ~ Type  + Bedroom2*Bathroom, data = tao_shadow)
+confint_tidy(model1)
+
+tidy(model1)
+glance(model1)
+
+est_std <- bind_cols(tidy(model1), confint_tidy(model1))
+est_std %>% 
+    filter(term != "(Intercept)") %>% 
+    ggplot(aes(x = term, y = estimate)) +
+    geom_hline(yintercept = 0, colour = "red") +
+    geom_point() +
+    geom_errorbar(aes(ymin = conf.low, ymax = conf.high))
+
+ggplot(model1, aes(x=.fitted, y=.stdresid)) +
+  geom_point() + ggtitle("Model 1")
+
+ggplot(model1, aes(x=Bedroom2, y=.fitted, colour=Bathroom, group=Bathroom)) +
+  geom_line() +  
+  scale_colour_viridis() + 
+  theme(legend.position="none")+
+  ggtitle("Model 1: with an interaction")
+
+
+#Model 2
+mod2 <- lm(Price ~ Type  + Distance*Rooms, data = tao_shadow)
+confint_tidy(mod2)
+
+tidy(mod2)
+glance(mod2)
+
+est_std <- bind_cols(tidy(mod2), confint_tidy(mod2))
+est_std %>% 
+    filter(term != "(Intercept)") %>% 
+    ggplot(aes(x = term, y = estimate)) +
+    geom_hline(yintercept = 0, colour = "red") +
+    geom_point() +
+    geom_errorbar(aes(ymin = conf.low, ymax = conf.high))
+
+ggplot(mod2, aes(x=.fitted, y=.stdresid)) +
+  geom_point() + ggtitle("Model 2")
+
+
+ggplot(mod2, aes(x=Distance, y=.fitted, colour=Rooms, group=Rooms)) +
+  geom_line() +  
+  scale_colour_viridis() + 
+  theme(legend.position="none")+
+  ggtitle("Model 2: with an interaction")
+
+
+#Model 1 explains 18.5% of the variability of the response data, while model 2 only explains 3.2%. The BIC indicates how well the model fits, and in this case, model 1 is slightly better than model 2, as the BIC for model 1 is lower. The deviance of model 1 also shows that it is lower than model 2, indicating model 1 is better. However, this does not indicate that model 1 is a good predictive as the adjusted r-squared value is very low.
+```
+
+```{r}
+#Model 3
+mod3 <- lm(Price ~ Type  + Bedroom2*Distance, data = tao_shadow)
+confint_tidy(mod3)
+
+tidy(mod3)
+glance(mod3)
+
+est_std <- bind_cols(tidy(mod3), confint_tidy(mod3))
+est_std %>% 
+    filter(term != "(Intercept)") %>% 
+    ggplot(aes(x = term, y = estimate)) +
+    geom_hline(yintercept = 0, colour = "red") +
+    geom_point() +
+    geom_errorbar(aes(ymin = conf.low, ymax = conf.high))
+
+ggplot(mod3, aes(x=.fitted, y=.stdresid)) +
+  geom_point() + ggtitle("Model 3")
+
+ggplot(mod3, aes(x=Bedroom2, y=.fitted, colour=Distance, group=Distance)) +
+  geom_line() +  
+  scale_colour_viridis() + 
+  theme(legend.position="none")+
+  ggtitle("Model 3: with an interaction")
+
+
+#Model 4 
+mod4 <- lm(Price ~ Type + Bedroom2 + Bathroom + Rooms*Distance, data = tao_shadow)
+confint_tidy(mod4)
+
+tidy(mod4)
+glance(mod4)
+
+est_std <- bind_cols(tidy(mod4), confint_tidy(mod4))
+est_std %>% 
+    filter(term != "(Intercept)") %>% 
+    ggplot(aes(x = term, y = estimate)) +
+    geom_hline(yintercept = 0, colour = "red") +
+    geom_point() +
+    geom_errorbar(aes(ymin = conf.low, ymax = conf.high))
+
+ggplot(mod4, aes(x=.fitted, y=.stdresid)) +
+  geom_point() + ggtitle("Model 4")
+
+ggplot(mod4, aes(x=Bedroom2, y=.fitted, colour=Bathroom, group=Bathroom)) +
+  geom_line() +  
+  scale_colour_viridis() + 
+  theme(legend.position="none")+
+  ggtitle("Model 4: with an interaction")
+
+
+
+#Model 4 explains 20.4% of the variability of the response data, while model 3 only explains 16.8%. The BIC indicates how well the model fits, and in this case, model 4 is slightly better than model 3, as the BIC for model 4 is lower. The deviance of model 4 also shows that it is lower than model 3, indicating model 4 is better. However, this does not indicate that model 4 is a good predictive as the adjusted r-squared value is very low, meaning that the model has a low predictive power.
+
+#Hence, Model 4 is the best linear model as the adjusted r-squared had the highest value and the best goodness of fit.
+```
+
+
+
+

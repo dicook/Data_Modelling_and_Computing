@@ -1,0 +1,469 @@
+title: "Assignment 3"
+author: "Group1"
+output: html_document
+---
+
+Team member:Anusha Gunputh
+#Observation of missing 
+-most data is missing in YearBuilt and Prices but does not mean data in the other variables are reliable and will show a proper indication on the effect of price which is the response.
+```{r}
+library(tidyverse)
+library(readr)
+library(visdat)
+library(naniar)
+library(forcats)
+library(modelr)
+library(broom)
+library(gridExtra)
+library(dplyr)
+library(viridis)
+Melbourne_housing_FULL <- read_csv("/Users/anne/ETC1010/Melbourne_housing_FULL.csv")
+houses_select <- Melbourne_housing_FULL %>% select(Bedroom2, Price, Type, Rooms,YearBuilt) %>% mutate(Type = factor(Type, ordered=FALSE)) %>% filter(Bedroom2>0) %>% mutate(Bedroom2 = as.numeric(Bedroom2, ordered=FALSE)) 
+summary_miss <- miss_summary(houses_select)
+summary_miss$miss_df_prop
+vis_miss(houses_select, sort_miss=TRUE) + theme(aspect.ratio=1)
+```
+#plotting variables with missing values- ggplot removed rows with missing values as below
+-bedroom vs price by type
+```{r}
+
+ggplot(houses_select,
+       aes(x = Bedroom2,
+           y = Price)) +
+  geom_point() + theme(aspect.ratio=1)+ facet_wrap(~Type)
+```
+#Relationship between chosen variables- Bedroom & Rooms
+-Looks like price tends to increase while rooms increases, they have a linear relationship
+```{r}
+
+ggplot(houses_select,
+       aes(x = Rooms,
+           y = Price)) +
+  scale_colour_brewer(palette="Dark2") +
+  geom_point(alpha=0.1) + 
+  geom_smooth(method="lm") +
+  theme(aspect.ratio=1) + facet_wrap(~Type) +
+  scale_y_log10()
+
+ggplot(houses_select,
+       aes(x = Bedroom2,
+           y = Price)) +
+  scale_colour_brewer(palette="Dark2") +
+  geom_point(alpha=0.1) + 
+  geom_smooth(method="lm") +
+  theme(aspect.ratio=1) + scale_y_log10() + facet_wrap(~Type)
+
+
+```
+#Impute by type to show the missingness values in Prices
+-It appears most values of price is missing in the Type h than Type u and Type t.
+-One way to interpret the data collected is more data you collect for a particular type tend to leave rooms for invariability, hence more missingness.
+
+```{r}
+Type_h <- bind_shadow(houses_select) %>% 
+  filter(Type=="h") %>%
+  mutate(Bedroom2 = ifelse(is.na(Bedroom2), 
+                             mean(Bedroom2, na.rm=TRUE),
+                             Bedroom2),
+         Price = ifelse(is.na(Price), 
+                             mean(Price, na.rm=TRUE),
+                             Price)) 
+
+Type_u <- bind_shadow(houses_select) %>% 
+  filter(Type=="u") %>%
+  mutate(Bedroom2 = ifelse(is.na(Bedroom2), 
+                             mean(Bedroom2, na.rm=TRUE),
+                             Bedroom2),
+         Price = ifelse(is.na(Price), 
+                             mean(Price, na.rm=TRUE),
+                             Price)) 
+
+Type_t <- bind_shadow(houses_select) %>% 
+  filter(Type=="t") %>%
+  mutate(Bedroom2 = ifelse(is.na(Bedroom2), 
+                             mean(Bedroom2, na.rm=TRUE),
+                             Bedroom2),
+         Price = ifelse(is.na(Price), 
+                             mean(Price, na.rm=TRUE),
+                             Price)) 
+
+ 
+Type_shadow <- bind_rows(Type_h, Type_u, Type_t)  
+
+ggplot(Type_shadow,
+       aes(x = Bedroom2,
+           y = Price, 
+           colour=Price_NA)) +
+  geom_point(alpha=0.7) + 
+  facet_grid(Type~.) + 
+  scale_colour_brewer(palette="Dark2") +
+  theme(aspect.ratio=0.5)
+```
+#Dependencies on other variables- YearBuilt
+-The plot shows year starting late 1800's data was collected consistently, no missing data for Bedroom2, however, data is missing for prices.
+-Particularly; the price missing for bedroom=30 and for a house build in 2106 and has 4 bedroom. lastly house build in 1196 and has 2 bedroom. It is reasonable to take it out based on the fact that we cannot compare it with modern houses since we do not know the state of the house and how well maintained it was. Old houses tend to cost millions of dollars in melbourne. It is important to get rid of incorrect data.. Outliers like this will make our model biased.
+```{r}
+houses_select <- Melbourne_housing_FULL %>% select(Bedroom2, Price, Type, Rooms,YearBuilt) %>% mutate(Type = factor(Type, ordered=FALSE)) %>% filter(Bedroom2>0) %>% mutate(Bedroom2 = as.numeric(Bedroom2, ordered=FALSE))
+
+house_shadow1 <- bind_shadow(Melbourne_housing_FULL)
+ggplot(data = house_shadow1,
+       aes(x = Rooms, y=YearBuilt, colour=Price_NA)) +
+       scale_colour_brewer(palette="Dark2") +
+       geom_point(alpha=0.7) + theme(aspect.ratio=1) + facet_wrap(~Type) 
+ggplot(data = house_shadow1,
+       aes(x = Bedroom2, y=YearBuilt, colour=Price_NA)) +
+       scale_colour_brewer(palette="Dark2") +
+       geom_point(alpha=0.7) + theme(aspect.ratio=1) + facet_wrap(~Type) 
+ggplot(data = house_shadow1,
+       aes(x = Bedroom2, y=Rooms, colour=Price_NA)) +
+       scale_colour_brewer(palette="Dark2") +
+       geom_point(alpha=0.7) + theme(aspect.ratio=1) + facet_wrap(~Type) + ylab("Room") + 
+  xlab("Number of Bedroom")
+
+```
+#Boxplot- comparing medians
+-Looks like the median price is $910,000 for 6 bedroom and the starting price for 1 bedroom is $85,000, max price is $11,200,000 for 4 bedroom. 
+```{r}
+library(forcats)
+houses_select <- Melbourne_housing_FULL %>% select(Bedroom2, Price, Type, Rooms) %>% mutate(Type = factor(Type, ordered=FALSE)) %>% filter(Bedroom2>0) %>% filter(!is.na(Price)) %>% mutate(Bedroom2 = as.numeric(Bedroom2))
+houses_select<-na.omit(houses_select)
+houses_select <- rename(houses_select, Bedroom = Bedroom2)
+
+
+house_box <- houses_select %>% 
+  mutate(Bedroom=factor(Bedroom, 
+    levels=c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10","16", "12")))
+ggplot(data=house_box, aes(x=Bedroom, y=Price)) +
+  geom_boxplot()
+
+summary(houses_select)
+summary(houses_select$Price)
+##    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA's 
+## 85000   635000   870000  1050173  1295000 11200000     7610 
+
+```
+#Categorical and quantitive variable
+```{r}
+library(labelled)
+Melbourne_housing_FULL <- read_csv("/Users/anne/ETC1010/Melbourne_housing_FULL.csv")
+houses_select <- Melbourne_housing_FULL %>% select(Bedroom2, Price, Type, Rooms, YearBuilt) %>% mutate(Type = factor(Type, ordered=FALSE)) %>% filter(Bedroom2>0, Bedroom2<10) %>% filter(!is.na(Price)) %>% filter(!is.na(Rooms))%>% filter(YearBuilt>1200)
+
+houses_select <- rename(houses_select, Bedroom = Bedroom2) %>% select(Price, Bedroom, Type, Rooms)
+  
+ggplot(houses_select, aes(x=Price, y=Bedroom,
+                            colour=Type)) + 
+  geom_point(alpha=0.3) + 
+  scale_colour_brewer("Bedroom", palette="Dark2") +
+  facet_wrap(~Type, nrow=3) + scale_x_log10() + geom_smooth(method="lm", se=FALSE) + 
+  theme(legend.position="bottom") + 
+  xlab("Price") + 
+  ylab("Number of Bedroom")
+
+```
+#Fitting a linear model- correlation between Price and Bedroom2
+
+```{r}
+
+houses_select <- Melbourne_housing_FULL %>% select(Bedroom2, Price,Rooms, Type, YearBuilt) %>% mutate(Type = factor(Type, ordered=FALSE)) %>% filter(!is.na(Bedroom2))%>% filter(Bedroom2>0)  %>% mutate(Bedroom2 = as.numeric(Bedroom2, ordered=FALSE)) %>% filter(!is.na(Price)) %>% mutate(Price_log = log10(Price)) %>% mutate(Price = as.numeric(Price),ordered=FALSE) %>% filter(YearBuilt>1200)
+
+houses_select <- rename(houses_select, Bedroom = Bedroom2)
+
+houses_fit1 <- lm(Price_log~Bedroom + Rooms, data=houses_select)
+houses_fit2 <- lm(Price_log~Bedroom*Rooms, data=houses_select)
+tidy(houses_fit1)
+##Analysis: without interaction
+#Bedroom:Given there is one additional bedroom in any type of house, the price increases by 0.01347383
+
+#Rooms: Given there is one additional roomns in any type of house, the price increases by 0.10509578
+tidy(houses_fit2)
+confint_tidy(houses_fit2)
+##Analysis: with interaction
+#Bedroom*Rooms:Given there is one additional bedroom and one additional rooms in any type of house, the price decreases by 0.01288828
+#Conclusion: the more rooms we add to the type of house the price starts to decrease
+
+glance(houses_fit1)
+
+glance(houses_fit2)
+#houses_fit2 has an interaction and is a better fit since r squared is higher than house_fit1
+
+```
+#Visualising models
+-The models are clearly different. The response is plotted against the two variable on two different level. And the interaction term makes it a much better fit as they interlaps each other while the non interaction term has paralell lines. Model 2 is definitely a better fit.
+-Model 1: Adding an additional bedroom to the type of house makes the price go up by a coefficient of 0.01107983	and adding an additional room will make it go up by 0.11746504.
+-Model 2: However, taking interaction into consideration, a house with one bedroom but adding an additional room will the price go down by a coefficient of -0.01690853 which mean even if a house has a lot of bedrooms, the fact that it has more rooms than bedroom or an equal number of rooms will make the price go down as compared to the mean price of any type.
+```{r}
+
+house_mod1 <- augment(houses_fit1, houses_select)
+house_mod2 <- augment(houses_fit2, houses_select)
+p1 <- ggplot(house_mod1, aes(x=Bedroom, y=.fitted, colour=Rooms, group=Rooms)) +
+  geom_line() +  scale_colour_viridis() + 
+  theme(legend.position="none") + ggtitle("Model 1: no interaction")
+p2 <- ggplot(house_mod2, aes(x=Bedroom, y=.fitted, colour=Rooms, group=Rooms)) +
+  geom_line() +  scale_colour_viridis() + 
+  theme(legend.position="none") + ggtitle("Model 2: with an interaction") 
+
+p3 <- ggplot(house_mod1, aes(x=Rooms, y=.fitted, colour=Bedroom, group=Bedroom)) +
+  geom_line() +  scale_colour_viridis() + 
+  theme(legend.position="none") + ggtitle("Model 1: no interaction")
+p4 <- ggplot(house_mod2, aes(x=Rooms, y=.fitted, colour=Bedroom, group=Bedroom)) +
+  geom_line() +  scale_colour_viridis() + 
+  theme(legend.position="none") + ggtitle("Model 2: with an interaction") 
+grid.arrange(p1, p2, p3, p4, ncol=2)
+
+#Residuals vs Fitted
+p1 <- ggplot(house_mod2, aes(x=.fitted, y=.std.resid)) +
+  geom_point() + ggtitle("Model 1")
+p2 <- ggplot(house_mod2, aes(x=.fitted, y=.std.resid)) +
+  geom_point() + ggtitle("Model 2")
+grid.arrange(p1, p2, ncol=2)
+ 
+#The residuals and fitted is the same since we took out the missing values.
+
+
+```
+# Team member:Fengqiu Fang
+#find the price missing value and add new columns that are functions of existing columns-Variables used room,Price,Rooms,Type
+```{r}
+
+room<-read_csv("/Users/anne/ETC1010/Melbourne_housing_FULL.csv")
+room<-select(room,Price,Rooms,Type)
+
+Type_h<-bind_shadow(room)%>%
+  filter(Type=='h')%>%
+  mutate(Rooms=ifelse(is.na(Rooms),mean(Rooms,na.rm=TRUE),Rooms),Price=ifelse(is.na(Price),mean(Price,na.rm=TRUE),Price))
+Type_u<-bind_shadow(room)%>%
+  filter(Type=='u')%>%
+  mutate(Rooms=ifelse(is.na(Rooms),mean(Rooms,na.rm=TRUE),Rooms),Price=ifelse(is.na(Price),mean(Price,na.rm=TRUE),Price))
+Type_t<-bind_shadow(room)%>%
+  filter(Type=='t')%>%
+  mutate(Rooms=ifelse(is.na(Rooms),mean(Rooms,na.rm=TRUE),Rooms),Price=ifelse(is.na(Price),mean(Price,na.rm=TRUE),Price))
+Type_shadow<-bind_rows(Type_h,Type_u,Type_t)
+```
+#missing values relationship with other variables- Rooms & Type
+```{r}
+#missing values relationship with other variables- Rooms & Type
+ggplot(Type_shadow,aes(x=Rooms,y=Price,colour=Price_NA))+geom_point(alpha=0.7)+facet_grid(Type~.)+scale_colour_brewer(palette='Dark2')+
+  theme(aspect.ratio = 0.5)
+```
+#Delete the missing value and mutate the variables as numeric
+
+```{r}
+
+library(labelled)
+room <- room %>% 
+  filter(!is.na(Rooms)) %>%
+  filter(!is.na(Price)) %>% 
+  select(Price,Rooms, Type) %>%
+  mutate(Rooms = as.numeric(Rooms)) %>%
+  mutate(Price = as.numeric(Price)) %>%
+  filter(Price>0)
+```
+#find the relationship between log10(price) and Rooms devided by house types
+```{r}
+
+library(ggplot2)
+ggplot(room,  aes(x = Rooms, y =log10(Price )))  + geom_point(alpha=0.1)+
+  geom_smooth(method="lm") + theme(aspect.ratio=1)+ facet_wrap(~ Type, nrow = 2)
+
+```
+#build two models to identify house types and rooms which may influence the house price
+```{r}
+room <- room %>%
+  mutate(log_price = log10(Price)) %>%
+  mutate(type = factor(Type, ordered=FALSE))
+mod1 <- lm(log_price~Type+Rooms, data=room)
+mod2 <- lm(log_price~Type*Rooms, data=room)
+tidy(mod1)
+tidy(mod2)
+confint_tidy(mod2)
+
+```
+#augment the models and plot modules
+```{r}
+room_mod1 <- augment(mod1, room)
+room_mod2 <- augment(mod2, room)
+ggplot(room, aes(x=Rooms, y=log_price,
+                 colour=Type)) + 
+  geom_point(alpha=0.1) + 
+  scale_colour_brewer("Type", palette="Dark2") +
+  facet_wrap(~Type, ncol=4) + 
+  theme(legend.position="bottom") + 
+  xlab("Rooms") + 
+  ylab("log_price") +
+  geom_line(data=room_mod1, aes(y=.fitted)) + 
+  ggtitle("Model 1")
+ggplot(room, aes(x=Rooms, y=log_price,
+                 colour=Type)) + 
+  geom_point(alpha=0.1) + 
+  scale_colour_brewer("Type", palette="Dark2") +
+  facet_wrap(~Type, ncol=4) + 
+  theme(legend.position="bottom") + 
+  xlab("Rooms") + 
+  ylab("log_price") +
+  geom_line(data=room_mod2, aes(y=.fitted)) + 
+  ggtitle("Model 2")
+
+p1 <- ggplot(room_mod1, aes(x=Rooms, y=.fitted,
+                            colour=Type)) +
+  geom_line() +
+  scale_colour_brewer("Type", palette="Dark2") +
+  theme(legend.position="bottom") + 
+  xlab("Rooms") + 
+  ylab("log_price") + ggtitle("Model 1")
+p2 <- ggplot(room_mod2, aes(x=Rooms, y=.fitted,
+                            colour=Type)) +
+  geom_line() +
+  scale_colour_brewer("Type", palette="Dark2") +
+  theme(legend.position="bottom") + 
+  xlab("Rooms") + 
+  ylab("log_price") + ggtitle("Model 2")
+grid.arrange(p1, p2, ncol=2)
+```
+#compared two models,the mod2 is better than mod1
+```{r}
+
+glance(mod1)
+glance(mod2)
+glance(room_mod1)
+glance(room_mod2)
+```
+#explanatory variables
+```{r}
+
+p1 <- ggplot(room_mod1, aes(x=log_price, y=.fitted, colour=Rooms, group=Rooms)) +
+  geom_line() +  scale_colour_viridis() + 
+  theme(legend.position="none") + ggtitle("Model 1: no interaction")
+p2 <- ggplot(room_mod2, aes(x=log_price, y=.fitted, colour=Rooms, group=Rooms)) +
+  geom_line() +  scale_colour_viridis() + 
+  theme(legend.position="none") + ggtitle("Model 2: with an interaction") 
+p3 <- ggplot(room_mod1, aes(x=Rooms, y=.fitted, colour=log_price, group=log_price)) +
+  geom_line() +  scale_colour_viridis() + 
+  theme(legend.position="none") + ggtitle("Model 1: no interaction")
+p4 <- ggplot(room_mod2, aes(x=Rooms, y=.fitted, colour=log_price, group=log_price)) +
+  geom_line() +  scale_colour_viridis() + 
+  theme(legend.position="none") + ggtitle("Model 2: with an interaction") 
+grid.arrange(p1, p2, p3, p4, ncol=2)
+```
+# Team member: Xiaoru Chen
+```{r}
+
+
+library(tidyverse)
+library(modelr)
+library(labelled)
+library(broom)
+ass2 <- read.csv("/Users/anne/ETC1010/Melbourne_housing_FULL.csv")
+ass3 <- ass2 
+#choose the collumn of variables
+assm <- select(ass3, Price, Distance, Rooms)
+#plot the graph of missing values
+library(visdat)
+vis_dat(assm)
+#Delete the missing value of Variables Distance and Rooms and select the collumn of variables
+ass4 <- filter(ass3, !is.na(Distance)) %>% filter(!is.na(Rooms)) 
+ass5 <- filter(ass4, !is.na(Price)) 
+ass6 <- select(ass5, Price, Distance, Rooms)  %>% mutate(Distance = to_factor(Distance, ordered=TRUE, drop_unused_labels = TRUE))
+#Transfrom the variables into numberic type and create a new collumn with log10(Price) so the scale of price can bechanged into reasonable scale
+
+ass7 <- mutate(ass6, Price = as.numeric(Price)) 
+ass8 <- mutate(ass7, Distance = as.numeric(Distance)) 
+ass9 <- mutate(ass7, Rooms = as.numeric(Rooms))
+ass10 <- mutate(ass8, Price = log10(Price))
+#Use ggplot to draw a graph with fitted line 
+p1 <- ggplot(ass10, mapping = aes(x=Distance, y=Price))+geom_point()+geom_smooth(method="lm", se=FALSE)
+ggplot(ass10, mapping = aes(x=Rooms, y=Price))+geom_point()+geom_smooth(method="lm", se=FALSE)
+#Create a new model of using distance and rooms as independent variables and price as dependent variable
+pisa_lm <- lm(Price~Distance+Rooms, data=ass10)
+#create a model with interaction
+pisa_lm1 <- lm(Price~Distance+Rooms-Distance*Rooms, data=ass10)
+#Use tidy and glance funciton to get the estimated values of parameters and the r squared
+tidy(pisa_lm)
+glance(pisa_lm)
+tidy(pisa_lm1)
+glance(pisa_lm1)
+#From the result we can see the model with interaction has r squared of 0, therefore we choose anther model with no interaction.
+
+```
+
+# Team member: Anushka Fernando
+```{r}
+library(naniar)
+library(visdat)
+library(broom)
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+Melbourne_housing_FULL <- read_csv("/Users/anne/ETC1010/Melbourne_housing_FULL.csv")
+vis_miss(Melbourne_housing_FULL, sort_miss=TRUE) + theme(aspect.ratio=1)
+
+
+ggplot(Melbourne_housing_FULL,
+       aes(x = Bathroom,
+                    y = Bedroom2)) +
+  geom_point() + theme(aspect.ratio=1)
+#Warning message:
+  #Removed 3557 rows containing missing values (geom_point). 
+
+ggplot(Melbourne_housing_FULL,
+         aes(x = Bathroom,
+                      y = Bedroom2)) +
+  scale_colour_brewer(palette="Dark2") +
+  geom_miss_point() + theme(aspect.ratio=1)
+
+#21.7% missing values, 0.1240107, proportion of observations missing
+#0.4285714 proportion of variables missing
+
+#3557 rows contained missing values
+#The plot showing missing values shows that the missing values are from the 0 values. 
+houses_select <- Melbourne_housing_FULL %>%
+  select(Bathroom, Price, Type, Rooms) %>%
+  mutate(Type = factor(Type, ordered = FALSE)) %>% 
+  filter(Bathroom>0) %>% mutate(Bathroom = as.numeric(Bathroom, ordered=FALSE)) %>% 
+  mutate(Price = as.numeric(Price)) %>%
+  filter(Price>0) %>%
+  filter(is.na(Price))%>% mutate(Price_log = log10(Price))
+
+Type_h <- bind_shadow(Melbourne_housing_FULL) %>%
+  filter(Type=="h") %>%
+  mutate(Bathroom = ifelse(is.na(Bathroom),
+              mean(Bathroom, na.rm = TRUE),
+              Bathroom),
+         Price = ifelse(is.na(Price),
+                        mean(Price, na.rm = TRUE),
+                        Price))
+Type_u <- bind_shadow(Melbourne_housing_FULL) %>%
+  filter(Type=="u") %>%
+  mutate(Bathroom = ifelse(is.na(Bathroom),
+                           mean(Bathroom, na.rm=TRUE),
+                           Bathroom),
+         Price = ifelse(is.na(Price),
+                        mean(Price, na.rm=TRUE),
+                        Price))
+Type_t <- bind_shadow(Melbourne_housing_FULL) %>%
+  filter(Type=="t") %>%
+  mutate(Bathroom = ifelse(is.na(Bathroom),
+                           mean(Bathroom, na.rm = TRUE),
+                           Bathroom),
+         Price = ifelse(is.na(Price),
+                        mean(Price, na.rm = TRUE),
+                        Price))
+Type_shadow <- bind_rows(Type_h, Type_u, Type_t)
+#Plotted final missingness data, Bathroom and Price
+ggplot(Type_shadow,
+       aes(x = Bathroom,
+           y = Price,
+           colour=Price_NA)) + 
+  geom_point(alpha=0.7) +
+  facet_grid(Type~.) +
+  scale_colour_brewer(palette = "Dark2") +
+  theme(aspect.ratio = 0.5)
+```
+
+##Inference
+```{r}
+#Comparing the R square of the 3 models above, based on the R-squares 0.3372794 (log_price~Type*Rooms)which is higher than 0.2970719	(log10(price) vs distance*rooms) and 0.3026702 (log10(price) vs bedroom*rooms) , we can conclude that the second model which is (log_price~Type*Rooms) is the best model.
+#We can be 95% confident that the mean increase in price is between 0.03572294 and 0.05623976	when the type is t and has 1 additional room compared to the type h and 95% confident of an increase in price between 0.07112103 and	0.08688207 when the type is u and has an additional rooms compared to type h.
+
+
+```

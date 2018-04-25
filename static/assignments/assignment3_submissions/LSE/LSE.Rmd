@@ -1,0 +1,265 @@
+---
+title: "Assignment3"
+author: "Little Salt Egg"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(mvtnorm)
+library(broom)
+library(lubridate)
+library(visdat)
+library(naniar)
+library(impute)
+library(ggplot2)
+library(ggthemes)
+library(gridExtra)
+```
+
+```{r}
+houses <- read_csv("data/Melbourne_housing_FULL.csv")
+houses1 <- houses %>% select(Price, Rooms, Type, Distance, Bedroom2, Bathroom)
+houses1 <- houses1 %>% 
+  mutate(
+    Type = case_when(
+      Type == "h" ~ "house", Type == "t" ~ "townhouse", Type == "u" ~ "unit"
+    ))
+```
+
+### Visualising Missing values before cleaning up
+
+```{r}
+vis_miss(houses1, sort_miss=TRUE)
+```
+
+According to the missing values plot, bathroom, bedroom2 and price have a large number of missing values. However, distance, room and type have no missing values.
+Overall there are 11.5% values that are missing. Bathroom and bedroom2 have the same percentage of missing values of 23.6% while price has 21.8% of values missing.
+
+
+###Missing value summaries 
+
+```{r}
+s_miss <- miss_summary(houses1)
+s_miss
+```
+
+###Shadow matrix for houses before cleaning up missing values
+
+```{r}
+houses1_shadow <- bind_shadow(houses1)
+houses1_shadow
+```
+
+```{r}
+ggplot(houses, aes(x = Bedroom2, y = Rooms)) + geom_miss_point()
+```
+
+The plot above shows us the relationship between Rooms and Bedroom2 for Missing and Not Missing values. Missing Bedroom2 values have relatively reasonable Rooms values. Additionally, Not Missing values have a positive relationship between Rooms and Bedroom2 where the higher the amount of Bedrooms the higher amount of total rooms. However, there are a few illogical outliers such as where Bedroom2 values are a lot higher than Rooms values, this would not make sense as housing cannot possibly have more bedrooms than the total amount of rooms. Therefore, these values will be excluded later.
+
+
+###The strategy for dealing with the missing values.
+
+```{r}
+houses1 <- houses1 %>%
+  filter(!is.na(Price)) %>%
+  filter(!is.na(Distance))
+houses2 <- houses1 %>%
+  filter(is.na(Bedroom2)) %>% 
+  mutate(
+    Bedroom2 = case_when(
+      Rooms %in% 1:1 ~ 1, Rooms %in% 2:3  ~ Rooms - 1, Rooms %in% 4:6  ~ Rooms - 2, Rooms %in% 7:9  ~ Rooms - 3, 
+      Rooms %in% 10:12  ~ Rooms - 4 - 1, Rooms %in% 13:15  ~ Rooms - 5 - 2, TRUE ~ Rooms - 6 - 3
+    )) %>%
+  mutate(Bathroom = case_when(
+      Rooms %in% 1:9 ~ Rooms - Bedroom2,
+      Rooms %in% 10:12  ~ Rooms - Bedroom2 - 1, Rooms %in% 13:15  ~ Rooms - Bedroom2 - 2, TRUE ~ Rooms - Bedroom2 - 3
+    ))
+houses3 <- bind_rows(houses1 %>% filter(!is.na(Bedroom2)), houses2)
+houses3 <- bind_rows(houses1 %>% filter(!is.na(Bathroom)), houses2)
+```
+
+We can see from the missing values summaries that the missing values for bedroom2 and the missing values for bathroom occur together.
+
+We are assuming a large house (house with more than 9 rooms) will have some rooms that are neither bedroom nor bathroom (for example: study, dining room, etc.).
+
+For Bedroom2 missing, calculate it:
+$if 1=<x=<3, Bedroom = Room-1$, 
+$if 4=<x=<6, Bedroom = Room-2$, 
+$if 7=<x=<9, Bedroom = Room-3$, 
+$if 10=<x=<12, Bedroom = Room - 4 - 1$, 
+$if 13=<x=<15, Bedroom = Room - 5 - 2$, 
+$if x>=16, Bedroom = Room - 6 - 3$.
+
+For bathroom missing, calculate it: 
+$if 1=<x=<9, Bathroom = Room - Bedroom$, 
+$if 10=<x=<12, Bathroom = Rooms - Bedroom - 1$, 
+$if 13=<x=<15, Bathroom = Room - Bedroom - 2$, 
+$if x>=16, Bathroom = Room - Bedroom – 3$.
+
+### Drop unreasonable values
+
+```{r}
+houses3 <- mutate(houses3, new_rooms = Bedroom2 + Bathroom)
+houses3 <- filter(houses3, new_rooms <= Rooms) %>%
+  select(Price, Rooms, Type, Distance, Bedroom2, Bathroom)
+```
+
+In the data there are many "Rooms" that are less than the sum of "Bedroom2" and "Bathroom". This does not make sense as "Rooms" is meant to be all rooms in the house including the house such as bedrooms, bathrooms, kitchen, study, laundry and more. Therefore, it is unreasonable to keep values where "Rooms" is smaller than "Bedroom2" and "Bathroom".
+
+We created a new variable "new_rooms" by adding up "Bedrooms2" and "Bathroom". Afterwards, we subset logical "Room" values by filtering "Room" values that have "new_rooms" less than or equal to "Rooms". This means that we will only get data that have the number of bathrooms and bedrooms less than or equal to the total number of rooms in the house. As it would not make sense for a house to have more bathrooms and bedrooms compared to total rooms in a house.
+
+### Visualising Missing values after cleaning up
+
+```{r}
+vis_miss(houses3, sort_miss=TRUE)
+```
+
+According to the above plot, there are no more missing values after cleaning it up as 100% of values are present.
+
+###Shadow matrix for houses after cleaning up missing values
+
+```{r}
+houses3_shadow <- bind_shadow(houses3)
+houses3_shadow
+ggplot(houses3, aes(x = Bedroom2, y = Rooms)) + geom_miss_point()
+```
+
+This graph shows us that missing values for bedroom2 has been excluded, therefore from the legend we can see that there missing values are not present anymore.
+
+Another information we can get from this graph is that the relationship between bedroom2 and rooms is linearly and positive. 
+
+Also, after cleaning up, we can see that this scatterplot makes a lot more sense than the previous one as there are no values with Bedroom2 more than Rooms.
+
+```{r}
+ggplot(houses3, aes(x = Rooms, y = Price, alpha = 0.3)) +
+  geom_point()+
+  geom_smooth(method = "lm") +
+  facet_wrap(~Type) +
+ggtitle("Graph 1")
+```
+
+The first graph shows the relationship between the number of rooms and price for each type of housing (house, townhouse, unit) using scatterplots.
+
+For three types of housing (house, townhouse, unit), we can see that there are positive relationships between price and number of rooms.  Their slopes look similar. This makes sense, because more rooms mean the housing area is larger, larger housing tend to be more expensive.
+
+For house, we can see that the number of rooms for most houses is between 2.5 and 5. As most houses in the market are houses with 2.5 and 5 rooms. These standard houses have more range of prices suggesting that other factors may affect the price for these standard houses.
+
+Townhouse has a shorter linear model. This suggests that the relationship between price and room numbers is still strong but most townhouses have fewer rooms between 2 and 5. 
+
+For unit, we can see that there are two outliers that have extremely high prices with fewer rooms. These two outliers indicate that, in the case of a small number of rooms, unit prices can still be high. This suggests that these units could have other exceptional factors affecting their prices.
+
+We would naturally assume for all types of housing that more rooms lead to higher price. However, the number of rooms for most housing is between 2.5 and 5. These standard rooms have a variety of house prices. This means that not only the number of rooms but also some other factors will affect prices. These factors may be the distance from the urban area, convenience of transportation, or the surrounding infrastructures. With the number of houses alone, house prices cannot be accurately predicted.
+
+```{r}
+ggplot(houses3, aes(x = Distance, y = Price, alpha = 0.3)) +
+  geom_point()+
+  geom_smooth(method = "lm") +
+  facet_wrap(~Type) +
+ggtitle("Graph 2")
+```
+
+The above graph shows the relationship between distance and price for each type of housing (house, townhouse, unit) using scatterplots.
+
+For house we can see that there may be a negative relationship between price and distance, this implies that houses with shorter distances from the CBD will have higher the prices. The scatterplot also looks like a $y=a/x$ (inverse proportional function) graph which suggests there may be a non-linear association between price and distance for houses. Houses that are closer to the CBD also have more range of prices suggesting that other factors may affect the price of higher priced houses.
+
+Townhouse has plots clustered together on the bottom left corner. This suggests that the relationship between price and distance is not strong and most townhouses are near the city and have low prices. Since the line is relatively flat, this also supports the fact that there is not much correlation between the townhouses price and distance from CBD.
+
+With regards to units, it seems like it follows a similar pattern like houses, except that it is less spread out in relation to price. It also seems like there are two outliers that have extremely high unit prices that are close to the CBD. This suggests that these houses could have other exceptional factors affecting its price.
+
+We would naturally assume for all types of housing, the closer it is to the CBD the higher the price. However, there are many houses that are close to the CBD that are also relatively cheaper than others. This could mean that there may be other factors affecting prices of houses, townhouses and units such as the distance from attractions. For example, if housings are near attractions such as amusement parks or big shopping malls, the prices of housing could still increase regardless of the distance from the CBD.
+
+```{r}
+ggplot(houses3, aes(x=Price)) +
+  geom_histogram(binwidth = 50000)
+```
+
+According to the histogram above, the values are skewed to the right. This suggests that we would need to do a log transformation in the models later on to make it relatively normally distributed.
+
+```{r}
+houses4 <- houses3 %>%
+  mutate(Type = as.factor(Type))
+houses_fit1 <- lm(Price ~ Bedroom2 + Bathroom + Rooms + Distance + Type*Rooms, data=houses4)
+tidy(houses_fit1)
+glance(houses_fit1)
+
+houses_fit2 <- lm(log(Price) ~ Bedroom2 + Bathroom + Rooms + Distance + Type*Rooms, data=houses4)
+tidy(houses_fit2)
+glance(houses_fit2)
+
+houses_fit3 <- lm(log(Price) ~ Bedroom2 + Bathroom + Rooms + I(Rooms^2) + Distance + Type*Rooms, data=houses4)
+tidy(houses_fit3)
+glance(houses_fit3)
+
+houses_mod1 <- augment(houses_fit1, houses4)
+houses_mod2 <- augment(houses_fit2, houses4)
+houses_mod3 <- augment(houses_fit3, houses4)
+```
+
+### Visualising Fitted value
+
+```{r}
+p1 <- ggplot(houses_mod1, aes(x=.fitted, y=Price, alpha = 0.3)) +
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  theme(aspect.ratio = 1) +
+  ggtitle("Model 1")
+p2 <- ggplot(houses_mod2, aes(x=.fitted, y=Price, alpha = 0.3)) +
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  theme(aspect.ratio = 1) +
+  ggtitle("Model 2")
+p3 <- ggplot(houses_mod3, aes(x=.fitted, y=Price, alpha = 0.3)) +
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  theme(aspect.ratio = 1) +
+  ggtitle("Model 3")
+grid.arrange(p1, p2, p3, ncol = 3)
+```
+
+### Visualising Residuals
+
+```{r}
+r1 <- ggplot(houses_mod1, aes(x=.fitted, y=.std.resid, alpha = 0.3)) +
+  geom_point() +
+  theme(aspect.ratio = 1) +
+  ggtitle("Model 1")
+r2 <- ggplot(houses_mod2, aes(x=.fitted, y=.std.resid, alpha = 0.3)) +
+  geom_point() + 
+  theme(aspect.ratio = 1) +
+  ggtitle("Model 2")
+r3 <- ggplot(houses_mod3, aes(x=.fitted, y=.std.resid, alpha = 0.3)) +
+  geom_point() + 
+  theme(aspect.ratio = 1) +
+  ggtitle("Model 3")
+grid.arrange(r1, r2, r3, ncol = 3)
+```
+
+Model 1 is shown by the model
+$\widehat{price}= 596062.29+ 59410.19Bedroom2+ 175983.94Bathroom+ 175046.32Rooms- 29875.95Distance+ 16671.10Rooms*Townhouse+ 14169.96Rooms*Unit$
+
+$R^2=(0.3652893)$   adjusted $R^2=(0.3645314)$
+
+We can visualise Model 1 in a plot with fitted values on the x-axis and Price on the y-axis with a regression line. This suggests that there is a level-level relationship between the fitted values and price. We selected 5 variables in this model, which is bedroom2, bathroom, rooms, distance and type*rooms. All these variables affects price and fitted values.
+
+To visualise the residuals of this model we plotted a residual plot where fitted values are on the x-axis and standard residuals are on the y-axis. From the first residual plot, it suggests that Model1 may not be a good residual plot compared with the other two because the residual points are not randomly distributed. Also, the values of r square and adjusted r square are not big enough to prove this is a good residual plot. 
+
+
+Model 2 is shown by the model 
+$log(\widehat{price})= 13.472+ 0.039Bedroom2 + 0.172Bathroom + 0.116Rooms - 0.0271Distance -0.463Townhouse -0.72Unit +0.115 Rooms*Townhouse + 0.175Rooms*Unit$
+
+$r^2=(0.488)$   adjusted $r^2=(0.487)$
+
+We can visualise Model 2 in a plot with fitted values on the x-axis and Price on the y-axis with a regression line. This suggests that there is a log-level relationship between the fitted values and price. While the log-level model is better than level-level model, since the points are more clustered near the linear model in the log-level model. There may be other variables affecting price and fitted values as we only selected 8 variables.
+
+
+Model 3 is shown by the model 
+$log(\widehat{price})= 13.208+ 0.00274Bedroom2 + 0.123Bathroom + 0.306Rooms -0.0191Rooms^2 - 0.0275Distance -0.355Townhouse -0.548Unit +0.080003 Rooms*Townhouse + 0.116Rooms*Unit$
+
+$r^2=(0.492)$   adjusted $r^2=(0.491)$
+
+We can visualise Model 3 in a plot with fitted values on the x-axis and Price on the y-axis with a regression line. This suggests that there may be a $x^2$ relationship between the fitted values and price. There may be other variables affecting price and fitted values as we only selected 9 variables, thus, the square relationship.
+
+To visualise the residuals of this model we plotted a residual plot where fitted values are on the x-axis and standard residuals are on the y-axis. According to the three plots, the Model 3 residual plot is the best among other models as there is a random relationship between the standard residuals and fitted values. 
+
+In conclusion, the random plots in the residual plot for Model 3 suggests that the distance between observed values and predicted values is the lowest among all models, therefore, this is the best model among all 3 models. R squared (0.492) and adjusted r squared (0.491) is also the highest among the other models, suggesting that more proportion of plots are explained by this model. Additionally, Model 3's standard deviation (sigma) is also the lowest among all models, thus, Model 3 is the best model.

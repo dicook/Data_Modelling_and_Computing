@@ -49,32 +49,30 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - [Guide for making plots](assignments/assign2_blog.html) [(Rmd)](assignments/assign2_blog.Rmd), based on assignment 2 submissions. WORTH READING!
 - Assignment 3: [Instructions](assignments/assignment3.html) [(Rmd)](assignments/assignment3.Rmd), [Data](assignments/data/Melbourne_housing_FULL.csv) **DUE: Tues Apr 24 in class**
 
-<!--
-- [Peer evaluation assignments](assignments/assignment2_marking.csv) This is the team's assignment that you should evaluate, on reproducing and explanations. Enter your feedback in the "Assignment 2 peer evaluation" on ED. 
+- [Peer evaluation assignments](assignments/assignment3_marking.csv) This is the team's assignment that you should evaluate, on reproducing and explanations. Enter your feedback in the "Assignment 2 peer evaluation" on ED. 
 - You can download the Rmd and html for your evaluation here:
-    - 5T: [Rmd](assignments/assignment2_submissions/5T/5T.Rmd) [html](assignments/assignment2_submissions/5T/5T.html)
-    - BBC: [Rmd](assignments/assignment2_submissions/BBC/BBC.Rmd) [html](assignments/assignment2_submissions/BBC/BBC.html)
-    - Black_4: [Rmd](assignments/assignment2_submissions/Black_4/Black_4.Rmd) [html](assignments/assignment2_submissions/Black_4/Black_4.html)
-    - CJ: [Rmd](assignments/assignment2_submissions/CJ/CJ.Rmd) [html](assignments/assignment2_submissions/CJ/CJ.html)
-    - Data Lads: [Rmd](assignments/assignment2_submissions/Data Lads/Data Lads.Rmd) [html](assignments/assignment2_submissions/Data Lads/Data Lads.html)
-    - DQ: [Rmd](assignments/assignment2_submissions/DQ/DQ.Rmd) [html](assignments/assignment2_submissions/DQ/DQ.html)
-    - ETC1010: [Rmd](assignments/assignment2_submissions/ETC1010/ETC1010.Rmd) [html](assignments/assignment2_submissions/ETC1010/ETC1010.html)
-    - Group One: [Rmd](assignments/assignment2_submissions/Group-One/Group-One.Rmd) [html](assignments/assignment2_submissions/Group-One/Group-One.html)
-    - Group1: [Rmd](assignments/assignment2_submissions/Group1/Group1.Rmd)
-    - Group2: [Rmd](assignments/assignment2_submissions/Group2/Group2.rmd) [html](assignments/assignment2_submissions/Group2/Group2.html)
-    - Group5: [Rmd](assignments/assignment2_submissions/Group5/Group5.Rmd) [html](assignments/assignment2_submissions/Group5/Group5.html)
-    - GuangZongYaoZu: [Rmd](assignments/assignment2_submissions/GuangZongYaoZu/GuangZongYaoZu.Rmd) [html](assignments/assignment2_submissions/GuangZongYaoZu/GuangZongYaoZu.html)
-    - HDgroup: [Rmd](assignments/assignment2_submissions/HDgroup/HDgroup.Rmd) [html](assignments/assignment2_submissions/HDgroup/HDgroup.html)
-   - KatTim: [Rmd](assignments/assignment2_submissions/KatTim/KatTim.Rmd) [html](assignments/assignment2_submissions/KatTim/KatTim.html)
-    - LSE: [Rmd](assignments/assignment2_submissions/LSE/LSE.Rmd) [html](assignments/assignment2_submissions/LSE/LSE.html)
-    - MNS2: [Rmd](assignments/assignment2_submissions/MNS2/MNS2.Rmd) [html](assignments/assignment2_submissions/MNS2/MNS2.html)
-    - OTN: [Rmd](assignments/assignment2_submissions/OTN/OTN.Rmd) [html](assignments/assignment2_submissions/OTN/OTN.html)
-    - Raymond & Co: [Rmd](assignments/assignment2_submissions/Raymond & Co/Raymond & Co.Rmd) [html](assignments/assignment2_submissions/Raymond & Co/Raymond & Co.html)
-    - The_Ems: [Rmd](assignments/assignment2_submissions/The_Ems/The_Ems.Rmd) [html](assignments/assignment2_submissions/The_Ems/The_Ems.html)
-    - The Markdown Mates: [Rmd](assignments/assignment2_submissions/The_Markdown_Mates/The_Markdown_Mates.Rmd) [html](assignments/assignment2_submissions/The_Markdown_Mates/The_Markdown_Mates.html)
-    - The_pirates: [Rmd](assignments/assignment2_submissions/The_pirates/The_pirates.Rmd) [html](assignments/assignment2_submissions/The_pirates/The_pirates.html)
-    - YES: [Rmd](assignments/assignment2_submissions/YES/YES.Rmd) [html](assignments/assignment2_submissions/YES/YES.html)
--->
+    - 5T: [Rmd](assignments/assignment3_submissions/5T/5T.Rmd) [html](assignments/assignment3_submissions/5T/5T.html)
+    - BBCS: [Rmd](assignments/assignment3_submissions/BBCS/BBCS.Rmd) [html](assignments/assignment3_submissions/BBCS/BBCS.html)
+    - Black_4: [Rmd](assignments/assignment3_submissions/Black 4/Black 4.Rmd) [html](assignments/assignment3_submissions/Black 4/Black 4.html)
+    - CJ: [Rmd](assignments/assignment3_submissions/CJ/CJ.Rmd) [html](assignments/assignment3_submissions/CJ/CJ.html)
+    - Data Lads: [Rmd](assignments/assignment3_submissions/Data Lads/Data Lads.Rmd) [html](assignments/assignment3_submissions/Data Lads/Data Lads.html)
+    - DQ: [Rmd](assignments/assignment3_submissions/DQ/DQ.Rmd) [html](assignments/assignment3_submissions/DQ/DQ.html)
+    - ETC1010: [Rmd](assignments/assignment3_submissions/ETC1010/ETC1010.Rmd) [html](assignments/assignment3_submissions/ETC1010/ETC1010.html)
+    - Group One: [Rmd](assignments/assignment3_submissions/Group-One/Group-One.Rmd) [html](assignments/assignment3_submissions/Group-One/Group-One.html)
+    - Group1: [Rmd](assignments/assignment3_submissions/Group1/Group1.Rmd)
+    - Group2: [Rmd](assignments/assignment3_submissions/Group2/Group2.Rmd) [html](assignments/assignment3_submissions/Group2/Group2.html)
+    - Group5: [Rmd](assignments/assignment3_submissions/Group5/Group5.Rmd) [html](assignments/assignment3_submissions/Group5/Group5.html)
+    - GuangZongYaoZu: [Rmd](assignments/assignment3_submissions/GuangZongYaoZu/GuangZongYaoZu.Rmd) [html](assignments/assignment3_submissions/GuangZongYaoZu/GuangZongYaoZu.html)
+    - HDgroup: [Rmd](assignments/assignment3_submissions/HDgroup/HDgroup.Rmd) [html](assignments/assignment3_submissions/HDgroup/HDgroup.html)
+   - KatTim: [Rmd](assignments/assignment3_submissions/KatTim/KatTim.Rmd) [html](assignments/assignment3_submissions/KatTim/KatTim.html)
+    - LSE: [Rmd](assignments/assignment3_submissions/LSE/LSE.Rmd) [html](assignments/assignment3_submissions/LSE/LSE.html)
+    - NMS2: [Rmd](assignments/assignment3_submissions/NMS2/NMS2.Rmd) [html](assignments/assignment3_submissions/NMS2/NMS2.html)
+    - OTN: [Rmd](assignments/assignment3_submissions/OTN/OTN.Rmd) [html](assignments/assignment3_submissions/OTN/OTN.html)
+    - Raymond & Co: [Rmd](assignments/assignment3_submissions/Raymond & Co/Raymond & Co.Rmd) [html](assignments/assignment3_submissions/Raymond & Co/Raymond & Co.html)
+    - The_Ems: [Rmd](assignments/assignment3_submissions/The_Ems/The_Ems.Rmd) [html](assignments/assignment3_submissions/The_Ems/The_Ems.html)
+    - The Markdown Mates: [Rmd](assignments/assignment3_submissions/Markdown-Mates/Markdown-Mates.Rmd) [html](assignments/assignment3_submissions/Markdown-Mates/Markdown-Mates.html)
+    - The_pirates: [Rmd](assignments/assignment3_submissions/The_pirates/The_pirates.Rmd) [html](assignments/assignment3_submissions/The_pirates/The_pirates.html)
+    - YES: [Rmd](assignments/assignment3_submissions/YES/YES.Rmd) [html](assignments/assignment3_submissions/YES/YES.html)
 
 ## Data 
 

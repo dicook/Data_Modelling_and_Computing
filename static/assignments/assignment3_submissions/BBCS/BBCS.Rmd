@@ -1,0 +1,142 @@
+---
+title: "Assignment3"
+author: "BBCS"
+date: "21/04/2018"
+output: html_document
+---
+
+##Load Packages
+```{r}
+library(tidyverse)
+library(broom)
+library(naniar)
+library(visdat)
+library(imputeR)
+```
+
+##Load Data, select variables
+```{r}
+houses <- read_csv("Melbourne_housing_FULL.csv")
+houses1 <- select(houses, Rooms, Price, Type, Distance, Bedroom2, Bathroom)
+```
+Here, only Houses, Rooms, Price, Type, Distance, Bedroom2, Bathroom are selected, as they are deemed sufficient for analysis in accordance with the assignment, however later we will select only some of these variables as a basis for our model.
+
+
+##Visualise Data: Missing Values
+```{r}
+vis_miss(houses1, sort_miss=TRUE) + theme(aspect.ratio=1)
+```
+This visual representation allows us to see the extent of missing values, where they occur and how frequently. Harnessing this data will help us to determine how to mutate or impute the missing values in later analysis.
+
+#Obtain missing value summaries
+```{r}
+miss_summary(houses1)$miss_case_table
+miss_summary(houses1)$miss_var_table
+miss_summary(houses1)$miss_var_summary
+```
+This allows us to view the percentage of missing values contained within each variable. From this we can see that proportionally, 23.6% of data is missing for Bedroom and Bathroom data respectively (likely the same observations) and 21.9% of price data is missing. This is important to understand as we must omit some of these observations and estimate others later on.
+
+##Initial Regression Analysis: Bathrooms and Rooms
+```{r}
+houses_fit <- lm(Bathroom~Rooms, data=houses1)
+tidy(houses_fit)
+
+bathroom_model <- augment(houses_fit, houses1)
+ggplot(bathroom_model, aes(x=Rooms, y=Bathroom)) + 
+     geom_point() + 
+     geom_line(aes(y=.fitted), colour="blue")
+```
+
+##Initial Regression Analysis: Bedrooms and Rooms
+```{r}
+houses_fit2 <- lm(Bedroom2~Rooms, data=houses1)
+tidy(houses_fit2)
+
+bedroom_model <- augment(houses_fit2, houses1)
+ggplot(bedroom_model, aes(x=Rooms, y=Bedroom2)) +
+     geom_point() +
+     geom_line(aes(y=.fitted), colour="blue")
+```
+
+##Initial Regression Analysis: Price and Rooms
+```{r}
+no_na_dataset <- na.omit(houses1)
+pricehouses_fit <- lm(Price~Rooms, data=no_na_dataset)
+tidy(pricehouses_fit)
+
+priceshouses_model <- augment(pricehouses_fit, no_na_dataset)
+ggplot(priceshouses_model, aes(x=Rooms, y=Price)) + 
+     geom_point() + 
+     geom_line(aes(y=.fitted), colour="blue")
+```
+In order to accurately represent this data, we have taken out all NA values - this is represented by no_na_dataset which omits all observations with NA values (for comparrison sake, this dataset contains 20,800 observations out of the original 34,857).
+
+##Initial Regression Analysis: Price and Bedrooms
+Again, it must be noted that no_na_dataset is utilised here, not houses1. We observe a positive linear trend.
+```{r}
+pricebedrooms_fit <- lm(Price~Bedroom2, data=no_na_dataset)
+tidy(pricebedrooms_fit)
+
+pricebedrooms_model <- augment(pricebedrooms_fit, no_na_dataset)
+ggplot(pricebedrooms_model, aes(x=Bedroom2, y=Price)) + 
+     geom_point() + 
+     geom_line(aes(y=.fitted), colour="blue")
+```
+
+#Initial Regression Analysis: Price and Bathrooms
+```{r}
+pricebathroom_fit <- lm(Price~Bathroom, data=no_na_dataset)
+tidy(pricebathroom_fit)
+
+pricebathroom_model <- augment(pricebathroom_fit, no_na_dataset)
+ggplot(pricebathroom_model, aes(x=Bathroom, y=Price)) + 
+     geom_point() + 
+     geom_line(aes(y=.fitted), colour="blue") + facet_wrap(~Type)
+```
+
+##Removing all NAs
+```{r}
+no_na_dataset <- na.omit(houses1)
+```
+This will remove all observations that have NA in the observation, just to allow us to see the extent of NA values. We create a new dataset (used before in the price comparrison plots) with an omit function.
+
+Then, we convert the houses1 table (from the original csv file, after selecting appropriate variables) into a dataframe. Then we remove all observations (rows) that include two or more NA readings, and assign it to "price_na_dataset". We are now left with price_na_dataset which will only include NAs in the Price column, next we shall use regression analysis to predict the prices of these observations.
+```{r}
+dataframehouses <- as.data.frame.matrix(houses1) 
+price_na_dataset <- dataframehouses[rowSums(is.na(dataframehouses)) < 2, ]
+```
+
+##Utilise Regression Analysis of Price_NA_Dataset
+```{r}
+no_na_dataset <- select(no_na_dataset, Price, Rooms, Distance, Bathroom)
+no_na_regression1 <- lm(Price ~ Rooms + Distance + Bathroom, data = no_na_dataset)
+final_dataset <- price_na_dataset
+#i=1
+  #for (i in 1:nrow(final_dataset)) {
+    #if (is.na(final_dataset$Price[i]) == TRUE) {
+      #predict(no_na_regression1[i], final_dataset$Price[i])
+      #final_dataset$Price[i] <- 289507 + 283037*final_dataset$Rooms[i] - 36397*final_dataset$Distance[i] + 218740*final_dataset$Bathroom[i]}}
+```
+We run a regression of Price on Rooms, Bedrooms, Bathrooms and then mutate/fill NA values according to the model. Thus, the model is estimating NA values based on the number of rooms, bedrooms and bathrooms of that particular observation as well as other observations. We have used an if statement that will loop through every row in the price_na_dataset and mutates the NA fields with a regression analysis of that value.
+
+##Final Equation From Estimated Values
+##\hat{Price} = 289507 x 283037x\hat{Rooms} x 36397x\hat{Distance} x 218740x\hat{Bathroom}
+This was our original equation obtained from imputing values according to no_na_dataset.
+
+##Variable Selection for model
+```{r}
+finalldataset <- houses1
+tidy(lm(Price~Rooms + Bathroom + Type + Distance, data=finalldataset))
+glance(lm(Price~Rooms + Bathroom + Type + Distance, data=finalldataset))
+glance(lm(Price~Rooms * Bathroom * Type * Distance, data=finalldataset))
+```
+Our R^2 value is 0.4492 which is considerably low and average for a regression line and would usually pertain to a bad model. However, with the variables used there are alot of other variables that are taken into account in real life relative to price (eg; environment, pollution, whether or not there are shops/train stations/parks nearby, general traffic, place we're at in the economic cycle, interest rates, etc.)
+
+We've analysed the estimates of each useful variable:
+Rooms - As the amount of rooms go up, the price goes up since there is more space, and the more space there is in property the more valuable it is holding all other variables constant.
+Bathrooms - As the amount of bathrooms go up, the price goes up since Bathrooms in the property industry and generally known to increase price and the larger the space of the property (holding all else constant) there is an increase in property value and price.
+Bedrooms - We've taken out bedrooms since in our analysis the p value is quite large (0.3168197) which indicates that relevant to our variables and data, the number of bedrooms is not useful in deciding the price of the property and has thus been dropped.
+Distance - As the property gets further away from the CBD, holding all else constant there is a decrease in price. Intuitively this is because there is less price value due the people needing to spend extra on transportation costs and losing time in order to get to the city/work. 
+Type - 'h' the household type is our baseline (dummy variable) so the types are a comparison to that. Having a home that is a townhouse (t) reduces the value as townhouses aren't as sought out to live in in comparison to households due to their nature, size, and environment. Having a home that is a unit (u) reduces the value as units are smaller, and thus have less property space and thus less property price/value, also units aren't as useful for families and purchases for landlords (as they get less of a passive income in comparison to homes due to the price and use difference).
+
+We've included the interactions as using the interactions increases the r^2 and thus the accuracy of the model. This is due to the fact that there is a small amount of variables used for such a complex idea so there will be alot of interaction between the variables which has been taken into account for our decided model.

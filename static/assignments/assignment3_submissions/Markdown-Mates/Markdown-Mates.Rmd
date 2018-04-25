@@ -1,0 +1,254 @@
+---
+title: "Assignment 3"
+output: html_document
+author: "The Markdown Mates"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(visdat)
+library(naniar)
+library(broom)
+library(gridExtra)
+# If impute is not installed uncomment these lines:
+# source("https://bioconductor.org/biocLite.R")
+# biocLite("impute")
+
+library(impute)
+```
+
+Some Key Details
+
+Rooms:      Number of rooms
+
+Price:      Price in dollars
+
+Type:       h - house,cottage,villa, semi,terrace; 
+            u - unit, duplex; 
+            t - townhouse;
+            
+Distance:   Distance from CBD
+
+Bedroom2:   Scraped # of Bedrooms (from different source)
+
+Bathroom:   Number of Bathrooms
+
+###Initially reading data
+```{r}
+houses <- read_csv("Melbourne_housing_FULL.csv")
+housesTarget <- houses[,c("Price", "Rooms", "Type", "Distance", "Bedroom2", "Bathroom")]
+
+```
+
+# Dealing with Missing Values
+
+Create a missing values summary Diagrams to visualise the data
+```{r}
+vis_miss(housesTarget, sort_miss=TRUE)
+vis_dat(housesTarget)
+```
+
+Various missing value summaries to further understand what values are missing
+```{r}
+house_miss <- miss_summary(housesTarget)
+house_miss$miss_case_table
+house_miss$miss_var_summary
+```
+
+Shows that 1777 observations are missing 3 variables, these observations should be removed, since 50% of the data assosciated with these observations is not valid.
+```{r}
+housesTarget <- housesTarget[-which(rowMeans(is.na(housesTarget)) >= 0.5),]
+#Check missing value summaries again
+house_miss <- miss_summary(housesTarget)
+house_miss$miss_case_table
+```
+
+Plot data in scatter plots to visualise missing data
+```{r}
+#Create Shadow matrix to indicate missing data
+tao_shadow <- bind_shadow(housesTarget)
+
+ggplot(tao_shadow, aes(x = Distance, y = Price, colour = Price_NA)) + geom_point() + geom_miss_point()+ facet_wrap(~Type)
+ggplot(tao_shadow, aes(x = Bedroom2, y = Bathroom)) + geom_point() + geom_miss_point()+ facet_wrap(~Type)
+```
+
+Imputation, now using a simpler mean value method, separated by type
+```{r}
+#Start with house data
+tao_house <- tao_shadow %>% 
+  filter(Type == "h") %>% 
+  mutate(Bathroom = ifelse(is.na(Bathroom), 
+                        mean(Bathroom, na.rm = TRUE), 
+                        Bathroom),
+         Bedroom2 = ifelse(is.na(Bedroom2), 
+                        mean(Bedroom2, na.rm = TRUE), 
+                        Bedroom2))
+
+#Townhouse data
+tao_town <- tao_shadow %>% 
+  filter(Type == "t") %>% 
+  mutate(Bathroom = ifelse(is.na(Bathroom), 
+                        mean(Bathroom, na.rm = TRUE), 
+                        Bathroom),
+         Bedroom2 = ifelse(is.na(Bedroom2), 
+                        mean(Bedroom2, na.rm = TRUE), 
+                        Bedroom2))
+
+#Unit data
+tao_unit <- tao_shadow %>% 
+  filter(Type == "u") %>% 
+  mutate(Bathroom = ifelse(is.na(Bathroom), 
+                        mean(Bathroom, na.rm = TRUE), 
+                        Bathroom),
+         Bedroom2 = ifelse(is.na(Bedroom2), 
+                        mean(Bedroom2, na.rm = TRUE), 
+                        Bedroom2))
+
+#Combining data and plotting
+tao_shadow <- bind_rows(tao_house, tao_town, tao_unit)
+ggplot(tao_shadow, aes(x = Bedroom2, y = Bathroom, colour = Bathroom_NA)) + geom_point() + facet_wrap(~Type)
+```
+
+Check missing values now
+```{r}
+housesTarget$Bedroom2 <- tao_shadow$Bedroom2
+housesTarget$Bathroom <- tao_shadow$Bathroom
+tao_shadow <- bind_shadow(housesTarget)
+house_miss <- miss_summary(tao_shadow)
+house_miss$miss_case_table
+house_miss$miss_var_summary
+```
+
+Impute Price data using the Bioconductor Impute Method, separating by property type
+```{R}
+#First House data
+tao_impute_house <- bind_shadow(housesTarget)%>%
+  arrange(Type, Rooms, Distance, Price) %>%
+  filter(Type == "h") %>% 
+  select(Price, Distance, Rooms) 
+tao_impute_house <- impute.knn(as.matrix(tao_impute_house), 1)
+
+#Next Townhouse data
+tao_impute_town <- bind_shadow(housesTarget) %>%
+  arrange(Type,Rooms, Distance, Price) %>%
+  filter(Type == "t") %>% 
+  select(Price, Distance, Rooms) 
+tao_impute_town <- impute.knn(as.matrix(tao_impute_town), 1)
+
+#Finally Unit data
+tao_impute_unit <- bind_shadow(housesTarget) %>%
+  arrange(Type, Rooms, Distance, Price) %>%
+  filter(Type == "u") %>% 
+  select(Price, Distance, Rooms) 
+tao_impute_unit <- impute.knn(as.matrix(tao_impute_unit), 1)
+
+#Combine all imputations
+tao_impute <- rbind(tao_impute_house$data, tao_impute_town$data, tao_impute_unit$data)
+
+#Transfer imputations to shadow matrix
+tao_shadow <- bind_shadow(housesTarget) %>%
+  arrange(Type, Rooms, Distance, Price) %>%
+  mutate(Price = tao_impute[,1],
+         Distance = tao_impute[,2])
+
+
+#Plot outcomes
+ggplot(tao_shadow, aes(x = Distance, y = Price, colour = Price_NA)) + geom_point(alpha = 0.25) + facet_wrap(~Type) + scale_colour_brewer(palette="Set1") + geom_miss_point()
+
+```
+
+Check missing values now
+```{r}
+house_miss <- miss_summary(tao_shadow)
+house_miss$miss_case_table
+house_miss$miss_var_summary
+```
+
+Defining new dataframe with all missing values replaced using aforementioned imputation methods
+```{r}
+HousingNoNA <- tao_shadow[,c(1:6)] 
+```
+
+#Summary Plots of house price against other variables
+Finding the mean price of the different types of houses and plotting them. 
+```{r}
+tao_shadow_av <- tao_shadow %>% 
+     group_by(Type) %>%
+     summarise(Price=mean(Price))
+ggplot(data = tao_shadow_av) + geom_col(mapping = aes(Type, Price)) + ggtitle("Average price of houses, townhouses and units") + labs(y="Average price ($)", x = "Type of residence") + scale_x_discrete(labels=c("h" = "House", "t" = "Townhouse","u" = "Unit"))
+```
+
+This plot shows that the mean price of houses is $1,203,740, the mean price of townhouses is $927,598, and the mean price of units is $627,345. 
+
+Finding the mean price of the different number of rooms and plotting them against price. 
+```{r}
+tao_shadow_av_room <- tao_shadow %>% 
+     group_by(Rooms) %>%
+     summarise(Price=mean(Price))
+ggplot(data = tao_shadow_av_room) + geom_point(mapping = aes(Rooms, Price)) + ggtitle("Average price for number of rooms") + labs(y="Average price ($)", x = "Number of rooms")
+```
+
+This plot shows that the mean price increases as rooms increase upto 5 rooms, after that it actually platos, then falls. After 10 rooms price of the home exponentially rises.
+
+Plotting average price of house type, against distance from CBD
+```{r}
+tao_shadow_av_distance <- tao_shadow %>% 
+     group_by(Distance) %>%
+     summarise(Price=mean(Price))
+ggplot(data = tao_shadow_av_distance) + geom_point(mapping = aes(Distance, Price)) + ggtitle("Average price against distance from CBD") + labs(y="Average price ($)", x = "Distance from CBD(km)")
+```
+
+This plot indicates that a negative negative relationship exists between distance and average price of house type, with prices falling as the houses move further from the CBD.
+
+#Model Construction for house prices
+
+In constructing the best model for predicting house price, the first step was to determine which explanatory variables were jointly signficant in explaining price; with the explanatory variables being Rooms, Type, Distance, Bedroom2 and Bathroom. The optimal model for predicting house prices will have the best fit, with measures of goodness of fit given by R-squared, adjusted R-squared and BIC, when comparing models.
+```{r}
+#Modelling price against all explanatory variables to establish significance, and removing intercept to improve model accuracy.
+price_variables<- lm(Price~Rooms+Type+Distance+Bedroom2+Bathroom-1, data=HousingNoNA)
+tidy(price_variables)
+```
+
+Both bedroom and bathroom variables are insignificant in explaining price, with p-values >0.05.
+
+
+After removing insignificant variables, interaction variables containing significant variables were added to the model. Quadratic and cuib transformations of these significant variables were also included. There changes were made to determine whether the optimal model was non-linear.
+```{r}
+HousingNoNA <- HousingNoNA %>% 
+  mutate(rooms_sqr = Rooms^2) %>% 
+  mutate(distance_sqr = Distance^2) %>% 
+  mutate(rooms_cube = Rooms^3) %>% 
+  mutate(distance_cube = Distance^3)
+price_variables_interactions_transformations<- lm(Price~Rooms*Type*Distance + rooms_sqr + distance_sqr + rooms_cube + distance_cube + Rooms + Distance + Type - 1, data=HousingNoNA)
+tidy(price_variables_interactions_transformations)
+```
+
+The optimal model is non-linear, as non-linear transformations of significant variables i.e. Rooms^2 and distance^2 are significant in explaining Price with p-values <0.05. Several interaction variables are also significant, such as Rooms*Distance.
+
+
+The model was refined, using those variables determined to be significant from the previous model - i.e. all those with p-values <0.05, excluding interactions involvinmg type as it's a categorical variable.
+```{r}
+price_refinedmodel<- lm(Price~Rooms*Type*Distance + rooms_sqr + distance_sqr + rooms_cube + Rooms + Type + Distance - 1, data=HousingNoNA)
+tidy(price_refinedmodel)
+```
+
+
+The refined model including all significant variables was determined to be the optimal model for predicting price. To confirm this, goodness of fit statistics for the model were analysed.
+```{r}
+glance(price_refinedmodel)
+```
+
+The R-squared and adjusted R-squared values indicate that this model and the variables included, explain ~85% of the variation in house prices. The BIC value is also lower than the earlier models, providing further evidence that this model is the best fit. 
+
+
+The final model was then augmented to predict/fit prices using the data provided in the modified dataframe, HousingNoNA. Residuals for the predicted or fitted values were also plotted.
+```{r}
+price_model <- augment(price_refinedmodel, HousingNoNA)
+predicted <- ggplot(price_model, aes(x=.fitted, y=Price)) + geom_point() + ggtitle("Fitted Price Model")
+residuals <- ggplot(price_model, aes(x=.fitted, y=.std.resid)) + geom_point() + ggtitle("Price Model Residuals")
+grid.arrange(predicted,residuals, ncol=2) 
+```
+
+The above model of the relationship between house price and number of rooms, distance from CBD and type of house is reasonably accurate. This is shown by the positive relationship between the observed and fitted values in the fitted price model. The correlation between these variables isn't stronger, however this is expected as the model doesn't explain all variation in house prices.For the price model residuals, values don't shown a significant relationship indicating that the fitted model captures the majority of the variables effecting house prices.
+

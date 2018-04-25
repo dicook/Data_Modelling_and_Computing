@@ -1,0 +1,298 @@
+---
+title: "Assignment 3"
+author: "On The Nose (OTN)"
+date: "23 April 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(visdat)
+library(naniar)
+library(broom)
+```
+
+```{r Reading in Data}
+houses <- read_csv("data/Melbourne_housing_FULL.csv")
+
+#Focusing only on the variables Price, Rooms, Type, Distance, Bedroom2, Bathroom
+houses <- houses %>%
+	select(Price, Rooms, Type, Distance, Bedroom2, Bathroom)
+```
+
+#Part 1: Missing Values
+##Summary
+```{r Missing Values Part 1}
+#Missingness map
+vis_miss(houses, sort_miss = TRUE)
+#Numerical summary
+s_miss <- miss_summary(houses)
+s_miss$miss_case_table
+```
+
+- Graphically, we can see that Distance, Rooms and Type had no missing values, whereas  Price, Bedroom2 and Bathroom were roughly equal in proportion of missing values.
+- The proportion of observations with missing values (40.3%) is quite high, such that simply omitting all the values may not be the best option.
+
+##Dealing with Missing Values
+```{r Missing Values Part 2}
+#Removing missing prices
+houses_PM <- houses %>%
+	filter(!is.na(houses$Price))
+
+vis_miss(houses_PM, sort_miss = TRUE)
+s_miss_PM <- miss_summary(houses_PM)
+s_miss_PM$miss_case_table
+
+houses_clean <- houses_PM %>%
+  #Removing 0 bedroom/bathroom values
+	filter(Bedroom2 > 0 | is.na(Bedroom2)) %>%
+  filter(Bathroom > 0 | is.na(Bathroom)) %>%
+  #Removing single observations that cannot be reasonably imputed- impact is minimal due to size of dataset
+	filter(Rooms != 9) %>%
+  filter(!(is.na(Distance)))
+
+vis_miss(houses_clean, sort_miss = TRUE)
+s_miss_clean <- miss_summary(houses_clean)
+s_miss_clean$miss_case_table
+
+#Proportion missing by room value
+s_miss_group <- houses_clean %>% 
+  group_by(Rooms) %>%
+	miss_summary()
+s_miss_group$miss_case_table
+#Proportion missing by Type
+s_miss_group2 <- houses_clean %>% 
+  group_by(Type) %>%
+	miss_summary()
+s_miss_group2$miss_case_table
+
+```
+
+- As predicting price is the purpose of our model, imputing price just to predict it would be pointless and would artificially improve the quality of any model we produce. Thus, observations that contained a missing Price value were removed. This also included observations that also missed a combination of Bedroom2 and Bathroom as well, but since Price was missing in these observations anyway there is no point in imputing them.
+- Observations that had 0 values in either Bedroom2 or Bathroom were removed, as it seemed infeasible that a residence would not have either a bedroom or bathroom, or both.
+- Single observations were also removed, namely an observation where both Bedroom2 and Bathroom was missing and was unsuitable for our imputing method, and an observation that missed Bedroom2, Bathroom and Distance. It was removed since we did not want to impute Distance depending on the remaining variables, since we did not consider them directly related to Distance.
+- Comparing the missing case tables of Rooms and Type, a better spread of missing value cases is seen across Rooms rather than Type, which is expected due to the lower number of factors for Type.
+
+###Imputing Values
+```{r Imputing values}
+imputed_means <- as.table(unlist(by(houses_clean[5:6], houses_clean[2], function(df) colMeans(df, na.rm = TRUE))))
+imputed_means <- as.data.frame(imputed_means) %>%
+  separate(col = Var1, into = c("Rooms", "Room Type"), sep = "[.]") %>%
+  spread(key = "Room Type", value = Freq)
+
+houses_comp <- houses_clean %>%
+  #Finds the corresponding Rooms mean of any missing value to impute missing Bedroom2 and Bathroom variables
+	#not using k nearest neighbours as values are discrete
+  #adding imputed dummy variables for plotting- indicates if the variable was imputed
+	mutate(imputed_ba = ifelse(is.na(Bathroom),
+														 "Yes",
+														 "No"),
+				 imputed_be = ifelse(is.na(Bedroom2),
+				 										"Yes",
+				 										"No"),
+  			 Bathroom = ifelse(is.na(Bathroom),
+  												 imputed_means[match(Rooms,imputed_means[,1]),2],
+  												 Bathroom),
+         Bedroom2 = ifelse(is.na(Bedroom2),
+         									imputed_means[match(Rooms,imputed_means[,1]),3],
+         									Bedroom2))
+```
+
+- Imputation using impute.knn could not be used between Rooms and Bathroom nor between Rooms and Bedroom2 as all of the variables in question were discrete.
+	- Price could not be used in place of Rooms since the values of Bathroom and Bedroom would be used to predict Price later, which would affect the model we create.
+	- Any relationship between Distance and either Bathroom or Bedroom2 is highly unlikely to display the entire picture, as any perceived effect may be attributed to the land size, which is not being investigated.
+	- Finally, Residence Type was not chosen due to the small number of factors, which would give a more general imputed value whereas imputing by Rooms would give greater flexibility in imputed values.
+
+#Part 2: Plots
+```{r Plots: Preparation}
+#Recoding Type to meaning for clarity
+houses_comp <- houses_comp %>% mutate(Type=recode(Type,"h"="House","t"="Townhouse","u"="Unit"))
+
+#Creating plot-friendly data- rounding imputed values
+houses_plot <- houses_comp %>%
+	mutate_if(is.double, funs(round(.,0)))
+```
+
+##Price Distribution
+```{r Plot 1: Price Distribution}
+houses_comp %>%
+	ggplot(aes(x = Price)) +
+	geom_histogram(binwidth=100000) +
+	coord_cartesian(xlim = c(0, 7000000)) +
+	ggtitle("Price Distribution")
+```
+
+- The plot demonstrates that Price is right-skewed 
+
+##Violin Plots
+```{r Plot 2: Violin Plots}
+houses_plot %>%
+	ggplot(aes(x=as.factor(Rooms), y = log(Price))) +
+	geom_violin(draw_quantiles = c(0.25,0.5,0.75)) +
+	xlab("Rooms") +
+	ggtitle("Rooms and Price")
+
+houses_plot %>%
+	ggplot(aes(x=as.factor(Bedroom2), y = log(Price))) +
+	geom_violin(draw_quantiles = c(0.25,0.5,0.75)) +
+	xlab("Bedrooms") +
+	ggtitle("Bedrooms and Price")
+
+houses_plot %>%
+	ggplot(aes(x=as.factor(Bathroom), y = log(Price))) +
+	geom_violin(draw_quantiles = c(0.25,0.5,0.75)) +
+	xlab("Bathrooms") +
+	ggtitle("Bathrooms and Price")
+```
+
+- The Violin Plots demonstrate positive relationships between Price and Rooms, between Price and Bedrooms and between Price and Bathrooms. 
+
+##Violin Plots Facetted by Residence Type
+```{r Plot 3: Violin Plots Facetted by Residence Type}
+houses_plot %>%
+	ggplot(aes(x=as.factor(Rooms), y = log(Price))) +
+	geom_violin(draw_quantiles = c(0.25,0.5,0.75)) +
+	xlab("Rooms") + facet_grid(~Type) +
+	ggtitle("Rooms and Price, Facetted by Residence Type")
+
+houses_plot %>%
+	ggplot(aes(x=as.factor(Bedroom2), y = log(Price))) +
+	geom_violin(draw_quantiles = c(0.25,0.5,0.75)) +
+	xlab("Bedrooms") + facet_grid(~Type) +
+	ggtitle("Bedrooms and Price, Facetted by Residence Type")
+
+houses_plot %>%
+	ggplot(aes(x=as.factor(Bathroom), y = log(Price))) +
+	geom_violin(draw_quantiles = c(0.25,0.5,0.75)) +
+	xlab("Bathrooms") + facet_grid(~Type) +
+	ggtitle("Bathrooms and Price, Facetted by Residence Type")
+```
+
+- When the Violin Plots are facetted by Residence Type it is clear that there is another relationship between Bedrooms and Residence Type as well as Bathrooms and Residence Type. In both cases, there are varying slopes for each Residence Type. This suggests the possibility of interactions between these variables. There may also be a relationship between Rooms and Type.
+
+##Scatterplots
+```{r Plot 4: Scatterplots}
+houses_plot %>%
+	ggplot(aes(x = as.factor(Bedroom2), y = log(Price), colour = imputed_be)) +
+	geom_point(alpha = 0.2) +
+	xlab("Bedrooms") +
+	ggtitle("Price by number of Bedrooms, Facetted by Residence Type") + facet_grid(~Type)
+
+houses_plot %>%
+	ggplot(aes(x = as.factor(Bathroom), y = log(Price), colour = imputed_ba)) +
+	geom_point(alpha = 0.2) +
+	xlab("Bathrooms") +
+	ggtitle("Price by number of Bathrooms, Facetted by Residence Type") + facet_grid(~Type)
+
+houses_comp %>%
+	ggplot(aes(x = Distance, y = Price, colour = Type)) +
+	geom_point(alpha = 0.2) +
+	coord_cartesian(xlim = c(0,50), ylim = c(0, 7000000)) +
+	ggtitle("Price by Distance from CBD")
+
+houses_comp %>%
+	ggplot(aes(x = Distance, y = Price, colour = Type)) +
+	geom_point(alpha = 0.2) +
+	facet_grid(~Type) + coord_cartesian(ylim = c(0, 7000000)) +
+	ggtitle("Price by Distance from CBD, facetted by Residence Type")
+```
+
+- When observing the Scatterplot of Price by Bedrooms again facetted by Residence Type, and taking into account where values were imputed - it was seen that a large proportion of values for townhouses and units were imputed, and therefore were initally missing. 
+- Distance is heavily right-skewed, where properties closer to the CBD are generally more expensive. When facetted by Residence Type this trend is particularly obvious with houses. The difference in slopes between Residence Types suggests a possible interaction between Distance and Type. 
+
+#Part 3: Modelling
+- From our plots it was clear that both Price and Distance were right-skewed, so we transformed these variables when plotting. Distance was transformed using log1p as it has zero values due to houses that are located within the CBD and using log10 would result in negative and infinite values. We also ensured that Type was treated as an unordered categorical variable.
+
+##Independent Variable Models
+```{r Independent Variable Models}
+#Transforming data
+houses_comp<-houses_comp %>%
+  mutate(log_price = log10(Price)) %>%
+  mutate(log_dist = log1p(Distance)) %>%
+  mutate(type_c = factor(Type, ordered=FALSE))
+
+#Models generated by considering the addition of one extra variable each time
+#Single Explanatory Variable
+mod1_ind1<-lm(log_price~Rooms,data=houses_comp)
+mod1_ind2<-lm(log_price~Rooms+type_c,data=houses_comp)
+mod1_ind3<-lm(log_price~Rooms+type_c+log_dist,data=houses_comp)
+mod1_ind4<-lm(log_price~Rooms+type_c+log_dist+Bedroom2,data=houses_comp)
+mod1_ind5<-lm(log_price~Rooms+type_c+log_dist+Bedroom2+Bathroom,data=houses_comp)
+
+glance(mod1_ind1)
+glance(mod1_ind2)
+glance(mod1_ind3)
+glance(mod1_ind4)
+glance(mod1_ind5)
+tidy(mod1_ind5)
+
+mod1_a<-augment(mod1_ind5,houses_comp)
+
+ggplot(mod1_a, aes(x=.fitted, y=.std.resid)) +
+  geom_point(alpha=0.1) + ggtitle("Model 1 Residuals vs Fitted")
+ggplot(mod1_a, aes(x=.fitted, y=log_price)) +
+  geom_point(alpha=0.1) + ggtitle("Model 1 Observed vs Fitted")
+```
+
+- The best model found was when all variables were added, as it had the highest Adjusted R^2 of all the models we tested (a subset is shown above). The AIC, BIC and deviance were also smallest when dealing with the last model which included all variables. This was expected as our plotting suggested that all of the variables had some sort of effect on Price.
+
+- Looking at the coefficients, we can see that compared to the base case (a residence which is either a house, cottage, villa, semi, or terrace) the number of Rooms, Bedrooms and Bathrooms will all positively impact Price. Conversely, if the residence were a unit/duplex or townhouse, or was further from the CBD, this would negatively impact Price.
+
+- The current residual vs fitted plot suggests there is a non-linear structure possibly not captured
+
+##Interaction Models
+```{r Interaction Models}
+#Testing interactions with Rooms, Bedroom and Bathroom with Residence Type
+mod2_int1<-lm(log_price~Rooms+type_c+log_dist+Bedroom2+Bathroom+type_c*Rooms,data=houses_comp)
+mod2_int2<-lm(log_price~Rooms+type_c+log_dist+Bedroom2+Bathroom+type_c*Bedroom2,data=houses_comp)
+mod2_int3<-lm(log_price~Rooms+type_c+log_dist+Bedroom2+Bathroom+type_c*Bathroom,data=houses_comp)
+mod2_int4<-lm(log_price~Rooms+type_c+log_dist+Bedroom2+Bathroom+type_c*Bedroom2+type_c*Bathroom,data=houses_comp)
+
+
+#Testing interactions with Distance, Bedroom and Bathroom with Residence Type
+mod2_int5 <- lm(log_price~Rooms+type_c+log_dist+Bedroom2+Bathroom+type_c*log_dist,data=houses_comp)
+mod2_int6 <- lm(log_price~Rooms+type_c+log_dist+Bedroom2+Bathroom+type_c*log_dist+type_c*Bedroom2,data=houses_comp)
+mod2_int7 <- lm(log_price~Rooms+type_c+log_dist+Bedroom2+Bathroom+type_c*log_dist+type_c*Bathroom,data=houses_comp)
+
+glance(mod2_int1)
+glance(mod2_int2)
+glance(mod2_int3)
+glance(mod2_int4)
+glance(mod2_int5)
+glance(mod2_int6)
+glance(mod2_int7)
+tidy(mod2_int6)
+
+mod2_a<-augment(mod2_int6,houses_comp)
+
+ggplot(mod2_a, aes(x=.fitted, y=.std.resid)) +
+  geom_point(alpha=0.1) + ggtitle("Model 6 Residuals vs Fitted")
+ggplot(mod2_a, aes(x=.fitted, y=log_price)) +
+  geom_point(alpha=0.1) + ggtitle("Model 6 Observed vs Fitted")
+```
+
+- The interaction between Type and Bedroom2 exhibits a slope which was captured in previous plots and its inclusion resulted in the increase of the adjusted R^2 value
+- The interaction between Type and Distance also exhibited a slope, and its inclusion also contributed to the increased adjusted R^2 value.
+- The interactions between Type and Rooms is similar to the interaction between Type and Bedroom2, which may in part be due to imputation of values from Rooms. Due to this, including both interactions in the model provides little improvement to the fit so only Bedroom2's interaction was ultimately included.
+
+##Inference
+```{r Inference}
+
+houses_coefs<-bind_cols(tidy(mod2_int6), confint_tidy(mod2_int6))
+
+confint_tidy(mod2_int6)
+
+ggplot(filter(houses_coefs, term != "(Intercept)"), aes(x=term, y=estimate)) + 
+  geom_hline(yintercept=0, colour="red", size=1) +
+  geom_point() + 
+  geom_errorbar(aes(ymin=conf.low, ymax=conf.high)) +coord_flip() +ggtitle("Confidence Intervals")
+```
+
+- The parametric approach suggests that Bedroom2 is not important for predicting Price as its confidence interval crosses zero. This variable had the least effect on the model fit previously, however, it was included as there was still some change seen in the R^2 value. 
+
+#Summary
+The final model produced was:
+$\widehat{log(Price)}=5.901433117 + 0.057118429Rooms -0.281261875type\_cTownhouse -0.475465948type\_cUnit -0.015740812log(Distance) + 0.001634523Bedroom2 + 0.074495348Bathroom + 0.008174023type\_cTownhouse*log(Distance) + 0.009263828type\_cUnit*log(Distance) + 0.035374822type\_cTownhouse*Bedroom2 + 0.090522400type\_cUnit*Bedroom2$
+
+The model chosen captures the main effects of the explanatory variables as well as some interactions between Residence type, Bedroom2 and Distance. It was chosen out of several iterations of different models tested after observing the plots generated. While the residuals suggest that there may still be non-linear trends we have not captured, we chose to leave them out as our current model is already quite complex and adding higher order terms will further adversely impact ease of interpretation, especially given the interaction terms.

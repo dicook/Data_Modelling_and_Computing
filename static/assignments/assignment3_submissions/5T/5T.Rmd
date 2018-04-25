@@ -1,0 +1,113 @@
+---
+title: "Assignment3_final"
+author: "5T"
+date: "24/04/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Focus only on Price, Rooms, Type, Distance, Bedroom2 and Bathroom
+
+Summary of missing values:
+```{r}
+library(tidyverse)
+library(visdat)
+library(naniar)
+houses <- read_csv("data/Melbourne_housing_FULL.csv")
+
+houses <- houses%>%
+  select(Price, Rooms, Type, Distance, Bedroom2, Bathroom)
+
+#is.na(houses)
+summary(houses)
+vis_miss(houses, sort_miss = TRUE) 
+houses_missing<- miss_summary(houses)
+houses_missing
+#40.33% of the observations having missings
+#therefore 14057 cases were dropped when missings were removed in the model
+houses_missing$miss_case_table
+```
+Price has 7610 missing values
+Distance has 1 missing value
+Bedroom 2 has 8217 missing values
+Bathroom has 8226 missing values
+The missingness map shows that Bathroom and Bedroom2 are msising on almost the same observations.
+Rooms and Type do not contain any missing values
+
+Strategy for dealing with missings:
+We would not drop missings since it forms quite a small proportion of the bathroom, bedroom and price variables, however located in my cases and variables. These variables also seem crucial in predicting the price of housing. Therefore, we would try to nearest neighbour imputation. 
+
+```{r}
+#Using Nearest neighbors:
+library(impute)
+houses_impute <- bind_shadow(houses) %>%
+  arrange(Price, Rooms, Type, Distance, Bedroom2, Bathroom) %>%
+  select(Price, Distance, Bedroom2, Bathroom) 
+houses_impute <- impute.knn(as.matrix(houses_impute), 5)
+houses_shadow <- bind_shadow(houses) %>%
+  arrange(Price, Rooms, Type, Distance, Bedroom2, Bathroom) %>%
+  mutate(Price = houses_impute$data[,1],
+         Distance = houses_impute$data[,2],
+         Bedroom2 = houses_impute$data[,3],
+         Bathroom = houses_impute$data[,4])
+houses_shadow
+```
+
+#Plots summarising the relationship between price
+```{r}
+library(gridExtra)
+p1 <- ggplot(houses_shadow) +
+  geom_point(mapping = aes(y = Price, x = Rooms)) 
+p2 <- ggplot(houses_shadow) +
+  geom_col(mapping = aes(y = Price, x = Type))
+p3 <- ggplot(houses_shadow) +
+  geom_point(mapping = aes(y = Price, x = Distance))
+p4 <- ggplot(houses_shadow) +
+  geom_point(mapping = aes(y = Price, x = Bedroom2))
+p5 <- ggplot(houses_shadow) +
+  geom_point(mapping = aes(y = Price, x = Bathroom))
+grid.arrange(p1,p2,p3,p4,p5)
+```
+Distance is negatively skewed, hence this will possibly need to be log transformed.
+Price seems to rise as the number if rooms increases but then declines after 4 rooms
+Houses are the most expensive, followed by units and then t
+
+
+#Build the model
+```{r}
+library(broom)
+#here we check the correlation between potentially correlated variables
+cor1 <- cor(houses_shadow$Bedroom2, houses_shadow$Bathroom)
+cor2 <- cor(houses_shadow$Rooms, houses_shadow$Bathroom)
+cor1
+cor2
+#start with fitting independent (no interactions) model including all variables 
+mod1 <- lm(Price ~ Rooms+Type+Bedroom2+Bathroom+Distance, data = houses_shadow)
+tidy(mod1)
+#there is correlation between bedroom, bathroom and rooms so considered a 3-way interaction
+mod2 <- lm(Price ~ Type + Distance + Rooms*Bathroom*Bedroom2, data = houses_shadow)
+tidy(mod2)
+#we will log price 
+mod3 <- lm(log(Price) ~ Type + Distance + Rooms*Bathroom*Bedroom2, data = houses_shadow)
+tidy(mod3)
+houses_shadow <- houses_shadow %>% mutate(lDistance = log(Distance))
+houses_shadow$lDistance[houses_shadow$lDistance == "-Inf"] <- "0"
+houses_shadow$lDistance <- as.numeric(houses_shadow$lDistance)
+mod4 <- lm(log(Price) ~ Type + lDistance + Rooms*Bathroom*Bedroom2, data = houses_shadow)
+tidy(mod4)
+#here we have lower p-values, so logging prices is ideal
+glance(mod1)
+glance(mod2)
+glance(mod3)
+glance(mod4)
+#we can see that mod3 has a much significantly lower AIC/BIC and lower deviance
+housemodel <- augment(mod3, houses_shadow)
+ggplot(housemodel) +
+  geom_point(mapping = aes(y=.std.resid, x=.fitted))
+#here we can see there is no significant pattern within the residual plot 
+```
+
+Here we fitted three models, one with all the variables, one with all the variables and a three way interaction and one with all the variables, a three way interaction and the price variable logged. From our first model, we can see that we get an AIC of 1008175, whereas our second model with the 3 way interaction has an AIC of 1007825. Therefore this tells us that the second model with the 3 way interaction is slightly better than the model without the interaction. As we can see, the graphs with Price as the dependent variable and the rest as predictors exhibit some skewness, so we decided to log the Price variable, and this reduces the AIC to 24476, showing a much better fit. We also tried fitting another log trasnformation on the distance variable in model 4 since it also showed some skewness, however this instead increased our AIC to 25083, so we kept model 3. With the residual plot in model 3, we can see that it is quite randomly dispersed around, so there is very little information left in the residuals. The residual plot shows a slight linear line running through, this is due to the imputed missing values.

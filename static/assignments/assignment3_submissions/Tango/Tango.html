@@ -1,0 +1,347 @@
+<!--begin.rcode
+## try http:// if https:// URLs are not supported
+source("https://bioconductor.org/biocLite.R")
+biocLite("impute")
+end.rcode-->
+
+<!--begin.rcode
+n
+end.rcode-->
+
+<!--begin.rcode
+library(tidyverse)
+library(dplyr)
+library(VIM)
+library(naniar)
+library(visdat)
+library(tidyr)
+library(impute)
+library(broom)
+library(mice)
+library(modelr)
+end.rcode-->
+
+<!--begin.rcode
+houses <- read_csv("data/Melbourne_housing_FULL.csv")
+houses1 <- select(houses, Price, Rooms, Type, Distance, Bedroom2, Bathroom)
+md.pattern(houses1)
+miss_summary(houses1)
+end.rcode-->
+the numbers and situation of NA in different variable, 1 means it is in the data,0 means it is missed, we can see about 5831 data only missed price
+
+
+our strategy about dealing with these missing values are ignoring them first, then trying to fill them by modelb
+<!--begin.rcode
+houses2 <- na.omit(houses1)
+md.pattern(houses2)
+end.rcode-->
+all missed value is ignored in the first place since we do not have enough information to fill these NA, for realestate data, we need consider a lot factors rather than just one or two. For instance, price can be decided by its distance, rooms or type, so, if we just make a sequence based a single factor, it may will lead to unacceptable biases, for the same reason we cannot use their mean or median to replace these NA
+Therefore we just ignore all observation whose information is incomplete, and try to fill them by model later 
+
+<!--begin.rcode
+tbg1 <- filter(houses2, Bathroom <= 2 & Rooms <= 8)
+ggplot(tbg1, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg2 <- filter(houses2, Bathroom == 3 & Rooms <= 8)
+ggplot(tbg2, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg3 <- filter(houses2, Bathroom == 4 & Rooms <= 8)
+ggplot(tbg3, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg4 <- filter(houses2, Bathroom == 5 & Rooms <= 8)
+ggplot(tbg4, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg5 <- filter(houses2, Bathroom == 6 & Rooms <= 8)
+ggplot(tbg5, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg6 <- filter(houses2, Bathroom == 7 & Rooms <= 8)
+ggplot(tbg6, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg7 <- filter(houses2, Bathroom == 8 & Rooms <= 8)
+ggplot(tbg7, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+ggplot(houses2)+
+  geom_hex(aes(x = Distance,y = log(Price)))+
+  facet_wrap(~Type)
+ggplot(houses2)+
+  geom_hex(aes(x = Distance,y = Price))+
+  facet_wrap(~Type)
+end.rcode-->
+These plots indicated the relationship between distance and price in different situation
+seems like price shown a curve in most situation, so we dicided to log the price
+
+<!--begin.rcode
+houses2 <- mutate(houses2, logprice = log(Price))
+tbg1 <- filter(houses2, Bathroom <= 2 & Rooms <= 8)
+ggplot(tbg1, mapping = aes(x = Distance, y = logprice, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg2 <- filter(houses2, Bathroom == 3 & Rooms <= 8)
+ggplot(tbg2, mapping = aes(x = Distance, y = logprice, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg3 <- filter(houses2, Bathroom == 4 & Rooms <= 8)
+ggplot(tbg3, mapping = aes(x = Distance, y = logprice, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg4 <- filter(houses2, Bathroom == 5 & Rooms <= 8)
+ggplot(tbg4, mapping = aes(x = Distance, y = logprice, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg5 <- filter(houses2, Bathroom == 6 & Rooms <= 8)
+ggplot(tbg5, mapping = aes(x = Distance, y = logprice, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg6 <- filter(houses2, Bathroom == 7 & Rooms <= 8)
+ggplot(tbg6, mapping = aes(x = Distance, y = logprice, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg7 <- filter(houses2, Bathroom == 8 & Rooms <= 8)
+ggplot(tbg7, mapping = aes(x = Distance, y = logprice, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+ggplot(houses2)+
+  geom_hex(aes(x = Distance,y = log(Price)))+
+  facet_wrap(~Type)
+ggplot(houses2)+
+  geom_hex(aes(x = Distance,y = Price))+
+  facet_wrap(~Type)
+houses2 <- houses2 %>%
+  mutate(Type = sub("u", "0", Type),
+         Type = sub("t", "1", Type),
+         Type = sub("h", "2", Type))  
+end.rcode-->
+
+
+<!--begin.rcode
+sim1 <- lm(Price ~ Rooms, data=houses2)
+sim2 <- lm(Price ~ Distance, data=houses2)
+sim3 <- lm(Price ~ Bedroom2, data=houses2)
+sim4 <- lm(Price ~ Bathroom, data=houses2)
+sim5 <- lm(Price ~ Type, data=houses2)
+glance(sim1)
+glance(sim2)
+glance(sim3)
+glance(sim4)
+glance(sim5)
+end.rcode-->
+the first model type we tried is single factor model, we will see the relation ship between price and different factors, seems like in single factor model, Distance model(sim2) has the lowest R^2
+
+<!--begin.rcode
+sim11 <- lm(Price ~ Rooms+Distance, data=houses2)
+sim12 <- lm(Price ~ Rooms*Distance, data=houses2)
+sim13 <- lm(Price ~ Rooms+Bedroom2, data=houses2)
+sim14 <- lm(Price ~ Rooms*Bedroom2, data=houses2)
+sim15 <- lm(Price ~ Rooms+Bathroom, data=houses2)
+sim16 <- lm(Price ~ Rooms*Bathroom, data=houses2)
+sim17 <- lm(Price ~ Rooms+Type, data=houses2)
+sim18 <- lm(Price ~ Rooms*Type, data=houses2)
+
+glance(sim11)
+glance(sim12)
+glance(sim13)
+glance(sim14)
+glance(sim15)
+glance(sim16)
+glance(sim17)
+glance(sim18)
+end.rcode-->
+by adding another factor, the adjusted r^2 of model is significantly improved, and for rooms and distance, the model with interaction has higher adjusted r^2, therefore rooms will be times by distance in our final model
+
+<!--begin.rcode
+sim19 <- lm(Price ~ Distance+Bedroom2, data=houses2)
+sim20 <- lm(Price ~ Distance*Bedroom2, data=houses2)
+sim21 <- lm(Price ~ Distance+Bathroom, data=houses2)
+sim22 <- lm(Price ~ Distance*Bathroom, data=houses2)
+sim23 <- lm(Price ~ Distance+Type, data=houses2)
+sim24 <- lm(Price ~ Distance*Type, data=houses2)
+
+glance(sim19)
+glance(sim20)
+glance(sim21)
+glance(sim22)
+glance(sim23)
+glance(sim24)
+end.rcode-->
+In theses 6 models, models with interaction shown a higher adjusted r^2 compared with models without interaction. Therefore, in final model, distance will have interaction with other factors
+
+
+<!--begin.rcode
+sim25 <- lm(Price ~ Bedroom2+Bathroom, data=houses2)
+sim26 <- lm(Price ~ Bedroom2*Bathroom, data=houses2)
+sim27 <- lm(Price ~ Bedroom2+Type, data=houses2)
+sim28 <- lm(Price ~ Bedroom2*Type, data=houses2)
+sim29 <- lm(Price ~ Bathroom+Type, data=houses2)
+sim30 <- lm(Price ~ Bathroom*Type, data=houses2)
+
+glance(sim25)
+glance(sim26)
+glance(sim27)
+glance(sim28)
+glance(sim29)
+glance(sim30)
+end.rcode-->
+In these 6 models, there is not significant difference between model with interaction and model without interaction, therefore there will not be between these factors in the final model
+
+<!--begin.rcode
+sim41 <- lm(Price ~ Distance*Rooms+Distance*Bedroom2+Distance*Bathroom+Distance*Type, data=houses2)
+sim42 <- lm(Price ~ Distance*Rooms*Bedroom2*Bathroom*Type, data=houses2)
+sim43 <- lm(logprice ~ Distance*Rooms*Bedroom2*Bathroom*Type, data=houses2)
+
+glance(sim41)
+glance(sim42)
+glance(sim43)
+tidy(sim43)
+end.rcode-->
+so far, the best model we get is sim43, by this model, more than half changes in price can be explained by change in these independent variables
+
+<!--begin.rcode
+houses2 <- add_predictions(houses2, sim43)
+tbg21 <- filter(houses2, Bathroom <= 2 & Rooms <= 8)
+ggplot(tbg21, mapping = aes(x = Distance, color = Rooms))+
+  geom_line(aes(y = pred), colour = "red")+
+  geom_point(aes(y = logprice))+
+  facet_grid(Bathroom ~ Type)
+
+houses2 <- add_residuals(houses2, sim43)
+
+ggplot(houses2, aes(resid))+
+  geom_freqpoly(binwidth = 0.5)
+
+ggplot(houses2, aes(logprice, resid))+
+  geom_ref_line(h = 0)+
+  geom_point()
+end.rcode-->
+This is about the residuals situation of sim43
+
+```{r}
+
+<!--begin.rcode
+rooms_calsulation <-  houses %>%
+  mutate(special = Bedroom2 + Bathroom)
+
+rooms_changing <- rooms_calsulation %>%
+  mutate(Rooms = if_else(Rooms < !is.na(special),special, Rooms))
+
+houses3 <-  rooms_changing %>%
+  select(Price, Rooms, Type, Distance, Bedroom2, Bathroom)
+
+
+houses4 <- houses3 %>%
+  mutate(
+    Distance = if_else(
+      is.na(Distance), mean(Distance, na.rm = TRUE), Distance),
+    Bedroom2 = if_else(
+      is.na(Bedroom2), as.integer(median(Bedroom2, na.rm = TRUE)), Bedroom2    ),
+    Bathroom = if_else(
+      is.na(Bathroom), as.integer(median(Bathroom, na.rm = TRUE)), Bathroom
+    ))
+  
+  md.pattern(houses4)
+end.rcode-->
+
+We filled the missing value of distance by its mean, filling the Bedroom and Bathroom by their median.
+
+<!--begin.rcode
+houses4 <- houses4 %>%
+  mutate(Type = sub("u", "0", Type),
+         Type = sub("t", "1", Type),
+         Type = sub("h", "2", Type))  
+houses4 <- mutate(houses4, logprice = log(Price))
+houses4 <- add_predictions(houses4, sim43)
+houses4 <- add_residuals(houses4, sim43)
+
+
+houses4 <- houses4 %>%
+  mutate(
+    Price = ifelse(is.na(Price), exp(pred), Price)
+  )
+md.pattern(houses4)
+end.rcode-->
+Type is changed from a catorgorical vairbale to a numberical variable for regression line prediction, now all missed price is filled, some logprice and resid are missed is because we don't have original data of these price, so we are not sure about the resid with these price.
+
+
+
+<!--begin.rcode
+houses4 <- houses4 %>%
+  mutate(Type = sub("0", "unit_houses", Type),
+         Type = sub("1", "town_houses", Type),
+         Type = sub("2", "houses", Type))
+tbg21 <- filter(houses4, Bathroom <= 2 & Rooms <= 8)
+ggplot(tbg21, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg22 <- filter(houses4, Bathroom == 3 & Rooms <= 8)
+ggplot(tbg22, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg23 <- filter(houses4, Bathroom == 4 & Rooms <= 8)
+ggplot(tbg23, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg24 <- filter(houses4, Bathroom == 5 & Rooms <= 8)
+ggplot(tbg24, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg25 <- filter(houses4, Bathroom == 6 & Rooms <= 8)
+ggplot(tbg25, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg26 <- filter(houses4, Bathroom == 7 & Rooms <= 8)
+ggplot(tbg26, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg27 <- filter(houses4, Bathroom == 8 & Rooms <= 8)
+ggplot(tbg27, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg28 <- filter(houses4, Bathroom >= 8 & Rooms <= 8)
+ggplot(tbg28, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+tbg29 <- filter(houses4, Rooms >= 8)
+ggplot(tbg29, mapping = aes(x = Distance, y = Price, color = Rooms))+
+  geom_point()+
+  geom_smooth(se = FALSE)+
+  facet_grid(Bathroom ~ Type)
+ggplot(houses4)+
+  geom_hex(aes(x = Distance,y = log(Price)))+
+  facet_wrap(~Type)
+ggplot(houses4)+
+  geom_hex(aes(x = Distance,y = Price))+
+  facet_wrap(~Type)
+end.rcode-->
+
+         
+         
+         
+         

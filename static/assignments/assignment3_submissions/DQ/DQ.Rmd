@@ -1,0 +1,167 @@
+---
+title: "Assignment 3"
+author: "Group DQ , Dewei Qiu"
+date: "2018年4月21日"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+houses <- read_csv("data/Melbourne_housing_FULL.csv")
+```
+
+```{r}
+library(visdat)
+library(naniar)
+
+
+houses <- houses %>% 
+  select(Price, Rooms, Type, Distance, Bedroom2, Bathroom) 
+vis_dat(houses)
+summary(houses)
+miss_summary(houses)
+```
+
+#missing value
+```{r}
+s_miss <- miss_summary(houses)
+s_miss$miss_df_prop
+s_miss$miss_var_prop
+s_miss$miss_case_table
+#by group
+s_miss_group <- houses %>% 
+  group_by(Suburb) %>% miss_summary()
+s_miss_group$miss_case_table
+vis_miss(houses, sort_miss=TRUE) + theme(aspect.ratio=1)
+Houses_true<- houses %>% na.exclude(houses)
+```
+#Overall statistics, 11.5% of possible values are missing. That’s alot missing. Bathroom, Bedroom2 and Price, have a large number of missings, which more than 20%. But Distance, Rooms and Type, have no missings. Have more than 20% missing which is too much for us, we will check if the model ignore this three variables will perform good or not.
+
+```{r}
+tao_shadow <- bind_shadow(houses)
+tao_shadow
+ggplot(data = tao_shadow,
+       aes(x = wind_ew, y=wind_ns, colour=air_temp_c_NA)) +
+       scale_colour_brewer(palette="Dark2") +
+       geom_point(alpha=0.7) + theme(aspect.ratio=1) 
+```
+
+
+```{r}
+p1 <- ggplot(Houses_true, aes(x=Rooms, y=Price)) + geom_point() + 
+  geom_smooth(method="lm", se=FALSE)
+p2 <- ggplot(Houses_true, aes(x=Type, y=Price)) + geom_point() + 
+  geom_smooth(method="lm", se=FALSE)
+p3 <- ggplot(Houses_true, aes(x=Distance, y=Price)) + geom_point() + geom_smooth(method="lm", se=FALSE)
+p4 <- ggplot(Houses_true, aes(x=Bedroom2, y=Price)) + geom_point() + geom_smooth(method="lm", se=FALSE)
+p5 <- ggplot(Houses_true, aes(x= Bathroom, y=Price)) + geom_point() + geom_smooth(method="lm", se=FALSE)
+p1
+p2
+p3
+p4
+p5
+```
+
+Price: Price in dollars
+Rooms: Number of rooms
+Type: br - bedroom(s); h - house,cottage,villa, semi,terrace; u - unit, duplex; t - townhouse; dev site - development site; o res - other residential.
+Distance: Distance from CBD
+Bedroom2 : Scraped # of Bedrooms (from different source)
+Bathroom: Number of Bathrooms
+
+
+##First we check if we use only Distance, Rooms and Type three variables
+
+```{r}
+library(broom)
+
+mod1 <- lm(Price ~  Type + Distance, data=Houses_true)
+tidy(mod1)
+summary(mod1)
+```
+
+```{r}
+library(broom)
+
+mod2 <- lm(Price ~ Type * Distance, data=Houses_true)
+summary(mod2)
+```
+#Both model with/without interact term have good P-value, but adjusted R^2 for them only 0.2336 and 0.2504 which too low. They only explained 25% of the data value
+
+
+##THan we try to compare the non interaction mod with all variables
+```{r}
+mod3 <- lm(Price ~  Rooms + Type + Distance + Bedroom2 + Bathroom, data=Houses_true)
+summary(mod3)
+```
+#Form result, this adjusted R^2 increase to 0.418, and we try to reject the bedrrom 2 as it greater than 0.05 P-value.
+
+```{r}
+mod4 <- lm(Price ~  Rooms + Type + Distance + Bathroom, data=Houses_true)
+summary(mod4)
+```
+
+#However when we drop the varibale "bedroom2", the R^2 value and adjusted R^2 are same as before. we keep the "bedroom2" first and more to interaction model
+
+
+##check the correlation between each variables
+```{r}
+library(GGally)
+ggpairs(houses)
+```
+#The "Bedroom2" and "Room" has 0.947 correlation which very high interate each other
+#The "Rooms" and "Bathroom" has 0.612 correlation which higher than 0.5.  
+#The "Bedroom2" and "Bathroom" has 0.615 correlation also higher than 0.5, we will check them either has or not interacte.  
+
+##show them graph
+```{r}
+library(viridis)
+
+p_1 <- ggplot(Houses_true, aes(x=Bedroom2, y=Rooms, colour=y1)) + 
+  geom_point(size=5, alpha=0.5) + 
+  scale_colour_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
+  ggtitle("Bedroom2 and room")
+
+p_2 <- ggplot(Houses_true, aes(x=Bedroom2, y=Bathroom, colour=y2)) + 
+  geom_point(size=5, alpha=0.5) + 
+  scale_colour_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
+  ggtitle("Bedroom2 and bathroom")
+
+p_3 <- ggplot(Houses_true, aes(x=Bedroom2, y=Bathroom, colour=y3)) + 
+  geom_point(size=5, alpha=0.5) + 
+  scale_colour_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
+  ggtitle("Bedroom2 and Bathroom")
+
+grid.arrange(p_1, p_2, p_3, ncol=3) 
+```
+
+
+##only two interact variable
+```{r}
+mod5 <- lm(Price ~  Type + Distance + Bathroom + Rooms * Bedroom2, data=Houses_true)
+summary(mod5)
+```
+adjusted R^2=0.419 
+
+##three interact variable
+```{r}
+mod6 <- lm(Price ~  Type + Distance + Rooms * Bathroom * Bedroom2, data=Houses_true)
+summary(mod6)
+```
+adjusted R^2=0.4248
+
+##four interact variable
+```{r}
+mod7 <- lm(Price ~  Type + Distance * Rooms * Bathroom * Bedroom2 , data=Houses_true)
+summary(mod7)
+```
+adjusted R^2=0.4506
+
+```{r}
+mod8 <- lm(Price ~  Type * Distance + Bathroom  + Rooms * Bedroom2 , data=Houses_true)
+summary(mod8)
+```
+

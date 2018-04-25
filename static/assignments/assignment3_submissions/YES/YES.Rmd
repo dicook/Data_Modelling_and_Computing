@@ -1,0 +1,330 @@
+---
+title: "Assignment_3"
+output: html_document
+
+
+---
+# Team YES 
+# Melbourne Housing Data
+
+RMarkdown Reference sheet: https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf
+
+## Introduction
+The purpose of this R code is to use the Melbourne housing data in order to create a model summary of a rough price estimates around Melbourne. This project aims to simplify the modelling of housing prices by taking five independent variables: 
+
+- Rooms, 
+- Type of house,
+- Distance from the nearest train station,
+- Number of bedrooms,
+- Number of Bathrooms
+
+``````{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      message = FALSE, 
+                      warning = FALSE, 
+                      error = FALSE,
+                      fig.align = "center")
+
+## Please install this package (lessR) before running the code 
+
+library(tidyverse)
+library(visdat) 
+library(broom)
+library(naniar)
+library(gridExtra)
+library(viridis)
+houses <- read_csv("Melbourne_housing_FULL.csv")
+```
+
+### Selecting variables of interest
+
+Selecting the independent variables of interest (including price for the dependent variable)
+
+```{r}
+
+
+## Extracting columns
+houses_temp<-houses %>%
+  select(Rooms, Type, Price, Distance, Bedroom2, Bathroom)
+
+## Summarising with the missing table
+vis_miss(houses_temp, sort_miss=TRUE) + theme(aspect.ratio = 1)
+
+##From the missing tables summary, we can conclude the following:
+
+##- For any missing value in Bathroom, there is a missing value of Bedroom2
+##- The missing values in price usually has a different row to the missing values in Bathroom/Bedroom2
+##- The rest of the variables (Distance, Rooms, Type) have no missing values
+
+## Getting a numerical summary of the data
+s_miss <- miss_summary(houses_temp)
+s_miss$miss_case_table
+
+## This shows that a small proportion of missing values in prices overlaps with the same missing value records for bathroom and bedroom2 (n_miss_in_case = 3)
+```
+
+From the missing tables summary, we can conclude the following:
+
+- For any missing value in Bathroom, there is a missing value of Bedroom2
+- The missing values in price usually has a different row to the missing values in Bathroom/Bedroom2
+- The rest of the variables (Distance, Rooms, Type) have no missing values
+
+
+
+### Understanding the missing data
+
+First of all, it is important to understand the variable names within the data. We asked ourselves a few questions:
+
+- Is Rooms meant to be the same as Bedroom2? Because Bedroom2 comes from a different source so we suspect that they are both referring to bedrooms
+- How many Rooms are not the same as Bedroom2?
+- Furthermore, what happens if we take out all the missing values from Bedroom2? Will that give a drastically different missing summary for the tables? 
+
+```{r}
+
+## Is Rooms meant to be the same as Bedroom2? Because Bedroom2 comes from a different source so we suspect that they are both referring to bedrooms
+
+first_q <- houses %>%
+  filter(Rooms==Bedroom2)
+nrow(first_q)
+
+## Proportion of equal values
+nrow(first_q) / nrow(houses)
+
+## How many Rooms are not the same as Bedroom2?
+second_q <- houses%>%
+  filter(Rooms!=Bedroom2)
+nrow(second_q)
+
+## Proportion of non-equal values
+nrow(second_q) / nrow(houses)
+
+## Furthermore, what happens if we take out all the missing values from Bedroom2? Will that give a drastically different missing summary for the tables? 
+houses_filt<-houses %>%
+  filter(!is.na(Bedroom2)) %>%
+  select(Rooms, Type, Price, Distance, Bedroom2, Bathroom)
+
+filt_summary <- miss_summary(houses_filt)
+filt_summary$miss_case_table
+```
+
+From these values, our understanding is:
+
+- Rooms should be the same as Bedroom2 (0.737 or 73.7%)
+- There is a small proportion of non-equal values (0.027 or 2.7%)
+- The rest are missing values from the Bedroom2 column 
+
+Furthermore, by taking out all the records with missing values from Bedroom2, we are still left with a reasonable amount of records to model the housing prices with. Records with 2 missing values will be taken out because it is hard to impute two variables in the record and this only makes up a small proportion of cases (3 cases). 
+
+Hence, we will only be using values that are equal for both Room and Bedroom2 as a large proportion of the values are the same. This provides a stronger validation of the housing data that is provided. 
+
+
+```{r}
+
+
+## Filtering by equal values
+houses_filt<-houses %>%
+  filter(Rooms==Bedroom2) %>%
+  filter(!(is.na(Price) & is.na(Bathroom))) %>% ## Filtering the records where there are two missing values
+  select(Price, Rooms, Type, Distance, Bathroom)
+
+
+## Converting all the relevant data types to numeric instead of a categorical variable
+houses_filt <- houses_filt %>%
+  mutate(Rooms =  as.numeric(Rooms))%>%
+  mutate(Price = as.numeric(Price)) %>%
+  mutate(Distance = as.numeric(Distance)) %>%
+  mutate(Bathroom = as.numeric(Bathroom))
+##mutate(Bedroom2 = as.numeric(Bedroom2))%>%
+
+## Missing summary
+s_miss2 <- miss_summary(houses_filt)
+vis_miss(houses_filt, sort_miss=TRUE) + theme(aspect.ratio = 1)
+s_miss2$miss_case_table
+```
+As seen, the data is now cleaner to work with.
+Also, as Rooms and Bedroom2 are equal, they are essentially the same data hence there is perfect collinearity between the two columns. Hence, Bedroom2 is dropped out from the regression of housing price.
+
+```{r}
+
+summary(houses_filt)
+
+
+```
+
+Since there are some rooms that exceeds 16 and some bathrooms being 9, a filter has been applied to take out these outliers.
+
+
+### Understanding the relationship between variables
+
+We now investgiate the relationship between the independent and dependent variables. This includes understanding the linear or non-linearities within the data set while exploring the residuals. 
+
+
+```{r include = TRUE}
+##knitr::opts_chunk$set(echo = TRUE)
+
+houses_filt <- houses_filt %>%
+  filter(Rooms<10) %>%
+  filter(Bathroom<5) %>% ## Arbitary numbers
+  filter(Rooms!=0 & !is.na(Rooms)) %>%
+  filter(Bathroom!= 0 & !is.na(Bathroom)) ## Not many records that have this
+
+houses_training <- houses_filt %>%
+  filter(!is.na(Price)) %>% ##%>% ## To create the regression variables
+  mutate(Price_1 = log10(Price)) 
+
+##  mutate(Rooms = log10(Rooms)) 
+
+houses_testing <- houses_filt %>%
+  filter(is.na(Price)) ##%>%  ## To model the prices
+##  mutate(Rooms = log10(Rooms))
+
+houses_predict <- houses_testing
+
+
+## First Model
+##----------------------------------------------------------------------
+##house_modA <- lm(Price ~ Type + Distance + Rooms + Bathroom - 1, 
+##             data = houses_training)
+house_modA <- lm(Price_1 ~ Type + Distance + Rooms + Bathroom - 1, data = houses_training)
+modelA <- glance(house_modA)
+modelA
+
+## Second Model
+##----------------------------------------------------------------------
+##house_modB <- lm(Price ~ Type + Bathroom + Distance + Rooms + Type*Bathroom*Distance + Type*Rooms*Distance + ##Distance*Bathroom*Rooms -1, 
+##                 data = houses_training)
+house_modB <- lm(Price_1 ~ Type + Distance + Rooms + Bathroom + Type*Bathroom*Distance + Type*Rooms*Distance + Distance*Bathroom*Rooms -1, data = houses_training)
+model_B <- glance(house_modB)
+model_B
+
+## Third Model
+##----------------------------------------------------------------------
+##house_modC <- lm(Price ~  Type + Bathroom + Distance + Rooms +  Bathroom*Rooms + Type*Rooms +
+##                 + Type*Distance + Bathroom*Distance + Rooms*Distance -1, 
+##                 data = houses_training)
+house_modC <- lm(Price_1 ~  Type + Distance + Rooms + Bathroom +
+                 + Type*Distance + Bathroom*Distance + Rooms*Distance -1, data = houses_training)
+model_C <- glance(house_modC)
+model_C
+
+## As seen, all 3 models (linear and interactive variables) have roughly the same R squared value. 
+
+
+houses_predict$Price_1 <- predict(house_modB, data.frame(houses_testing))
+
+mutate(houses_predict, Price = 10^Price_1)
+
+houses_all <- rbind(houses_training, houses_predict)
+
+
+##houses_predict <- houses_predict%>%
+##  mutate(Rooms = 10^(Rooms))
+
+
+```
+
+
+### Understanding the model 
+
+3 models have been made and tested against each other. The price variable has been log transformed in order to increase the R squared value while also decreasing the standard deviations of the residuals. This is because without the log transformation, the residuals does not become normally distributed as it easily reaches 10-20 standard deviations away from zero. With the log transformation, the majority of the residuals fluctuate around +/- 2 standard deviations. Furthermore, the R squared value is misleading as there are lots of independent variables that have been added to the equation (including the interactive variables), hence the R squared value might not be indicative of the real performance of the model. The same goes with Adjusted R squared as it has its own flaws as well. 
+
+### Plotting the fitted vs. original values
+
+
+```{r }
+
+## Analysing the original vs. the fitted values
+## This is done for all 3 models
+
+mod1_a2 <- augment(house_modA, houses_training)
+mod2_a2 <- augment(house_modB, houses_training)
+mod3_a2 <- augment(house_modC, houses_training)
+p1 <- ggplot(mod1_a2, aes(x=(10^.fitted)/10^6, y=Price/10^6)) +
+  geom_point() + ggtitle("Model 1")+ theme(aspect.ratio = 1) +
+  xlab("Predicted ($1,000,000s)") + ylab("Actual ($1,000,000s)") +
+scale_x_continuous(limits = c(0, 8)) + scale_y_continuous(limits = c(0, 8))
+
+p2 <- ggplot(mod2_a2, aes(x=(10^.fitted)/10^6, y=Price/10^6)) +
+  geom_point() + ggtitle("Model 2")+ theme(aspect.ratio = 1) +
+ xlab("Predicted ($1,000,000s)") + ylab("Actual ($1,000,000s)") + 
+  scale_x_continuous(limits = c(0, 8)) + scale_y_continuous(limits = c(0, 8))
+
+p3 <- ggplot(mod3_a2, aes(x=(10^.fitted)/10^6, y=Price/10^6)) +
+  geom_point() + ggtitle("Model 3") + theme(aspect.ratio = 1) +
+ xlab("Predicted ($1,000,000s)") + ylab("Actual ($1,000,000s)")+
+  scale_x_continuous(limits = c(0, 8)) + scale_y_continuous(limits = c(0, 8))
+
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+Furthermore, the plots of the fitted vs. the original values provides an indication that the model is prone to under-predicting the actual price. This might be because the variables that we are using does not capture the entire regression on the price variable as there could be other factors that have been omitted for the modelling of the Melbourne house price. Hence, the chosen independent variables does not capture the entire fluctuation of the housing prices. 
+
+### Analysis of the residuals
+
+```{r}
+## Analyising the standard deviations for residuals against fitted
+
+p1 <- ggplot(mod1_a2, aes(x=.fitted, y=.std.resid)) +
+  geom_point() + ggtitle("Model 1")+ geom_hex() + theme(aspect.ratio = 1)
+p2 <- ggplot(mod2_a2, aes(x=.fitted, y=.std.resid)) +
+  geom_point() + ggtitle("Model 2")+ geom_hex() + theme(aspect.ratio = 1)
+p3 <- ggplot(mod3_a2, aes(x=.fitted, y=.std.resid)) +
+  geom_point() + ggtitle("Model 3") + geom_hex()+ theme(aspect.ratio = 1)
+grid.arrange(p1, p2, p3, ncol=1)
+
+```
+
+The residuals highlights that the model performs fairly well as the majority of the residuals fluctuates between +/- 2 std devs. Although there are some data points that are fluctuating between +/- 4 standard deviations, this only highlights that the model has a longer tails compared to the normal distribution.
+
+## Plots of the independent variables
+```{r}
+##plotting the average price for then number of bathrooms for each type of building
+ggplot(houses_all, aes(x=factor(Bathroom), y=Price, fill=factor(Type))) + stat_summary(fun.y="mean", geom="bar",position=position_dodge(1)) + ggtitle("Mean price against number of bathrooms") + labs(x = "No. bathrooms")
+```
+The general trend of the type of property are the following:
+
+- houses are worth more than townhouses which are worth more than units for the same number of bathrooms on average. 
+- the more bathrooms a property has, the higher its price.
+- the difference between house prices compared to townhall is more than the difference between townhalls compared to units for all levels of bathroom.
+
+
+
+```{r}
+##plotting the distrubtion of house prices based on Type alone
+ggplot(data=houses_all, aes(x=Type, y=Price, fill=Type)) +geom_violin()+ ggtitle("Price distribution for each type of property")
+```
+
+- Units have the least price spread, followed by townhouses with houses having the most price variance.
+- Houses has a larger outlier which should be taken out of the model as it will skew the model.
+
+
+
+```{r}
+##Plotting the distance against price to see the relationship for each different type of accomodation
+
+ggplot(houses_all, aes(x=Price, y=Distance)) +
+  geom_hex() +
+  scale_fill_viridis()+facet_grid(~Type) + theme(aspect.ratio = 1)+ theme(axis.text.x = element_text(angle = 90, hjust = 1))+ ggtitle("Price vs Distance distribution") 
+  
+```
+
+The hex distribution graph reveals that the price of houses has the most variation but also the most data points. This may be due to the multitude of external factors such as nearby schools and ammenities or proximity to major roads has on the prices of houses. 
+Units and townhouses are typically built in convenient locations close to ammentities and transport and hence there is less price fluctuation.
+
+
+## Conclusion
+
+```{r}
+
+## This is the chosen model to predict house prices. It uses interactive variables for each distance against each independent variable.
+summary(house_modC)
+
+```
+
+Three models were created to display the relationship between housing prices and the following factors: number of bathrooms, distance from CBD, number of rooms and accomodation type. There is little to separate the three models as they perform fairly similiarly (in comparison to the original values), however it is of our opinion that model three provides the best estimation of the price as the residuals appear to be scattered above and below 0 most prevalently in this model. Despite this model two appears to have a slightly R^2 and adjusted R^2 values though these measures are proven to be unreliable when observing the fitted vs original model plots where we see all the models performing in similiar manners. Hence, we believe that model 3 should be used to estimate the missing values.
+
+Furthermore, the modelling of the house prices was complex as it was difficult to understand which source of information was correct for the number of rooms. Hence, the Bedroom2 variable was taken out after finding the records which had matching Rooms with Bedroom2. Lastly, the intercept was taken out of the equation as it does not make sense for a house to have no rooms, bathrooms etc. when regressing for the house price. This boosted the R squared value (although not shown in this report) from 0.41 to 0.85 initially. 
+
+It should be noted that housing prices is a complex, volatile science. Two identical houses next door to eachother may sell for different amounts based on seemingly neglible issues such as a house number. It is important to note that a house/property is worth whatever somebody is willing to sell and it is difficult to capture the maximum value a property may hold to an individual.
+
+Another factor in choosing model three was that it uses less variables in comparison to model two. This is advantageous as there is less correlation between repeated factors while model two contains many superfluous variables that are highly correlated with each other . The summary of model three shown above confirms each variable is statistically significant at the 1% level. Hence, the final model (model C) has been chosen for the regression on Melbourne house prices. The model is summarised in the table above. 
