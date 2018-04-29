@@ -155,10 +155,9 @@ for (i in 1:12) {
 head(nba$SALARY)
 
 # get rid of $ and , in salaries and convert to numeric:
-gsub("[$,]", "", head(as.character(nba$SALARY)))
+gsub("[$,]", "", head(nba$SALARY))
 nba <- nba %>%
-  mutate(SALARY = as.numeric(gsub("[$,]", "", 
-                   as.character(nba$SALARY))))
+  mutate(SALARY = as.numeric(gsub("[$,]", "", SALARY)))
 ```
 
 - Where does the warning come from?
@@ -177,7 +176,7 @@ nba <- nba %>% filter(!is.na(SALARY))
 
 ```{r}
 nba <- nba %>% 
-  mutate(NAME = as.character(nba$NAME)) %>% 
+  mutate(NAME = as.character(NAME)) %>% 
   separate(NAME, c("full_name", "position"), ",") %>% 
   separate(full_name, c("first", "last"), " ") 
 head(nba)
