@@ -78,7 +78,8 @@ ausw_t20 <- ausw_t20 %>%
   mutate(HS = sub("\\*", "", HS)) %>%
   #mutate_all(funs(sub("*", "", .))) %>%
   mutate_all(funs(sub("-", "", .))) %>%
-  mutate_at(c("Inns", "NO", "Runs", "HS", "Ave", "BF", "SR", "100", "50", "0", "4s", "6s"), as.numeric)
+  mutate_at(vars(Inns:`6s`), as.numeric)
+  # mutate_at(c("Inns", "NO", "Runs", "HS", "Ave", "BF", "SR", "100", "50", "0", "4s", "6s"), as.numeric)
 ```
 
 ### All done
@@ -324,7 +325,7 @@ With the advent of web communication, comes JavaScript Object Notation (JSON). I
 An example we have seen is the cross rates data available at [https://openexchangerates.org/](https://openexchangerates.org/). To access this data you need to:
 
 - 1.Get a free plan from https://openexchangerates.org/signup/free
-- 2.Tell this function your API key -- `Sys.setenv("OER_KEY", "your-key-here")`
+- 2.Tell this function your API key -- `Sys.setenv("OER_KEY" = "your-key-here")`
 
 Then you can access the data using a command like:
 
