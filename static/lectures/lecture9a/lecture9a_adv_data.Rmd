@@ -286,7 +286,7 @@ rentals %>%
 
 ## JSON format files
 
-With the advent of web communication, comes JavaScript Object Notation (JSON). It is a language-independent data format, and supplants extensible markup language (XML). It is a verbose data descriptor, from wikipedia:
+With the advent of web communication, comes JavaScript Object Notation (JSON). It is a language-independent data format, and supplants extensible markup language (XML). It is a verbose data descriptor. Here's an example from [wikipedia](https://en.wikipedia.org/wiki/JSON) describing a person:
 
 ```
 {
@@ -300,7 +300,7 @@ With the advent of web communication, comes JavaScript Object Notation (JSON). I
     "state": "NY",
     "postalCode": "10021-3100"
   },
-  "phoneNumbers": [
+  "phoneNumbers": 
     {
       "type": "home",
       "number": "212 555-1234"
@@ -323,8 +323,8 @@ With the advent of web communication, comes JavaScript Object Notation (JSON). I
 
 An example we have seen is the cross rates data available at [https://openexchangerates.org/](https://openexchangerates.org/). To access this data you need to:
 
-- 1.Get a free plan from https://openexchangerates.org/signup/free
-- 2.Tell this function your API key -- `Sys.setenv("OER_KEY" = "your-key-here")`
+1. Get a free plan from https://openexchangerates.org/signup/free
+2. Tell this function your API key -- `Sys.setenv("OER_KEY" = "your-key-here")`
 
 Then you can access the data using a command like:
 
