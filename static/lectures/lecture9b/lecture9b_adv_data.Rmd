@@ -1,0 +1,275 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 6,
+                      fig.width = 6,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+library(tidyverse)
+```
+
+# Advanced data handling
+
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.netlify.com](http://dmac.netlify.com)
+
+## Databases
+
+### What is a database?
+
+- A collection of data
+- A set of rules to manipulate data
+
+### Why are they important?
+
+- Efficient manipulation of large data sets
+- Convenient processing of data
+- Integration of multiple sources of data
+- Access to a shared resource
+
+### Relational Databases
+
+- Database is collection of tables and links 
+- SQL (Structured Query Language) for querying 
+- DBMS (Database Management System) and managing data
+
+### Access from R
+
+`dplyr` works with remote on-disk data stored in databases. This is particularly useful in two scenarios:
+
+1. Your data is already in a database. (If you are using R to do data analysis inside a company, most of the data you need probably already lives in a database.)
+
+2. You have so much data that it does not all fit into memory simultaneously and you need to use some external storage engine.
+
+## Let's make a database to play with
+
+(If your data fits in memory, there is no advantage to putting it in a database; it will only be slower and more frustrating.)
+
+We have worked with subsets of the PISA 2015 data. Now we are going to work with the entire data set. 
+
+1. Find the data on the OECD PISA web site, [http://www.oecd.org/pisa/data/2015database/](http://www.oecd.org/pisa/data/2015database/). Download the SPSS format "Student questionnaire data file (419MB)". (The downloaded file name should be `CY6_MS_CMB_STU_QQQ.sav`.) It is quite large, so if you have trouble we have the file on a USB stick, that you can copy.)
+
+2. Read the data into R using this code:
+
+```{r eval=FALSE}
+# devtools::install_github("tidyverse/haven")
+library(haven)
+pisa_2015 <- read_sav("data/CY6_MS_CMB_STU_QQQ.sav")
+```
+*NOTE: If you get this `Error in df_parse_sav_file(spec, user_na) : Failed to parse CY6_MS_CMB_STU_QQQ.sav: Unable to allocate memory.` you should install the ost recent version of `haven` from github, and try again.*
+
+How many students are in the data set?
+
+3. This code creates the database, in your project data folder. *You only need to create the database once!*
+
+```{r eval=FALSE}
+library(sqldf)
+library(DBI)
+db <- dbConnect(SQLite(), dbname="data/PISA.sqlite")
+dbWriteTable(conn=db, name="student", value=pisa_2015)
+```
+
+4. Let's test the speed
+
+From the R object:
+
+```{r eval=FALSE}
+start_time <- Sys.time()
+score_gap <- pisa_2015 %>% 
+  group_by(CNT) %>%
+  summarise(math=mean(PV1MATH),
+            read=mean(PV1READ),
+            scie=mean(PV1SCIE))
+end_time <-Sys.time()
+end_time-start_time
+```
+
+Using sqlite database:
+
+```{r eval=FALSE}
+tb <- tbl(db, "student")
+start_time <- Sys.time()
+score_gap <- tb %>% group_by(CNT) %>%
+  summarise(math=mean(PV1MATH),
+            read=mean(PV1READ),
+            scie=mean(PV1SCIE)) %>%
+  collect()
+end_time <-Sys.time()
+end_time-start_time
+```
+
+(I get 0.09001613 secs directly in R, and 12.21206 secs using the database.)
+
+## Using the database. 
+
+The code below lists the "fields" (variables) in the table.
+
+```{r}
+library(sqldf)
+library(DBI)
+db <- dbConnect(SQLite(), dbname="data/PISA.sqlite")
+```
+
+```{r eval=FALSE}
+dbListFields(db, "student")
+```
+
+### Calculating statistics
+
+Set up the link to the actual table that you want to use, using the `tbl` function. It **doesn't** create a copy of the data in your R session. It simply sets up a connection to the table in the external database.
+
+```{r}
+tb <- tbl(db, "student")
+```
+
+### Using dplyr, almost
+
+For the most part you can use the same tidyverse verbs to operate on the data. It tells the database what operations to perform.
+
+Adding the `collect()` function at the end of the set of instructions says "send the result to R".
+
+1. Compute the averages across the multiple math scores, and save in an R object. 
+2. Make a dotplot against country, ordered from top score to lowest. 
+3. What are the top three countries? 
+4. What is Australia's rank?
+
+```{r}
+scores <- tb %>% 
+  mutate(math=(PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+PV6MATH+
+                 PV7MATH+PV8MATH+PV9MATH+PV10MATH)/10) %>%
+  group_by(CNT) %>%
+  summarise(mathmean=mean(math)) %>%
+  collect()
+scores <- scores %>% mutate(CNT=fct_reorder(CNT, mathmean))
+ggplot(scores, aes(x=mathmean, y=CNT)) + geom_point()
+```
+
+## Differences
+
+Database operations typically only operate on a column by column basis, so calculating statistics such as standard deviation can be a challenge. 
+
+Try it, and see what happens if you ask for the database to compute the standard deviation of the math scores instead of the mean, using the `sd` function.
+
+You can do this with a direct SQL QUERY (the ugly code is below), instead. Do it! 
+
+And then make a plot which shows the mean and a segment indicating one standard deviation below and above the mean, by country, sorted from highest to lowest average.
+
+
+```{r eval=FALSE}
+library(RSQLite)
+mathmean <- dbGetQuery(db, "SELECT Avg((PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+PV6MATH+
+                 PV7MATH+PV8MATH+PV9MATH+PV10MATH)/10) as m FROM student GROUP BY CNT")
+mathsq <- dbGetQuery(db, "SELECT Sum((PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+PV6MATH+
+        PV7MATH+PV8MATH+PV9MATH+PV10MATH)*(PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+PV6MATH+
+        PV7MATH+PV8MATH+PV9MATH+PV10MATH)/100) as s FROM student GROUP BY CNT")
+n <- dbGetQuery(db, "SELECT count(*) as n FROM student GROUP BY CNT")
+CNT <- dbGetQuery(db, "SELECT distinct CNT as CNT FROM student")
+
+scores_sql <- data.frame(m=mathmean, s=mathsq, n, CNT)
+scores_sql <- scores_sql %>%
+  mutate(msd=sqrt((s - n*m^2)/(n-1))) %>%
+  mutate(CNT=fct_reorder(CNT, m))
+
+ggplot(scores_sql, aes(x=CNT, y=m)) + 
+  geom_point() + 
+  geom_errorbar(aes(ymin=m-msd, ymax=m+msd)) +
+  coord_flip()
+```
+
+## Structured Query Language
+
+The RSQLite package allows SQL queries to be constructed and passed to the database for computing quantities.
+
+* Structured Query Language (1970, E Codds)
+* Programming language used for accessing data in a database
+* ANSI standard since 1986, ISO standard since 1987
+* Still some portability issues between software systems!
+* We’ll mainly focus on SQL queries to access data
+
+### Syntax
+
+* SQL is not case sensitive.
+* Some systems require `;` at the end of each line. The semi-colon can be used to separate each SQL statement in a system that allows multiple command to be executed in a call to the server.
+
+### Example
+
+Here is a small database example, that has two tables
+
+**person**
+
+| ***ID***            | Name          | Major  |
+| ------------- |:-------------:| ------:|
+| 1234          | Never Ever    | Math   |
+| 4321          | Some Times    | CS     |
+
+**attendance**
+
+| ***ID***            | ***Date***          | Status  |
+| ------------- |:-------------:| -------:|
+| 1234          | 02-Feb        | absent  |
+| 1234          | 09-Feb        | absent  |
+| 4321          | 02-Feb        | present |
+| 4321          | 09-Feb        | absent  |
+
+
+### SELECT
+
+```Select * from person``` leads to 
+
+| ***ID***            | Name          | Major  |
+| ------------- |:-------------:| ------:|
+| 1234          | Never Ever    | Math   |
+| 4321          | Some Times    | CS     |
+
+
+
+### WHERE
+
+```Select Name from person where Major='Math'``` would result in
+
+| Name          | 
+| ------------- |
+| Never Ever    | 
+
+
+### Aggregations
+
+```Select ID, count(ID) from attendance where Status='absent'``` results in
+
+| ***ID***            | Frequency          | 
+| ------------- |-------------:| 
+| 1234          | 2    | 
+| 4321          | 1    | 
+
+### Your turn
+
+1. Set up and execute an SQL query to compute the average science score (using PV1SCIE only)
+2. Do the same calculation using dplyr functions, followed by the `collect()` function. 
+3. Are the answers the same?
+4. Set up and execute an SQL query to compute the average science score, by country
+5. Plot the average science scores by country as a dot plot. Which country has the lowest average? Highest?
+6. Compute the average of the plausible science scores for each student, and then select this variable, plus the BELONG (how much the student feels like they belong at school) and country.
+7. Fit a linear model, across all the countries. Do students score better in science if they report feeling like they belong at school?
+8. Using the multiple models approach fit a separate linear model for each country. Plot the slope vs intercept for the models. Is the relationship similar for all countries?
+
+## Resources
+
+- [Databases using dplyr](https://db.rstudio.com/dplyr/)
+- [Rams Legacy Stock Assessment Database](http://www.hafro.is/~einarhj/education/tcrenv2016/posthoc/databases.html)
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.

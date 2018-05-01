@@ -211,6 +211,8 @@ quiz(
 ```
 
 ```{r eval=FALSE}
+nba %>% summarise(ms = min(SALARY))
+nba %>% filter(SALARY < 100000) %>% tally()
 ggplot(data=nba, aes(x=position, y=SALARY)) + geom_boxplot()
 library(forcats)
 ggplot(data=nba, aes(x=fct_reorder(TEAM, SALARY), y=SALARY)) + 
