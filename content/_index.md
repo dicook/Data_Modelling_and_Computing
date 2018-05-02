@@ -102,8 +102,11 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - [foragers.csv](http://dmac.netlify.com/lectures/data/foragers.csv) Howell's foragers data
 
 
-## [2018 Project Description](project/project-ETC1010.pdf) 
+## Project
 
+- [2018 Project Description](project/project-ETC1010.pdf)
+- [Example report (zip)](project/examples/report.zip)
+- [Example presentation (zip)](project/examples/presentation.zip)
 
 ## Exam information
 
