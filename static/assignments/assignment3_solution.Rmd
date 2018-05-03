@@ -1,0 +1,236 @@
+---
+title: "ETC1010 Assignment 3"
+author: "SOLUTION"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  scipen = 1, 
+  digits = 2,
+  message = FALSE,
+  warning = FALSE, 
+  error = FALSE)
+```
+
+## Summary of missing values 
+
+There are 11.5% of total observations missing, 40% of the observations have at least one missing, and two thirds of variables (Price, Bedroom and Bathroom) have missing values. 
+
+```{r}
+library(tidyverse)
+library(visdat)
+library(naniar)
+library(broom)
+library(gridExtra)
+housing <- read.csv("data/Melbourne_housing_FULL.csv") %>%
+  select(Price, Rooms, Type, Distance, Bedroom2, Bathroom) %>%
+  rename(Bedroom = Bedroom2) %>%
+  mutate(Distance = as.character(Distance)) %>% mutate(Distance = as.numeric(Distance)) 
+vis_miss(housing, sort_miss = TRUE)
+miss_summary(housing)
+housing_shadow <- bind_shadow(housing) %>%
+  impute_shift()
+```
+
+The missings on Bedroom and Bathroom are the same, if one is missing, so is the other. Missings on Price tend to be different. It will be important to impute missings on Bedroom and Bathroom, to maximise the information used for modeling.
+
+To impute missing Bedroom and Bathroom, the best approach is to fit a regression model for each based on the other explanatory variables. Nearest neighbours would also be reasonable. Bedroom and Bathroom are closely associated with Rooms, but not Distance or Type of property. 
+
+```{r}
+p1 <- ggplot(housing_shadow, aes(x=Rooms, y=Bedroom,
+                                 colour=Bedroom_NA)) +
+  geom_point(alpha=0.5) + scale_color_brewer(palette="Dark2") +
+  theme(legend.position="bottom")
+p2 <- ggplot(housing_shadow, aes(x=Rooms, y=Bathroom,
+                                 colour=Bathroom_NA)) +
+  geom_point(alpha=0.5) + scale_color_brewer(palette="Dark2") +
+  theme(legend.position="bottom")
+grid.arrange(p1, p2, ncol=2)
+
+bathroom_imputation <- predict(lm(Bathroom ~ Rooms, data=housing), newdata=housing)
+bedroom_imputation <- predict(lm(Bedroom ~ Rooms, data=filter(housing, Bedroom<9)), newdata=housing)
+
+housing_shadow <- housing %>% bind_shadow()
+housing_shadow <- housing_shadow %>%
+  mutate(Bathroom = ifelse(is.na(Bathroom),
+     round(bathroom_imputation, digits=0),  Bathroom)) %>%
+  mutate(Bedroom = ifelse(is.na(Bedroom),
+     round(bedroom_imputation, digits=0),  Bedroom)) 
+p1 <- ggplot(housing_shadow, aes(x=Rooms, y=Bedroom,
+                                 colour=Bedroom_NA)) +
+  geom_point(alpha=0.5) + scale_color_brewer(palette="Dark2") +
+  theme(legend.position="bottom")
+p2 <- ggplot(housing_shadow, aes(x=Rooms, y=Bathroom,
+                                 colour=Bathroom_NA)) +
+  geom_point(alpha=0.5) + scale_color_brewer(palette="Dark2") +
+  theme(legend.position="bottom")
+grid.arrange(p1, p2, ncol=2)
+```
+
+The imputed values for Bedroom lie along a line, reflecting the regression model. The imputation doesn't improve by adding the other explanatory variables (Distance and Type) into the model. Although each is statistically significant, neither improve the model fit statistics by much.
+
+*Aside: Using the mean or median to impute the missing values doesn't take into account the association with Rooms. Its not recommended.*
+
+Price is the response variable, and it may be better not to impute this. The reasoning is that this is the variable that we are using to train the model, to build the predictive model with as best accuracy as possible. If we don't know the value, and impute a value, then build the model, it is  training the model (partially) on guesses.  Removing these cases from the data set loses 21.8% of the data, 34857 observations to 27247 observations. It is a lot observations to lose, but there are still a lot of observations remaining. 
+
+```{r}
+housing <- housing_shadow %>% filter(!is.na(Price))
+```
+
+*Aside: Some groups used Price to impute Bedroom and Bathroom. This isn't advised because it will affect your model, actually it is likely to artificially inflate the model fit statistics.*
+
+## Graphical summary
+
+Examining the relationship between price and the explanatory variables shows that there is some relationship with each, although it may not be linear. 
+
+
+```{r}
+housing <- housing %>% filter(Rooms < 7, Bedroom < 9)
+p1 <- ggplot(housing, aes(x=Rooms, y=Price)) +
+  geom_point(alpha=0.5) + stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+p2 <- ggplot(housing, aes(x=Bedroom, y=Price)) +
+  geom_point(alpha=0.5) + 
+  stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+p3 <- ggplot(housing, aes(x=Bathroom, y=Price)) +
+  geom_point(alpha=0.5) + 
+  stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+p4 <- ggplot(housing, aes(x=Type, y=Price)) +
+  geom_boxplot()
+p5 <- ggplot(housing, aes(x=Distance, y=Price)) +
+  geom_point(alpha=0.5) + 
+  stat_smooth(colour = "red")
+grid.arrange(p1, p2, p3, p4, p5, ncol=3)
+```
+
+Price has a skewed distribution, so it is a good idea to transform it using a log.
+
+```{r}
+housing <- housing %>% mutate(lPrice = log10(Price))
+p1 <- ggplot(housing, aes(x=Rooms, y=lPrice)) +
+  geom_point(alpha=0.5) + stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+p2 <- ggplot(housing, aes(x=Bedroom, y=lPrice)) +
+  geom_point(alpha=0.5) + 
+  stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+p3 <- ggplot(housing, aes(x=Bathroom, y=lPrice)) +
+  geom_point(alpha=0.5) + 
+  stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+p4 <- ggplot(housing, aes(x=Type, y=lPrice)) +
+  geom_boxplot()
+p5 <- ggplot(housing, aes(x=Distance, y=lPrice)) +
+  geom_point(alpha=0.5) + 
+  stat_smooth(colour = "red")
+grid.arrange(p1, p2, p3, p4, p5, ncol=3)
+```
+
+The nonlinear relationships between response and the explanatory variables are clear on the log scale. Generally, as Rooms, Bedroom and Bathroom increase Price increases. Houses and townhouses have higher prices than units. Prices tend to decrease as distance from the centre of the city increases. There is an unusual pattern in the properties with 0 bedrooms tend to have higher price. 
+
+A major pattern is that for price is quite varied, and not very strongly associated with any of the explanatory variables. 
+
+*Aside: Many students noted that Rooms was often smaller than Bedrooms. It is not clear how to interpret Rooms, but this observation suggests that it is not total rooms in the house, maybe total rooms minus bedrooms. However, it is an important variable, to understand price, and it is clear that bedroom and bathrooms also need to be used.*
+
+## Model building
+
+Important components:
+
+- It is important to use a log transformed response. 
+- Check the variables individually, and add to model, keeping an eye on fit statistics
+- Check residual plots
+
+```{r}
+m <- lm(lPrice ~ Rooms, data=housing)
+mfit <- data.frame(var="Rooms",intercept=tidy(m)[1,2],slope=tidy(m)[2,2],r2=glance(m)$r.squared)
+m <- lm(lPrice ~ Bedroom, data=housing)
+mfit <- bind_rows(mfit, data.frame(var="Bedroom",intercept=tidy(m)[1,2],slope=tidy(m)[2,2],r2=glance(m)$r.squared))
+m <- lm(lPrice ~ Bathroom, data=housing)
+mfit <- bind_rows(mfit, data.frame(var="Bathroom",intercept=tidy(m)[1,2],slope=tidy(m)[2,2],r2=glance(m)$r.squared))
+m <- lm(lPrice ~ Distance, data=housing)
+mfit <- bind_rows(mfit, data.frame(var="Distance",intercept=tidy(m)[1,2],slope=tidy(m)[2,2],r2=glance(m)$r.squared))
+m <- lm(lPrice ~ Type, data=housing)
+mfit <- bind_rows(mfit, data.frame(var=c("House","Townhouse","Unit"), intercept=c(tidy(m)[1,2], tidy(m)[2,2], tidy(m)[3,2]), slope=c(NA, NA, NA), r2=rep(glance(m)$r.squared, 3)))
+mfit
+```
+
+The best single model is Rooms, explaining 28% of the variation in log Price. This is followed by Type of property at 23% of the variation. Bedroom and Bathroom and Distance are much less important.
+
+```{r echo=TRUE}
+mod1 <- lm(data=housing, lPrice ~ Rooms+Type)
+glance(mod1)$r.squared
+mod2 <- lm(data=housing, lPrice ~ Rooms*Type)
+glance(mod2)$r.squared
+mod3 <- lm(data=housing, lPrice ~ Rooms*Type+Bathroom)
+glance(mod3)$r.squared
+mod4 <- lm(data=housing, lPrice ~ Rooms*Type+Bathroom+Type*Distance)
+tidy(mod4)
+glance(mod4)
+```
+
+The procedure followed was:
+
+1. Working from the best single variable models, choose to include both Rooms and Type, and also the interaction between the two added 1% explanatory power. 
+2. Consider adding the next best single variable, Bedroom. Surprisingly, it does not to the $R^2$, and would not be considered to be statistically significant. Then consider Bathroom, which improves the model by 2%. 
+3. Add Distance, because we would expect that in association with Type of property, it should substantially affect log Price. It boosts the explanatory power by 20%, when included as an interaction with Type.
+
+### Check the fit
+
+```{r fig.height=4, fig.width=10}
+mod4_fit <- augment(mod4, housing)
+p1 <- ggplot(mod4_fit, aes(x=.fitted, y=lPrice)) + geom_point(alpha=0.1)
+p2 <- ggplot(mod4_fit, aes(x=Rooms, y=.fitted, colour=Type)) + geom_point(alpha=0.01) + geom_smooth(method="lm", se=FALSE)
+p3 <- ggplot(mod4_fit, aes(x=Distance, y=.fitted, colour=Type)) + geom_point(alpha=0.01) + geom_smooth(method="lm", se=FALSE)
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+The plot of observed vs fitted values indicates a reasonably good fit. There is still a lot of unexplained variance, but no other uncaptured structure because it looks linear.
+
+The plots of fitted vs Rooms and Distance, by Type of apartment, shows how these variables interact to affect price. Generally, as Rooms increase unit price increases faster than house price. A little surprisingly, in relation to Distance, house price drops more dramatically than either townhouse or unit price, the further from the city the property is.
+
+```{r fig.width=10}
+p1 <- ggplot(mod4_fit, aes(x=.fitted, y=.std.resid)) + geom_point(alpha=0.1)
+p2 <- ggplot(mod4_fit, aes(x=factor(Rooms), y=.std.resid)) + geom_boxplot()
+p3 <- ggplot(mod4_fit, aes(x=factor(Bathroom), y=.std.resid)) + geom_boxplot()
+p4 <- ggplot(mod4_fit, aes(x=Distance, y=.std.resid)) + geom_point(alpha=0.1)
+p5 <- ggplot(mod4_fit, aes(x=Rooms, y=.std.resid, colour=Type)) + geom_point(alpha=0.1) + geom_smooth(se=FALSE, method="lm")
+p6 <- ggplot(mod4_fit, aes(x=Distance, y=.std.resid, colour=Type)) + geom_point(alpha=0.1) + geom_smooth(se=FALSE, method="lm")
+grid.arrange(p1, p2, p3, p4, p5, p6, ncol=3)
+```
+
+The residual plots indicate that there is that the model has captured the important variation in log price, and there is virtually no structure remaining. 
+
+## Model summary
+
+The model using Rooms, Bathroom, Distance and Type is the best fit, with Type being included as an interaction with both Rooms and Distance. It explains about 53% of the variation.
+
+The model fit is:
+
+- House: $Predicted ~log(Price)= 
+5.873 + 0.080Rooms + 0.051Bathroom - 0.016Distance$
+- Townhouse: $Predicted ~log(Price)= 
+5.595 + 0.116Rooms + 0.051Bathroom - 0.008Distance$
+- Unit: $Predicted ~log(Price)= 
+5.424 + 0.161Rooms + 0.051Bathroom - 0.007Distance$
+
+Choices made during the data processing, and model building, are summarised as:
+
+1. Observations with missing values on Price were removed. Missing bedroom and bathroom values were imputed using a linear model on Rooms.
+2. Observations with more than 6 rooms, or 8 bedrooms were removed because there were insufficient data values in these ranges.
+3. Price was transformed to log scale. 
+
+## Grading rubric
+
+* Make a missing values summary, and a strategy for dealing with the missings (5 pts)
+    - having a plot of missing values or in text (2 pts)
+    - writing what to do with missing values (1 pts)
+    - implmenting a strategy (2 pts)
+* Make some good plots summarising the relationship between price (5pts)
+    - scatter plots
+    - descriptions of the relationships
+* Build your model, explaining your choices of transformations, variable selection, interactions (5 pts)
+    - log transform price (1 pt)
+    - interaction between House type (1 pts) 
+    - iteratively building up model (2 pts)
+* Summarise your final model, and justify why you think it is the best (5 pts)
+    - reporting on model statistics to justify your final model (2pts)
+    - R^2 > 0.4 (1pts)
+    - diagnostic plots (2 pts)
