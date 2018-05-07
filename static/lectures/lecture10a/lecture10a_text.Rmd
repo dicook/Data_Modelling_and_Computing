@@ -36,13 +36,7 @@ This is a link to the course web site, in case you need to go back and forth bet
 - To use the realtors text description to improve the Melbourne housing price model
 - Determine the extent of public discontent with train stoppages in Melbourne
 - The differences between Darwin's first edition of the Origin of the Species and the 6th edition
-- What events has the "New To Melbourne" facebook group hosted, and is planning to host
-
-### Methods
-
-- Descriptive: frequencies, co-occurrences
-- Topic modelling
-- Sentiment analysis
+- Does the sentiment of posts on Newcastle Jets public facebook page reflect their win/los record?
 
 ### Process
 
@@ -59,19 +53,22 @@ This is a link to the course web site, in case you need to go back and forth bet
 
 The [Gutenberg project](http://www.gutenberg.org/wiki/Main_Page) provides the text of over 57000 books free online. 
 
-Navigate to The Origin of the Species by Charles Darwin. There are two versions available, 
+Navigate to The Origin of the Species by Charles Darwin. There are two versions available. 
 
 You can either download the text directly or use the `gutenbergr` package. To use the package you need to know the `id` of the book, which means looking this up online anyway. (The first edition is `1228`, and the 6th edition is `2009`)
 
 ```{r}
+# install.packages("tidytext")
 library(tidytext)
 # The tm package is needed because the book has numbers 
 # in the text, that need to be removed, and the
 # tidytext package doesn't have a function to do that
+# install.packages("tm")
 library(tm)
 # install.packages("gutenbergr")
 library(gutenbergr)
 darwin1 <- gutenberg_download(1228)
+darwin1
 ```
 
 ### Tokenize
@@ -89,8 +86,11 @@ darwin1_words %>% filter(n > 90) %>%
   ylab("")
 ```
 
+### Your turn
 
-```{r}
+Download and tokenize the 6th edition.
+
+```{r results='hide', fig.show='hide'}
 darwin6 <- gutenberg_download(2009)
 darwin6$text <- removeNumbers(darwin6$text)
 darwin6_words <- darwin6 %>% 
@@ -139,7 +139,7 @@ fit %>% arrange(desc(.resid)) %>% top_n(10)
 
 ### Book comparison
 
-The idea is to find the important words for the content of each document by decreasing the weight for commonly used words and increasing the weight for words that are not used very much in a collection or corpus of documents.
+The idea is to find the important words for the content of each document by decreasing the weight of commonly used words and increasing the weight for words that are not used very much in a collection or corpus of documents.
 
 The statistic *term frequency, inverse document frequency*, `tf-idf`, is intended to measure how important a word is to a document in a collection (or corpus) of documents, for example, to one novel in a collection of novels or to one website in a collection of websites.
 
@@ -183,7 +183,9 @@ darwin6[5435,]
 
 ### Your turn
 
-Work your way through the [comparison of physics books](https://www.tidytextmining.com/tfidf.html#a-corpus-of-physics-texts)
+Text Mining with R has an example comparing historical physics textbooks:  *Discourse on Floating Bodies* by Galileo Galilei, *Treatise on Light* by Christiaan Huygens, *Experiments with Alternate Currents of High Potential and High Frequency* by Nikola Tesla, and *Relativity: The Special and General Theory* by Albert Einstein. All are available on the Gutenberg project. 
+
+Work your way through the [comparison of physics books](https://www.tidytextmining.com/tfidf.html#a-corpus-of-physics-texts). It is section 3.4.
 
 ## Sentiment analysis
 
@@ -317,6 +319,69 @@ sc_s %>% filter(name %in% keep$name) %>%
   arrange(desc(angry))
 ```
 
+## Sentiment of facebook posts
+
+If you have a facebook account, you can get a token to automatically extract public posts, using the package `Rfacebook`.
+
+1. Go to [facebook for developers](https://developers.facebook.com/tools/explorer/?method=GET&path=me%3Ffields%3Did%2Cname&version=v3.0)
+2. Click on "Get token", "Get Page Access Token" and this will give you a temporary code to use to extract data
+
+The code below was used to extract all the public posts from the "Newcastle Jets" facebook account. The Newcastle Jets just played the finals over the weekend, and lost after a referee error. 
+
+```{r eval=FALSE}
+library(Rfacebook)
+token <- "EAACEdEose0cBABZAXeZCfIwsZAJsBAL9drBBNtMs2go831XnEDMJZBK6tlui0O2ZBjm5snq7E9QVjVuETHmjnNrAG7Qp1Wu2WALrqtoiFo2PQ5T75b4zvEZAH2PaPcMXoyjlqLEiNJJdDHaGAIKec9PZAL2oqFzPSlOojBZBEWvjgHKxOl5qHqkW5kynsqavQZCWIBuVbHSqzTgZDZD"
+ncj <- "newcastlejetsfc"
+ncj_posts <- getPage(ncj, token, n=1000, feed = TRUE)
+save(ncj_posts, file="data/ncj_posts.rda")
+```
+
+Let's take a look at the average sentiment score of posts by week. And compare them with win-loss record for the team. 
+
+```{r }
+library(lubridate)
+load("data/ncj_posts.rda")
+msg_word <- ncj_posts %>% 
+  group_by(id) %>% 
+  unnest_tokens(word, message) %>%
+  anti_join(stop_words) %>%
+  count(word, sort=TRUE) %>%
+  inner_join(get_sentiments("afinn"), by = "word")
+# Compute average sentiment score
+msg_word_s <- msg_word %>% 
+  group_by(id) %>%
+  summarise(score = mean(score)) 
+ncj_posts <- ncj_posts %>% 
+  mutate(date = date(created_time)) %>%
+  mutate(wday = wday(date, label = TRUE, abbr = TRUE, week_start=1))
+msg_word_s <- msg_word_s %>%
+  left_join(ncj_posts, by="id")
+msg_word_s_17_18 <- msg_word_s %>% filter(date > ymd("2017-10-01")) %>%
+  mutate(week = week(date)) %>%
+  mutate(week = ifelse(week < 19, week+53, week)) %>%
+  mutate(week = week - 40)
+msg_word_s_17_18_av <- msg_word_s_17_18 %>%
+  filter(type == "photo") %>%
+  group_by(week) %>%
+  summarise(m = mean(score, na.rm=TRUE))
+```
+
+```{r fig.width=5, fig.height=2}
+# Read in match scores
+ncj_scores <- read_csv("data/ncj.csv")
+ncj_scores$win <- "W"
+ncj_scores$win[ncj_scores$team1 == "Newcastle Jets"&ncj_scores$score1<ncj_scores$score2] <- "L"
+ncj_scores$win[ncj_scores$team2 == "Newcastle Jets"&ncj_scores$score2<ncj_scores$score1] <- "L"
+ncj_scores$win[ncj_scores$score1==ncj_scores$score2] <- "D"
+ncj_scores <- ncj_scores %>% mutate(date = dmy(date)) %>%
+  mutate(week = week(date)) %>%
+  mutate(week = ifelse(week < 19, week+53, week)) %>%
+  mutate(week = week - 40)
+ggplot() +
+  geom_line(data=msg_word_s_17_18_av, aes(x=week, y=m)) +
+  geom_text(data=ncj_scores, aes(x=week, y=-2, label=win, colour=win)) +
+  scale_colour_brewer(palette="Dark2")
+```
 
 ## Share and share alike
 
