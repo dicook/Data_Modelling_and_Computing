@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<meta name="progressive" content="false" />
+<meta name="allow-skip" content="false" />
+
+<title>ETC1010: Data Modelling and Computing</title>
+
+
+<!-- highlightjs -->
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+<link rel="stylesheet" href="css/logo.css" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+<div class="pageContent band">
+<div class="bandContent page">
+
+<div class="topics">
+
+<div id="section-network-analysis" class="section level1">
+<h1>Network analysis</h1>
+<div id="section-course-web-site" class="section level2">
+<h2>Course web site</h2>
+<p>This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: <a href="http://dmac.netlify.com" class="uri">http://dmac.netlify.com</a></p>
+</div>
+<div id="section-overview" class="section level2">
+<h2>Overview</h2>
+<p>Network data arises in many settings, e.g. study of communities, biological pathways, … Typically the data is provided in two related tables, nodes and edges. Both may have additional attributes.</p>
+<p>This is a nodes data set, the characters from the TV series Mad Men.</p>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["label"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["Gender"],"name":[2],"type":["fctr"],"align":["left"]}],"data":[{"1":"Betty Draper","2":"female"},{"1":"Don Draper","2":"male"},{"1":"Harry Crane","2":"male"},{"1":"Joan Holloway","2":"female"},{"1":"Lane Pryce","2":"male"},{"1":"Peggy Olson","2":"female"},{"1":"Pete Campbell","2":"male"},{"1":"Roger Sterling","2":"male"},{"1":"Sal Romano","2":"male"},{"1":"Henry Francis","2":"male"},{"1":"Random guy","2":"male"},{"1":"Allison","2":"female"},{"1":"Bethany Van Nuys","2":"female"},{"1":"Bobbie Barrett","2":"female"},{"1":"Candace","2":"female"},{"1":"Doris","2":"female"},{"1":"Faye Miller","2":"female"},{"1":"Joy","2":"female"},{"1":"Megan Calvet","2":"female"},{"1":"Midge Daniels","2":"female"},{"1":"Rachel Menken","2":"female"},{"1":"Shelly","2":"female"},{"1":"Suzanne Farrell","2":"female"},{"1":"Woman at the Clios party","2":"female"},{"1":"Hildy","2":"female"},{"1":"Jennifer Crane","2":"female"},{"1":"Franklin","2":"male"},{"1":"Greg Harris","2":"male"},{"1":"Janine","2":"female"},{"1":"Rebecca Pryce","2":"female"},{"1":"Toni","2":"female"},{"1":"Abe Drexler","2":"male"},{"1":"Brooklyn College Student","2":"male"},{"1":"Duck Phillips","2":"male"},{"1":"Mark","2":"male"},{"1":"Gudrun","2":"female"},{"1":"Playtex bra model","2":"female"},{"1":"Trudy Campbell","2":"female"},{"1":"Ida Blankenship","2":"female"},{"1":"Jane Siegel","2":"female"},{"1":"Mirabelle Ames","2":"female"},{"1":"Mona Sterling","2":"female"},{"1":"Vicky","2":"female"},{"1":"Bellhop in Baltimore","2":"male"},{"1":"Kitty Romano","2":"female"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>and the network component measures how the “nodes” are associated. Here it is whether they have had an affair.</p>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Name1"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["Name2"],"name":[2],"type":["fctr"],"align":["left"]}],"data":[{"1":"Betty Draper","2":"Henry Francis"},{"1":"Betty Draper","2":"Random guy"},{"1":"Don Draper","2":"Allison"},{"1":"Don Draper","2":"Bethany Van Nuys"},{"1":"Don Draper","2":"Betty Draper"},{"1":"Don Draper","2":"Bobbie Barrett"},{"1":"Don Draper","2":"Candace"},{"1":"Don Draper","2":"Doris"},{"1":"Don Draper","2":"Faye Miller"},{"1":"Don Draper","2":"Joy"},{"1":"Don Draper","2":"Megan Calvet"},{"1":"Don Draper","2":"Midge Daniels"},{"1":"Don Draper","2":"Rachel Menken"},{"1":"Don Draper","2":"Shelly"},{"1":"Don Draper","2":"Suzanne Farrell"},{"1":"Don Draper","2":"Woman at the Clios party"},{"1":"Harry Crane","2":"Hildy"},{"1":"Harry Crane","2":"Jennifer Crane"},{"1":"Joan Holloway","2":"Franklin"},{"1":"Joan Holloway","2":"Greg Harris"},{"1":"Joan Holloway","2":"Roger Sterling"},{"1":"Lane Pryce","2":"Janine"},{"1":"Lane Pryce","2":"Rebecca Pryce"},{"1":"Lane Pryce","2":"Toni"},{"1":"Peggy Olson","2":"Abe Drexler"},{"1":"Peggy Olson","2":"Brooklyn College Student"},{"1":"Peggy Olson","2":"Duck Phillips"},{"1":"Peggy Olson","2":"Mark"},{"1":"Peggy Olson","2":"Pete Campbell"},{"1":"Pete Campbell","2":"Gudrun"},{"1":"Pete Campbell","2":"Playtex bra model"},{"1":"Pete Campbell","2":"Trudy Campbell"},{"1":"Roger Sterling","2":"Ida Blankenship"},{"1":"Roger Sterling","2":"Jane Siegel"},{"1":"Roger Sterling","2":"Mirabelle Ames"},{"1":"Roger Sterling","2":"Mona Sterling"},{"1":"Roger Sterling","2":"Vicky"},{"1":"Sal Romano","2":"Bellhop in Baltimore"},{"1":"Sal Romano","2":"Kitty Romano"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Why?</p>
+<ul>
+<li>Telephone exchanges: Nodes are the phone numbers. Edges would indicate a call was made betwen two numbers.</li>
+<li>Book or movie plots: Nodes are the characters. Edges would indicate whether they appear together in a scene, or chapter. If they speak to each other, various ways we might measure the association.</li>
+<li>Social media: nodes would be the people who post on facebook, including comments. Edges would measure who comments on who’s posts.</li>
+</ul>
+<p>A basic component is to have an association matrix between many objects. (Image above created by Sam Tyner.)</p>
+<div class="figure">
+<img src="images/network_data.png" />
+
+</div>
+<p>The R package <a href="https://github.com/sctyner/geomnet">geomnet</a> provides tools for working with network data.</p>
+</div>
+<div id="section-example-madmen" class="section level2">
+<h2>Example: Madmen</h2>
+<p>Here’s an example from the TV series Madmen. The nodes data contains the actors in the series, and the edges contains pairs of actors that had romantic relationships.</p>
+<pre class="r"><code>glimpse(madmen)
+## List of 2
+##  $ edges   :&#39;data.frame&#39;:    39 obs. of  2 variables:
+##   ..$ Name1: Factor w/ 9 levels &quot;Betty Draper&quot;,..: 1 1 2 2 2 2 2 2 2 2 ...
+##   ..$ Name2: Factor w/ 39 levels &quot;Abe Drexler&quot;,..: 15 31 2 4 5 6 8 9 11 21 ...
+##  $ vertices:&#39;data.frame&#39;:    45 obs. of  2 variables:
+##   ..$ label : Factor w/ 45 levels &quot;Abe Drexler&quot;,..: 5 9 16 23 26 32 33 38 39 17 ...
+##   ..$ Gender: Factor w/ 2 levels &quot;female&quot;,&quot;male&quot;: 1 2 2 1 2 1 2 2 2 2 ...</code></pre>
+<div id="section-generate-a-network-view" class="section level3">
+<h3>Generate a network view</h3>
+<ul>
+<li>Create a layout (in 2D) which places nodes which are most related close,</li>
+<li>Plot the nodes as points, connect the appropriate lines</li>
+<li>Overlaying other aspects, e.g. gender</li>
+</ul>
+<pre class="r"><code># data step: join the edge and node data with a fortify call
+MMnet &lt;- fortify(as.edgedf(madmen$edges), madmen$vertices)
+# create plot
+set.seed(10052016)
+ggplot(data = MMnet, aes(from_id = from_id, to_id = to_id)) +
+  geom_net(aes(colour = Gender), layout.alg = &quot;kamadakawai&quot;,
+    size = 2, labelon = TRUE, vjust = -0.6, ecolour = &quot;grey60&quot;,
+    directed =FALSE, fontsize = 3, ealpha = 0.5) +
+    scale_colour_manual(values = c(&quot;#FF69B4&quot;, &quot;#0099ff&quot;)) +
+    xlim(c(-0.05, 1.05)) +
+    theme_net() +
+    theme(legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="lecture10b_text_files/figure-html/unnamed-chunk-4-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplotly()</code></pre>
+<div id="htmlwidget-1ec95a65a10d98bab8d9" style="width:768px;height:576px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1ec95a65a10d98bab8d9">{"x":{"data":[{"x":[0.235250878978073,0.241686527042645,0.435323271932887,0.424886623378118,0.399673875541893,0.565123208776707,0.49348974049579,0.511207873941808,0.435241078667149,0.55329803641272,0.588794836186244,0.533904564799844,0.593519858132005,0.473068249850462,0.451473853364454,0.55401348582701,0.80099274883993,0.697071767222194,0.55411311116534,0.515462038184451,0.426537957807879,0.0702597722736954,0.0190888758388137,0.00445255879479583,0.91329141972223,0.882708891196802,0.779803328002713,0.81536915984498,0.86285913958685,0.881982546290831,0.938363993342462,0.924052702119095,0.374308190666936,0.311494495930515,0.324769901495042,0.398694633548499,0.285620186639512,0.103171887453377,0.0769023455382103],"y":[0.15135825063943,0.236588463653958,0.0998348835386342,0.137454259590939,0.177580358793096,0.222737697091612,0.261542350744243,0.0847503234634439,0.21092879957469,0.0933029373548073,0.185457093154401,0.251873774814887,0.135340211941291,0.0883524588003578,0.252339795673221,0.139155186966867,0.869591713875621,0.93543485782859,0.831988582842412,0.934022928234422,0.85222036362508,0.447681101862651,0.352000121833679,0.488795438268443,0.581263771196293,0.639833056323389,0.576924751819143,0.640376687257393,0.494769916449943,0.339183777910154,0.439945404014532,0.366876137215996,0.90854984944979,0.890102857492596,0.768238194814429,0.772660605835333,0.83279463332844,0.642706117943972,0.743156821884934],"text":["(Betty Draper,Henry Francis)","(Betty Draper,Random guy)","(Don Draper,Allison)","(Don Draper,Bethany Van Nuys)","(Don Draper,Betty Draper)","(Don Draper,Bobbie Barrett)","(Don Draper,Candace)","(Don Draper,Doris)","(Don Draper,Faye Miller)","(Don Draper,Joy)","(Don Draper,Megan Calvet)","(Don Draper,Midge Daniels)","(Don Draper,Rachel Menken)","(Don Draper,Shelly)","(Don Draper,Suzanne Farrell)","(Don Draper,Woman at the Clios party)","(Harry Crane,Hildy)","(Harry Crane,Jennifer Crane)","(Joan Holloway,Franklin)","(Joan Holloway,Greg Harris)","(Joan Holloway,Roger Sterling)","(Lane Pryce,Janine)","(Lane Pryce,Rebecca Pryce)","(Lane Pryce,Toni)","(Peggy Olson,Abe Drexler)","(Peggy Olson,Brooklyn College Student)","(Peggy Olson,Duck Phillips)","(Peggy Olson,Mark)","(Peggy Olson,Pete Campbell)","(Pete Campbell,Gudrun)","(Pete Campbell,Playtex bra model)","(Pete Campbell,Trudy Campbell)","(Roger Sterling,Ida Blankenship)","(Roger Sterling,Jane Siegel)","(Roger Sterling,Mirabelle Ames)","(Roger Sterling,Mona Sterling)","(Roger Sterling,Vicky)","(Sal Romano,Bellhop in Baltimore)","(Sal Romano,Kitty Romano)"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,255,255,1)","opacity":1,"size":0,"symbol":"","line":{"width":1.88976377952756,"color":"rgba(255,255,255,1)"}},"hoveron":"points","showlegend":false,"xaxis":null,"yaxis":null,"hoverinfo":"text","frame":null},{"x":[0.302680362432262,0.167821395523883,null,0.302680362432262,0.180692691653028,null,0.496667388651523,0.373979155214251,null,0.496667388651523,0.353105858104714,null,0.496667388651523,0.302680362432262,null,0.496667388651523,0.633579028901892,null,0.496667388651523,0.490312092340057,null,0.496667388651523,0.525748359232093,null,0.496667388651523,0.373814768682776,null,0.496667388651523,0.609928684173917,null,0.496667388651523,0.680922283720965,null,0.496667388651523,0.571141740948165,null,0.496667388651523,0.690372327612488,null,0.496667388651523,0.4494691110494,null,0.496667388651523,0.406280318077385,null,0.496667388651523,0.611359583002498,null,0.750525146122366,0.851460351557493,null,0.750525146122366,0.643618388322022,null,0.495090414065386,0.613135808265293,null,0.495090414065386,0.535833662303515,null,0.495090414065386,0.357985501550371,null,0.00890511758959166,0.131614426957799,null,0.00890511758959166,0.0292726340880357,null,0.00890511758959166,0,null,0.848990292488777,0.977592546955684,null,0.848990292488777,0.916427489904827,null,0.848990292488777,0.71061636351665,null,0.848990292488777,0.781748027201184,null,0.848990292488777,0.876727986684924,null,0.876727986684924,0.887237105896738,null,0.876727986684924,1,null,0.876727986684924,0.971377417553267,null,0.357985501550371,0.390630879783502,null,0.357985501550371,0.265003490310658,null,0.357985501550371,0.291554301439713,null,0.357985501550371,0.439403765546627,null,0.357985501550371,0.213254871728653,null,0.0476628256677828,0.15868094923897,null,0.0476628256677828,0.106141865408638],"y":[0.185660070659304,0.117056430619556,null,0.185660070659304,0.287516856648612,null,0.169500646926888,0.0301691201503806,null,0.169500646926888,0.10540787225499,null,0.169500646926888,0.185660070659304,null,0.169500646926888,0.275974747256336,null,0.169500646926888,0.353584054561599,null,0.169500646926888,0,null,0.169500646926888,0.252356952222492,null,0.169500646926888,0.0171052277827269,null,0.169500646926888,0.201413539381914,null,0.169500646926888,0.334246902702887,null,0.169500646926888,0.101179776955694,null,0.169500646926888,0.00720427067382788,null,0.169500646926888,0.335178944419554,null,0.169500646926888,0.108809727006846,null,0.90560817062804,0.833575257123201,null,0.90560817062804,0.96526154502914,null,0.868045856468844,0.795931309215979,null,0.868045856468844,1,null,0.868045856468844,0.836394870781316,null,0.419280547364684,0.476081656360618,null,0.419280547364684,0.284719696302675,null,0.419280547364684,0.558310329172203,null,0.569973460155034,0.592554082237552,null,0.569973460155034,0.709692652491744,null,0.569973460155034,0.583876043483252,null,0.569973460155034,0.710779914359752,null,0.569973460155034,0.419566372744853,null,0.419566372744853,0.258801183075454,null,0.419566372744853,0.46032443528421,null,0.419566372744853,0.314185901687139,null,0.836394870781316,0.980704828118263,null,0.836394870781316,0.943810844203877,null,0.836394870781316,0.700081518847543,null,0.836394870781316,0.70892634088935,null,0.836394870781316,0.829194395875564,null,0.680595154659529,0.604817081228414,null,0.680595154659529,0.805718489110339],"type":"scatter","mode":"lines","line":{"width":3.77952755905512,"color":"rgba(153,153,153,0.5)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":null,"yaxis":null,"hoverinfo":"text","frame":null},{"x":[0.373979155214251,0.353105858104714,0.302680362432262,0.302680362432262,0.633579028901892,0.490312092340057,0.525748359232093,0.373814768682776,0.887237105896738,0.851460351557493,0.390630879783502,0.265003490310658,0.131614426957799,0.643618388322022,0.495090414065386,0.495090414065386,0.495090414065386,0.609928684173917,0.106141865408638,0.680922283720965,0.571141740948165,0.291554301439713,0.439403765546627,0.848990292488777,0.848990292488777,0.848990292488777,0.848990292488777,0.848990292488777,1,0.690372327612488,0.0292726340880357,0.4494691110494,0.406280318077385,0,0.971377417553267,0.213254871728653,0.611359583002498],"y":[0.0301691201503806,0.10540787225499,0.185660070659304,0.185660070659304,0.275974747256336,0.353584054561599,0,0.252356952222492,0.258801183075454,0.833575257123201,0.980704828118263,0.943810844203877,0.476081656360618,0.96526154502914,0.868045856468844,0.868045856468844,0.868045856468844,0.0171052277827269,0.805718489110339,0.201413539381914,0.334246902702887,0.700081518847543,0.70892634088935,0.569973460155034,0.569973460155034,0.569973460155034,0.569973460155034,0.569973460155034,0.46032443528421,0.101179776955694,0.284719696302675,0.00720427067382788,0.335178944419554,0.558310329172203,0.314185901687139,0.829194395875564,0.108809727006846],"text":["Allison","Bethany Van Nuys","Betty Draper","Betty Draper","Bobbie Barrett","Candace","Doris","Faye Miller","Gudrun","Hildy","Ida Blankenship","Jane Siegel","Janine","Jennifer Crane","Joan Holloway","Joan Holloway","Joan Holloway","Joy","Kitty Romano","Megan Calvet","Midge Daniels","Mirabelle Ames","Mona Sterling","Peggy Olson","Peggy Olson","Peggy Olson","Peggy Olson","Peggy Olson","Playtex bra model","Rachel Menken","Rebecca Pryce","Shelly","Suzanne Farrell","Toni","Trudy Campbell","Vicky","Woman at the Clios party"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,105,180,1)","opacity":1,"size":7.55905511811024,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(255,105,180,1)"}},"hoveron":"points","name":"female","legendgroup":"female","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.977592546955684,0.15868094923897,0.916427489904827,0.496667388651523,0.496667388651523,0.496667388651523,0.496667388651523,0.496667388651523,0.496667388651523,0.496667388651523,0.496667388651523,0.496667388651523,0.496667388651523,0.496667388651523,0.496667388651523,0.496667388651523,0.496667388651523,0.71061636351665,0.613135808265293,0.535833662303515,0.750525146122366,0.750525146122366,0.167821395523883,0.00890511758959166,0.00890511758959166,0.00890511758959166,0.781748027201184,0.876727986684924,0.876727986684924,0.876727986684924,0.180692691653028,0.357985501550371,0.357985501550371,0.357985501550371,0.357985501550371,0.357985501550371,0.0476628256677828,0.0476628256677828],"y":[0.592554082237552,0.604817081228414,0.709692652491744,0.169500646926888,0.169500646926888,0.169500646926888,0.169500646926888,0.169500646926888,0.169500646926888,0.169500646926888,0.169500646926888,0.169500646926888,0.169500646926888,0.169500646926888,0.169500646926888,0.169500646926888,0.169500646926888,0.583876043483252,0.795931309215979,1,0.90560817062804,0.90560817062804,0.117056430619556,0.419280547364684,0.419280547364684,0.419280547364684,0.710779914359752,0.419566372744853,0.419566372744853,0.419566372744853,0.287516856648612,0.836394870781316,0.836394870781316,0.836394870781316,0.836394870781316,0.836394870781316,0.680595154659529,0.680595154659529],"text":["Abe Drexler","Bellhop in Baltimore","Brooklyn College Student","Don Draper","Don Draper","Don Draper","Don Draper","Don Draper","Don Draper","Don Draper","Don Draper","Don Draper","Don Draper","Don Draper","Don Draper","Don Draper","Don Draper","Duck Phillips","Franklin","Greg Harris","Harry Crane","Harry Crane","Henry Francis","Lane Pryce","Lane Pryce","Lane Pryce","Mark","Pete Campbell","Pete Campbell","Pete Campbell","Random guy","Roger Sterling","Roger Sterling","Roger Sterling","Roger Sterling","Roger Sterling","Sal Romano","Sal Romano"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,153,255,1)","opacity":1,"size":7.55905511811024,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,153,255,1)"}},"hoveron":"points","name":"male","legendgroup":"male","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":16,"r":0,"b":3.65296803652968,"l":3.65296803652968},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"type":"linear","autorange":false,"tickmode":"array","range":[-0.105,1.105],"ticktext":["0.00","0.25","0.50","0.75","1.00"],"tickvals":[0,0.25,0.5,0.75,1],"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":false,"tickfont":{"color":null,"family":null,"size":0},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":"","titlefont":{"color":null,"family":null,"size":0},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"type":"linear","autorange":false,"tickmode":"array","range":[-0.05,1.05],"ticktext":["0.00","0.25","0.50","0.75","1.00"],"tickvals":[0,0.25,0.5,0.75,1],"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":false,"tickfont":{"color":null,"family":null,"size":0},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":"","titlefont":{"color":null,"family":null,"size":0},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.927821522309711},"annotations":[{"text":"Gender","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest"},"source":"A","attrs":{"7a8349d2a5ac":{"colour":{},"from_id":{},"to_id":{},"type":"ggplotly"}},"cur_data":"7a8349d2a5ac","visdat":{"7a8349d2a5ac":["function (y) ","x"]},"config":{"modeBarButtonsToAdd":[{"name":"Collaborate","icon":{"width":1000,"ascent":500,"descent":-50,"path":"M487 375c7-10 9-23 5-36l-79-259c-3-12-11-23-22-31-11-8-22-12-35-12l-263 0c-15 0-29 5-43 15-13 10-23 23-28 37-5 13-5 25-1 37 0 0 0 3 1 7 1 5 1 8 1 11 0 2 0 4-1 6 0 3-1 5-1 6 1 2 2 4 3 6 1 2 2 4 4 6 2 3 4 5 5 7 5 7 9 16 13 26 4 10 7 19 9 26 0 2 0 5 0 9-1 4-1 6 0 8 0 2 2 5 4 8 3 3 5 5 5 7 4 6 8 15 12 26 4 11 7 19 7 26 1 1 0 4 0 9-1 4-1 7 0 8 1 2 3 5 6 8 4 4 6 6 6 7 4 5 8 13 13 24 4 11 7 20 7 28 1 1 0 4 0 7-1 3-1 6-1 7 0 2 1 4 3 6 1 1 3 4 5 6 2 3 3 5 5 6 1 2 3 5 4 9 2 3 3 7 5 10 1 3 2 6 4 10 2 4 4 7 6 9 2 3 4 5 7 7 3 2 7 3 11 3 3 0 8 0 13-1l0-1c7 2 12 2 14 2l218 0c14 0 25-5 32-16 8-10 10-23 6-37l-79-259c-7-22-13-37-20-43-7-7-19-10-37-10l-248 0c-5 0-9-2-11-5-2-3-2-7 0-12 4-13 18-20 41-20l264 0c5 0 10 2 16 5 5 3 8 6 10 11l85 282c2 5 2 10 2 17 7-3 13-7 17-13z m-304 0c-1-3-1-5 0-7 1-1 3-2 6-2l174 0c2 0 4 1 7 2 2 2 4 4 5 7l6 18c0 3 0 5-1 7-1 1-3 2-6 2l-173 0c-3 0-5-1-8-2-2-2-4-4-4-7z m-24-73c-1-3-1-5 0-7 2-2 3-2 6-2l174 0c2 0 5 0 7 2 3 2 4 4 5 7l6 18c1 2 0 5-1 6-1 2-3 3-5 3l-174 0c-3 0-5-1-7-3-3-1-4-4-5-6z"},"click":"function(gd) { \n        // is this being viewed in RStudio?\n        if (location.search == '?viewer_pane=1') {\n          alert('To learn about plotly for collaboration, visit:\\n https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html');\n        } else {\n          window.open('https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html', '_blank');\n        }\n      }"}],"cloud":false},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1}},"base_url":"https://plot.ly"},"evals":["config.modeBarButtonsToAdd.0.click"],"jsHooks":[]}</script>
+<p>Which actor was most connected?</p>
+<pre class="r"><code>madmen$edges %&gt;% 
+  gather(X, Name, Name1, Name2) %&gt;% 
+  count(Name, sort=TRUE)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Don Draper","2":"14"},{"1":"Roger Sterling","2":"6"},{"1":"Peggy Olson","2":"5"},{"1":"Pete Campbell","2":"4"},{"1":"Betty Draper","2":"3"},{"1":"Joan Holloway","2":"3"},{"1":"Lane Pryce","2":"3"},{"1":"Harry Crane","2":"2"},{"1":"Sal Romano","2":"2"},{"1":"Abe Drexler","2":"1"},{"1":"Allison","2":"1"},{"1":"Bellhop in Baltimore","2":"1"},{"1":"Bethany Van Nuys","2":"1"},{"1":"Bobbie Barrett","2":"1"},{"1":"Brooklyn College Student","2":"1"},{"1":"Candace","2":"1"},{"1":"Doris","2":"1"},{"1":"Duck Phillips","2":"1"},{"1":"Faye Miller","2":"1"},{"1":"Franklin","2":"1"},{"1":"Greg Harris","2":"1"},{"1":"Gudrun","2":"1"},{"1":"Henry Francis","2":"1"},{"1":"Hildy","2":"1"},{"1":"Ida Blankenship","2":"1"},{"1":"Jane Siegel","2":"1"},{"1":"Janine","2":"1"},{"1":"Jennifer Crane","2":"1"},{"1":"Joy","2":"1"},{"1":"Kitty Romano","2":"1"},{"1":"Mark","2":"1"},{"1":"Megan Calvet","2":"1"},{"1":"Midge Daniels","2":"1"},{"1":"Mirabelle Ames","2":"1"},{"1":"Mona Sterling","2":"1"},{"1":"Playtex bra model","2":"1"},{"1":"Rachel Menken","2":"1"},{"1":"Random guy","2":"1"},{"1":"Rebecca Pryce","2":"1"},{"1":"Shelly","2":"1"},{"1":"Suzanne Farrell","2":"1"},{"1":"Toni","2":"1"},{"1":"Trudy Campbell","2":"1"},{"1":"Vicky","2":"1"},{"1":"Woman at the Clios party","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>What do we learn?</p>
+<ul>
+<li>Don Draper had a lot of affairs, all with loyal partners except for his wife Betty, who had two affairs herself</li>
+<li>Peggy Olson was the female character with the most affairs, but her husband Pete Campbell had almost as many affairs</li>
+</ul>
+</div>
+</div>
+<div id="section-american-college-football" class="section level2">
+<h2>American college football</h2>
+<pre class="r"><code>glimpse(football)
+## List of 2
+##  $ edges   :&#39;data.frame&#39;:    613 obs. of  3 variables:
+##   ..$ from     : chr [1:613] &quot;BrighamYoung&quot; &quot;Iowa&quot; &quot;BrighamYoung&quot; &quot;NewMexico&quot; ...
+##   ..$ to       : chr [1:613] &quot;FloridaState&quot; &quot;KansasState&quot; &quot;NewMexico&quot; &quot;TexasTech&quot; ...
+##   ..$ same.conf: num [1:613] 0 0 1 0 1 1 0 1 0 1 ...
+##  $ vertices:&#39;data.frame&#39;:    115 obs. of  2 variables:
+##   ..$ label: chr [1:115] &quot;BrighamYoung&quot; &quot;FloridaState&quot; &quot;Iowa&quot; &quot;KansasState&quot; ...
+##   ..$ value: chr [1:115] &quot;Mountain West&quot; &quot;Atlantic Coast&quot; &quot;Big Ten&quot; &quot;Big Twelve&quot; ...</code></pre>
+<pre class="r"><code># data step: merge vertices and edges
+ftnet &lt;- merge(
+  football$edges, football$vertices,
+  by.x = &quot;from&quot;, by.y = &quot;label&quot;, all = TRUE
+)
+
+# label independent schools
+ftnet$schools &lt;- ifelse(ftnet$value == &quot;Independents&quot;, ftnet$from, &quot;&quot;)
+ggplot(data = ftnet,
+       aes(from_id = from, to_id = to)) +
+  geom_net(
+    aes(
+      colour = value, group = value,
+      linetype = factor(1-same.conf),
+      label = schools
+    ),
+    linewidth = 0.5,
+    size = 5, vjust = -0.75, alpha = 0.3,
+    layout.alg = &#39;fruchtermanreingold&#39;
+  ) +
+  theme_net() +
+  theme(legend.position = &quot;bottom&quot;) +
+  scale_colour_brewer(&quot;Conference&quot;, palette = &quot;Paired&quot;)</code></pre>
+<p><img src="lecture10b_text_files/figure-html/unnamed-chunk-7-1.png" width="1056" style="display: block; margin: auto;" /></p>
+</div>
+<div id="section-harry-potter-characters" class="section level2">
+<h2>Harry Potter characters</h2>
+<p>There is a connection between two students if one provides emotional support to the other at some point in the book. Code to pull the data together is provided by Sam Tyner <a href="https://github.com/sctyner/geomnet/blob/master/README.Rmd#harry-potter-peer-support-network">here</a>.</p>
+<pre class="r"><code>load(&quot;data/hpchars.rda&quot;)
+load(&quot;data/hpedges.rda&quot;)
+head(hp.chars)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["schoolyear"],"name":[2],"type":["int"],"align":["right"]},{"label":["gender"],"name":[3],"type":["fctr"],"align":["left"]},{"label":["house"],"name":[4],"type":["fctr"],"align":["left"]}],"data":[{"1":"Adrian Pucey","2":"1989","3":"M","4":"Slytherin","_rn_":"1"},{"1":"Alicia Spinnet","2":"1989","3":"F","4":"Gryffindor","_rn_":"2"},{"1":"Angelina Johnson","2":"1989","3":"F","4":"Gryffindor","_rn_":"3"},{"1":"Anthony Goldstein","2":"1991","3":"M","4":"Ravenclaw","_rn_":"4"},{"1":"Blaise Zabini","2":"1991","3":"M","4":"Slytherin","_rn_":"5"},{"1":"C. Warrington","2":"1989","3":"M","4":"Slytherin","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>head(hp.edges)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["name1"],"name":[1],"type":["chr"],"align":["left"]},{"label":["name2"],"name":[2],"type":["chr"],"align":["left"]},{"label":["book"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Dean Thomas","2":"Harry James Potter","3":"1","_rn_":"1"},{"1":"Dean Thomas","2":"Hermione Granger","3":"1","_rn_":"2"},{"1":"Dean Thomas","2":"Neville Longbottom","3":"1","_rn_":"3"},{"1":"Dean Thomas","2":"Ronald Weasley","3":"1","_rn_":"4"},{"1":"Dean Thomas","2":"Seamus Finnigan","3":"1","_rn_":"5"},{"1":"Fred Weasley","2":"George Weasley","3":"1","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>hp.all &lt;- fortify(as.edgedf(hp.edges), hp.chars, group = &quot;book&quot;)
+ggplot(data=hp.all, aes(from_id = from, to_id = to_id)) + 
+  geom_net(fiteach=T, directed = T, size = 3, linewidth = .5, 
+           ealpha = .5, labelon = T, fontsize = 3, repel = T, 
+           labelcolour = &quot;black&quot;, arrowsize = .5, singletons = FALSE,
+           aes(colour = house, group = house, shape = gender)) + 
+  scale_colour_manual(values = c(&quot;#941B08&quot;,&quot;#F1F31C&quot;, 
+                                 &quot;#071A80&quot;, &quot;#154C07&quot;)) + 
+  facet_wrap(~book, labeller = &quot;label_both&quot;, ncol=3) + 
+  theme_net() + theme(panel.background = element_rect(colour = &#39;black&#39;), legend.position=&quot;bottom&quot;)</code></pre>
+<p><img src="lecture10b_text_files/figure-html/unnamed-chunk-9-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="section-share-and-share-alike" class="section level2">
+<h2>Share and share alike</h2>
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. 
+<script type="application/shiny-prerendered" data-context="server-start">
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 6,
+                      fig.width = 6,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+library(tidyverse)
+library(plotly)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::register_http_handlers(session, metadata = NULL)
+</script>
+ <!--html_preserve-->
+<script type="application/shiny-prerendered" data-context="dependencies">
+{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap-3.3.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cerulean.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["pagedtable"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pagedtable-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/pagedtable.js"]},{"type":"character","attributes":{},"value":["css/pagedtable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["textmate.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-format"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmarkdown/templates/tutorial/resources"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-format.js"]},{"type":"character","attributes":{},"value":["tutorial-format.css","rstudio-theme.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["4.5.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/font-awesome-4.5.0"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["css/font-awesome.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["4.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["localforage"]},{"type":"character","attributes":{},"value":["1.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/localforage"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["localforage.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets"]},{"type":"character","attributes":{},"value":["1.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["htmlwidgets.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["htmlwidgets"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["plotly-binding"]},{"type":"character","attributes":{},"value":["4.7.1.9000"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["plotly.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["plotly"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["typedarray"]},{"type":"character","attributes":{},"value":["0.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets/lib/typedarray"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["typedarray.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["plotly"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/jquery"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["crosstalk"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["crosstalk"]},{"type":"character","attributes":{},"value":["1.0.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/crosstalk.min.js"]},{"type":"character","attributes":{},"value":["css/crosstalk.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["crosstalk"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["plotlyjs"]},{"type":"character","attributes":{},"value":["1.33.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets/lib/plotlyjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["plotly-latest.min.js"]},{"type":"character","attributes":{},"value":["plotly-htmlwidgets.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["plotly"]},{"type":"logical","attributes":{},"value":[true]}]}]}
+</script>
+<!--/html_preserve-->
+</div>
+</div>
+
+</div> <!-- topics -->
+
+<div class="topicsContainer">
+<div class="topicsPositioner">
+<div class="band">
+<div class="bandContent topicsListContainer">
+
+<!-- begin doc-metadata -->
+<div id="doc-metadata">
+<h2 class="title toc-ignore" style="display:none;">ETC1010: Data Modelling and Computing</h2>
+</div>
+<!-- end doc-metadata -->
+
+</div> <!-- bandContent.topicsListContainer -->
+</div> <!-- band -->
+</div> <!-- topicsPositioner -->
+</div> <!-- topicsContainer -->
+
+
+</div> <!-- bandContent page -->
+</div> <!-- pageContent band -->
+
+
+
+
+<script>
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+
+</html>
