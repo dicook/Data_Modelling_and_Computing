@@ -38,7 +38,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - Week 7: Intermediate models; [Slide set a](https://ebsmonash.shinyapps.io/lecture7a_models/) [(Rmd)](lectures/lecture7a/lecture7a_models.Rmd); [Slide set b](https://ebsmonash.shinyapps.io/lecture7b_models/) [(Rmd)](lectures/lecture7b/lecture7b_models.Rmd); Texbook reading: Chapter 23, sections 3 and 4
 - Week 8: Advanced modeling; [Slide set a](https://ebsmonash.shinyapps.io/lecture8a_models/) [(Rmd)](lectures/lecture8a/lecture8a_models.Rmd) [CODE FOR LAB EXERCISE](lectures/lecture8a/lab_exercise_week8a.R)
 - Week 9: Advanced data handling; [Slide set a](https://ebsmonash.shinyapps.io/lecture9a_adv_data/) [(Rmd)](lectures/lecture9a/lecture9a_adv_data.Rmd); [Slide set b](https://ebsmonash.shinyapps.io/lecture9b_adv_data/) [(Rmd)](lectures/lecture9b/lecture9b_adv_data.Rmd); [Scraping economic data](https://uninformedpriors.org/posts/using-purrr-to-wrangle-and-clean-economic-data/); [Scraping and Analyzing Spotify Streaming Data, using R](https://ramirobentes.netlify.com/post/scraping-and-analyzing-spotify-streaming-data-using-r/)
-- Week 10: Model diagnostics
+- Week 10: Working with text data, and networks; [Slide set a](https://ebsmonash.shinyapps.io/lecture10a_text/) [(Rmd)](lectures/lecture10a/lecture10a_text.Rmd);
 - Week 11: Summaries and decision making
 - Week 12: Project presentations
 
