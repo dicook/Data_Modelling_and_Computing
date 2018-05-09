@@ -101,7 +101,7 @@ What do we learn?
 - Don Draper had a lot of affairs, all with loyal partners except for his wife Betty, who had two affairs herself
 - Peggy Olson was the female character with the most affairs, but her husband Pete Campbell had almost as many affairs 
 
-## American college football
+## Example: American college football
 
 Fall 2000 Season of [Division I college football](https://en.wikipedia.org/wiki/NCAA_Division_I). Nodes are the teams, edges are the matches. Teams are broken into "conferences" which are the primary competition, but they can play outside this group.
 
@@ -143,7 +143,7 @@ What do we learn?
 - The Independents are independent
 - Some teams play far afield from their conference.
 
-## Harry Potter characters
+## Example: Harry Potter characters
 
 There is a connection between two students if one provides emotional support to the other at some point in the book. Code to pull the data together is provided by Sam Tyner [here](https://github.com/sctyner/geomnet/blob/master/README.Rmd#harry-potter-peer-support-network).
 
