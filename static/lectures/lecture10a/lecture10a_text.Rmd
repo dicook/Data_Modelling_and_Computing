@@ -133,7 +133,8 @@ library(broom)
 mod <- lm(n_ed6~n_ed1, data=darwin)
 tidy(mod)
 fit <- augment(mod, darwin)
-ggplot(fit, aes(x=n_ed1, y=.resid)) + geom_point(alpha=0.5)
+ggplot(fit, aes(x=n_ed1, y=.resid, label=word)) + geom_point(alpha=0.5)
+ggplotly()
 fit %>% arrange(desc(.resid)) %>% top_n(10)
 ```
 
