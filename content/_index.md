@@ -40,7 +40,33 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - Week 9: Advanced data handling; [Slide set a](https://ebsmonash.shinyapps.io/lecture9a_adv_data/) [(Rmd)](lectures/lecture9a/lecture9a_adv_data.Rmd); [Slide set b](https://ebsmonash.shinyapps.io/lecture9b_adv_data/) [(Rmd)](lectures/lecture9b/lecture9b_adv_data.Rmd); [Scraping economic data](https://uninformedpriors.org/posts/using-purrr-to-wrangle-and-clean-economic-data/); [Scraping and Analyzing Spotify Streaming Data, using R](https://ramirobentes.netlify.com/post/scraping-and-analyzing-spotify-streaming-data-using-r/)
 - Week 10: Working with text data, and networks; [Slide set a](https://ebsmonash.shinyapps.io/lecture10a_text/) [(Rmd)](lectures/lecture10a/lecture10a_text.Rmd); [Slide set b](https://ebsmonash.shinyapps.io/lecture10b_networks/) [(Rmd)](lectures/lecture10b/lecture10b_networks.Rmd);
 - Week 11: Tues will be project work, and help from tutors/instructor; Wed will be Assignment 5 all done during class.
-- Week 12: Project presentations
+- Week 12: Project presentations, schedule below
+
+<PRE>
+   `Proj Team`           Day    Time
+ 1 CJ                    T         6
+ 2 The Pirates           T        10
+ 3 Data Lads             T         8
+ 4 Emusha                T         8
+ 5 Glen Waverley Dragons T         8
+ 6 OTN                   T        10
+ 7 GuangZongYaoZu        T        10
+ 8 Little Salt Egg       T        10
+ 9 5T                    T         8
+10 KatTim                T         6
+11 NMS2                  T        10
+12 YES                   W         8
+13 BBC                   W         8
+14 DQ                    W         4
+15 Group 2               W         6
+16 As a TEAM             W        10
+17 AF                    W         4
+18 THE MARKDOWN MATES    W        10
+19 Black 4               W        10
+20 Raymond & Co.         W        10
+21 Group One             W         8
+22 ETC1010               W         8
+</PRE>
 
 ## Assignments
 
