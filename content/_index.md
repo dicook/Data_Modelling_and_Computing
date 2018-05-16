@@ -75,7 +75,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - [Guide for making plots](assignments/assign2_blog.html) [(Rmd)](assignments/assign2_blog.Rmd), based on assignment 2 submissions. WORTH READING!
 - Assignment 3: [Instructions](assignments/assignment3.html) [(Rmd)](assignments/assignment3.Rmd), [SOLUTION](assignments/assignment3_solution.html) [(Rmd)](assignments/assignment3_solution.Rmd), [Data](assignments/data/Melbourne_housing_FULL.csv) **DUE: Tues Apr 24 in class**
 - Assignment 4: [Instructions](assignments/assignment4.html) [(Rmd)](assignments/assignment4.Rmd), [stns_oz.rda](assignments/data/stns_oz.rda), [oz_yr_prcp_50yrs.rda](assignments/data/oz_yr_prcp_50yrs.rda) **DUE: Wed May 2 in class**
-- Assignment 5:  [Instructions](assignments/assignment5.html)[(Rmd)](assignments/assignment5.Rmd)
+- Assignment 5:  [Instructions](assignments/assignment5.html)[(Rmd)](assignments/assignment5.Rmd) **DUE: Wed May 16 in class**
 
 <!--
 - [Peer evaluation assignments](assignments/assignment3_marking.csv) This is the team's assignment that you should evaluate, on reproducing and explanations. Enter your feedback in the "Assignment 2 peer evaluation" on ED. 
