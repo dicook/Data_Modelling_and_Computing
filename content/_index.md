@@ -55,14 +55,14 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
  9 5T                    T         8
 10 KatTim                T         6
 11 NMS2                  T        10
-12 YES                   W         8
-13 BBC                   W         8
-14 DQ                    W         4
-15 Group 2               W        10
-16 As a TEAM             W        10
-17 AF                    W         4
-18 THE MARKDOWN MATES    W        10
-19 Black 4               W        10
+12 BBC                   W         8
+13 DQ                    W         4
+14 Group 2               W        10
+15 As a TEAM             W        10
+16 AF                    W         4
+17 THE MARKDOWN MATES    W        10
+18 Black 4               W        10
+19 YES                   W         8
 20 Raymond & Co.         W        10
 21 Group One             W         8
 22 ETC1010               W         8
