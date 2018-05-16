@@ -58,7 +58,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 12 YES                   W         8
 13 BBC                   W         8
 14 DQ                    W         4
-15 Group 2               W         6
+15 Group 2               W        10
 16 As a TEAM             W        10
 17 AF                    W         4
 18 THE MARKDOWN MATES    W        10
