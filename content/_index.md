@@ -44,27 +44,27 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
      - Tuesday
          -  1 CJ, 6,  [An Analysis of the NBA](project/presentations/1.CJ/CJ Sildes.pptx)
          - 2 The Pirates,  10, [Happiness, socio-economic condition and politics](project/presentations/2.The_Pirates/Project_presentation2.html)
- 3 Data Lads             T         8   2018 AFL Statistics
- 4 Emusha                T         8   Foodborne Disease Outbreaks in the United States
- 5 Glen Waverley Dragons T         8   NBA Statistics 2017/18 Season
- 6 OTN                   T        10    The College Students’ Relationship with Food
- 7 GuangZongYaoZu        T        10   In-depth analysis of infant mortality
- 8 Little Salt Egg       T        10   Montgomery Salaries
- 9 5T                    T         8   london Smart Meter Data
-10 KatTim                T         6   An International Analysis of Economic Health
-11 NMS2                  T        10  Agricultural commodities and trade
-12 BBC                   W         8
-13 DQ                    W         4
-14 Group 2               W        10
-15 As a TEAM             W        10
-16 AF                    W         4
-17 THE MARKDOWN MATES    W        10
-18 Black 4               W        10
-19 YES                   W         8
-20 Raymond & Co.         W        10
-21 Group One             W         8
-22 ETC1010               W         8
-</PRE>
+         - 3 Data Lads, 8, [2018 AFL Statistics](project/presentations/3.DataLads/Project_presentation.html)
+         - 4 Emusha, 8, [Foodborne Disease Outbreaks in the United States](project/presentations/4.Emusha/Emusha_Pres.html)
+         - 5 Glen Waverley Dragons, 8, [NBA Statistics 2017/18 Season](project/presentations/5.GlenWaverleyDragons/Project_Presentation.html)
+         - 6 OTN, 10,  [The College Students’ Relationship with Food](project/presentations/6.OTN/OTN_Presentation.html)
+         - 7 GuangZongYaoZu, 10, [In-depth analysis of infant mortality](project/presentations/7.GuangZongYaoZu/GuangZongYaoZu_Presentation.html)
+         - 8 Little Salt Egg, 10,  [Montgomery Salaries](project/presentations/8.LSE/LSE-slide_7.html)
+         - 9 5T,  8,   [London Smart Meter Data](project/presentations/9.5T/presenation_slides-1.html)
+         - 10 KatTim,  6,   [An International Analysis of Economic Health](project/presentations/10.KatTim/KTProject_presentation.html)
+         - 11 NMS2, 10,  [Agricultural commodities and trade](project/presentations/11.NMS2/ETC1010-Project-Presentation.html)
+    - Wednesday
+         - 12 BBC                   W         8
+         - 13 DQ                    W         4
+         - 14 Group 2               W        10
+         - 15 As a TEAM             W        10
+         - 16 AF                    W         4
+         - 17 THE MARKDOWN MATES    W        10
+         - 18 Black 4               W        10
+         - 19 YES                   W         8
+         - 20 Raymond & Co.         W        10
+         - 21 Group One             W         8
+         - 22 ETC1010               W         8
 
 ## Assignments
 

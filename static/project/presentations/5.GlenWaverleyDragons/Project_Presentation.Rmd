@@ -1,0 +1,306 @@
+---
+title: "ETC1010Assignment- NBA Statistics 2017/18 Season"
+author: Glen Waverley Dragons Data Analysts
+date: "Week 12"
+output:
+  xaringan::moon_reader:
+    css: ["default", "rladies", "hygge"]
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  collapse = TRUE,
+  echo=FALSE,
+  comment = "",
+  fig.height = 4,
+  fig.width = 8,
+  fig.align = "center",
+  cache = FALSE
+)
+library(tidyverse)
+
+```
+
+# Overview
+
+- Question we sought to answer
+- Descriptive Statistics
+- Questions
+- Conclusions
+- References
+
+---
+
+# Data description
+
+- https://www.kaggle.com/dzchen/nba-advanced-statistics-20172018/data 
+- Data was discovered on Kaggle, by David Chen and was uploaded in April of this year.
+- Data set
+  - Number of samples: 531
+  - Period: 2017-2018 
+  - Number of variables: 57
+- What we variables we observed?
+- Our thinking.
+
+---
+
+#  Questions will be answering
+
+- What aspects of a player impacts the number of games they play?
+- What aspects of a player impacts the number of minutes they per game?
+- The Perfect Triple Double Threat
+- What aspects of a player impacts their win percentage?
+
+---
+
+#   Descriptive Statistics 
+
+```{r}
+library(knitr)
+opts_chunk$set(fig.align = 'center',echo=FALSE)
+library(tidyverse)
+library(plotly)
+library(broom)
+data <- read_csv("NBAadvancedstats17_18.csv")
+```
+
+```{r}
+data1 <- data %>%
+  select(PLAYER_NAME, TEAM_ABBREVIATION, AGE, GP, W, W_PCT, MIN, NET_RATING, OFF_RATING_RANK, DEF_RATING_RANK)
+```
+
+## 1. Age
+
+```{r}
+ggplot(data = data1, aes(x = "", y = AGE, fill = "red")) +
+  geom_boxplot() + 
+  theme(legend.position = "none") + 
+  labs(x = "Players 2017/18", y = "Age (Years)")
+```
+
+---
+
+#   Descriptive Statistics 
+
+## 2. Minutes Played
+
+```{r}
+atl <- data1 %>% filter(TEAM_ABBREVIATION == "ATL")
+a <- atl[which.max(atl$MIN),]
+bkn <- data1 %>% filter(TEAM_ABBREVIATION == "BKN")
+b <- bkn[which.max(bkn$MIN),]
+bos <- data1 %>% filter(TEAM_ABBREVIATION == "BOS")
+c <- bos[which.max(bos$MIN),]
+cha <- data1 %>% filter(TEAM_ABBREVIATION == "CHA")
+d <- cha[which.max(cha$MIN),]
+chi <- data1 %>% filter(TEAM_ABBREVIATION == "CHI")
+e <- chi[which.max(chi$MIN),]
+cle <- data1 %>% filter(TEAM_ABBREVIATION == "CLE")
+f <- cle[which.max(cle$MIN),]
+dal <- data1 %>% filter(TEAM_ABBREVIATION == "DAL")
+g <- dal[which.max(dal$MIN),]
+den <- data1 %>% filter(TEAM_ABBREVIATION == "DEN")
+h <- den[which.max(den$MIN),]
+det <- data1 %>% filter(TEAM_ABBREVIATION == "DET")
+i <- det[which.max(det$MIN),]
+gsw <- data1 %>% filter(TEAM_ABBREVIATION == "GSW")
+j <- gsw[which.max(gsw$MIN),]
+hou <- data1 %>% filter(TEAM_ABBREVIATION == "HOU")
+k <- hou[which.max(hou$MIN),]
+ind <- data1 %>% filter(TEAM_ABBREVIATION == "IND")
+l <- ind[which.max(ind$MIN),]
+lac <- data1 %>% filter(TEAM_ABBREVIATION == "LAC")
+m <- lac[which.max(lac$MIN),]
+lal <- data1 %>% filter(TEAM_ABBREVIATION == "LAL")
+n <- lal[which.max(lal$MIN),]
+mem <- data1 %>% filter(TEAM_ABBREVIATION == "MEM")
+o <- mem[which.max(mem$MIN),]
+mia <- data1 %>% filter(TEAM_ABBREVIATION == "MIA")
+p <- mia[which.max(mia$MIN),]
+mil <- data1 %>% filter(TEAM_ABBREVIATION == "MIL")
+q <- mil[which.max(mil$MIN),]
+min <- data1 %>% filter(TEAM_ABBREVIATION == "MIN")
+r <- min[which.max(min$MIN),]
+nop <- data1 %>% filter(TEAM_ABBREVIATION == "NOP")
+s <- nop[which.max(nop$MIN),]
+nyk <- data1 %>% filter(TEAM_ABBREVIATION == "NYK")
+t <- nyk[which.max(nyk$MIN),]
+okc <- data1 %>% filter(TEAM_ABBREVIATION == "OKC")
+u <- okc[which.max(okc$MIN),]
+orl <- data1 %>% filter(TEAM_ABBREVIATION == "ORL")
+v <- orl[which.max(orl$MIN),]
+phi <- data1 %>% filter(TEAM_ABBREVIATION == "PHI")
+w <- phi[which.max(phi$MIN),]
+phx <- data1 %>% filter(TEAM_ABBREVIATION == "PHX")
+x <- phx[which.max(phx$MIN),]
+por <- data1 %>% filter(TEAM_ABBREVIATION == "POR")
+y <- por[which.max(por$MIN),]
+sac <- data1 %>% filter(TEAM_ABBREVIATION == "SAC")
+z <- sac[which.max(sac$MIN),]
+sas <- data1 %>% filter(TEAM_ABBREVIATION == "SAS")
+aa <- sas[which.max(sas$MIN),]
+tor <- data1 %>% filter(TEAM_ABBREVIATION == "TOR")
+bb <- tor[which.max(tor$MIN),]
+uta <- data1 %>% filter(TEAM_ABBREVIATION == "UTA")
+cc <- uta[which.max(uta$MIN),]
+was <- data1 %>% filter(TEAM_ABBREVIATION == "WAS")
+dd <- was[which.max(was$MIN),]
+
+histo <- rbind(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,aa,bb,cc,dd)
+histo$special <- paste(histo$PLAYER_NAME, histo$TEAM_ABBREVIATION, sep=", ")
+
+ggplot(data=histo, aes(x = reorder(special, MIN), y=MIN)) +
+  geom_bar(stat = "identity", width = 0.4) +
+  coord_flip() +
+  labs(x = "Minutes Player", y = "Player and Team")
+```
+
+---
+
+# What aspects of a player impacts the number of games they play?
+
+```{r}
+data2 <- data %>%
+  select(GP, AGE, FGM_PG, USG_PCT) %>%
+  filter(GP >= 20) %>%
+  mutate(gpsquared = (GP)^2)
+```
+
+```{r}
+special1 <- lm(gpsquared ~ FGM_PG + USG_PCT,  data = data2)
+#  tidy(special1)
+#  glance(special1)  
+special1_model <- augment(special1, data2)
+ggplot(special1_model, aes(x = FGM_PG, y = gpsquared)) + 
+  geom_point() +
+  geom_line(aes(y = .fitted), colour = "red") + 
+  labs(x = "Field Goals Made Per Game", y = "Games Played (Squared)") 
+
+# the predicted v residual plot when we did so displayed no relationship - meaning there error term within the equation that would be made is not actaully another independent term, as there is random dispersion.  
+```
+- How did we get to this graph
+- What does the graph display
+- What did we observe in the pred. v resid. plot
+
+---
+
+# What aspects of a player impacts the minutes they play?
+
+- Correlation Test (R)
+  - Transformation of Minutes variable
+- The model
+  - Coefficients and R^2 Value
+
+```{r}
+ datamin <- data %>%
+  mutate(minsquared = (MIN^2))
+#cor.test(datamin$FGM_PG, datamin$minsquared, method = "pearson")
+```
+
+```{r}
+yoy <- lm(minsquared ~ FGM_PG,  data = datamin)
+#  tidy(yoy)
+#  glance(yoy)  
+yoymodel <- augment(yoy, datamin)
+
+ggplot(yoymodel, aes(x = FGM_PG, y = minsquared)) + 
+  geom_point() +
+  geom_line(aes(y = .fitted), colour = "red") + 
+  labs(x = "Field Goals Made Per Game", y = "Minutes Played (Squared)") 
+```
+
+---
+
+# The Perfect Triple Double Threat
+
+```{r}
+tripdub <- data %>%
+  select(PLAYER_NAME, GP, EFG_PCT, USG_PCT, AST_TO, REB_PCT, DEF_RATING ) %>%
+  filter(GP >= 20)
+
+offense <- mutate(tripdub, bestoffense = tripdub$EFG_PCT*tripdub$USG_PCT)
+
+bestplayer <- mutate(offense, best = tripdub$EFG_PCT*tripdub$USG_PCT*AST_TO*REB_PCT*DEF_RATING)
+
+tripdub <- data %>%
+  select(PLAYER_NAME, AGE, MIN, GP, EFG_PCT, USG_PCT, AST_TO, REB_PCT, DEF_RATING ) %>%
+  filter(GP >= 20)
+
+offence <- mutate(tripdub, bestoffense = tripdub$EFG_PCT*tripdub$USG_PCT)
+
+bestplayer <- mutate(offense, best = tripdub$EFG_PCT*tripdub$USG_PCT*AST_TO*REB_PCT*DEF_RATING*offence$MIN)
+
+finalbestplayer <- bestplayer %>%
+select(PLAYER_NAME, best)
+finalbestplayer[order(finalbestplayer$best, decreasing=TRUE), ]
+```
+
+---
+
+# What aspects of a player impacts their win percentage?
+
+```{r}
+data4 <- data %>%
+  select(GP, OFF_RATING, DEF_RATING, W_PCT) %>%
+  filter(GP >= 20)
+```
+
+## 1. W_PCT and OFF_RATING
+
+```{r}
+q4_1 <- lm(W_PCT ~ OFF_RATING,  data = data4)
+#  tidy(q4_1)
+#  glance(q4_1)  
+q4_1_model <- augment(q4_1, data4)
+
+ggplot(q4_1_model, aes(x = OFF_RATING, y = W_PCT)) + 
+  geom_point() +
+  geom_line(aes(y = .fitted), colour = "red") + 
+  labs(x = "Offensive Rating", y = "Winning Percentage)") 
+```
+
+---
+
+# What aspects of a player impacts their win percentage?
+
+## 2. W_PCT and OFF_RATING
+
+```{r}
+q4_2 <- lm(W_PCT ~ DEF_RATING,  data = data4)
+#  tidy(q4_2)
+#  glance(q4_2)  
+q4_2_model <- augment(q4_2, data4)
+
+ggplot(q4_2_model, aes(x = DEF_RATING, y = W_PCT)) + 
+  geom_point() +
+  geom_line(aes(y = .fitted), colour = "red") + 
+  labs(x = "Defensive Rating", y = "Winning Percentage)")
+```
+
+---
+
+# Conclusions
+
+- The key trends and statistics of the 2017-18 Home and Away NBA Season
+- Biggest Triple Double Threat impact
+- Factors impacting the number of Games Played
+- Predicting the Win Percentage on Player Ratings
+
+---
+
+# References
+
+- https://www.kaggle.com/dzchen/nba-advanced-statistics-20172018/data 
+- Hadley, W. and Garrett, G. (2016). R for Data Science
+- ETC1010 Weeks 1-9 Slides
+- Packages applied: tidyverse, plotly, broom, knitr
+
+---

@@ -1,0 +1,366 @@
+---
+title: "ETC1010Assignment Montgomery Salaries"
+author: LSE (Little Salt Egg)
+date: "May 22, 2018"
+output:
+  xaringan::moon_reader:
+    css: ["default","myremark.css"]
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  collapse = TRUE,
+  echo=FALSE,
+  comment = "",
+  fig.height = 4,
+  fig.width = 8,
+  fig.align = "center",
+  cache = FALSE
+)
+library(tidyverse)
+```
+# Overview
+
+- Introduction
+- Process of exploring data
+- Four questions
+- Conclusions: Interesting discovery
+---
+# Introduction
+
+- Gender discrimination can be investigated by understanding the difference between male and female salaries. 
+- Are there is less discrimination in developed areas?
+- The dataset of salaries for the country Montgomery, Maryland, USA is used to investigate our questions. 
+- Montgomery is known as one of the wealthiest counties in the USA so this gives us an insight on the salaries of workers living in more developed areas.
+- It is assumed that as a developed area, less discrimination will occur
+- Salaries also vary among different departments. 
+- Understanding the salaries of different departments also give us further insights to the salary situation in Montgomery
+- This helps uncover jobs that are most demanded as it is assumed the higher the salary, the higher the demand to work in that department.
+---
+# Tidy data process
+
+```{r echo=FALSE}
+library(tidyverse)
+library(broom)
+library(lubridate)
+library(visdat)
+library(naniar)
+library(ggplot2)
+library(ggthemes)
+library(gridExtra)
+library(plotly)
+library(purrr)
+library(DT)
+```
+
+```{r echo=FALSE}
+salaries_raw <- read_csv("employee-salaries-montgomery-county-md-2014-to-2016-csv_csv.csv")
+```
+### Visualising Missing values
+```{r echo=FALSE}
+vis_miss(salaries_raw, sort_miss=TRUE)
+```
+
+```{r include=FALSE}
+s_miss <- miss_summary(salaries_raw)
+s_miss$miss_df_prop
+s_miss$miss_var_summary
+
+### Tidy the data
+salaries_tidy <- salaries_raw %>% select(-Year, -Division, -Position_Title, -Underfilled_Job_Title) %>%
+  
+# Clarify Assignment category with simple character
+  mutate(
+    Assignment_Category = case_when(
+      Assignment_Category == "Fulltime-Regular" ~ "Fulltime", Assignment_Category == "Parttime-Regular" ~ "Parttime"
+    ))
+
+# Separate the column "Date_first_hired" into 3 column "Year_first_hired", "month", "date", drop the month and date, only left the year first hired
+salaries_tidy <- salaries_tidy %>% separate(Date_First_Hired, into = c("Year_first_hired", "month", "date")) %>% select(-month, -date)
+
+# Handling missing values in gross pay received dollar
+salaries_na_grosspay <- salaries_tidy %>% filter(is.na(Gross_Pay_Received_Dollar)) %>%
+  mutate(Gross_Pay_Received_Dollar = Current_Annual_Salary_Dollar)
+salaries_tidy <- bind_rows(salaries_tidy %>% filter(!is.na(Gross_Pay_Received_Dollar)), salaries_na_grosspay)
+
+# Handling missing values in annual pay received dollar
+salaries_na_annual <- salaries_tidy %>% filter(is.na(Current_Annual_Salary_Dollar)) %>%
+  mutate(Current_Annual_Salary_Dollar = Gross_Pay_Received_Dollar)
+salaries_tidy <- bind_rows(salaries_tidy %>% filter(!is.na(Current_Annual_Salary_Dollar)), salaries_na_annual) %>%
+  filter(!is.na(Current_Annual_Salary_Dollar))
+
+# Drop the variables with Gender missed
+salaries_tidy <- salaries_tidy %>% filter(!is.na(Gender)) %>%
+  mutate(
+    Gender = case_when(
+      Gender == "F" ~ "Female", Gender == "M" ~ "Male", TRUE ~ Gender
+    ),
+    
+# Change the missing values in overtime pay dollar into "0", since the missings probably refers to no overtime salaries
+    Overtime_Pay_Dollar = if_else(Overtime_Pay_Dollar %in% c(NA), 0, Overtime_Pay_Dollar)
+    )
+
+# Checking the tidy data to see is there still have any missing value
+s_miss <- miss_summary(salaries_tidy)
+s_miss$miss_df_prop
+s_miss$miss_var_summary
+
+### since the data before 1980 is very small, and has some extreme values, we remove that from the dataset.
+salaries_tidy2 <- salaries_tidy %>% filter(!Year_first_hired < 1980) %>%
+  mutate(Year_first_hired = as.numeric(Year_first_hired)) %>%
+  mutate(No_Year_hired = 2017 - Year_first_hired)
+
+# create two datasets to see the salaries for different assignment category
+salaries_fulltime <- salaries_tidy2 %>% filter(Assignment_Category == "Fulltime")
+salaries_parttime <- salaries_tidy2 %>% filter(Assignment_Category == "Parttime")
+```
+
+The proportion of observations missing is 9.25%
+
+To tidy the data, we filtered out the missing values.
+---
+#Q1. How does gender influence full time salaries
+```{r}
+### Graph of fulltime salaries by gender
+p_full <- ggplot(salaries_fulltime, aes(x = No_Year_hired, y = Gross_Pay_Received_Dollar, group = No_Year_hired, fill = Gender)) +
+  geom_boxplot() +
+  facet_wrap(~Gender) +
+  scale_fill_brewer(palette="Dark2")
+ggplotly(p_full)
+```
+---
+
+- In general, the employees' salary levels of male and female increase as the number of years hired increases. 
+- Male employees seem to have more salary outliers than female employees regardless of the number of years hired.
+- When comparing the upper outliers for both genders, the male plot seems to have more higher outliers
+- After being hired for more than 30 years, female employees salaries increases at a much slower rate compared to 30 years ago, or maintain at a high level.
+- It is even possible to get a lower salary when working for longer years
+- On the other hand, male employees' salary levels reached the highest after working for 34 years, followed by a decrease in salary
+- Indicates that gender has an influence on people's salary. 
+- Male employees earn more salaries than female employees.
+---
+#Q2. Will different departments influence salary?
+```{r echo=FALSE}
+### Graph of average salaries by department
+salaries_by_department1 <- salaries_tidy2 %>% group_by(Department_Name) %>%
+  summarise(median = median(Gross_Pay_Received_Dollar))
+salaries_by_department2 <- salaries_tidy2 %>% group_by(Department) %>%
+  summarise(median = median(Gross_Pay_Received_Dollar))
+salaries_by_department <- left_join(salaries_by_department1, salaries_by_department2, by = c("median"))
+```
+
+```{r}
+p_median_salaries <- ggplot(salaries_by_department, aes(x = reorder(Department_Name, -median), y = median)) +
+  geom_point() +
+  xlab("Department") +
+  ylab("average salaries (median)") +
+  coord_flip()
+ggplotly(p_median_salaries)
+```
+---
+
+- We use median to measure the average compensation
+- Mean is very sensitive to outliers and medians are much less affected by outliers
+- Departments with the highest median salary is the Department of Technology Services with `$114380.74` followed by Office of Intergovernmental Relations Department with `$105437.68`, and Office of the Inspector General with `$100908.03`. 
+- This suggests that Montgomery may be a county with expertise in these areas. 
+- Departments with the lowest median salaries, the Merit System Protection Board Department has the lowest with `$23766.25`, followed by Department of Public Libraries with `$43684.70`, and Department of Liquor Control with `$45813.31`.
+
+```{r echo=FALSE}
+### convert charactor variables to factor variables
+salaries_tidy3 <- salaries_tidy2 %>%
+  mutate(Department = as.factor(Department),
+         Department_Name = as.factor(Department_Name),
+         Gender = as.factor(Gender),
+         Assignment_Category = as.factor(Assignment_Category))
+```
+---
+#Q3. What is the best model for full time salaries?
+
+- Operation of regression models can help understand what explanatory variables influences salaries
+- Understand how interacting variables may contribute to differing salaries
+
+---
+```{r include=FALSE}
+### select the variables who working as fulltime
+salaries_fulltime1 <- salaries_tidy3 %>% filter(Assignment_Category == "Fulltime")
+
+### tesing regression model of salaries by working year
+
+### without interaction
+salaries_fulltime_fit1 <- lm(Gross_Pay_Received_Dollar ~ No_Year_hired, data = salaries_fulltime1)
+tidy(salaries_fulltime_fit1) %>% datatable (options = list (pageLength = 5))
+glance(salaries_fulltime_fit1) %>%
+datatable (options = list (pageLength = 5))
+```
+
+Model 1 is shown by the model:
+$(\widehat{Gross Pay Received Dollar}) = 51691.927 + 2067.891No Year hired$
+$r^2=(0.324341)$   adjusted $r^2=(0.3243134)$
+```{r include=FALSE}
+### include interaction of gender
+salaries_fulltime_fit2 <- lm(Gross_Pay_Received_Dollar ~ No_Year_hired + Gender*No_Year_hired, data = salaries_fulltime1)
+tidy(salaries_fulltime_fit2) %>% datatable (options = list (pageLength = 5))
+glance(salaries_fulltime_fit2) %>%
+datatable (options = list (pageLength = 5))
+```
+
+Model 2 is shown by the model:
+$(\widehat{Gross Pay Received Dollar}) = 52926.4879 + 1602.6090No Year hired$
+$- 2628.4711GenderMale + 794.8971No Year hired*GenderMale$
+$r^2=(0.3524821)$   adjusted $r^2=(0.3524028)$
+```{r include=FALSE}
+### include interaction of department
+salaries_fulltime_fit3 <- lm(Gross_Pay_Received_Dollar ~ No_Year_hired + Department*No_Year_hired, data = salaries_fulltime1)
+tidy(salaries_fulltime_fit3) %>% datatable (options = list (pageLength = 5))
+glance(salaries_fulltime_fit3) %>%
+datatable (options = list (pageLength = 5))
+```
+
+Model 3 is shown by the equation below:
+$(\widehat{Gross Pay Received Dollar}) = 30662.4550 + 2827.7894No Year hired$
+$+ 38891.2769DepartmentBOE + 41475.4256DepartmentCAT + 35207.6053DepartmentCCL$
+$-2219.0289 No Year Hired*DepartmentBOE -1011.0479No Year hired*DepartmentCAT - 950.5913No Year Hired*DepartmentCCL..$
+$r^2=(0.4697724)$   adjusted $r^2=(0.4681872)$
+```{r include=FALSE}
+### include interaction of gender and department
+salaries_fulltime_fit4 <- lm(Gross_Pay_Received_Dollar ~ No_Year_hired + Gender*No_Year_hired + Department*No_Year_hired, data = salaries_fulltime1)
+tidy(salaries_fulltime_fit4) %>% datatable (options = list (pageLength = 5))
+glance(salaries_fulltime_fit4) %>%
+datatable (options = list (pageLength = 5))
+```
+
+
+Model 4 is shown by the equation below:
+$(\widehat{Gross Pay Received Dollar}) = 30662.4550 + 2827.7894No Year hired$
+$+ 3559.3636GenderMale + 343.3332No Year hired*GenderMale + 38948.1903DepartmentBOE$
+$+ 41439.0342DepartmentCAT + 32574.1856DepartmentCCL - 2387.5940No Year hired*DepartmentBOE$
+$- 1170.2447No Year hired*DepartmentCAT - 998.9119No Year hired*DepartmentCCL..$
+$r^2=(0.4830304)$   adjusted $r^2=(0.4814423)$
+
+---
+```{r include=FALSE}
+### build model
+salaries_fulltime_mod1 <- augment(salaries_fulltime_fit1, salaries_fulltime1)
+salaries_fulltime_mod2 <- augment(salaries_fulltime_fit2, salaries_fulltime1)
+salaries_fulltime_mod3 <- augment(salaries_fulltime_fit3, salaries_fulltime1)
+salaries_fulltime_mod4 <- augment(salaries_fulltime_fit4, salaries_fulltime1)
+```
+
+```{r echo=FALSE}
+### looking at fitted value
+p1_fulltime <- ggplot(salaries_fulltime_mod1, aes(x=.fitted, y=Gross_Pay_Received_Dollar, alpha = 0.3)) +
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  theme(aspect.ratio = 1) +
+  ggtitle("Model 1")
+
+p2_fulltime <- ggplot(salaries_fulltime_mod2, aes(x=.fitted, y=Gross_Pay_Received_Dollar, alpha = 0.3)) +
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  theme(aspect.ratio = 1) +
+  ggtitle("Model 2")
+
+p3_fulltime <- ggplot(salaries_fulltime_mod3, aes(x=.fitted, y=Gross_Pay_Received_Dollar, alpha = 0.3)) +
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  theme(aspect.ratio = 1) +
+  ggtitle("Model 3")
+
+p4_fulltime <- ggplot(salaries_fulltime_mod4, aes(x=.fitted, y=Gross_Pay_Received_Dollar, alpha = 0.3)) +
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  theme(aspect.ratio = 1) +
+  ggtitle("Model 4")
+
+grid.arrange(p1_fulltime, p2_fulltime, p3_fulltime, p4_fulltime, ncol = 2)
+```
+- Model 1 and Model 2 have a similar pattern and shape 
+- Model 3 and 4 have a similar pattern and shape. 
+- Since these plots look similar to each other, it is difficult to determine which is the better model just by looking at the plots
+- We will use another measure to discuss which model is the best later.
+---
+### looking at residuals
+```{r echo=FALSE}
+r1_fulltime <- ggplot(salaries_fulltime_mod1, aes(x=.fitted, y=.std.resid, alpha = 0.3)) +
+  geom_point() +
+  theme(aspect.ratio = 1) +
+  ggtitle("Model 1")
+
+r2_fulltime <- ggplot(salaries_fulltime_mod2, aes(x=.fitted, y=.std.resid, alpha = 0.3)) +
+  geom_point() + 
+  theme(aspect.ratio = 1) +
+  ggtitle("Model 2")
+
+r3_fulltime <- ggplot(salaries_fulltime_mod3, aes(x=.fitted, y=.std.resid, alpha = 0.3)) +
+  geom_point() + 
+  theme(aspect.ratio = 1) +
+  ggtitle("Model 3")
+
+r4_fulltime <- ggplot(salaries_fulltime_mod4, aes(x=.fitted, y=.std.resid, alpha = 0.3)) +
+  geom_point() + 
+  theme(aspect.ratio = 1) +
+  ggtitle("Model 4")
+
+grid.arrange(r1_fulltime, r2_fulltime, r3_fulltime, r4_fulltime, ncol = 2)
+```
+
+- According to the four plots previously, Model 4's residual plot seems to be the best among other models
+- More random relationship between the standard residuals and fitted values.
+- Model 4 may be the best model because distance between observed and predicted values are the lowest among all models. 
+- Model 4's $R^2$ (0.483) and adjusted $R^2$ (0.481) is also the highest among all the other models
+
+```{r include=FALSE}
+# Fit model to each department, make summary plots
+by_department_fulltime <- salaries_fulltime1 %>% 
+  group_by(Department_Name) %>% 
+  nest()
+by_department_fulltime <- by_department_fulltime %>% 
+  mutate(
+    model = purrr::map(data, ~ lm(Gross_Pay_Received_Dollar ~ No_Year_hired, 
+                                  data = .))
+  )
+department_coefs_fulltime <- by_department_fulltime %>% 
+  unnest(model %>% purrr::map(broom::tidy))
+department_coefs_fulltime <- department_coefs_fulltime %>% 
+  select(Department_Name, term, estimate) %>% 
+  spread(term, estimate) %>%
+  rename(intercept = `(Intercept)`, slope = No_Year_hired)
+department_coefs_fulltime 
+```
+---
+#Q4. Which department's salary increases the fastest as number of years worked increase?
+```{r echo=FALSE}
+# Extract goodness of fit statistics, and join with coefs
+department_fit_fulltime <- by_department_fulltime %>% 
+  unnest(model %>% 
+           purrr::map(broom::glance))
+department_fit_fulltime <- left_join(department_fit_fulltime, department_coefs_fulltime, by="Department_Name")
+p <- ggplot(department_fit_fulltime, aes(x = slope, y = intercept, label = Department_Name)) + geom_point()
+ggplotly(p)
+```
+---
+
+- Slope means the salary increases at different rates in different departments
+- Intercept is the basic salary in different departments. 
+- The graph shows us that Department of technology services has the highest basic salary, while the Office of Zoning and Administrative Hearings has the lowest basic salary.
+- Office of the Inspector General has the highest slope which means salary increases the fastest in this department.
+- Office of Emergency Management and Homeland Security has the lowest slope suggesting that salary increases the slowest in this department. 
+- This makes sense, because the department with a higher basic salary may not increase fast as they do not want to over pay their employees.
+- The department with a lower basic salary may increase salaries faster to encourage employees to be more loyal to the company and make employments feel motivated and satisfied.
+---
+#Conclusions: Interesting discoveries
+
+- We found that despite Montgomery being a developed area, gender discrimination still occurs.
+- Once people reach a certain age in Montgomery, salaries median start decreasing.
+- Department of Technology Services, Office of Intergovernmental Relations Department, Office of the Inspector General are Montgomery's specialisations.
+- All of Number of Years hired, Gender, Department, Interaction between Number of Years hired and Gender, Interaction between Number of Years hired and Department should be included in a model when trying to predict salaries.
+- Departments with a higher salary may not increase that fast to balance the salary compared to other departments.
+- Departments with lower basic salaries may increase faster to encourage employees.
+
+

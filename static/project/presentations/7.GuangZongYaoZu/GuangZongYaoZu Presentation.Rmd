@@ -1,0 +1,222 @@
+---
+title: "In-depth analysis of infant mortality"
+author: "Linguo Yang, Shibo Dong, Ronghao Zhang, Ziqi Hao"
+date: "May 22, 2018"
+output:
+  xaringan::moon_reader:
+    css: ["default","myremark.css"]
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  collapse = TRUE,
+  echo=FALSE,
+  comment = "",
+  fig.height = 6,
+  fig.width = 8,
+  fig.align = "center",
+  cache = FALSE
+)
+library(tidyverse)
+
+```
+## Introduction
+
+- The dataset chosen was acquired from THE WORLD BANK. We focused on the topic of infant mortality rate across the world because the phenomenon of infant mortality has drawn public attention, especially in some developing countries. The aim is to observe, the situation in which infant mortality, the factor influence the growth of infant mortality rate even and the reason cause of infant mortality. 
+- We assume some factors may affect infant mortality: fertility rate, crude birth rate, female secondary school enrollment rate, current health expenditure,and GDP.
+- URL : http://databank.worldbank.org/data/reports.aspx?source=World-Development-Indicators
+
+---
+## Questions will be answering
+
+1.Is there a trend in infant mortality rate during the period?
+
+2.Does infant mortality remain stable in some countries?
+
+3.What is the relationship between infant mortality and others variables? Does one variable affect others?
+
+---
+## Data Processing
+
+- Initial data contains character, numerical and logical variables
+- Select variables we need
+- Delete the variable containing too many NAs
+- Rename confusing variable names
+
+---
+## Missing Value Indicator
+```{r}
+library(knitr)
+opts_chunk$set(fig.align = 'center',echo=FALSE)
+library(tidyverse)
+library(broom)
+library(visdat)
+library(tidyr)
+library(plotly)
+library(readxl)
+untidy_data <- read_excel("untidy_data.xlsx", na = "..")
+
+vis_dat(untidy_data)
+```
+- Large number of NAs in Categorical variable
+- NA can be imputated or replaced
+- Not for this variable, delete
+
+---
+## Basic plots
+
+### Is there a trend in infant mortality rate during the period?
+
+
+- The relationship between year 2005-2015 and all the countries.
+- Boxplot (x = year, y = Infant Mortality)
+
+---
+- Analysis
+```{r}
+Tidy_data <- untidy_data %>%
+  select(Time, Country_name = "Country Name", 
+         Country_Code = "Country Code", 
+         Infant_mor = "Infant Mortality rate",
+         Fertility_wom = "Fertility rate per woman",
+         Female_sec = "Female secondary School enrollment",
+         Health_exp = "Current health expenditure per capita",
+         GDP_cap = "GDP per capita",
+         Birth_rat = "Birth rate"
+         )
+Tidy_data <- mutate(Tidy_data, Time = as.integer(Time))
+
+Infantmotality <- Tidy_data %>%
+  select(Time, Country_name, Infant_mor) %>%
+  mutate(year = factor( Time, 
+                   levels=c("2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015")))
+ggplot(data = Infantmotality, aes(x=year, y=Infant_mor, fill = year)) +
+  geom_boxplot()
+```
+- Infant mortality during ten years
+- Average infant mortality rate across was experiencing decrease progressively
+- Spread of MAX and MIN is becoming narrower
+- Decrease faster before 2010
+
+---
+## Next is the variable interpretation
+### Graph 1 (for developed C)
+```{r}
+Australia <- Tidy_data %>% filter(Country_name == "Australia")
+ggplot(Australia, aes(x=Time, y=Infant_mor)) +
+  geom_point() +
+  ggtitle("Australia")
+```
+---
+### Graph 2 (for developing c)
+
+```{r}
+India <- Tidy_data %>% filter(Country_name == "India")
+ggplot(India, aes(x=Time, y=Infant_mor)) +
+  geom_point() +
+  ggtitle("India")
+```
+
+---
+### Graph 3 (for tubulent c)
+
+```{r}
+Syria <- Tidy_data %>% filter(Country_name == "Syrian Arab Republic")
+ggplot(Syria, aes(x=Time, y=Infant_mor)) +
+  geom_point() +
+  ggtitle("Syria")
+```
+
+---
+### Graph 4
+
+```{r}
+I2015 <- Tidy_data %>%
+  filter(Time == 2015)
+
+T1 <- ggplot(I2015, aes(x = Female_sec, y = Infant_mor, 
+                     size = GDP_cap, label = Country_name)) +
+  geom_point(alpha = 0.3) +
+  ggtitle("Infant Mortality vs Female secondary school enrollment") +
+  labs(x = "Female secondary school enrollment", y = "Infant Mortality")
+ggplotly(T1)
+```
+
+---
+## Model 1
+
+- mod1 = lm(Infant_mor ~ Fertility_wom + Female_sec + Health_exp + GDP_cap + Birth_rat)
+```{r}
+mod1 <- lm(Infant_mor ~ Fertility_wom + Female_sec + Health_exp + GDP_cap + Birth_rat,
+           data = Tidy_data)
+tidy(mod1)
+glance(mod1)
+```
+---
+
+```{r}
+Inf_mod1 <- augment(mod1, Tidy_data)
+
+ggplot(Inf_mod1, aes(x= Fertility_wom + Female_sec + Health_exp + GDP_cap + Birth_rat,
+                     y=Infant_mor)) + 
+  geom_point(alpha=0.3) +
+  geom_line(data = Inf_mod1, aes(y=.fitted))
+```
+
+---
+## Transformation
+
+```{r}
+ggplot(Tidy_data,
+       aes(x = Infant_mor)) +
+  geom_bar(stat = 'density') +
+  ggtitle("The distribution of Infant Mortality")
+```
+
+---
+## Model 2
+
+- mod2 = lm(lInfant_mor ~ Fertility_wom + Female_sec + Health_exp * GDP_cap + Birth_rat)
+```{r}
+Mod_data <- Tidy_data %>% mutate(lInfant_mor = log10(Infant_mor))
+
+mod2 <- lm(lInfant_mor ~ Fertility_wom + Female_sec + Health_exp * GDP_cap + Birth_rat,
+           data = Mod_data)
+tidy(mod2)
+glance(mod2)
+```
+---
+
+```{r}
+Inf_mod2 <- augment(mod2, Mod_data)
+
+ggplot(Inf_mod2, aes(x=Health_exp * GDP_cap, y=lInfant_mor)) + 
+  geom_point(alpha=0.3) +
+  geom_line(data = Inf_mod2, aes(y=.fitted))
+```
+
+---
+
+## Conclusion  
+
+1.Infant mortality is witnessed a decreasing trend.
+
+2.Higher levels of female education contributes lower infant mortality.
+
+3.A variety of factors affect infant mortality, and variables interact with each other.
+
+---
+## Reference:
+- http://databank.worldbank.org/data/reports.aspx?source=World-Development-Indicators.
+- R. STUDIO version 3.4.2
+- R. PACKAGES: (tidyverse) (visdat) (tidyr) (broom) (plotly) (readxl)
+
+---

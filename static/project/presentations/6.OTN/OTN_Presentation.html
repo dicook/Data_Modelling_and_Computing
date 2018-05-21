@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The College Students’ Relationship with Food</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Team OTN" />
+    <meta name="date" content="2018-05-21" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# The College Students’ Relationship with Food
+### Team OTN
+### May 21, 2018
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+layout: true
+class: middle
+
+---
+# Outline
+
+- Data Description
+
+- Data tidying process
+
+- Visualizations and analysis
+
+- Conclusions
+
+- References
+
+---
+# Data Description
+- Data includes around 125 college students' food habits, including their food choices, preferences, nutrition, etc.
+
+- Our aim is to understand the eating habits of college students and the factors behind these habits. 
+
+- Data sourced from https://www.kaggle.com/borapajo/food-choices
+---
+
+# Posed Questions
+
+- How does a college student's self-imposed importance of calories and their self-perception of weight affect their actual weight?
+
+- Why do college students eat comfort food?
+
+- Which comfort foods are popular amongst students?
+
+- Does a parent's profession affect their home-cooking frequency?
+
+- Does a parent's home-cooking frequency affect a student's eating habits?
+
+- Does an individual's health affect how rewarding they find life?
+
+---
+
+# Cleaning
+
+- Multi-choice and extended response data
+
+- Drop null values
+
+- Spelling Mistakes
+
+- Synonymous Terms
+
+- Different Tenses
+
+- Redundant Terms
+
+- Recoding multi-choice
+
+- Profession data
+
+---
+layout:false
+
+# Importance of calories
+&lt;img src="OTN_Presentation_files/figure-html/Importance of Calories Distribution-1.png" style="display: block; margin: auto;" /&gt;
+- More females
+- Higher percentage of males who view calories as "very important" and 
+"not important"
+---
+
+layout: true
+class: middle
+
+---
+# Variables affecting Weight
++ What variables affect weight?
++ Importance of calories vs weight
++ Self perception of weight vs weight
+
+
+---
+layout: false
+
+## Importance of calories vs weight
+&lt;img src="OTN_Presentation_files/figure-html/Variables Affecting Weight: Plot-1.png" style="display: block; margin: auto;" /&gt;
+- Trend in Males
+- Increasing range in males
+
+---
+## Self Perception of weight vs weight
+&lt;img src="OTN_Presentation_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+- Higher number = perceived as more overweight
+- Self-perception reflects weight
+- Large range
+- Limited to absolute value
+
+---
+
+
+layout: true
+class: middle, center
+
+---
+
+# Comfort Food Analysis
+---
+
+layout: true
+class: middle
+
+---
+
+## What is emotional eating?
+- **emotional eating:** "an increase in food intake in response to negative emotions" [(Definition)](https://doi.org/10.1016/j.appet.2006.10.005)
+- Typically a coping mechanism for many students!
+- But what kind of foods do college students consume, and for what reasons?
+
+---
+layout: false
+
+## "What kind of foods do students like to eat for comfort?"
+- Text analysis was conducted on the short-response columns. Students listed:
+  - the foods they liked to eat
+  - reasons why they typically ate
+- Token Frequencies were calculated by gender
+- Quantiles were calculated to determine the cutoffs for terms of interest
+
+
+
+
+```r
+Frequency &lt;- c(quantile(cf_token_total$total,probs = 0.9), quantile(cf_fem$n, probs = 0.9),
+           quantile(cf_mal$n, probs = 0.9))
+Group &lt;- c("All", "Female", "Male")
+top_foods_table &lt;- cbind(Group, Frequency)
+knitr::kable(top_foods_table, format = "html")
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Group &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Frequency &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 90% &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; All &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 12.8 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 90% &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Female &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 90% &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Male &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 5 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+## Plot: Comfort Foods by Groups
+
+
+&lt;img src="OTN_Presentation_files/figure-html/CF Analysis: Plot Formatting-1.png" style="display: block; margin: auto;" /&gt;
+---
+
+layout: true
+class: middle
+
+---
+
+- Ice cream was split into two tokens
+  - Similar counts in the first graph indicate that both tokens typically referred to ice cream
+  - Ice Snapps was an exception
+- Primarily sweet foods (Ice Cream, Pizza, Chocolate, Cookies) were preferred by more female students than male students
+- Male students preferred both sweet and savoury foods.
+- The top foods were preferred by a greater proportion of female students
+  - female students' preferences accounted for 65.8% of the top foods listed
+  - statistic reflects the general proportion of comfort foods listed by each gender
+  - female respondents tended to list more foods than male respondents (64.2%)
+  
+---
+
+## "Why do students eat comfort food?"
+- Once again, the short-response column was tokenised and frequencies were calculated
+- The sentiment analysis conducted used the AFINN lexicon
+  - Due to the low number of total sentiments captured in the dataset, all captured sentiments were used in plotting
+
+
+
+```r
+Frequency &lt;- c(quantile(cr_tokens_total$total,probs = 0.9),
+           quantile(cr_fem$n, probs = 0.9),
+           quantile(cr_mal$n, probs = 0.9))
+Group &lt;- c("All", "Female", "Male")
+
+top_reasons_table &lt;- cbind(Group, Frequency)
+knitr::kable(top_reasons_table, format = "html")
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Group &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Frequency &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 90% &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; All &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 9.90000000000001 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 90% &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Female &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3.9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 90% &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Male &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 7.2 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+layout: false
+
+## Plot: Comfort Food Reasons
+
+
+
+&lt;img src="OTN_Presentation_files/figure-html/CR Analysis: Plot Formatting-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+layout: true
+class: middle
+
+---
+
+## Comfort Food Reasons
+
+- Respondents of both genders cited boredom as the top reason
+- Further reasons observe a different split in proportions
+  - Female survey respondents cited stress as a reason to eat for comfort 3 times more frequently than males
+- After Boredom, the next highest reasons were all emotional
+
+- While more females cited the top reasons (Boredom, Sadness and Stress) than males, the next three top reasons were all cited by more males than females
+  - This included Happiness, Anger and Hunger
+  - Males reported that they were more likely to eat out of happiness than females, but they were also more likely to cite eating out of anger
+
+---
+
+layout: false
+
+## Plot: Sentiment Scores
+
+
+
+
+
+&lt;img src="OTN_Presentation_files/figure-html/Sentiment Analysis: Plot Formatting-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+layout: true
+class: middle
+
+---
+
+## Sentiment Analysis on Reasons
+
+- A vast majority of the reasons reported were negative
+  - Top reasons Boredom and Sad(ness) rated -2 by the AFINN sentiment lexicon
+    - Negative values [indicate an "intrinsic averseness"](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010), or negativity of a term/emotion
+- Female responses accounted for a greater variety of emotions and mental states than male responses
+- The large skew of negatively classified emotions supports the idea that many eat for intrinsically negative emotions and reasons
+
+---
+
+
+layout: true
+class: middle, center
+
+---
+
+# Parent's effect on students' eating habits
+
+---
+
+layout: false
+#  Effect of a parent's profession on their home-cooking frequency
+
+
+&lt;img src="OTN_Presentation_files/figure-html/Parents Cooking Given Profession: Plot Formatting-1.png" style="display: block; margin: auto;" /&gt;
+
+.small[- Most parents cooked almost every day regardless of profession 
+- Exception: Fathers in teaching and mothers in stem tended to cook less frequently
+- Unemployed parents or those who worked in management were more likely to cook
+
+- The data has not been analysed based on both parent's professions concurrently so similarities between the different professions for mother and father may be from pairings]
+
+---
+#  Effect of a parent's home-cooking frequency on a student's cooking and eating out frequency
+
+
+&lt;img src="OTN_Presentation_files/figure-html/Student Cooking Frequency given Parents Cooking History: Plot Formatting-1.png" style="display: block; margin: auto;" /&gt;
+.small[- The proportion where parents never cooked is always 1 as only 1 student had this answer so it was excluded from the plots to prevent misrepresentation of data
+
+- Most students, regardless of gender, do not cook very often 
+- Females do cook more frequently than males, regardless of whether their parents cooked for them frequently as children
+
+- Most students will eat out during the week, at least 1-2 times, regardless of whether their parents cooked for them]
+
+---
+# How does healthiness affect outlook on life?
+
+&lt;img src="OTN_Presentation_files/figure-html/Health on Happiness: Plot-1.png" style="display: block; margin: auto;" /&gt;
+- Upwards trend between how healthy a student feels and how rewarding they find life
+  - Large variance and many outliers; not exact proof
+
+---
+
+layout: true
+class: middle
+
+---
+# Conclusions
+
+- Most students place moderate importance on caloric consumption
+
+- Boredom is the top reason behind consuming comfort food
+  - Most reasons are negative
+  
+- Most students don't cook much, irrespective of parents' cooking habits
+
+- Healthiness appears to correlate with a rewarding life
+
+---
+# References
+
+- Food choices and preferences of college students survey (2017)
+  - Retrieved from https://www.kaggle.com/borapajo/food-choices
+  
+- Spoor, S., Bekker, M., Strien, T., &amp; Heck, G. (2006). Relations between negative affect, coping, and emotional eating. Appetite, 48(3), 368-376. doi:10.1016/j.appet.2006.10.005
+
+- Hadley, W. and Garrett, G. (2016). R for Data Science
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

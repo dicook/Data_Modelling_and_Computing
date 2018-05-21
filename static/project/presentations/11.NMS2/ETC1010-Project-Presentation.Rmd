@@ -1,0 +1,441 @@
+---
+title: "Agricultural commodities and trade"
+author: "NMS2: Samantha Stephens, Nathan Colvin, Stephen Bottrell, Metlha Ganelang"
+output:  
+  xaringan::moon_reader:
+    css: ["default","myremark.css"]
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  collapse = TRUE,
+  echo=FALSE,
+  comment = "",
+  fig.height = 4,
+  fig.width = 8,
+  fig.align = "center",
+  cache = FALSE
+)
+library(readxl)
+library(tidyverse)
+library(visdat)
+library(naniar)
+library(broom)
+library(gridExtra)
+library(dplyr)
+library(readxl)
+library(lubridate)
+library(plotly)
+```
+
+# Overview
+
+- Data description
+- Process of exploring data/ Different forms of data and making them tidy
+- Answering Questions
+- Conclusions
+- References
+
+---
+# Data description
+- The data set we chose was from the Department of Agriculture and Water Resources ABARES on Agricultural commodities and trade. 
+- Focuses on the Australian economy, specifically the farm sector and the overview of the Australian economy. 
+- Information on a variety of aspects of the Australian farm sector and agriculture, with yearly data ranging from 1973-2017. 
+- The data is recorded on Excel and is updated annually. 
+- Examples of variables are agricultural establishments, employment in Australia, farm land and use, Prices received by famers, and the Gross value of Australian farm production. There are 20 Different Tables in total.
+---
+#  Questions we will be answering
+
+1.How has employment in the agriculture areas changed since 1973?
+2.How have price indexes changed for agricultural products since 2003?
+3.What area of agriculture has the greatest effect on total production?
+4.How dependent is employment in the agricultural sector on how many crops are grown and how much livestock is kept?
+
+---
+#   Process of exploring data/ Different forms of data and making them tidy
+Initial data was contained over many different Excel sheets containing relevant data.
+- Relevant tables were selected from the Excel document
+- Data was tidied and cleaned
+- Most of the cleaning process was renaming columns to more useful names and filtering NA values
+- Relevent tables were combined to get the tables needed
+- Due to the layout of the excel sheets some data had to be added manual
+
+```{r, echo=FALSE }
+## TIDYING DATA
+###### Table 3.1: Number of Agricultural establishments and Rural Employment in Australia
+ag <- read_excel("data/ACS2017_FarmSectorTables_v1.0.0-1.xlsx", sheet = 'Table3.1') %>% select(X__1, X__2, X__3) %>% mutate(X__2 = as.integer(X__2)) %>% mutate(X__3 = as.integer(X__3)) %>% filter(!is.na(X__2)) %>% filter(X__2 != 0) 
+
+ag <- ag %>% mutate(X__1 = ymd(sprintf("%s-01-01",substr(ag$X__1, 0, 4)))) 
+
+colnames(ag) = c('year', 'numEstablishments', 'area')
+```
+
+
+```{r, echo=FALSE }
+###### Table 3.6: Indexes of Prices received by Farmers in Australia 2003-17
+
+price_index1 <- read_excel("data/ACS2017_FarmSectorTables_v1.0.0-1.xlsx", sheet = 'Table3.6A')
+# Rename columns
+colnames(price_index1) <- c('Item', '2003', '2004', '2005', '2006', '2007', '2008', '2009')
+
+price_index2 <- read_excel("data/ACS2017_FarmSectorTables_v1.0.0-1.xlsx", sheet = 'Table3.6B') %>% select(-X__8)
+# Rename columns
+colnames(price_index2) <- c('Item', '2010', '2011', '2012', '2013', '2014', '2015', '2016')
+
+# Join datasets
+price_index3 <- full_join(price_index1, price_index2, by = 'Item')
+
+# Add the type of item
+price_index <- price_index3 %>% mutate(type = case_when(Item == 'barley' | Item == 'canola' | Item == 'lupins' | Item == 'oats' | Item == 'wheat' | Item == 'grain sorghum' | Item == 'Cotton' | Item == 'Sugar' | Item == 'Hay' | Item == 'Fruit' | Item == 'Vegetables' ~ 'Crop', Item == 'cattle' | Item == 'lambs b' | Item == 'sheep' | Item == 'live sheep for export' | Item == 'pigs' | Item == 'poultry' ~ 'Livestock for slaughter', Item == 'wool' | Item == 'milk' | Item == 'eggs' ~ 'Livestock products', TRUE ~ 'other'))
+
+# Remove subheadings in data
+price_index <- price_index %>% filter(!is.na(`2010`)) %>% gather(-Item, -type, key = 'year', value = 'price') %>% mutate(price = as.integer(price)) %>% filter(!is.na(Item)) %>% filter(Item != 'total') %>% filter(Item != 'Total grains a') %>% filter(Item != 'Total crops sector') %>% filter(Item != 'Total livestock sector')  %>% filter(Item != 'Total prices received') 
+
+price_index <- price_index %>% mutate(year = ymd(sprintf("%s-01-01",price_index$year)))
+```
+
+```{r, echo=FALSE }
+# Transform the table converting rows to columns and columns to rows to use in modelling
+price_index_m <-data.frame(t(price_index1[]))
+header.true <- function(price_index_m) {
+  names(price_index_m) <- as.character(unlist(price_index_m[1,]))
+  price_index_m[-1,]}
+price_index_m <- header.true(price_index_m)
+colnames(price_index_m)[2] <- "Year"
+price_index_m14 <- price_index_m[ -c(1, 3:5, 11, 13, 21:23)]
+price_index_m15 <- price_index_m14[ -c(13:14,16,19, 20, 24:28)]
+```
+
+```{r, echo=FALSE }
+# Transform the table converting rows to columns and columns to rows to use in modelling
+price_index_m1 <-data.frame(t(price_index2[]))
+header.true <- function(price_index_m1) {
+  names(price_index_m1) <- as.character(unlist(price_index_m1[1,]))
+  price_index_m1[-1,]
+}
+price_index_m1 <- header.true(price_index_m1)
+colnames(price_index_m1)[2] <- "Year"
+price_index_m16 <- price_index_m1[ -c(1, 3:5, 11, 13, 21:23)]
+price_index_m17 <- price_index_m16[ -c(13:14,16,19, 20, 24:28)]
+```
+
+```{r, echo=FALSE }
+price_index_m21 <-rbind(price_index_m15, price_index_m17)  %>%
+  select(barley, canola, lupins, oats, wheat)
+PI <- price_index_m21 %>%
+mutate(barley = as.numeric(barley)) %>%
+  mutate(canola = as.numeric(canola)) %>%
+mutate(lupins = as.numeric(lupins)) %>%
+  mutate(oats = as.numeric(oats)) %>%
+  mutate(wheat = round(as.numeric(wheat),3))
+## Missing summary
+# This particular data sheet has no missing values. As a result of this, no missing data manipulation needs to be performed.
+# vis_miss(price_index_m21, sort_miss = TRUE)
+# miss_summary(price_index_m21)
+```
+
+```{r, echo=FALSE }
+##### Table 3.9 Gross value of Australian farm production 
+Farmpro <- read_excel("data/ACS2017_FarmSectorTables_v1.0.0-1.xlsx",sheet = 'Table3.9')
+Farmpro <- Farmpro[-c(1:20),]
+colnames(Farmpro) <- c('Year', 'Crops_Grain_oilseeds', 'Other_crops', 'Total_crops', 'livestock_slaughter', 'livestock_products', 'Total_livestock', 'Total_farm')
+Farmpro <- Farmpro %>%
+  select('Crops_Grain_oilseeds', 'Other_crops', 'livestock_slaughter', 'livestock_products', 'Total_farm')%>%
+  mutate(Crops_Grain_oilseeds = as.numeric(Crops_Grain_oilseeds)) %>%
+  mutate(Other_crops = as.numeric(Other_crops)) %>%
+mutate(livestock_slaughter = as.numeric(livestock_slaughter)) %>%
+  mutate(livestock_products = as.numeric(livestock_products)) %>%
+  mutate(Total_farm = as.numeric(Total_farm))
+#vis_miss(Farmpro, sort_miss = TRUE)
+#miss_summary(Farmpro)
+Farmpro <- Farmpro %>% filter(!is.na(Total_farm))
+```
+
+```{r, echo=FALSE }
+##### Table 1.2 Total number of agricultural employees in each year
+ag_employment <- read_excel("data/ACS2017_OverviewTables_v1.0.0.xlsx", sheet = "Table1.2") %>%
+  select(X__1, X__2) %>%
+  filter(!is.na(X__1)) %>%
+  filter(!is.na(X__2)) %>%
+  mutate(X__2 = as.numeric(X__2)) # Converting to numeric values
+# Renaming variables
+colnames(ag_employment) = c("year", "ag_employees")
+```
+
+```{r, echo=FALSE}
+##### Table 3.3 Farm land use and livestock numbers in Australia
+## Tidying data sets containing how much area is dedicated to wheat and other crops and the number of some different livestock in each year
+land_use <- read_excel("data/ACS2017_FarmSectorTables_v1.0.0-1.xlsx", sheet = "Table3.3") %>%
+  filter(!is.na(X__1)) %>% # Removing missing values for text that is not data
+  filter(!is.na(X__2)) %>%
+  select(-X__2)
+# Renaming variables
+colnames(land_use) = c("year", "wheat", "other_crops", "beef_cattle", "dairy_cattle", "sheep")
+# Converting columns to contain numeric values
+land_use <- land_use %>%
+  mutate(wheat = as.numeric(wheat)) %>%
+  mutate(other_crops = as.numeric(other_crops)) %>%
+  mutate(beef_cattle = as.numeric(beef_cattle)) %>%
+  mutate(dairy_cattle = as.numeric(dairy_cattle)) %>%
+  mutate(sheep = as.numeric(sheep))
+```
+
+```{r, echo=FALSE }
+## Combining the two previous sets of data in order to investigate how dependent employment in the agricultural sector is on how many crops are grown and how much livestock is kept (data contains totals in Australia in 12 month periods).
+ag_activities_employment <- full_join(ag_employment, land_use, by = "year") %>%
+  mutate(total_crops = wheat + other_crops) %>% # Creating variables for totals
+  mutate(total_livestock = beef_cattle + dairy_cattle + sheep)
+```
+---
+
+## 1. How has the number of agriculture establishments and the area used for agriculture changed since 1973?
+
+- The relationship between year and the number of agricultural establishments.
+- The relationship between year and the total farm area establishments.
+- scatter plot (x=year, y=numEstablishments)
+- scatter plot (x=year, y=area)
+- For the purposes of this report an agricultural establishment is any party in the business of argriculture, fishing, forestry, hunting or one that provides a service to one of these industies.
+
+---
+### Number of Agricultural Establishments
+```{r}
+ggplot(ag) + geom_point(aes(x = year, y = numEstablishments)) + theme(axis.text.x = element_text(angle = 90)) + scale_y_continuous(expand = c(0, 0), limits = c(0, 200000))
+```
+#### Analysis
+- Clear downward trend in the the number of establishments
+- Significant jump in 2005 
+- Significant drop in 2015
+- The number of agricultural establishments has halved from 1973 to 2015
+- Conclusion: There are fewer argricultural establishments, possibly due to the rise of larger farms taking over small ones
+---
+### Total Farm Land Area (millions of hectares)
+```{r}
+ggplot(ag) + geom_point(aes(x = year, y = area)) + theme(axis.text.x = element_text(angle = 90)) + scale_y_continuous(expand = c(0, 0), limits = c(0, 550))
+```
+#### Analysis
+- As with the number of establishments the total farm area has decreased 
+- The decrease has not been as drastic, indicating that claim larger farms are becoming more prominent may be partially true 
+---
+
+## 2. How have price indexes changed for agricultural products since 2003?
+- The relationship between year and the price index of various agricultural goods. 
+- Coloured by their type to see if there are any overall trend for crops, livestock, etc.
+- line point (x=year, y=price, colour = type)
+---
+### Price Indices for Agricultural Goods
+```{r, fig.height=5}
+price_plot <- ggplot(price_index, aes(x = year, y = price, group = Item, colour = type)) + geom_line() + theme(axis.text.x = element_text(angle = 90), legend.position = 'bottom') + scale_y_continuous(expand = c(0, 0), limits = c(0, 500))
+#ggplotly(price_plot)
+price_plot
+```
+#### Analysis
+- General upwards trend in the price
+- Large fluctuations in the price of meat
+- Crops and livestock products are much more stable
+---
+# 3. What area of agriculture has the greatest effect on total production?
+
+### Model Summary 
+
+The model fit is:
+log(TotalProduction) = 3.94 + 2.91OtherCrops + 2.645Livestockslaughter +  
+              1.0867CropsGrainoilseeds + 1.365livestockproducts
+
+The model using Other Crops, Live stockslaughter and Crops Grain and seeds and Livestock products. This explains 99.7% of the variation. 
+
+```{r, echo=FALSE}
+### Producing Graphical Summary 
+###### Total Production comparision to relative different agriculture sections
+## visual representation of the comparision
+p1 <- ggplot(Farmpro, aes(x=Crops_Grain_oilseeds, y=Total_farm)) +
+  geom_point(alpha=0.5) + stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+p2 <- ggplot(Farmpro, aes(x=Other_crops, y=Total_farm)) +
+  geom_point(alpha=0.5) + stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+p3 <- ggplot(Farmpro, aes(x=livestock_slaughter, y=Total_farm)) +
+  geom_point(alpha=0.5) + stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+p4 <- ggplot(Farmpro, aes(x = livestock_products, y=Total_farm)) +
+  geom_point(alpha=0.5) + stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+#grid.arrange(p1, p2, p3, p4, ncol=2)
+```
+
+```{r, echo=FALSE}
+## log of total production relative to different argiculture sections.
+## Visual representation of the change
+Farmpro <- Farmpro %>% mutate(ltotal = log10(Total_farm))
+p1 <- ggplot(Farmpro, aes(x=Crops_Grain_oilseeds, y=ltotal)) +
+  geom_point(alpha=0.5) + stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+p2 <- ggplot(Farmpro, aes(x=Other_crops, y=ltotal)) +
+  geom_point(alpha=0.5) + stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+p3 <- ggplot(Farmpro, aes(x=livestock_slaughter, y=ltotal)) +
+  geom_point(alpha=0.5) + stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+p4 <- ggplot(Farmpro, aes(x = livestock_products, y=ltotal)) +
+  geom_point(alpha=0.5) + stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+# grid.arrange(p1, p2, p3, p4, ncol=2)
+```
+---
+
+### Looking at the Best Single Model
+```{r, echo=FALSE}
+## MODEL BUILDING
+## Modelling each variable to see which has the greatest R^2 value and reliable effect on total production
+m <- lm(ltotal ~ Crops_Grain_oilseeds, data=Farmpro)
+mfit <- data.frame(var="Crops_Grain_oilseeds",intercept=tidy(m)[1,2],slope=tidy(m)[2,2],r2=glance(m)$r.squared)
+m <- lm(ltotal ~ Other_crops, data=Farmpro)
+mfit <- bind_rows(mfit, data.frame(var="Other_crops",intercept=tidy(m)[1,2],slope=tidy(m)[2,2],r2=glance(m)$r.squared))
+m <- lm(ltotal ~ livestock_slaughter, data=Farmpro)
+mfit <- bind_rows(mfit, data.frame(var="livestock_slaughter",intercept=tidy(m)[1,2],slope=tidy(m)[2,2],r2=glance(m)$r.squared))
+m <- lm(ltotal ~ livestock_products, data=Farmpro)
+mfit <- bind_rows(mfit, data.frame(var="livestock_products",intercept=tidy(m)[1,2],slope=tidy(m)[2,2],r2=glance(m)$r.squared))
+mfit
+```
+
+- The best single model is other crops, explaining 95% of the variation in log(Total Production). 
+- This is followed by livestock slaughters, explaining 90% of the variation. 
+- It can be seen that livestock products does a significantly worse job explaining the variation at 34% compared to the other variables.
+
+---
+### Finding the best Model
+```{r, echo=FALSE}
+mod1 <- lm(data=Farmpro, ltotal ~ Other_crops+livestock_slaughter)
+# glance(mod1)$r.squared, R^2 value was 0.9668874 
+mod2 <- lm(data=Farmpro, ltotal ~ Other_crops*livestock_slaughter)
+# glance(mod2)$r.squared R^2 value was 0.9680451 included Crops_grains_oilseeds
+mod3 <- lm(data=Farmpro, ltotal ~ Other_crops*livestock_slaughter+Crops_Grain_oilseeds)
+# glance(mod3)$r.squared R^2 value was 0.9932911
+mod4 <- lm(data=Farmpro,ltotal ~ Other_crops*livestock_slaughter+Crops_Grain_oilseeds+livestock_products)
+tidy(mod4)
+glance(mod4)
+```
+
+This model was found with the highest value of R^2 of 0.9977 meaning it explained 99.77% of the variance
+---
+### Checking the Fit of the Model
+
+```{r, echo=FALSE}
+mod4_fit <- augment(mod4, Farmpro)
+p1 <- ggplot(mod4_fit, aes(x=.fitted, y=ltotal)) + geom_point(alpha=0.1)
+p2 <- ggplot(mod4_fit, aes(x=Other_crops, y=.fitted)) + geom_point(alpha=0.01) + geom_smooth(method="lm", se=FALSE)
+grid.arrange(p1, p2)
+```
+
+The plot of observed vs fitted values indictated a reasonably good fit. There is still unexplained variance, but no other uncaptured structure because it looks linear.
+---
+
+# 4. How dependent is employment in the agricultural sector on how many crops are grown and how much livestock is kept?
+
+- Data containing the total number of agricultural employees (thousands), total area of different crops (millions of hectares) and total numbers of different livestock (millions) in each year from 1973 - 2017 in Australia is used for this question.
+- In addition, variables with the total area of crops and total amount of livestock were created.
+- It is predicted that as each crop or livestock variable increases, the number of employees in the industry will be higher.
+
+---
+
+### Some Plots of the Data
+
+```{r, echo = FALSE}
+p1 <- ggplot(ag_activities_employment, aes(x = wheat, y = ag_employees)) +
+  geom_point(alpha=0.5) +
+  stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+p2 <- ggplot(ag_activities_employment, aes(x = other_crops, y = ag_employees)) +
+  geom_point(alpha = 0.5) +
+  stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+p3 <- ggplot(ag_activities_employment, aes(x = beef_cattle, y = ag_employees)) +
+  geom_point(alpha=0.5) +
+  stat_summary(fun.y = "median", colour = "blue", size = 3, geom = "point")
+p4 <- ggplot(ag_activities_employment, aes(x = dairy_cattle, y = ag_employees)) + geom_point(alpha = 0.5) +
+  stat_summary(fun.y = "median", colour = "blue", size = 3, geom = "point")
+p5 <- ggplot(ag_activities_employment, aes(x = sheep, y = ag_employees)) +
+  geom_point(alpha=0.5) +
+  stat_summary(fun.y = "median", colour = "blue", size = 3, geom = "point")
+grid.arrange(p1, p2, p3, p4, p5)
+```
+
+- These plots show varying strengths and directions of relationships between the total number of agricultural employees and each crop or livestock type.
+- This relationship for livestock is generally positive or quite weak, but for crops it is actually negative.
+
+---
+
+### Some Plots of the Data (continued)
+
+```{r, echo = FALSE}
+p5 <- ggplot(ag_activities_employment, aes(x = total_crops, y = ag_employees)) +
+  geom_point(alpha=0.5) +
+  stat_summary(fun.y = "median", colour = "red", size = 3, geom = "point")
+p6 <- ggplot(ag_activities_employment, aes(x = total_livestock, y = ag_employees)) +
+  geom_point(alpha = 0.5) +
+  stat_summary(fun.y = "median", colour = "blue", size = 3, geom = "point")
+grid.arrange(p5, p6)
+```
+
+- When all crops are combined and all given livestock types are combined, the patterns become clearer.
+- Overall, the graphs suggest that as more area is used for crops, there are fewer employees in the industry, whereas if greater numbers of livestock is kept, more people are employed.
+
+---
+
+### Building a Model
+
+- To investigate this question further, the variables were tested for significance and a model was built from different trials.
+- Both beef and dairy cattle did not significantly affect employment, so were not included.
+- An interaction between wheat and other crops gave a better model, while sheep (of which there are many each year) were quite significant.
+- The model shows the number of employees is mostly dependent on the area of wheat and other crops grown and the number of sheep - the higher these values, the more employees. The negative relationship with the interaction of crops appears to have been outweighed by the numbers of sheep.
+- Thus increases in most explanatory variables in the model result in more employees, partially agreeing with the hypothesis.
+
+```{r, echo=FALSE}
+## Testing the different variables in this data for their potential use in modelling
+m <- lm(ag_employees ~ wheat, data = ag_activities_employment)
+mfit <- data.frame(var = "wheat", intercept = tidy(m)[1,2], slope = tidy(m)[2,2], r2=glance(m)$r.squared)
+m <- lm(ag_employees ~ other_crops, data = ag_activities_employment)
+mfit <- bind_rows(mfit, data.frame(var = "other_crops", intercept = tidy(m)[1,2], slope = tidy(m)[2,2], r2 = glance(m)$r.squared))
+m <- lm(ag_employees ~ beef_cattle, data = ag_activities_employment)
+mfit <- bind_rows(mfit, data.frame(var = "beef_cattle", intercept = tidy(m)[1,2], slope = tidy(m)[2,2], r2 = glance(m)$r.squared))
+m <- lm(ag_employees ~ dairy_cattle, data = ag_activities_employment)
+mfit <- bind_rows(mfit, data.frame(var = "dairy_cattle", intercept = tidy(m)[1,2],slope = tidy(m)[2,2],r2 = glance(m)$r.squared))
+m <- lm(ag_employees ~ sheep, data = ag_activities_employment)
+mfit <- bind_rows(mfit, data.frame(var = "sheep", intercept = tidy(m)[1,2], slope = tidy(m)[2,2], r2 = glance(m)$r.squared))
+m <- lm(ag_employees ~ total_crops, data = ag_activities_employment)
+mfit <- bind_rows(mfit, data.frame(var = "total_crops", intercept = tidy(m)[1,2], slope = tidy(m)[2,2], r2 = glance(m)$r.squared))
+m <- lm(ag_employees ~ total_livestock, data = ag_activities_employment)
+mfit <- bind_rows(mfit, data.frame(var = "total_livestock", intercept=tidy(m)[1,2], slope = tidy(m)[2,2], r2 = glance(m)$r.squared))
+# mfit
+```
+
+```{r, echo = FALSE}
+## Trying some different models, choosing mod4 as the best model
+mod1 <- lm(data = ag_activities_employment, ag_employees ~ total_livestock + total_crops)
+# glance(mod1), r^2 = 0.82
+mod2 <- lm(data = ag_activities_employment, ag_employees ~ total_livestock * total_crops)
+# glance(mod2), r^2 = 0.85 - the highest, but includes insignificant cattle
+mod3 <- lm(data = ag_activities_employment, ag_employees ~ wheat + other_crops + sheep)
+# glance(mod3), r^2 = 0.82
+mod4 <- lm(data = ag_activities_employment, ag_employees ~ wheat * other_crops + sheep)
+# tidy(mod4)
+glance(mod4) # r^2 = 0.83
+```
+
+```{r, echo = FALSE}
+mod4_fit <- augment(mod4, ag_activities_employment)
+# Plotting the fitted model for ag_employees
+p1 <- ggplot(mod4_fit, aes(x = .fitted, y = ag_employees)) + geom_point(alpha=0.5)
+p2 <- ggplot(mod4_fit, aes(x = .fitted, y = ag_employees)) + geom_point(alpha = 0.05) + geom_smooth(method="lm", se=FALSE)
+# grid.arrange(p1, p2, ncol=2)
+```
+
+Model Fit: Predicted ~ ag_employees = 
+33.23 + 13.61wheat + 15.94other_crops + 1.28sheep - 1.32wheat*other_crops
+
+---
+
+# Conclusion
+- This project taught us many things about how data analytics can be used to describe trends in real world phenomena. The creation of models helps to gain an insight into what factors affect the price of various agricultural goods. 
+- This information is very important to farmers as it can help them to determine which crops or livestock to focus on to maximise their profits. The trend of decreases in the number of farms may be important information for governments, to ensure that there is adequate food for the future, and may impact policy-making. It would be interesting to further study agricultural commodities by considering the impact that weather has on supply, demand and the price of goods as this is likely to be the cause of some of the unaccounted for variation in the data.
+
+---
+# Reference
+- http://www.agriculture.gov.au/abares/research-topics/agricultural-commodities/agricultural-commodities-trade-data#2017
+---
