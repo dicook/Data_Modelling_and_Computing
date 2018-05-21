@@ -41,11 +41,9 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - Week 10: Working with text data, and networks; [Slide set a](https://ebsmonash.shinyapps.io/lecture10a_text/) [(Rmd)](lectures/lecture10a/lecture10a_text.Rmd); [Slide set b](https://ebsmonash.shinyapps.io/lecture10b_networks/) [(Rmd)](lectures/lecture10b/lecture10b_networks.Rmd);
 - Week 11: Tues will be project work, and help from tutors/instructor; Wed will be Assignment 5 all done during class.
 - Week 12: Project presentations, schedule below
-
-<PRE>
-   `Proj Team`           Day    Time Topic
- 1 CJ                    T         6    An Analysis of the NBA
- 2 The Pirates           T        10   Happiness, socio-economic condition and politics
+     - Tuesday
+         -  1 CJ, 6,  [An Analysis of the NBA](project/presentations/1.CJ/CJ Sildes.pptx)
+         - 2 The Pirates,  10, [Happiness, socio-economic condition and politics](project/presentations/2.The_Pirates/Project_presentation2.html)
  3 Data Lads             T         8   2018 AFL Statistics
  4 Emusha                T         8   Foodborne Disease Outbreaks in the United States
  5 Glen Waverley Dragons T         8   NBA Statistics 2017/18 Season
