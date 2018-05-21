@@ -43,18 +43,18 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - Week 12: Project presentations, schedule below
 
 <PRE>
-   `Proj Team`           Day    Time
- 1 CJ                    T         6
- 2 The Pirates           T        10
- 3 Data Lads             T         8
- 4 Emusha                T         8
- 5 Glen Waverley Dragons T         8
- 6 OTN                   T        10
- 7 GuangZongYaoZu        T        10
- 8 Little Salt Egg       T        10
- 9 5T                    T         8
-10 KatTim                T         6
-11 NMS2                  T        10
+   `Proj Team`           Day    Time Topic
+ 1 CJ                    T         6    An Analysis of the NBA
+ 2 The Pirates           T        10   Happiness, socio-economic condition and politics
+ 3 Data Lads             T         8   2018 AFL Statistics
+ 4 Emusha                T         8   Foodborne Disease Outbreaks in the United States
+ 5 Glen Waverley Dragons T         8   NBA Statistics 2017/18 Season
+ 6 OTN                   T        10    The College Students’ Relationship with Food
+ 7 GuangZongYaoZu        T        10   In-depth analysis of infant mortality
+ 8 Little Salt Egg       T        10   Montgomery Salaries
+ 9 5T                    T         8   london Smart Meter Data
+10 KatTim                T         6   An International Analysis of Economic Health
+11 NMS2                  T        10  Agricultural commodities and trade
 12 BBC                   W         8
 13 DQ                    W         4
 14 Group 2               W        10
