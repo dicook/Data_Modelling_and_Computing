@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ETC1010 Project</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Team DQ" />
+    <link href="Presentation_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="myremark.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# ETC1010 Project
+### Team DQ
+### Week 12
+
+---
+
+
+
+
+
+# Data description
+
+- This data is the weather change from last year April to May
+- Data include temperature, speed, direction, temperature, rain, sunshine etc.
+- They are seperated to the daily, 9am and 3pm 
+- The changing between two-year climate in March 
+- The influence factors in temperature, and how they influenced.
+
+---
+#  Questions will be answering
+
+- 1. Does any factor relate to each other?
+- 2. Which factor(s) influence temperature?
+- 3. What different between 9am and 3pm?
+- 4. Shall we build the best 	prediction model for temperature?
+- 5. Can we visualize the relation of wind direction?
+- 6. Are there any patterns in last year? 	
+- 7. Can we guess the temperature in 5/7 and 5/8?
+
+---
+#   Missing value
+- Nealy no missing value
+- Missing value at bottom for predict
+
+&lt;img src="Presentation_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+---
+# Long term trend
+
+- There is seasonal trend
+- Spread of data in winter is much shorter in summer
+
+&lt;img src="Presentation_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Long term trend
+
+- The highest in daily maximum temperature looks more sticky
+
+&lt;img src="Presentation_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+#  Relations
+- Evaporation and minimum have positive relation, Correlation is 0.709
+- Add the ??eva?? term in minimum model 
+- Interaction term as eva and min
+
+&lt;img src="Presentation_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Direction &amp; Minimum
+- All has same mean
+- Different spread range 
+- Not useful
+- Morning is north wind
+
+&lt;img src="Presentation_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+# Wind direction 
+
+- Afternoon south and south-west wind chance
+
+&lt;img src="Presentation_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Best model in Minimum
+
+
+```
+
+Call:
+lm(formula = min ~ eva + sun + temp9 + humidity9 + cloud9 + pressure9 + 
+    humidity3 + speed3 + pressure3 + day + month + year, data = Data4)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-5.3536 -1.0871  0.0717  1.1459  4.5412 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 35.992574  15.005332   2.399  0.01693 *  
+eva          0.218843   0.035602   6.147 1.96e-09 ***
+sun         -0.058441   0.034447  -1.697  0.09059 .  
+temp9        0.824835   0.027128  30.406  &lt; 2e-16 ***
+humidity9    0.073266   0.007780   9.417  &lt; 2e-16 ***
+cloud9       0.181747   0.042693   4.257 2.60e-05 ***
+pressure9   -0.141870   0.042797  -3.315  0.00100 ** 
+humidity3    0.022466   0.007606   2.954  0.00333 ** 
+speed3       0.027029   0.009826   2.751  0.00623 ** 
+pressure3    0.104842   0.042597   2.461  0.01428 *  
+day          0.016794   0.009340   1.798  0.07294 .  
+month       -0.605048   0.284252  -2.129  0.03392 *  
+year        -6.091825   3.384520  -1.800  0.07265 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.614 on 388 degrees of freedom
+Multiple R-squared:  0.8874,	Adjusted R-squared:  0.8839 
+F-statistic: 254.8 on 12 and 388 DF,  p-value: &lt; 2.2e-16
+```
+
+
+---
+# Good for fitness
+- AIC of min &amp; max
+
+```
+[1] 1536.685
+```
+
+- Residuals plot
+
+---
+# Conclusion:  
+- Most of the factors relate to the minimum temperature
+- The time of the factors is key influence the temperature 
+- 9Pm temp, could and humidity are highly affect the daily temperature
+- Easily predict temperature by these factors we choosed
+
+---
+# Reference:
+- http://www.bom.gov.au/climate/data/
+- http://www.bom.gov.au/climate/dwo/IDCJDW0000.shtml
+- R. STUDIO version 3.4.2
+- R. PACKAGES: (haven) (readr) (readxl) (dplyr) (visdat) (data.table) (ggplot2) (GGally) (gdata) (ggpubr) (plyr)
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

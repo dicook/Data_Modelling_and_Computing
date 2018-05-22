@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ETC1010 Assignment - Private vs Public Education in the US</title>
+    <meta charset="utf-8">
+    <meta name="author" content="As a TEAM data analysts" />
+    <link href="Project_presentation_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="myremark.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# ETC1010 Assignment - Private vs Public Education in the US
+### As a TEAM data analysts
+### Week 12
+
+---
+
+
+
+
+
+
+
+# Overview
+
+- Detailed sample data description
+- Understanding the raw data + Data Cleaning
+- Visualising the data with R models
+- Analysis limitations
+- Findings
+- References
+
+---
+# Detailed sample data description
+
+- Our data originates from IPUMS (provides census and survey data from around the world integrated across time and space) 
+- The aim is to investigate the effect of some potential variables e.g. type of high school on the education level in USA in 2008/2009.
+The URL is:https://usa.ipums.org/usa/
+- The data contains many variables, however, our researchers just want to see factors influencing Education Level, so we have excluded other parts of data.
+
+---
+#  Understanding the raw data
+
+- Based on researches and surveys, we collect eight variables (includes the main interest)
+which may affect the university completion intuitively
+- Region; State; Gender; Age; Race (racwht);
+- Health Insurance Coverage (hcovany)
+- Total Family Income (ftotinc)
+- Public or private school (Schltype) 
+
+---
+#  Analysis Questions to consider
+
+- 1.Does Gender have a significant effect on Education Level?
+- 2.Considering the data selected (summary statistics), are they suitable for modelling?
+- 3.Whether “Private or Public” is a statistically significant estimator of education level?
+- 4.Does “Private or Public” have a positive or negative effect on education level?
+- 5.Is it possible that some correlation (interaction) between our estimators also affect education level?
+- 6.Given the data we picked, is our model a relatively good model?
+
+---
+#   The Data Cleaning
+
+- Only 8 regions are selected instead of 13. These 8 have relatively more observations, and therefore will improve the accuracy of conclusions based from a larger sample size
+- Initially categorised by States instead of Regions, due to the State education levels being more diverse compared to Regions, hence harder to draw conclusions from.
+- The relevant Age goup was chosen between 21 and 31y.o inclusive
+- Missing values present: 'Not enrolled'; 'No schooling'; '9999999' replaced with 'NA'
+- 7.4% of total observations missing during cleaning
+- Due to the sample size limitation, the (Middle Atlantic Division) was chosen for cleaning review. Which showed 100% of missing values removed.
+
+
+
+---
+#  Visualising the data with R models
+
+# 1.Statistical graphs for Education level and Age
+
+- The relationship between Education level and Age.
+- Variable used: "educ" and "Age".
+- Barcharts (x=Education level, y=count)
+
+---
+
+&lt;img src="Project_presentation_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+- Note that majority of the population only completed the first year of college
+- Due to financial or personal problems.
+- People may have entered college late, and are still studying. 
+- The sum of all people with &gt;4yrs college combined is still less than people with only one year of college.
+
+---
+#  Students of different Age
+&lt;img src="Project_presentation_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+- No. of people studying in university decreases as age increases
+- The most amount of university students' age is 21
+- Late enrollments with the majority of the people starting and finishing university within a reasonable time frame.
+
+---
+# 2.Type of Education and effect on Quality?
+
+- The relationship between Private/Public education and graduation level.
+- Variable used: "schltype" and "educ".
+- ProductPlot (x=schooltype, y=education level)
+
+---
+&lt;img src="Project_presentation_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+- Most people in the sample are from public schools.
+- If we only take into account people with 4+yrs of education, we notice an increasing effect on the relationship between private schools and education level. 
+- Private schools could provide positive effects on their education level, but it may not be a major effect.
+
+---
+# 3.Does Gender have a significant effect on Education Level?
+
+- The relationship between gender and graduation rate.
+- Variable used: "educ" and "sex".
+- Stacked Barcharts (x=gender, y=education level)
+
+---
+&lt;img src="Project_presentation_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+- From the graph we can see that for 1 year of college, there are more males in this section than females 
+- Meanwhile if we compare each category, we can observe that males have a smaller graduation rate than females
+- Shown for each year of college, males have less proportion represented than females.
+
+---
+# 4.Can Health insurance positively affect Education Level
+
+- The relationship between Health insurance and Education level.
+- Variable used: "hcovany" and "educ".
+- Barchart (x=Health Insurance, y=count) and (x=Health Insurance, y=EducationLVL Count)
+---
+&lt;img src="Project_presentation_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+- Note: Most people do appear to have health insurance
+---
+&lt;img src="Project_presentation_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+- Consider two groups of people in general: people with health insurance + graduating, and those who didn't graduate but have health insurance. 
+- We note the No. of people who have health insurance while also graduated is higher compared to those who didn't graduate. 
+- This suggests that at low levels of education, a person is also more likely to not have health insurance. Thusly insurance shows a positive effect on education level.
+
+---
+# 5. Further Data Modelling
+
+- During Linear Regression we consider distribution and transformation of our variables
+- Taking note of any skewness shown in the distribution
+&lt;img src="Project_presentation_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+- However, we do note a Positive Skewed distribution of family total income
+- Therefore, we predict that a log transformation might be required.
+
+---
+
+- Note the negative values among the ftotinc, preventing log transformation 
+- Negative numbered data count is relatively small(60)
+- These values have been removed to allow the log transformation
+
+
+```
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -14400   18000   46800   65641   90000 1322030 
+```
+---
+&lt;img src="Project_presentation_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+- The graph shows a reasonable distribution, log(familyincome). Skewness is back to normal.
+- There's a huge difference between each regions' education level
+- To apply the linear model to each region, we choose one region (New England Division) to select one relatively fit model.
+
+
+
+---
+
+---
+# 6. Which is the best model to use?
+- Refer to report Appendix 1-4
+- We can see that in all these models, the best model appears to be the very last model
+- An r squared of 0.2154. In the last model we note p values of each coefficient
+- We can see that most of the p values are &lt; (0.05), except for the coefficient 'racwhtYes'
+- As 'racwhtYes' p-val &gt; 0.05, we fail to reject the null hypothesis
+- There is unlikely to be a relationship between race and education level.
+
+---
+# Same Model with One Region
+- First regression is only one region (New England div) shown
+
+```
+                                   term    estimate  std.error  statistic
+1                           (Intercept)  0.13922895 0.32041003  0.4345337
+2                 schltypePublic school  1.92139355 0.34679052  5.5405020
+3                             sexFemale  0.14553862 0.04147867  3.5087578
+4 hcovanyWith health insurance coverage  0.53423241 0.07241625  7.3772449
+5                             racwhtYes -0.34664475 0.20712642 -1.6735902
+6                              lftotinc -0.06297856 0.01728373 -3.6438065
+7                                   age  0.29811414 0.01006939 29.6059882
+8             schltypePublic school:age -0.11285583 0.01350716 -8.3552602
+9                    racwhtYes:lftotinc  0.06364987 0.02009650  3.1672118
+        p.value
+1  6.639138e-01
+2  3.121300e-08
+3  4.529210e-04
+4  1.794465e-13
+5  9.425407e-02
+6  2.705027e-04
+7 5.279970e-182
+8  7.744918e-17
+9  1.545431e-03
+  r.squared adj.r.squared   sigma statistic p.value df    logLik      AIC
+1 0.2154005     0.2145395 1.75322  250.1705       0  9 -14450.38 28920.77
+       BIC deviance df.residual
+1 28989.72 22407.86        7290
+```
+---
+# Same Model with all Regions
+- Second regression is every region. R squared was a lot smaller
+- Showing that Education Level differs from region to region
+- Meaning we can’t analyse one region to represent the rest
+- We must find the best model to compare against every single region.
+---
+
+```
+                                   term    estimate   std.error  statistic
+1                           (Intercept)  2.06687955 0.081187778  25.458014
+2                 schltypePublic school  0.80408266 0.084653685   9.498496
+3                             sexFemale  0.14036928 0.008756433  16.030417
+4 hcovanyWith health insurance coverage  0.58128347 0.010865735  53.496928
+5                             racwhtYes -0.11811068 0.042128316  -2.803594
+6                              lftotinc -0.03932527 0.003343371 -11.762163
+7                                   age  0.20364085 0.002821627  72.171433
+8             schltypePublic school:age -0.05876810 0.003265549 -17.996393
+9                    racwhtYes:lftotinc  0.02813619 0.004060827   6.928686
+        p.value
+1 1.143221e-142
+2  2.158567e-21
+3  8.734290e-58
+4  0.000000e+00
+5  5.054290e-03
+6  6.311671e-32
+7  0.000000e+00
+8  2.469923e-72
+9  4.264364e-12
+  r.squared adj.r.squared    sigma statistic p.value df    logLik      AIC
+1 0.1302917     0.1302463 1.697168  2865.881       0  9 -298119.6 596259.1
+       BIC deviance df.residual
+1 596358.5 440813.2      153040
+```
+
+---
+# Benchmark Region Models against Best Model
+
+```
+# A tibble: 8 x 10
+  region        intercept   age `hcovanyWith health in… lftotinc racwhtYes
+  &lt;fct&gt;             &lt;dbl&gt; &lt;dbl&gt;                   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 New England …     0.139 0.298                   0.534  -0.0630   -0.347 
+2 Middle Atlan…     1.37  0.250                   0.368  -0.0495   -0.337 
+3 East North C…     2.18  0.201                   0.595  -0.0460   -0.243 
+4 West North C…     2.27  0.188                   0.660  -0.0327    0.0692
+5 South Atlant…     2.76  0.165                   0.668  -0.0316    0.194 
+6 West South C…     2.83  0.167                   0.651  -0.0438   -0.0888
+7 Mountain Div…     2.46  0.180                   0.496  -0.0646   -0.348 
+8 Pacific Divi…     1.96  0.205                   0.493  -0.0213   -0.0850
+# ... with 4 more variables: `racwhtYes:lftotinc` &lt;dbl&gt;, `schltypePublic
+#   school` &lt;dbl&gt;, `schltypePublic school:age` &lt;dbl&gt;, sexFemale &lt;dbl&gt;
+```
+- Each region is compared with the New England best model found
+- Age is all positive. Therefore a positive effect on all regions
+- RacwhtYes has negative and positive values depending on region
+- RacwhtYes isn't extremely influential across regions. P value &gt; 0.05
+
+---
+# How Good are the "Region Models"
+&lt;img src="Project_presentation_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+- The above Dot plot shows how good this model is.
+- As the r squared value are generally quite small, this model isn't a good model
+- However it is still very helpful for analysing education level based on various factors in the US. 
+
+---
+#  Analysis limitations
+
+- A comprehensive summary of all US regions would not be feasable therefore the analysis can be misleading or one sided with only 8 chosen regions 
+- Multicollinearity problems where variables may correlate to each other
+- Controlling the variable Family total income and Age, income tends to increase as age increases intuitively, however the family total income is less likely to affect the education level when observations graduate within the chosen age range
+- Outliers observed within variables requiring tidying up.
+
+---
+# Findings  
+- Health insurance is shown to have a positive effect on the education level
+- Different genders show noteworthy differences in education level, biased towards females,likely to have a 0.146 year higher education level than males
+- Public schools are more likely to increase the education level compared to private school
+- Interaction terms such as "Race to family total income", and "School type to Age" affect the education level of individual regions.
+- We hope you enjoyed the presentation. Thank you
+---
+# References:
+- IPUMS
+Retrieved from: https://usa.ipums.org/usa/
+- Bielick, S &amp; Chapman C. (2003). Trends in the Use of School Choice 1993 to 1999.
+Washington DC, USA: Department of Education, National Center for Education Statistics.
+- Centre of Education Policy. (2007). Are Private High Schools Better Academically Than
+Public High Schools, Washington DC, USA.
+- Council of American Private Education. (2013). Infographic - Private Education.
+Retrieved from: http://www.capenet.org/infographic.htm
+- Packages we used in R:
+ggplot, barplot, tidyverse, purrr, productplots
+---
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
