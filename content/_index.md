@@ -47,7 +47,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
          - 3 Data Lads, 8, [2018 AFL Statistics](project/presentations/3.DataLads/Project_presentation.html)
          - 4 Emusha, 8, [Foodborne Disease Outbreaks in the United States](project/presentations/4.Emusha/Emusha_Pres.html)
          - 5 Glen Waverley Dragons, 8, [NBA Statistics 2017/18 Season](project/presentations/5.GlenWaverleyDragons/Project_Presentation.html)
-         - 6 OTN, 10,  [The College Students’ Relationship with Food](project/presentations/6.OTN/OTN_Presentation.html)
+         - 6 OTN, 10,  [The College Students Relationship with Food](project/presentations/6.OTN/OTN_Presentation.html)
          - 7 GuangZongYaoZu, 10, [In-depth analysis of infant mortality](project/presentations/7.GuangZongYaoZu/GuangZongYaoZu_Presentation.html)
          - 8 Little Salt Egg, 10,  [Montgomery Salaries](project/presentations/8.LSE/LSE-slide_7.html)
          - 9 5T,  8,   [London Smart Meter Data](project/presentations/9.5T/presenation_slides-1.html)
@@ -59,7 +59,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
          - 14 Group 2,  10, [Infant mortality](project/presentations/14.Group 2/R_Project-Group2.html)
          - 15 As a TEAM, 1,0 [Private vs Public Education in the US](project/presentations/Project_presentation.html)
          - 16 AF,  4, [Mass shootings](project/presentations/16.AF/a.html)
-         - 17 THE MARKDOWN MATES,  10, 
+         - 17 THE MARKDOWN MATES,  10, [Accidents](project/presentations/17.Markdown_Mates/ETC1010-Project-presentation-Markdown-Mates-2__2_.html)
          - 18 Black 4, 10, [Melbourne Airbnb market](project/presentations/18.Black 4/Analysis_of_Melbourne_Airbnb_market.html)
          - 19 YES,  8, [Analysis of movies](project/presentations/19.YES/Project_Presentation.html)
          - 20 Raymond & Co., 10, [Crash accidents in Australia](project/presentations/20.Raymond & Co./ETC1010_Project_Presentation.html)
