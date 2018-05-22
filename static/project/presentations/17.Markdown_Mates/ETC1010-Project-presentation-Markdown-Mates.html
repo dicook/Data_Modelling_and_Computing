@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Project Presentation</title>
+    <meta charset="utf-8">
+    <meta name="author" content="The Markdown Mates" />
+    <meta name="date" content="2018-05-20" />
+    <link href="ETC1010-Project-presentation-Markdown-Mates_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="myremark.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Project Presentation
+### The Markdown Mates
+### 20 May 2018
+
+---
+
+
+
+
+## Presentation Overview
+
+- Data description
+
+- Data tidying, cleaning &amp; sampling
+
+- Visualing data through plots
+
+- Modelling the data 
+
+- Conclusions
+
+---
+##Data Description
+
+The data we selected was crash statistics, provided by the Victorian Government. Specifically, the data set contains information on 150,000 crash incidents throughout Victoria. Additonal data on hourly traffic volume across Victoria was also used, to supplement the crash data.
+
+The data included over 100 variables, across multiple CSV files. Each crash's accident number allowed variables from multiple files to be directly compared and analysed.
+
+This data was chosen as we all use the road, making analysis of the data both relevant and interesting. Findings from analysing the data may provide insight into dangerous pattern on Victorian road, and what to focus on for making our roads safer.
+
+---
+##Data Sets
+**Accidents data set** - Contains main datapoints (key information) for each accident.
+
+**Vehicle data set** - Contains data on every vehicle involved in each accident.
+
+**Node data set** - Contains location information for each accident.
+
+**Road surface data set** - Contains information on the road surface condition for each accident
+
+**Traffic volume data set** - Contains information regarding total traffic volume for locations.
+
+**Hourly traffic volume data set** - Contains hourly traffic volume information for locations.
+
+---
+##Data Cleaning
+
+- Reduced missing values from 5% to 0.4%
+- Observations with more than 6 missing values were removed
+- Used categorical imputation and logic, vehicles in similar classes had similar weights and seating capacities
+- Many remaining missing values were valid, due to inclusion of Horses, Trains, Trams and Rotary Engines
+- Further cleaning is requried for proper use of Vehicle Make and Model
+- Traffic volume data allowed standardisation of crash statistics by hour and day of the week
+- Further data that could be useful is the latitude and longitude of Vehicle Owner Suburbs
+
+---
+##Questions
+
+- Do the number of accidents on Victorian roads differ significantly between the hours in a day?
+- Do the number of accidents on Victorian roads differ significantly between the days of the week?
+- How much more dangerous are wet roads than dry?
+- Do accidents resulting in death vary according to light conditions?
+- How does accident damage change between speed zones?
+- Which makes of vehicle are involved in the most accidents?
+- How are accidents and accident severity dispersed across the state?
+- Is the type of accident significant in explaining its severity?
+- Are light and road surface conditions significant in explaining accident severity?
+- Are vehicle variables, specifically vehicle type, Number of cylinders, number of wheels, seating capacity, weight and year of manufacture significant in explaining accident severity?
+
+---
+##Data Visualisation
+
+
+
+
+&lt;img src="ETC1010-Project-presentation-Markdown-Mates_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+##Data Visualisation
+&lt;img src="ETC1010-Project-presentation-Markdown-Mates_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+##Data Visualisation
+
+
+&lt;img src="ETC1010-Project-presentation-Markdown-Mates_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+##Data Visualisation
+&lt;img src="ETC1010-Project-presentation-Markdown-Mates_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+##Data Visualisation
+&lt;img src="ETC1010-Project-presentation-Markdown-Mates_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+##Data Visualisation
+&lt;img src="ETC1010-Project-presentation-Markdown-Mates_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Modelling the data
+
+Three models were created, explaining the relationship between crash severity and a number of explanatory variables:
+
+  + Most of the variables select were categorical, so dummy variables were created to test individual significance of each category.
+  
+  + Individual significance was assessed using p-values, at a 95% significance level. If a individual variable (or dummy) had a p-values less than 0.05, it was deemed significant in explaining crash significance when modelled with the other variables.
+  
+  + All models were based on the sample of 5000 accidents, so certain categories included in the original data may be absent.
+
+---
+## Are accident type and road geometry significant in explaining crash severity?
+
+The first model attempted to explain crash severity using the type of crash/accident, and the road geometry of the location where the crash occured. Both were categorical variables, so dummies variables were used for each accident type and road geometry. 
+
+**Results:**
+  + All accident types were found to be significant in explaining crash severity, from vehicle collision to collisions with animals. P-values for all accident type dummies were very close to 0, well below the threshold of 0.05.
+  
+  + When modelled with accident type, all road geometries were insignificant in explaining crash severity. Whether the crash occured at a t-intersection, not at an intersection or at a multiple intersection, had no influence on it's severity.
+ 
+---
+## Do light conditions and the condition of the road surface help explain crash severity?
+
+This next model again focused on crash condition variables, rather than the vehicle itself. It examined the relationship between crash severity andlight conditions at the accident, along with the condition on the road surface. Again, dummies were used for individual significance.
+
+**Results:**
+  + All light conditions, from daylight, to night with no street lights, were found to be significant in explaining crash severity.
+  
+  + Of the road surface conditions, only wet and dry roads were found to be significant in explaining crash severity. The insignificance of icy, muddy and snowy roads may be due to the limits accidents in the sample involving those surface conditions. 
+
+---
+### Does the vehicle type, number of wheels, cylinders, seating capacity, weight and year of manufacture influence severity of the accident?
+
+The final model addressed certain vehicle variables, and whether they influenced severity of the vehicle's accident. 
+
+**Results:**
+  + Every vehicle type, from car, to bus, to motor scooter, to tram, were determined to be significant in explaining crash severity. 
+  
+  + Similarly, the number of wheel, vehicle weight and number of cylinders were also significant. 
+  
+  + The vehicle's seating capacity and yeat of manufacture, were not significant.
+  
+---
+
+# To Conclude...
+![](Finish.png)
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

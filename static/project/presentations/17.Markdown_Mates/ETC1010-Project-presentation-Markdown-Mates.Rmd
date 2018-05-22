@@ -1,0 +1,242 @@
+---
+title: "Project Presentation"
+author: "The Markdown Mates"
+date: "20 May 2018"
+output:
+  xaringan::moon_reader:
+    css: ["default","myremark.css"]
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  collapse = TRUE,
+  echo=FALSE,
+  comment = "",
+  fig.height = 4,
+  fig.width = 8,
+  fig.align = "center",
+  cache = FALSE
+)
+library(tidyverse)
+library(lubridate)
+#devtools::install_github("yihui/xaringan")
+library(xaringan)
+```
+
+## Presentation Overview
+
+- Data description
+
+- Data tidying, cleaning & sampling
+
+- Visualing data through plots
+
+- Modelling the data 
+
+- Conclusions
+
+---
+##Data Description
+
+The data we selected was crash statistics, provided by the Victorian Government. Specifically, the data set contains information on 150,000 crash incidents throughout Victoria. Additonal data on hourly traffic volume across Victoria was also used, to supplement the crash data.
+
+The data included over 100 variables, across multiple CSV files. Each crash's accident number allowed variables from multiple files to be directly compared and analysed.
+
+This data was chosen as we all use the road, making analysis of the data both relevant and interesting. Findings from analysing the data may provide insight into dangerous pattern on Victorian road, and what to focus on for making our roads safer.
+
+---
+##Data Sets
+**Accidents data set** - Contains main datapoints (key information) for each accident.
+
+**Vehicle data set** - Contains data on every vehicle involved in each accident.
+
+**Node data set** - Contains location information for each accident.
+
+**Road surface data set** - Contains information on the road surface condition for each accident
+
+**Traffic volume data set** - Contains information regarding total traffic volume for locations.
+
+**Hourly traffic volume data set** - Contains hourly traffic volume information for locations.
+
+---
+##Data Cleaning
+
+- Reduced missing values from 5% to 0.4%
+- Observations with more than 6 missing values were removed
+- Used categorical imputation and logic, vehicles in similar classes had similar weights and seating capacities
+- Many remaining missing values were valid, due to inclusion of Horses, Trains, Trams and Rotary Engines
+- Further cleaning is requried for proper use of Vehicle Make and Model
+- Traffic volume data allowed standardisation of crash statistics by hour and day of the week
+- Further data that could be useful is the latitude and longitude of Vehicle Owner Suburbs
+
+---
+##Questions
+
+- Do the number of accidents on Victorian roads differ significantly between the hours in a day?
+- Do the number of accidents on Victorian roads differ significantly between the days of the week?
+- How much more dangerous are wet roads than dry?
+- Do accidents resulting in death vary according to light conditions?
+- How does accident damage change between speed zones?
+- Which makes of vehicle are involved in the most accidents?
+- How are accidents and accident severity dispersed across the state?
+- Is the type of accident significant in explaining its severity?
+- Are light and road surface conditions significant in explaining accident severity?
+- Are vehicle variables, specifically vehicle type, Number of cylinders, number of wheels, seating capacity, weight and year of manufacture significant in explaining accident severity?
+
+---
+##Data Visualisation
+```{r}
+# Contains main datapoints about the accident, removing irrelevant variables such as Melways referencing and taking a sample
+suppressWarnings(accident <- read_csv("ACCIDENT.csv") %>% subset(select = -c(DIRECTORY, EDITION, PAGE, GRID_REFERENCE_X, GRID_REFERENCE_Y)) %>% sample_n(50000))
+
+# Contains data about EACH vehicle involved in the accident, there is often more than one vehicle for each accident. Remove variables which are irrelevant or have large instances of missing values
+suppressWarnings(vehicle <- read_csv("VEHICLE.csv") %>% subset(select = -c(VEHICLE_POWER, VEHICLE_COLOUR_2,CUBIC_CAPACITY, VEHICLE_WEIGHT, CARRY_CAPACITY, CONSTRUCTION_TYPE)))
+
+# Contains location information about the accident
+suppressWarnings(nodes <- read_csv("NODE.csv") %>% subset(select = c(ACCIDENT_NO, NODE_ID, Lat, Long)))
+
+# Contains total traffic data about a location
+suppressWarnings(minorVolume <- read_csv("Traffic_Volume.csv") %>% subset(select = c(HMGNS_FLOW_ID, ALLVEHS_MMW, MIDPNT_LAT, MIDPNT_LON)))
+
+# Contains hourly traffic volume figures for a location. Only take the observations for standard school term (Approx 40 weeks of the year), ignoring public holdidays, long weekends and school holidays for ease of analysis
+suppressWarnings(majorVolume <- read_csv("TYPICAL_HOURLY_VOLUME_DATA.csv") %>% subset(select = -c(HMGNS_LNK_ID, FLOW, COUNT_TYPE,HMGNS_LNK_DESC)) %>% filter(PERIOD_TYPE == "SCHOOL TERM/NORMAL"))
+
+# Contains information about the surface condition of the accident
+suppressWarnings(roadCondition <- read_csv("ROAD_SURFACE_COND.csv") %>% subset(select = c(ACCIDENT_NO, `Surface Cond Desc`))) 
+```
+
+```{r}
+finalVolume <- left_join(minorVolume, majorVolume, by = "HMGNS_FLOW_ID") %>% sample_n(50000)
+finalVolume <- finalVolume[-which(rowMeans(is.na(finalVolume)) >= 5/30),]
+
+rm(roadCondition)
+rm(minorVolume)
+rm(majorVolume)
+```
+
+```{r}
+sampleV <- read.csv("CleanedData.csv")
+# Create hourly tallies of the accidents and means of traffic volume data from all location
+sampleHourly <- sampleV %>% group_by(Hour)  %>% count(Hour) %>% arrange(Hour)
+volumeHourly <- finalVolume %>% subset(select = -c(ALLVEHS_MMW, DOW, MIDPNT_LAT, MIDPNT_LON, HMGNS_FLOW_ID, PERIOD_TYPE)) %>% gather(key = Time, value = Volume) %>% group_by(Time) %>% summarise(mean(Volume, na.rm = TRUE)) %>% mutate(Hour = hour(hms(Time))) %>% arrange(Hour)
+
+# Standardise the number of accidents by the average traffic volume in that hour to develop the risk
+sampleHourly <- left_join(sampleHourly, volumeHourly, by = "Hour") %>% mutate(STD = n/(`mean(Volume, na.rm = TRUE)`))
+ggplot(sampleHourly, aes(x = Hour, y = STD))+geom_col(fill = "Blue") + ggtitle("Accidents by hour") + ylab("Standardised number of accidents")
+```
+
+
+
+---
+##Data Visualisation
+```{r}
+# Create daily tallies of the accidents and means of traffic volume data from all location
+DOTVector <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+sampleDaily <- sampleV %>% group_by(DAY_OF_WEEK)  %>% count(DAY_OF_WEEK) %>% arrange(DAY_OF_WEEK)
+volumeDaily <- finalVolume %>% subset(select = c(DOW, ALLVEHS_MMW)) %>% group_by(DOW) %>% tally(ALLVEHS_MMW)
+colnames(volumeDaily) <- c("DAY_OF_WEEK", "traffic")
+
+# Standardise the number of accidents by the average traffic volume in that hour to develop the risk
+sampleDaily <- left_join(sampleDaily,volumeDaily, by = "DAY_OF_WEEK") %>% mutate(STD = n/traffic)
+sampleDaily$DAY_OF_WEEK <- factor(sampleDaily$DAY_OF_WEEK, levels = 1:7, labels = DOTVector)
+ggplot(sampleDaily, aes(x = DAY_OF_WEEK, y = STD)) + geom_col() + ggtitle("Number of accidents by days of the week") + ylab("Standardised number of accidents") + xlab("Day")
+```
+
+
+
+---
+##Data Visualisation
+
+
+```{r}
+#Subsetting data for average severity and average level of damage of accidents by road conditions, then comparing results for wet and dry conditions as bar charts.
+library(gridExtra)
+ConditionSeverity <- sampleV %>% group_by(Surface.Cond.Desc) %>%  summarise(SEVERITY=mean(SEVERITY)) 
+ConditionSeverity <- ConditionSeverity[-c(2,3,4,5),]
+ConditionDamage <- sampleV %>% group_by(Surface.Cond.Desc) %>%  summarise(Damage=mean(LEVEL_OF_DAMAGE)) 
+ConditionDamage <- ConditionDamage[-c(2,3,4,5),]
+Severity <- ggplot(ConditionSeverity, aes(Surface.Cond.Desc, y=SEVERITY)) + geom_col(stat="identity", fill="Red") + ggtitle("Road conditions by average severity") + xlab("Road surface condition")
+Damage <- ggplot(ConditionDamage, aes(Surface.Cond.Desc, y=Damage)) + geom_col(stat="identity", fill="Blue") + ggtitle("Road conditions by average damage") + xlab("Road surface condition")
+grid.arrange(Severity,Damage, ncol=2)
+```
+
+---
+##Data Visualisation
+```{r, echo=FALSE}
+#Subsetting data for average number of deaths by the light conditions, then comparing results as a bar chart. All conditions with no deaths are removed.
+DeathsbyLighting <- sampleV %>% group_by(Light.Condition.Desc) %>%  summarise(`Average Deaths`=mean(NO_PERSONS_KILLED))
+DeathsbyLighting <- DeathsbyLighting[-c(2,4,7),]
+ggplot(DeathsbyLighting, aes(Light.Condition.Desc, y=`Average Deaths`)) + geom_col() + ggtitle("Average deaths by amount of light present") + xlab("Light condition")
+```
+
+---
+##Data Visualisation
+```{r, echo=FALSE}
+#Subsetting data for speed zones, befor removing zones with few accidents and plotting remaining speed zones by average damage of accidents.
+ZoneDamage <- sampleV %>% group_by(SPEED_ZONE) %>% summarise(`Average Damage`=mean(LEVEL_OF_DAMAGE)) 
+ZoneDamage <- ZoneDamage[-c(6,10,11,12,13),]
+ggplot(ZoneDamage, aes(x=SPEED_ZONE, y=`Average Damage`)) + geom_col(fill="yellow") + ggtitle("Average accident damage by speed zone of accident") + xlab("Speed Zone")
+```
+
+---
+##Data Visualisation
+```{r, echo=FALSE}
+#Subsetting data by vehicle make, filtering by number of accidents; before plotting vehicle makes  with accidents >200.
+Accidents_by_vehicle_make <- sampleV %>% group_by(VEHICLE_MAKE) %>% count(VEHICLE_MAKE, sort=TRUE) %>% filter(n>2000)
+ggplot(Accidents_by_vehicle_make, aes(x=VEHICLE_MAKE, y=n)) + geom_col() + xlab("Vehicle make") + ylab("number of accidents") + ggtitle("Vehicle makes involved in most accidents")
+```
+
+---
+## Modelling the data
+
+Three models were created, explaining the relationship between crash severity and a number of explanatory variables:
+
+  + Most of the variables select were categorical, so dummy variables were created to test individual significance of each category.
+  
+  + Individual significance was assessed using p-values, at a 95% significance level. If a individual variable (or dummy) had a p-values less than 0.05, it was deemed significant in explaining crash significance when modelled with the other variables.
+  
+  + All models were based on the sample of 5000 accidents, so certain categories included in the original data may be absent.
+
+---
+## Are accident type and road geometry significant in explaining crash severity?
+
+The first model attempted to explain crash severity using the type of crash/accident, and the road geometry of the location where the crash occured. Both were categorical variables, so dummies variables were used for each accident type and road geometry. 
+
+**Results:**
+  + All accident types were found to be significant in explaining crash severity, from vehicle collision to collisions with animals. P-values for all accident type dummies were very close to 0, well below the threshold of 0.05.
+  
+  + When modelled with accident type, all road geometries were insignificant in explaining crash severity. Whether the crash occured at a t-intersection, not at an intersection or at a multiple intersection, had no influence on it's severity.
+ 
+---
+## Do light conditions and the condition of the road surface help explain crash severity?
+
+This next model again focused on crash condition variables, rather than the vehicle itself. It examined the relationship between crash severity andlight conditions at the accident, along with the condition on the road surface. Again, dummies were used for individual significance.
+
+**Results:**
+  + All light conditions, from daylight, to night with no street lights, were found to be significant in explaining crash severity.
+  
+  + Of the road surface conditions, only wet and dry roads were found to be significant in explaining crash severity. The insignificance of icy, muddy and snowy roads may be due to the limits accidents in the sample involving those surface conditions. 
+
+---
+### Does the vehicle type, number of wheels, cylinders, seating capacity, weight and year of manufacture influence severity of the accident?
+
+The final model addressed certain vehicle variables, and whether they influenced severity of the vehicle's accident. 
+
+**Results:**
+  + Every vehicle type, from car, to bus, to motor scooter, to tram, were determined to be significant in explaining crash severity. 
+  
+  + Similarly, the number of wheel, vehicle weight and number of cylinders were also significant. 
+  
+  + The vehicle's seating capacity and yeat of manufacture, were not significant.
+  
+---
+
+# To Conclude...
+![](Finish.png)
