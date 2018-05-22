@@ -4,6 +4,7 @@
     <title>ETC1010 Project</title>
     <meta charset="utf-8">
     <meta name="author" content="Team DQ" />
+    <meta name="date" content="2018-05-23" />
     <link href="Presentation_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="myremark.css" type="text/css" />
   </head>
@@ -13,7 +14,7 @@ class: center, middle, inverse, title-slide
 
 # ETC1010 Project
 ### Team DQ
-### Week 12
+### May 23, 2018
 
 ---
 
@@ -30,15 +31,21 @@ class: center, middle, inverse, title-slide
 - The influence factors in temperature, and how they influenced.
 
 ---
-#  Questions will be answering
+#  Questions
 
-- 1. Does any factor relate to each other?
-- 2. Which factor(s) influence temperature?
-- 3. What different between 9am and 3pm?
-- 4. Shall we build the best 	prediction model for temperature?
-- 5. Can we visualize the relation of wind direction?
-- 6. Are there any patterns in last year? 	
-- 7. Can we guess the temperature in 5/7 and 5/8?
+1.Are there any patterns in last year? 
+
+2.Does any factor relate to each other?
+
+3.Which factor(s) influence temperature?
+
+4.Can we visualize the relation of wind direction?
+
+5.What different between 9am and 3pm?
+
+6.Shall we build the best	prediction model for minimum temperature?
+
+7.Can we guess the temperature in 5/7 and 5/8?
 
 ---
 #   Missing value
@@ -72,7 +79,7 @@ class: center, middle, inverse, title-slide
 
 ---
 # Direction &amp; Minimum
-- All has same mean
+- All has similar middle point
 - Different spread range 
 - Not useful
 - Morning is north wind
@@ -96,53 +103,75 @@ class: center, middle, inverse, title-slide
 ```
 
 Call:
-lm(formula = min ~ eva + sun + temp9 + humidity9 + cloud9 + pressure9 + 
+lm(formula = min ~ eva + humidity9 * temp9 + cloud9 + pressure9 + 
+    humidity3 + speed3 + pressure3 + day + month + year, data = Data4)
+
+Coefficients:
+    (Intercept)              eva        humidity9            temp9  
+      38.004056         0.228627         0.002724         0.575002  
+         cloud9        pressure9        humidity3           speed3  
+       0.220687        -0.151934         0.026783         0.021752  
+      pressure3              day            month             year  
+       0.118012         0.017595        -0.666556        -6.809150  
+humidity9:temp9  
+       0.003979  
+```
+
+---
+
+```
+
+Call:
+lm(formula = min ~ eva + humidity9 * temp9 + cloud9 + pressure9 + 
     humidity3 + speed3 + pressure3 + day + month + year, data = Data4)
 
 Residuals:
     Min      1Q  Median      3Q     Max 
--5.3536 -1.0871  0.0717  1.1459  4.5412 
+-4.4591 -1.1178  0.0106  1.1630  4.2054 
 
 Coefficients:
-             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 35.992574  15.005332   2.399  0.01693 *  
-eva          0.218843   0.035602   6.147 1.96e-09 ***
-sun         -0.058441   0.034447  -1.697  0.09059 .  
-temp9        0.824835   0.027128  30.406  &lt; 2e-16 ***
-humidity9    0.073266   0.007780   9.417  &lt; 2e-16 ***
-cloud9       0.181747   0.042693   4.257 2.60e-05 ***
-pressure9   -0.141870   0.042797  -3.315  0.00100 ** 
-humidity3    0.022466   0.007606   2.954  0.00333 ** 
-speed3       0.027029   0.009826   2.751  0.00623 ** 
-pressure3    0.104842   0.042597   2.461  0.01428 *  
-day          0.016794   0.009340   1.798  0.07294 .  
-month       -0.605048   0.284252  -2.129  0.03392 *  
-year        -6.091825   3.384520  -1.800  0.07265 .  
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     38.0040558 14.6323498   2.597 0.009754 ** 
+eva              0.2286267  0.0348555   6.559 1.73e-10 ***
+humidity9        0.0027237  0.0162956   0.167 0.867345    
+temp9            0.5750023  0.0594595   9.670  &lt; 2e-16 ***
+cloud9           0.2206867  0.0338484   6.520 2.19e-10 ***
+pressure9       -0.1519336  0.0418284  -3.632 0.000319 ***
+humidity3        0.0267832  0.0066329   4.038 6.50e-05 ***
+speed3           0.0217521  0.0096742   2.248 0.025107 *  
+pressure3        0.1180118  0.0417107   2.829 0.004907 ** 
+day              0.0175951  0.0091246   1.928 0.054545 .  
+month           -0.6665556  0.2776166  -2.401 0.016821 *  
+year            -6.8091496  3.3063514  -2.059 0.040121 *  
+humidity9:temp9  0.0039790  0.0008605   4.624 5.13e-06 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 1.614 on 388 degrees of freedom
-Multiple R-squared:  0.8874,	Adjusted R-squared:  0.8839 
-F-statistic: 254.8 on 12 and 388 DF,  p-value: &lt; 2.2e-16
+Residual standard error: 1.577 on 388 degrees of freedom
+Multiple R-squared:  0.8925,	Adjusted R-squared:  0.8892 
+F-statistic: 268.4 on 12 and 388 DF,  p-value: &lt; 2.2e-16
 ```
-
 
 ---
+
+
 # Good for fitness
-- AIC of min &amp; max
+- AIC in the choosen minimum model
 
 ```
-[1] 1536.685
+[1] 1518.136
 ```
+- R^2 `0.8956`
+
 
 - Residuals plot
-
+&lt;img src="Presentation_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
 ---
 # Conclusion:  
-- Most of the factors relate to the minimum temperature
 - The time of the factors is key influence the temperature 
 - 9Pm temp, could and humidity are highly affect the daily temperature
-- Easily predict temperature by these factors we choosed
+- The best model with the interation factors will more accurate to predict temperature
+
 
 ---
 # Reference:
@@ -167,12 +196,23 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   d.head.appendChild(s);
 })();</script>
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
   }
-});
+})();
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

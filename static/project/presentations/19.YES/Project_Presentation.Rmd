@@ -128,12 +128,16 @@ prod_map <- joinCountryData2Map(country_codes, joinCode = "ISO3",
 
 ```
 
+---
+
 - North America as well as certain areas of Europe (France and Italy) have been home to a majority of the worlds film-productions 
 - Countries such as Australia, China and India have also commonly been chosen as areas for film production
 - Factors affecting location: unique filming environments, home grown filmmaking culture development, and overall globalisation of filmmaking 
 
+---
+
 ## 2. Top 10 grossing films vs. top 10 ROI
-```{r}
+```{r fig.height=6, fig.width=8}
 ##Question (8) What are the top 10 grossing films?
 Mixed_Data_V2 <- Mixed_Data_V2 %>%
   mutate(budget = ifelse(budget < 5000, NA, budget)) %>%  # Agreed value that $5000 should be null
@@ -175,6 +179,8 @@ ggplotly(p)  %>% config(displayModeBar = F)
 
 ```
 
+---
+
 - High world-wide box office performance does not always constitute great ROI
 - The highest earning films in terms of ROI are observed to return ROI orders of magnitude larger than those of the top high-grossing films
 
@@ -182,7 +188,7 @@ ggplotly(p)  %>% config(displayModeBar = F)
 ---
 # 3. The effect of a popular actor against ROI
 
-```{r}
+```{r fig.height=6, fig.width=8}
 #Question
 #Does having a world class actor, such as the beloved Tom Hanks, increase the ROI of the genre of movie.
 #Tom Hanks ROI vs Avg for that category
@@ -211,6 +217,8 @@ ggtitle("Tom Hanks movies ROI by Genre vs the average for the Genre")
 ggplotly(p,tooltip=c("Title","All_Genres","ROI","GenAvg")) %>% config(displayModeBar = F) 
 
 ```
+
+---
 
 - Tom Hank's movies generally performs better than the average in the same movie genres
 - Popular actors may have significant marketing value 
