@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>ETC1010 Final Project 2018</title>
+    <title>Kiva Crowdfunding</title>
     <meta charset="utf-8">
     <meta name="author" content="Riley/Lachlan/Ben" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="myremark.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# ETC1010 Final Project 2018
-## ⚔<br/>with xaringan
+# Kiva Crowdfunding
 ### Riley/Lachlan/Ben
 ### 2018/5/19
 
@@ -20,116 +19,21 @@ class: center, middle, inverse, title-slide
 
 
 
-```r
-#Loading up the specific libraries and downloading the data set.
-library(tidyverse)
-```
-
-```
-## ── Attaching packages ───────────────────────────────────── tidyverse 1.2.1 ──
-```
-
-```
-## ✔ ggplot2 2.2.1          ✔ purrr   0.2.4     
-## ✔ tibble  1.4.2          ✔ dplyr   0.7.5.9000
-## ✔ tidyr   0.8.1          ✔ stringr 1.3.1     
-## ✔ readr   1.1.1          ✔ forcats 0.3.0
-```
-
-```
-## ── Conflicts ──────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()
-```
-
-```r
-library(broom)
-library(readr)
-library(visdat)
-library(naniar)
-library(xaringan)
-library(plotly)
-```
-
-```
-## 
-## Attaching package: 'plotly'
-```
-
-```
-## The following object is masked from 'package:ggplot2':
-## 
-##     last_plot
-```
-
-```
-## The following object is masked from 'package:stats':
-## 
-##     filter
-```
-
-```
-## The following object is masked from 'package:graphics':
-## 
-##     layout
-```
-
-```r
-library(dplyr)
-Kiva_Loans &lt;- read_csv("Kiva Loans.csv")
-```
-
-```
-## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   id = col_integer(),
-##   funded_amount = col_double(),
-##   loan_amount = col_double(),
-##   partner_id = col_double(),
-##   posted_time = col_datetime(format = ""),
-##   disbursed_time = col_datetime(format = ""),
-##   funded_time = col_datetime(format = ""),
-##   term_in_months = col_double(),
-##   lender_count = col_integer(),
-##   date = col_date(format = "")
-## )
-```
-
-```
-## See spec(...) for full column specifications.
-```
 
 
-```r
-#Un-selecting the unnecessary variables.
-Kiva_Loans1 &lt;- Kiva_Loans %&gt;% 
-  select(-(use), -(country_code), -(tags), -(id), -(posted_time), -(disbursed_time), -(funded_time), -(partner_id), -(region)) %&gt;%
-  mutate(raised_amount = loan_amount + funded_amount) %&gt;%
-  filter(raised_amount &gt; c(200)) %&gt;%
-  filter(raised_amount &lt; c(1000000)) %&gt;%
-  filter(lender_count &lt; c(600)) %&gt;%
-  filter(term_in_months &lt; c(100))
-```
-
----
-
-- Missing Values
 
 
-```r
-#Warning, takes a very very very long time to run.
-#vis_miss(Kiva_Loans, warn_large_data = FALSE)
-#vis_miss(Kiva_Loans1, warn_large_data = FALSE)
-```
+
+
+# Missing Values
+
+&lt;img src="Final_Project_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
 
 As you can see, a large number of variables contain almost no missing values whatsoever. However, in cleaning our data we can boil down the variables that do have missing data like "funded time" and "disbursed" as the same as date, which isn't missing any values. As such, through our process we are able to clean out all missing values, resulting in a clean dataset that produces 0 missing values. 
 
 ---
 
-#Reasons for exclusion:
-
-The following variables were excluded
+# Excluded variables
 
 -	Use
 -	Tags
@@ -137,73 +41,49 @@ The following variables were excluded
 -	ID
 -	Partner ID
 -	Posted/Disbursed/Funded time
-
 -	Raised amount was filtered to avoid outliers influencing the analysis
 	$200 &lt; Raised Amount &lt; $1,000,000
 -	Lender count was filtered to below 600
 -	Term in Months (time) was filtered to below 150 months
 
-
 ---
-#Questions
+# Questions
 
-1. Is there any differences in the loan application process or result with females in comparison to males? If so, how?
+1.Is there any differences in the loan application process or result with females in comparison to males? If so, how?
 
-2. Does the size of the loan receive depend on the industry that you're in?
+2.Does the size of the loan receive depend on the industry that you're in?
 
-3. Which industries or types of activities are more dependent on looking for a loan system? Count actvities/sector + loan amount vs sector to look at it deeper.
+3.Which industries or types of activities are more dependent on looking for a loan system? Count actvities/sector + loan amount vs sector to look at it deeper.
 
-4. In how many instances does the loan amount equal the funded amount, and if they differ, why could that be? 
+4.In how many instances does the loan amount equal the funded amount, and if they differ, why could that be? 
 
-5. What's the most popular term for loans and repayment type, and dependent on the term of the loans, how does the repayment length vary?
+5.What's the most popular term for loans and repayment type, and dependent on the term of the loans, how does the repayment length vary?
 
-6.  Does the loan amount increase as the lender amount increases? 
+6.Does the loan amount increase as the lender amount increases? 
 
-7. Does the loan/funded amount depend on the currency it's given in/the country asking for it? 
+7.Does the loan/funded amount depend on the currency it's given in/the country asking for it? 
 
-8. Does the amount of donations increase over time?
-
----
-
-
-#  Making basic plots
-
+8.Does the amount of donations increase over time?
 
 ---
 
-- 1. Is there any differences in the loan application process or result with females in comparison to males? If so, how?
+*Is there any differences in the loan application process or result with females in comparison to males? If so, how?*
 
-
-```r
-a &lt;- Kiva_Loans1 %&gt;%
-  mutate(female = grepl("female", borrower_genders))
-
-a %&gt;% count(female)
-```
 
 ```
-## # A tibble: 2 x 2
-##   female      n
-##   &lt;lgl&gt;   &lt;int&gt;
-## 1 FALSE  137455
-## 2 TRUE   512485
+# A tibble: 2 x 2
+  female      n
+  &lt;lgl&gt;   &lt;int&gt;
+1 FALSE  137455
+2 TRUE   512485
+# A tibble: 2 x 2
+  male       n
+  &lt;lgl&gt;  &lt;int&gt;
+1 FALSE   4156
+2 TRUE  645784
 ```
 
-```r
-b &lt;- a %&gt;%
-  mutate(male = grepl("male", borrower_genders))
-
-b %&gt;% count(male)
-```
-
-```
-## # A tibble: 2 x 2
-##   male       n
-##   &lt;lgl&gt;  &lt;int&gt;
-## 1 FALSE   4156
-## 2 TRUE  645784
-```
-
+---
 
 Loan application process and result differed greatly on gender
 -	64% of borrowers were (just) females
@@ -216,49 +96,33 @@ Thus, you are significantly more likely to receive funds if you are female
 
 ---
 
-- 2. Does the size of the loan receive depend on the industry that you're in?
+*Does the size of the loan receive depend on the industry that you're in?*
 
-
-```r
-q2_tibble &lt;- Kiva_Loans1 %&gt;% 
-  group_by(sector) %&gt;%
-  summarise(n = n(), average_raised = mean(raised_amount) ) %&gt;%
-  mutate(total_raised = n * average_raised)
-q2_tibble
-```
 
 ```
-## # A tibble: 15 x 4
-##    sector              n average_raised total_raised
-##    &lt;chr&gt;           &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
-##  1 Agriculture    174296          1566.   273002960 
-##  2 Arts            11884          2007.    23851080 
-##  3 Clothing        32318          2226.    71930325 
-##  4 Construction     6210          2070.    12856665.
-##  5 Education       30124          1932.    58193970 
-##  6 Entertainment     820          2940.     2410920 
-##  7 Food           133876          1763.   235973060 
-##  8 Health           9138          2039.    18631850 
-##  9 Housing         33179          1353.    44899325 
-## 10 Manufacturing    6160          1725.    10624250 
-## 11 Personal Use    28883           966.    27893100 
-## 12 Retail         122374          1527.   186859060 
-## 13 Services        44696          2023.    90411160 
-## 14 Transportation  15358          1349.    20712775 
-## 15 Wholesale         624          2651.     1654300
+# A tibble: 15 x 4
+   sector              n average_raised total_raised
+   &lt;chr&gt;           &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
+ 1 Agriculture    174296          1566.   273002960.
+ 2 Arts            11884          2007.    23851080.
+ 3 Clothing        32318          2226.    71930325.
+ 4 Construction     6210          2070.    12856665.
+ 5 Education       30124          1932.    58193970.
+ 6 Entertainment     820          2940.     2410920.
+ 7 Food           133876          1763.   235973060.
+ 8 Health           9138          2039.    18631850.
+ 9 Housing         33179          1353.    44899325.
+10 Manufacturing    6160          1725.    10624250.
+11 Personal Use    28883           966.    27893100.
+12 Retail         122374          1527.   186859060.
+13 Services        44696          2023.    90411160.
+14 Transportation  15358          1349.    20712775.
+15 Wholesale         624          2651.     1654300.
 ```
 
-```r
-ggplot(q2_tibble, aes(x = fct_reorder(sector, n), y = n))+ geom_bar(stat="identity",position="dodge") + coord_flip()
-```
+&lt;img src="Final_Project_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
 
-![](Final_Project_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
-
-```r
-ggplot(q2_tibble, aes(x = fct_reorder(sector, total_raised), y = total_raised))+ geom_bar(stat="identity",position="dodge") + coord_flip()
-```
-
-![](Final_Project_files/figure-html/unnamed-chunk-5-2.png)&lt;!-- --&gt;
+---
 
 The three best performing sectors were (for both number of loans and gross raised funds):
 -	Agriculture
@@ -277,98 +141,55 @@ For the lower funded sectors (under 1000 loans each):
 
 ---
 
-- 3. Which industries or types of activities are more dependent on looking for a loan system? 
+*Which industries or types of activities are more dependent on looking for a loan system?* 
 
 
-```r
-q3_tibble &lt;- Kiva_Loans1 %&gt;% 
-  group_by(activity) %&gt;%
-  summarise(n = n(), average_raised = mean(raised_amount) ) %&gt;%
-  mutate(total_raised = n * average_raised)
-n_tibble &lt;- q3_tibble %&gt;%
-  filter(rank(n)&lt;=5 |  rank(desc(n))&lt;=5) %&gt;%
-  arrange(desc(n))
-average_raised_tibble &lt;- q3_tibble %&gt;%
-  filter(rank(average_raised)&lt;=5 |  rank(desc(average_raised))&lt;=5) %&gt;%
-  arrange(desc(average_raised))
-total_raised_tibble &lt;- q3_tibble %&gt;%
-  filter(rank(total_raised)&lt;=5 |  rank(desc(total_raised))&lt;=5) %&gt;%
-  arrange(desc(total_raised))
-
-n_tibble
+```
+# A tibble: 10 x 4
+   activity                      n average_raised total_raised
+   &lt;chr&gt;                     &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
+ 1 Farming                   68632          1437.    98650625.
+ 2 General Store             63886          1156.    73834940.
+ 3 Personal Housing Expenses 31900          1328.    42360050.
+ 4 Food Production/Sales     27432          1826.    50081715.
+ 5 Agriculture               26651          1892.    50435560.
+ 6 Film                         13          4185.       54400.
+ 7 Personal Care Products        7          1029.        7200.
+ 8 Event Planning                5          2870.       14350.
+ 9 Celebrations                  3           800.        2400.
+10 Adult Care                    2          3375.        6750.
+# A tibble: 10 x 4
+   activity                    n average_raised total_raised
+   &lt;chr&gt;                   &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
+ 1 Landscaping / Gardening    34          7980.      271315.
+ 2 Technology                178          6926.     1232870.
+ 3 Communications             96          6022.      578085.
+ 4 Cleaning Services         144          5641.      812285.
+ 5 Child Care                183          4998.      914675.
+ 6 Pigs                    26071           943.    24580225.
+ 7 Fishing                  9941           916.     9107525.
+ 8 Balut-Making               60           806.       48350.
+ 9 Celebrations                3           800.        2400.
+10 Home Appliances         15890           634.    10072550.
+# A tibble: 10 x 4
+   activity                   n average_raised total_raised
+   &lt;chr&gt;                  &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
+ 1 Farming                68632          1437.    98650625.
+ 2 General Store          63886          1156.    73834940.
+ 3 Agriculture            26651          1892.    50435560.
+ 4 Food Production/Sales  27432          1826.    50081715.
+ 5 Retail                 24195          2047.    49533675.
+ 6 Patchwork                 21          1338.       28100.
+ 7 Event Planning             5          2870.       14350.
+ 8 Personal Care Products     7          1029.        7200.
+ 9 Adult Care                 2          3375.        6750.
+10 Celebrations               3           800.        2400.
+     [,1]                            [,2]                
+[1,] "Count - Total Raised"          "0.963898808186909" 
+[2,] "Average Raised - Total Raised" "-0.149426393643214"
 ```
 
-```
-## # A tibble: 10 x 4
-##    activity                      n average_raised total_raised
-##    &lt;chr&gt;                     &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
-##  1 Farming                   68632          1437.    98650625 
-##  2 General Store             63886          1156.    73834940 
-##  3 Personal Housing Expenses 31900          1328.    42360050 
-##  4 Food Production/Sales     27432          1826.    50081715 
-##  5 Agriculture               26651          1892.    50435560 
-##  6 Film                         13          4185.       54400 
-##  7 Personal Care Products        7          1029.        7200.
-##  8 Event Planning                5          2870        14350 
-##  9 Celebrations                  3           800         2400 
-## 10 Adult Care                    2          3375         6750
-```
-
-```r
-average_raised_tibble
-```
-
-```
-## # A tibble: 10 x 4
-##    activity                    n average_raised total_raised
-##    &lt;chr&gt;                   &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
-##  1 Landscaping / Gardening    34          7980.       271315
-##  2 Technology                178          6926.      1232870
-##  3 Communications             96          6022.       578085
-##  4 Cleaning Services         144          5641.       812285
-##  5 Child Care                183          4998.       914675
-##  6 Pigs                    26071           943.     24580225
-##  7 Fishing                  9941           916.      9107525
-##  8 Balut-Making               60           806.        48350
-##  9 Celebrations                3           800          2400
-## 10 Home Appliances         15890           634.     10072550
-```
-
-```r
-total_raised_tibble
-```
-
-```
-## # A tibble: 10 x 4
-##    activity                   n average_raised total_raised
-##    &lt;chr&gt;                  &lt;int&gt;          &lt;dbl&gt;        &lt;dbl&gt;
-##  1 Farming                68632          1437.    98650625 
-##  2 General Store          63886          1156.    73834940 
-##  3 Agriculture            26651          1892.    50435560 
-##  4 Food Production/Sales  27432          1826.    50081715 
-##  5 Retail                 24195          2047.    49533675 
-##  6 Patchwork                 21          1338.       28100 
-##  7 Event Planning             5          2870        14350 
-##  8 Personal Care Products     7          1029.        7200.
-##  9 Adult Care                 2          3375         6750 
-## 10 Celebrations               3           800         2400
-```
-
-```r
-correlation1 &lt;- cor(q3_tibble$n, q3_tibble$total_raised)
-correlation2 &lt;- cor(q3_tibble$average_raised, q3_tibble$total_raised)
-correlation_array &lt;- matrix(
-  c("Count - Total Raised", "Average Raised - Total Raised", correlation1, correlation2),
-  nrow = 2,
-  ncol = 2)
-correlation_array
-```
-
-```
-##      [,1]                            [,2]                
-## [1,] "Count - Total Raised"          "0.963898808186909" 
-## [2,] "Average Raised - Total Raised" "-0.149426393643214"
-```
+---
 
 -	Very little variation in the mean raised amounts for each activity
 -	All activities average between $600-$8,000
@@ -379,48 +200,21 @@ correlation_array
 
 ---
 
-- 4. In how many instances does the loan amount equal the funded amount, and if they differ, why could that be? 
+*In how many instances does the loan amount equal the funded amount, and if they differ, why could that be?*
+
+&lt;img src="Final_Project_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
 
 
-```r
-Kiva_Loans1 %&gt;% ggplot(mapping = aes(x=loan_amount, y=funded_amount)) + geom_point()
-```
 
-![](Final_Project_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
-
-```r
-Kiva_Loans2 &lt;- Kiva_Loans1 %&gt;% mutate(funded_loan = funded_amount - loan_amount) 
-Kiva_Loans3 &lt;- Kiva_Loans2 %&gt;% filter(funded_loan &lt;0)
-Kiva_Loans4 &lt;- Kiva_Loans2 %&gt;% filter(funded_loan &gt;0)
-
-model1 &lt;- lm(funded_amount ~ loan_amount, data = Kiva_Loans1)
-```
-
-
-```r
-augment(model1)
-```
-
-
-```r
-tidy(model1)
-```
 
 ```
-##          term   estimate   std.error  statistic p.value
-## 1 (Intercept) 52.0818134 0.580687236   89.68996       0
-## 2 loan_amount  0.8718799 0.000413725 2107.38986       0
-```
-
-```r
-glance(model1)
-```
-
-```
-##   r.squared adj.r.squared    sigma statistic p.value df   logLik     AIC
-## 1 0.8723366     0.8723364 370.0195   4441092       0  2 -4765680 9531367
-##       BIC    deviance df.residual
-## 1 9531401 88985903995      649938
+         term   estimate   std.error  statistic p.value
+1 (Intercept) 52.0818134 0.580687236   89.68996       0
+2 loan_amount  0.8718799 0.000413725 2107.38986       0
+  r.squared adj.r.squared    sigma statistic p.value df   logLik     AIC
+1 0.8723366     0.8723364 370.0195   4441092       0  2 -4765680 9531367
+      BIC    deviance df.residual
+1 9531401 88985903995      649938
 ```
 
 -	Identify any observation that doesn’t lie on y=x function, hence funded amount does not equal loan amount
@@ -428,7 +222,6 @@ glance(model1)
 -	48,019 observations where funded amount &gt; loan amount
 -	$788 average difference for the loan being larger than the funded amount
 -	Intuitive model
-
 -	Calculate a tidy function of
 -	Funded amount estimated by loan amount
 -	For every dollar loaned by the agent, Kiva lenders lend $0.87
@@ -436,55 +229,36 @@ glance(model1)
 
 ---
 
-- 5. What's the most popular term for loans and repayment type, and dependent on the term of the loans, how does the repayment length vary? 
+*What's the most popular term for loans and repayment type, and dependent on the term of the loans, how does the repayment length vary?*
 
-
-```r
-Kiva_Loans %&gt;% count(term_in_months) %&gt;% arrange(desc(n))
-```
 
 ```
-## # A tibble: 148 x 2
-##    term_in_months      n
-##             &lt;dbl&gt;  &lt;int&gt;
-##  1             14 166750
-##  2              8 143042
-##  3             11  40694
-##  4              7  32847
-##  5             13  30501
-##  6             20  28483
-##  7              6  26039
-##  8             12  25700
-##  9             15  25255
-## 10             26  23431
-## # ... with 138 more rows
+# A tibble: 148 x 2
+   term_in_months      n
+            &lt;dbl&gt;  &lt;int&gt;
+ 1            14. 166750
+ 2             8. 143042
+ 3            11.  40694
+ 4             7.  32847
+ 5            13.  30501
+ 6            20.  28483
+ 7             6.  26039
+ 8            12.  25700
+ 9            15.  25255
+10            26.  23431
+# ... with 138 more rows
+# A tibble: 4 x 2
+  repayment_interval      n
+  &lt;chr&gt;               &lt;int&gt;
+1 monthly            342717
+2 irregular          257158
+3 bullet              70728
+4 weekly                602
 ```
 
-```r
-Kiva_Loans %&gt;% count(repayment_interval) %&gt;% arrange(desc(n))
-```
+&lt;img src="Final_Project_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;&lt;img src="Final_Project_files/figure-html/unnamed-chunk-10-2.png" style="display: block; margin: auto;" /&gt;
 
-```
-## # A tibble: 4 x 2
-##   repayment_interval      n
-##   &lt;chr&gt;               &lt;int&gt;
-## 1 monthly            342717
-## 2 irregular          257158
-## 3 bullet              70728
-## 4 weekly                602
-```
-
-```r
-ggplot(data = Kiva_Loans, mapping = aes(x=repayment_interval, y = term_in_months)) + geom_violin() + coord_flip()
-```
-
-![](Final_Project_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
-
-```r
-ggplot(data = Kiva_Loans, mapping = aes(x=1, y=term_in_months)) + geom_violin() + coord_flip()
-```
-
-![](Final_Project_files/figure-html/unnamed-chunk-10-2.png)&lt;!-- --&gt;
+---
 
 -	Short loan terms are more popular
 -	Likely attributable to:
@@ -495,44 +269,16 @@ ggplot(data = Kiva_Loans, mapping = aes(x=1, y=term_in_months)) + geom_violin() 
 -	Monthly repayments are the longest schedule
 -	Providing flexibility in repayments
 -	Helpful for businesses with limited liquid assets
-
 -	Longer term loans are either for higher-education costs or farming
 -	Higher loan demand, with limited profitability over short term
 
 ---
 
-- 6.  Does the amount raised for the crowdfund increase as the lender amount increases? 
+*Does the amount raised for the crowdfund increase as the lender amount increases?*
 
+&lt;img src="Final_Project_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;&lt;img src="Final_Project_files/figure-html/unnamed-chunk-11-2.png" style="display: block; margin: auto;" /&gt;
 
-```r
-ggplot(data = Kiva_Loans1, mapping = aes(x = lender_count, y = raised_amount)) + geom_point() + geom_smooth() + facet_wrap(~sector)
-```
-
-```
-## `geom_smooth()` using method = 'gam'
-```
-
-![](Final_Project_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
-
-```r
-Kiva_LoansSector &lt;- Kiva_Loans1 %&gt;% filter(sector == c("Agriculture", "Personal Use", "Retail", "Entertainment", "Clothing", "Education"))
-```
-
-```
-## Warning in sector == c("Agriculture", "Personal Use", "Retail",
-## "Entertainment", : longer object length is not a multiple of shorter object
-## length
-```
-
-```r
-ggplot(data = Kiva_LoansSector, mapping = aes(x = lender_count, y = raised_amount)) + geom_point() + geom_smooth() + facet_wrap(~sector)
-```
-
-```
-## `geom_smooth()` using method = 'gam'
-```
-
-![](Final_Project_files/figure-html/unnamed-chunk-11-2.png)&lt;!-- --&gt;
+---
 
 -	Likelihood of getting your crowdfund raised dependent on sector
 -	agriculture, retail, and clothing are the most frequent loan sectors
@@ -540,40 +286,29 @@ ggplot(data = Kiva_LoansSector, mapping = aes(x = lender_count, y = raised_amoun
 
 ---
 
-- 7. Does the raised amount depend on the currency it's given in/the country asking for it? 
+*Does the raised amount depend on the currency it's given in/the country asking for it?*
 
 
-```r
-Kiva_Loans1 %&gt;% count(currency) %&gt;% arrange(desc(n))
+```
+# A tibble: 66 x 2
+   currency      n
+   &lt;chr&gt;     &lt;int&gt;
+ 1 PHP      156144
+ 2 USD      105181
+ 3 KES       70897
+ 4 PKR       26841
+ 5 KHR       25468
+ 6 COP       21727
+ 7 PEN       21370
+ 8 UGX       19920
+ 9 TJS       17414
+10 XOF       17051
+# ... with 56 more rows
 ```
 
-```
-## # A tibble: 66 x 2
-##    currency      n
-##    &lt;chr&gt;     &lt;int&gt;
-##  1 PHP      156144
-##  2 USD      105181
-##  3 KES       70897
-##  4 PKR       26841
-##  5 KHR       25468
-##  6 COP       21727
-##  7 PEN       21370
-##  8 UGX       19920
-##  9 TJS       17414
-## 10 XOF       17051
-## # ... with 56 more rows
-```
+&lt;img src="Final_Project_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
 
-```r
-Kiva_LoansCurrency &lt;- Kiva_Loans1 %&gt;% filter(currency == c("USD", "MXN", "MMK", "RWF", "AZN", "PYG", "YER", "KES", "PEN", "PHP"))
-ggplot(data = Kiva_LoansCurrency, mapping = aes(x= lender_count, y=raised_amount)) + geom_point() + geom_smooth() + facet_wrap(~currency)
-```
-
-```
-## `geom_smooth()` using method = 'gam'
-```
-
-![](Final_Project_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+---
 
 -	From the top currencies we can identify the most prominent Kiva countries
 -	United States (USD), Kenya (KES), Peru (PEN), West Africa (XOF), and Columbia (COP)
@@ -585,14 +320,11 @@ ggplot(data = Kiva_LoansCurrency, mapping = aes(x= lender_count, y=raised_amount
 
 ---
 
-- 8. Does the amount of donations increase over time?
+*Does the amount of donations increase over time?*
 
+&lt;img src="Final_Project_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
 
-```r
-ggplot(data = Kiva_Loans1, mapping = aes(x=date, y=raised_amount)) + geom_point()
-```
-
-![](Final_Project_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+---
 
 -	No indication of growth in Kiva
 -	No indication of more donors to the service
@@ -600,211 +332,95 @@ ggplot(data = Kiva_Loans1, mapping = aes(x=date, y=raised_amount)) + geom_point(
 
 ---
 
-# Each individual variable plotted against the response variable.
+*Each individual variable plotted against the response variable.*
 
-
-```r
-Kiva_LoansGBActivity &lt;- Kiva_Loans1 %&gt;% group_by(activity)
-Kiva_LoansGBCountry &lt;- Kiva_Loans1 %&gt;% group_by(country)
-Kiva_LoansGBCurrency &lt;- Kiva_Loans1 %&gt;% group_by(currency)
-Kiva_LoansGBSector &lt;-  Kiva_Loans1 %&gt;% group_by(sector)
-
-Kiva_LoansGBCountry %&gt;% summarise(count = n()) %&gt;% arrange(count)
-```
 
 ```
-## # A tibble: 86 x 2
-##    country                          count
-##    &lt;chr&gt;                            &lt;int&gt;
-##  1 Guam                                 1
-##  2 Mauritania                           1
-##  3 Afghanistan                          2
-##  4 Bhutan                               2
-##  5 Virgin Islands                       2
-##  6 Vanuatu                              4
-##  7 Namibia                              8
-##  8 Chile                                9
-##  9 Saint Vincent and the Grenadines    16
-## 10 Puerto Rico                         68
-## # ... with 76 more rows
+# A tibble: 86 x 2
+   country                          count
+   &lt;chr&gt;                            &lt;int&gt;
+ 1 Guam                                 1
+ 2 Mauritania                           1
+ 3 Afghanistan                          2
+ 4 Bhutan                               2
+ 5 Virgin Islands                       2
+ 6 Vanuatu                              4
+ 7 Namibia                              8
+ 8 Chile                                9
+ 9 Saint Vincent and the Grenadines    16
+10 Puerto Rico                         68
+# ... with 76 more rows
+# A tibble: 66 x 2
+   currency count
+   &lt;chr&gt;    &lt;int&gt;
+ 1 VUV          4
+ 2 CLP          8
+ 3 NAD          8
+ 4 XCD         16
+ 5 THB         79
+ 6 BZD        125
+ 7 CNY        125
+ 8 SSP        127
+ 9 ILS        193
+10 SRD        223
+# ... with 56 more rows
 ```
 
-```r
-Kiva_LoansGBCurrency %&gt;% summarise(count = n()) %&gt;% arrange(count)
-```
-
-```
-## # A tibble: 66 x 2
-##    currency count
-##    &lt;chr&gt;    &lt;int&gt;
-##  1 VUV          4
-##  2 CLP          8
-##  3 NAD          8
-##  4 XCD         16
-##  5 THB         79
-##  6 BZD        125
-##  7 CNY        125
-##  8 SSP        127
-##  9 ILS        193
-## 10 SRD        223
-## # ... with 56 more rows
-```
-
-```r
-Kiva_LoansGBSector %&gt;% summarise(count = n()) %&gt;% arrange(count) %&gt;%
-  ggplot(aes(x = fct_reorder(sector, count), y = count)) + geom_bar(stat = "identity") + coord_flip()
-```
-
-![](Final_Project_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
-
-```r
-Kiva_LoansGBActivity %&gt;% summarise(count = n()) %&gt;% arrange(count) %&gt;% filter(count&gt;9000) %&gt;%
-  ggplot(aes(x = fct_reorder(activity, count), y = count)) + geom_bar(stat = "identity") + coord_flip()
-```
-
-![](Final_Project_files/figure-html/unnamed-chunk-14-2.png)&lt;!-- --&gt;
-
-```r
-Kiva_LoansGBCountry %&gt;% summarise(count = n()) %&gt;% arrange(count) %&gt;% filter(count&gt;8000) %&gt;%
-  ggplot(aes(x = fct_reorder(country, count), y = count)) + geom_bar(stat = "identity") + coord_flip()
-```
-
-![](Final_Project_files/figure-html/unnamed-chunk-14-3.png)&lt;!-- --&gt;
-
-```r
-Kiva_LoansGBCurrency %&gt;% summarise(count = n()) %&gt;% arrange(count) %&gt;% filter(count&gt;7000) %&gt;%
-  ggplot(aes(x = fct_reorder(currency, count), y = count)) + geom_bar(stat = "identity") + coord_flip()
-```
-
-![](Final_Project_files/figure-html/unnamed-chunk-14-4.png)&lt;!-- --&gt;
-
-```r
-ggplot(data = Kiva_Loans1, aes(x = term_in_months, weight = raised_amount)) + geom_histogram()
-```
-
-```
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-```
-
-![](Final_Project_files/figure-html/unnamed-chunk-14-5.png)&lt;!-- --&gt;
-
-```r
-ggplot(data = Kiva_Loans1, aes(x = repayment_interval, weight = raised_amount)) + geom_bar()
-```
-
-![](Final_Project_files/figure-html/unnamed-chunk-14-6.png)&lt;!-- --&gt;
-
-```r
-ggplot(data = Kiva_Loans1, aes(x = lender_count, weight = raised_amount)) + geom_histogram(binwidth = 10)
-```
-
-![](Final_Project_files/figure-html/unnamed-chunk-14-7.png)&lt;!-- --&gt;
-
-```r
-ggplot(data = Kiva_Loans1, aes(x = date, weight = raised_amount)) + geom_bar()
-```
-
-![](Final_Project_files/figure-html/unnamed-chunk-14-8.png)&lt;!-- --&gt;
+&lt;img src="Final_Project_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;&lt;img src="Final_Project_files/figure-html/unnamed-chunk-14-2.png" style="display: block; margin: auto;" /&gt;&lt;img src="Final_Project_files/figure-html/unnamed-chunk-14-3.png" style="display: block; margin: auto;" /&gt;&lt;img src="Final_Project_files/figure-html/unnamed-chunk-14-4.png" style="display: block; margin: auto;" /&gt;&lt;img src="Final_Project_files/figure-html/unnamed-chunk-14-5.png" style="display: block; margin: auto;" /&gt;&lt;img src="Final_Project_files/figure-html/unnamed-chunk-14-6.png" style="display: block; margin: auto;" /&gt;&lt;img src="Final_Project_files/figure-html/unnamed-chunk-14-7.png" style="display: block; margin: auto;" /&gt;&lt;img src="Final_Project_files/figure-html/unnamed-chunk-14-8.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
 OUR MODEL
 
 
-```r
-Kiva_LM_Data &lt;- Kiva_Loans1 %&gt;% filter(currency == c("USD", "MXN", "MMK", "RWF", "AZN", "PYG", "YER", "KES", "PEN", "PHP")) %&gt;% filter(sector == c("Agriculture", "Personal Use", "Retail", "Entertainment", "Clothing", "Education"))
 ```
 
-```
-## Warning in sector == c("Agriculture", "Personal Use", "Retail",
-## "Entertainment", : longer object length is not a multiple of shorter object
-## length
+Call:
+lm(formula = raised_amount ~ region * lender_count + sector, 
+    data = Kiva_LM_Data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4430.3  -416.9  -132.2   166.1 14685.0 
+
+Coefficients: (3 not defined because of singularities)
+                                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                      -65.539     51.098  -1.283 0.199709    
+regionArmenia                   1944.642    312.283   6.227 5.26e-10 ***
+regionAsia                       115.272     61.352   1.879 0.060337 .  
+regionEurope                    1796.135    474.457   3.786 0.000156 ***
+regionGuatemala                -4247.706   1287.582  -3.299 0.000979 ***
+regionN.America                  340.020     96.415   3.527 0.000426 ***
+regionPuerto Rico               2537.350   1178.147   2.154 0.031328 *  
+regionS.America                 1400.164     91.004  15.386  &lt; 2e-16 ***
+regionSomalia                   1275.718  32448.581   0.039 0.968641    
+regionUganda                     536.518   1177.007   0.456 0.648536    
+regionUSA                       3888.632    334.995  11.608  &lt; 2e-16 ***
+lender_count                      70.564      1.623  43.475  &lt; 2e-16 ***
+sectorClothing                   464.496     76.888   6.041 1.68e-09 ***
+sectorEducation                 -210.179     80.081  -2.625 0.008710 ** 
+sectorEntertainment             -400.882    485.994  -0.825 0.409496    
+sectorPersonal Use                10.261    102.929   0.100 0.920593    
+sectorRetail                     321.559     43.951   7.316 3.09e-13 ***
+regionArmenia:lender_count       -30.390      5.883  -5.166 2.52e-07 ***
+regionAsia:lender_count          -10.413      2.183  -4.770 1.91e-06 ***
+regionEurope:lender_count        -39.481      9.529  -4.143 3.50e-05 ***
+regionGuatemala:lender_count          NA         NA      NA       NA    
+regionN.America:lender_count     -11.652      3.446  -3.381 0.000730 ***
+regionPuerto Rico:lender_count        NA         NA      NA       NA    
+regionS.America:lender_count     -17.719      2.733  -6.484 1.00e-10 ***
+regionSomalia:lender_count       -70.564   1663.478  -0.042 0.966167    
+regionUganda:lender_count             NA         NA      NA       NA    
+regionUSA:lender_count           -17.707      4.068  -4.353 1.38e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1176 on 3838 degrees of freedom
+Multiple R-squared:  0.6632,	Adjusted R-squared:  0.6611 
+F-statistic: 328.5 on 23 and 3838 DF,  p-value: &lt; 2.2e-16
 ```
 
-```r
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Cambodia"] &lt;- "Asia"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Iraq"] &lt;- "Asia"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Lebanon"] &lt;- "Asia"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Mongolia"] &lt;- "Asia"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Palestine"] &lt;- "Asia"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "IraTajikistanq"] &lt;- "Asia"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Timor-Leste"] &lt;- "Asia"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Burma"] &lt;- "Asia"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Philippines"] &lt;- "Asia"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Kyrgyzstan"] &lt;- "Asia"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Yemen"] &lt;- "Asia"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Georgia"] &lt;- "Europe"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Azerbaijan"] &lt;- "Europe"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Peru"] &lt;- "S.America"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Ecuador"] &lt;- "S.America"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Bolivia"] &lt;- "S.America"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Paraguay"] &lt;- "S.America"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Zimbabwe"] &lt;- "Africa"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Kenya"] &lt;- "Africa"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Liberia"] &lt;- "Africa"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Tanzania"] &lt;- "Africa"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Rwanda"] &lt;- "Africa"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "The Democratic Republic of the Congo"] &lt;- "Africa"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Haiti"] &lt;- "N.America"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Panama"] &lt;- "N.America"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "El Salvador"] &lt;- "N.America"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Honduras"] &lt;- "N.America"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Mexico"] &lt;- "N.America"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Nicaragua"] &lt;- "N.America"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "United States"] &lt;- "USA"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Myanmar (Burma)"] &lt;- "Asia"
-Kiva_LM_Data$country[Kiva_LM_Data$country == "Tajikistan"] &lt;- "Asia"
-colnames(Kiva_LM_Data)[colnames(Kiva_LM_Data)=="country"] &lt;- "region"
-
-summary(lm(formula = raised_amount ~ region * lender_count + sector, data = Kiva_LM_Data))
-```
-
-```
-## 
-## Call:
-## lm(formula = raised_amount ~ region * lender_count + sector, 
-##     data = Kiva_LM_Data)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -4430.3  -416.9  -132.2   166.1 14685.0 
-## 
-## Coefficients: (3 not defined because of singularities)
-##                                 Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                      -65.539     51.098  -1.283 0.199709    
-## regionArmenia                   1944.642    312.283   6.227 5.26e-10 ***
-## regionAsia                       115.272     61.352   1.879 0.060337 .  
-## regionEurope                    1796.135    474.457   3.786 0.000156 ***
-## regionGuatemala                -4247.706   1287.582  -3.299 0.000979 ***
-## regionN.America                  340.020     96.415   3.527 0.000426 ***
-## regionPuerto Rico               2537.350   1178.147   2.154 0.031328 *  
-## regionS.America                 1400.164     91.004  15.386  &lt; 2e-16 ***
-## regionSomalia                   1275.718  32448.581   0.039 0.968641    
-## regionUganda                     536.518   1177.007   0.456 0.648536    
-## regionUSA                       3888.632    334.995  11.608  &lt; 2e-16 ***
-## lender_count                      70.564      1.623  43.475  &lt; 2e-16 ***
-## sectorClothing                   464.496     76.888   6.041 1.68e-09 ***
-## sectorEducation                 -210.179     80.081  -2.625 0.008710 ** 
-## sectorEntertainment             -400.882    485.994  -0.825 0.409496    
-## sectorPersonal Use                10.261    102.929   0.100 0.920593    
-## sectorRetail                     321.559     43.951   7.316 3.09e-13 ***
-## regionArmenia:lender_count       -30.390      5.883  -5.166 2.52e-07 ***
-## regionAsia:lender_count          -10.413      2.183  -4.770 1.91e-06 ***
-## regionEurope:lender_count        -39.481      9.529  -4.143 3.50e-05 ***
-## regionGuatemala:lender_count          NA         NA      NA       NA    
-## regionN.America:lender_count     -11.652      3.446  -3.381 0.000730 ***
-## regionPuerto Rico:lender_count        NA         NA      NA       NA    
-## regionS.America:lender_count     -17.719      2.733  -6.484 1.00e-10 ***
-## regionSomalia:lender_count       -70.564   1663.478  -0.042 0.966167    
-## regionUganda:lender_count             NA         NA      NA       NA    
-## regionUSA:lender_count           -17.707      4.068  -4.353 1.38e-05 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 1176 on 3838 degrees of freedom
-## Multiple R-squared:  0.6632,	Adjusted R-squared:  0.6611 
-## F-statistic: 328.5 on 23 and 3838 DF,  p-value: &lt; 2.2e-16
-```
+---
 
 -	Dummy variables were limited by combining variables, for example:
 -	Countries were combined into regions
