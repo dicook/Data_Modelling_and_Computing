@@ -58,8 +58,8 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
          - 13 DQ, 4, [Weather ](project/presentations/13.DQ/Presentation.html)
          - 14 Group 2,  10, [Infant mortality](project/presentations/14.Group 2/R_Project-Group2.html)
          - 15 As a TEAM, 1,0 [Private vs Public Education in the US](project/presentations/Project_presentation.html)
-         - 16 AF,  4
-         - 17 THE MARKDOWN MATES,  10
+         - 16 AF,  4, [Mass shootings](project/presentations/16.AF/a.html)
+         - 17 THE MARKDOWN MATES,  10, 
          - 18 Black 4, 10, [Melbourne Airbnb market](project/presentations/18.Black 4/Analysis_of_Melbourne_Airbnb_market.html)
          - 19 YES,  8, [Analysis of movies](project/presentations/19.YES/Project_Presentation.html)
          - 20 Raymond & Co., 10, [Crash accidents in Australia](project/presentations/20.Raymond & Co./ETC1010_Project_Presentation.html)
