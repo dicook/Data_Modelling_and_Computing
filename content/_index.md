@@ -17,11 +17,11 @@ title: Home
 - Lectorials: Tu 12-2, W 1-3 
 - Location: CL19Anc/G54 T
 
-## Consultation times
+## **EXAM** Consultation times
 
-- Di: Monday 2-3:30pm (Menzies E762A)
-- Earo: Thursday 12:30-2:00pm (Menzies W1105)
-- Steph: Friday 12:30-2:00 (Menzies W1105)
+- Di: Wednesday Jun 13 2-3:30pm (Menzies E762A)
+- Earo: Thursday Jun 14 12:30-2:00pm (Menzies W1105)
+- Steph: Friday Jun 15 12:30-2:00 (Menzies W1105)
 
 ## MoVE
 
@@ -39,7 +39,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - Week 8: Advanced modeling; [Slide set a](https://ebsmonash.shinyapps.io/lecture8a_models/) [(Rmd)](lectures/lecture8a/lecture8a_models.Rmd) [CODE FOR LAB EXERCISE](lectures/lecture8a/lab_exercise_week8a.R)
 - Week 9: Advanced data handling; [Slide set a](https://ebsmonash.shinyapps.io/lecture9a_adv_data/) [(Rmd)](lectures/lecture9a/lecture9a_adv_data.Rmd); [Slide set b](https://ebsmonash.shinyapps.io/lecture9b_adv_data/) [(Rmd)](lectures/lecture9b/lecture9b_adv_data.Rmd); [Scraping economic data](https://uninformedpriors.org/posts/using-purrr-to-wrangle-and-clean-economic-data/); [Scraping and Analyzing Spotify Streaming Data, using R](https://ramirobentes.netlify.com/post/scraping-and-analyzing-spotify-streaming-data-using-r/)
 - Week 10: Working with text data, and networks; [Slide set a](https://ebsmonash.shinyapps.io/lecture10a_text/) [(Rmd)](lectures/lecture10a/lecture10a_text.Rmd); [Slide set b](https://ebsmonash.shinyapps.io/lecture10b_networks/) [(Rmd)](lectures/lecture10b/lecture10b_networks.Rmd);
-- Week 11: Tues will be project work, and help from tutors/instructor; Wed will be Assignment 5 all done during class.
+- Week 11: Tues will be project work, and help from tutors/instructor; Wed will be Assignment 5 all done during class. [Wrap-up](https://ebsmonash.shinyapps.io/lecture11a_wrapup/) [(Rmd)](lectures/lecture11a/lecture11a_wrapup.Rmd)
 - Week 12: Project presentations, schedule below
      - Tuesday
          -  1 CJ, 6,  [An Analysis of the NBA](project/presentations/1.CJ/CJ Sildes.pptx)

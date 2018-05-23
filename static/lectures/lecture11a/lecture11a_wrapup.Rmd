@@ -1,0 +1,61 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 6,
+                      fig.width = 6,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+```
+
+# Wrap up
+
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.netlify.com](http://dmac.netlify.com)
+
+## Well done!
+
+*You've been a terrific bunch of students to work with this semester.*
+
+I really hope what we have covered has been **useful** for you and that you *continue to practice these skills*. And maybe use these skills in other classes where you are doing data analysis.
+
+## Major
+
+- Where do you go from here, if you are a **business analytics major**
+- Courses using R: 
+    - **core** 
+        - ETC2420: randomization and simulation to understand uncertainty, and a little about Bayesian models
+        - ETC3250: data mining, computationally intensive approach to fitting models
+    - **electives** 
+        - ETC3555, ETC3580: advanced statistical models, and advanced machine learning methods
+        - ETC3550, ETF3500, ETX2250: forcasting and multivariate analysis, data analytics
+
+## Exam 
+
+For exam prep, the week before the exam, we will have **three consultation times**. This is posted on the course web site. The exam from last year is posted. Not all topics are the same this year, and this should be obvious when you look at the questions.
+
+## Stickers
+
+![](images/user2018.png)
+
+## Course evaluation
+
+*Please complete the course evaluation.*
+
+This is a new version, new material, new format. The course will evolve, and your help in improving it is greatly appreciated.
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
