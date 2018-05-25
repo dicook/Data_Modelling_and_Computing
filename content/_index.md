@@ -141,7 +141,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - [Formula sheet](lectures/ETC1010_FORMULA_SHEET.pdf)
 - [Practice exam](exam/practice_exam2017.pdf) (This has 10 questions, actual exam has 9.)
 - [Practice exam solution](exam/practice_exam2017_solution.pdf)
-- [2017 exam](exam/_exam2017.pdf) 
+- [2017 exam](exam/exam2017.pdf) 
 - [2017 exam solution](exam/exam2017_solution.pdf)
 
 ## Computing information
