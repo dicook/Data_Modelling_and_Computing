@@ -41,6 +41,8 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 - Week 10: Working with text data, and networks; [Slide set a](https://ebsmonash.shinyapps.io/lecture10a_text/) [(Rmd)](lectures/lecture10a/lecture10a_text.Rmd); [Slide set b](https://ebsmonash.shinyapps.io/lecture10b_networks/) [(Rmd)](lectures/lecture10b/lecture10b_networks.Rmd);
 - Week 11: Tues will be project work, and help from tutors/instructor; Wed will be Assignment 5 all done during class. [Wrap-up](https://ebsmonash.shinyapps.io/lecture11a_wrapup/) [(Rmd)](lectures/lecture11a/lecture11a_wrapup.Rmd)
 - Week 12: Project presentations, schedule below
+
+<!--
      - Tuesday
          -  1 CJ, 6,  [An Analysis of the NBA](project/presentations/1.CJ/CJ Sildes.pptx)
          - 2 The Pirates,  10, [Happiness, socio-economic condition and politics](project/presentations/2.The_Pirates/Project_presentation2.html)
@@ -65,15 +67,16 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
          - 20 Raymond & Co., 10, [Crash accidents in Australia](project/presentations/20.Raymond & Co./ETC1010_Project_Presentation.html)
          - 21 Group One, 8, [What Makes a Good Government](project/presentations/21.Group One /Group_One_Presentation.html)
          - 22 ETC1010,  8, [Gender inequality in the US workforce](project/presentations/22.ETC1010/Presentation-slides.html)
-
+-->
+		 
 ## Assignments
 
 - Assignment 1: [Instructions](assignments/assignment1.html) [(Rmd)](assignments/assignment1.Rmd) [SOLUTION](assignments/assignment1_solution.html) [(Rmd)](assignments/assignment1_solution.Rmd) **DUE: Tues Mar 13 in class**
 - Assignment 2: [Instructions](assignments/assignment2.html) [(Rmd)](assignments/assignment2.Rmd), [SOLUTION](assignments/assignment2_solution.html) [(Rmd)](assignments/assignment2_solution.Rmd),  [Data](assignments/data/survey.csv), [Tidied Data](assignments/data/survey_tidy.csv), [Questionnaire (pdf)](assignments/class_survey.pdf)  **DUE: Tues Mar 27 in class**
 - [Guide for making plots](assignments/assign2_blog.html) [(Rmd)](assignments/assign2_blog.Rmd), based on assignment 2 submissions. WORTH READING!
 - Assignment 3: [Instructions](assignments/assignment3.html) [(Rmd)](assignments/assignment3.Rmd), [SOLUTION](assignments/assignment3_solution.html) [(Rmd)](assignments/assignment3_solution.Rmd), [Data](assignments/data/Melbourne_housing_FULL.csv) **DUE: Tues Apr 24 in class**
-- Assignment 4: [Instructions](assignments/assignment4.html) [(Rmd)](assignments/assignment4.Rmd), [stns_oz.rda](assignments/data/stns_oz.rda), [oz_yr_prcp_50yrs.rda](assignments/data/oz_yr_prcp_50yrs.rda) **DUE: Wed May 2 in class**
-- Assignment 5:  [Instructions](assignments/assignment5.html) [(Rmd)](assignments/assignment5.Rmd) **DUE: Wed May 16 in class**
+- Assignment 4: [Instructions](assignments/assignment4.html) [(Rmd)](assignments/assignment4.Rmd), [SOLUTION](assignments/assignment4_solution.html) [(Rmd)](assignments/assignment4_solution.Rmd) [stns_oz.rda](assignments/data/stns_oz.rda), [oz_yr_prcp_50yrs.rda](assignments/data/oz_yr_prcp_50yrs.rda) **DUE: Wed May 2 in class**
+- Assignment 5:  [Instructions](assignments/assignment5.html) [(Rmd)](assignments/assignment5.Rmd) [SOLUTION](assignments/assignment5_solution.html) [(Rmd)](assignments/assignment5_solution.Rmd) **DUE: Wed May 16 in class**
 
 <!--
 - [Peer evaluation assignments](assignments/assignment3_marking.csv) This is the team's assignment that you should evaluate, on reproducing and explanations. Enter your feedback in the "Assignment 2 peer evaluation" on ED. 
