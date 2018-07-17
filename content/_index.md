@@ -29,7 +29,7 @@ If you are enrolled in a MoVE unit and forget your laptop, or do not own one as 
 
 ## Lecture notes
 
-- Week 1: Getting started: [Slide set a]() [(Rmd)](); [Slide set b]() [(Rmd)]); Textbook reading: __I Explore__, Sections 2, 3.1-3.3, 4, 5.1-5.2, 6, 7.1-7.3
+- Week 1: Getting started: [Slide set a]() [(Rmd)](); [Slide set b]() [(Rmd)]); Textbook reading: __I Explore__
 - Week 2: Tidy data principles;
 - Week 3: Data cleaning, rearranging and transformation; 
 - Week 4: Data visualisation: 
