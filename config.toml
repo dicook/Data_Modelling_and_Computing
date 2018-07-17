@@ -21,12 +21,12 @@ footnotereturnlinkcontents = "↩"
     url = "http://r4ds.had.co.nz"
     weight = 2
 [[menu.main]]
-    name = "Moodle (grades)"
-    url = "https://moodle.vle.monash.edu/course/view.php?id=42115"
-    weight = 3
-[[menu.main]]
     name = "ED (Assignments & quizzes)"
     url = "https://edstem.com.au"
+    weight = 3
+[[menu.main]]
+    name = "Data Camp"
+    url = "https://www.datacamp.com"
     weight = 4
 
 [params]
