@@ -13,7 +13,7 @@ title: Home
 
 ## Schedule
 
-- Lectorials: Wed 12-2, F 10-12
+- Lectorials: Wed 11-1, F 10-12
 - Location: CL19Anc/G54 T
 
 ## Consultation times
