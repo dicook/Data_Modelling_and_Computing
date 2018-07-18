@@ -25,9 +25,13 @@ footnotereturnlinkcontents = "↩"
     url = "https://edstem.com.au"
     weight = 3
 [[menu.main]]
-    name = "Data Camp"
+    name = "DataCamp"
     url = "https://www.datacamp.com"
     weight = 4
+[[menu.main]]
+    name = "Unit guide"
+    url = "https://unitguidemanager.monash.edu/view?unitCode=ETC1010&tpCode=S2-01&tpYear=2018"
+    weight = 5
 
 [params]
     description = "A website built through Hugo and blogdown."

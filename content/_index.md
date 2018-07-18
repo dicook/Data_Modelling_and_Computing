@@ -25,7 +25,10 @@ title: Home
 
 ## MoVE
 
-If you are enrolled in a MoVE unit and forget your laptop, or do not own one as yet, please visit room 2.24 in the new Learning and Teaching building (Clayton campus) to borrow a laptop for an activity or the full day. You will be required to provide proof of ID (student card or personal ID) in order to borrow a laptop. This service is open from 7.45am - 7.00pm on Monday to Friday.
+If you are enrolled in a MoVE unit and forget your laptop, or do not own one as yet, please visit the locations below to borrow a laptop for an activity or part of a day:
+Clayton: Room 2.24 - Level 2, Learning and Teaching Building
+
+You’re required to provide proof of ID (student card or personal ID) in order to borrow a laptop. This service is open from 7.45am - 7.00pm on Monday to Friday.
 
 ## Lecture notes
 
