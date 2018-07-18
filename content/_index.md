@@ -13,8 +13,7 @@ title: Home
 
 ## Schedule
 
-- Lectorials: Wed 11-1, F 10-12
-- Location: CL19Anc/G54 T
+- Lectorials: Wed 11-1 (G54 - LTB Bldg 92), F 10-12 (G81 - LTB Bldg 92)
 
 ## Consultation times
 
