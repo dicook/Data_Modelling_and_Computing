@@ -28,7 +28,7 @@ Welcome to ETC1010: Data Modelling and Computing, semester 2, 2018.
 
 - Di: a professor at Monash University in Melbourne Australia, research in statistics, data science, visualisation, and statistical computing. I like to play all sorts of sports, tennis, soccer, hockey, cricket, and go boogie boarding.
 - Steph: is a graduate from Monash, and just started a Masters of Statistics at QUT based at Monash, working on cancer maps for Australia.
-- Mitch: 
+- Mitch: a data science exploreR, graduated from Monash University studying Econometrics, Math Statistics & Computational Science. Compulsively collects and uses data to automate gardening, lighting and chickens `r emo::ji("chick")`.
 - Zina: a double major in mathematics and operations research, and Masters in Analytics. I like to play badminton!
 
 ## Language of data analysis
