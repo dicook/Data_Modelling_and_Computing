@@ -17,17 +17,17 @@ title: Home
 
 ## Consultation times
 
-- Di: TBD (Menzies E762A)
-- Steph: TBD (Menzies W1105)
-- Mitch: TBD (Menzies W1105)
-- Zina: TBD (Menzies W1105)
+- Di: Thur 10:30-11:30 (Menzies E762A)
+- Steph: Thur 12:30-1:30 (Menzies W1105)
+- Mitch: Tues (Menzies W1105)
+- Zina: Tues 10:30-11:30 (Menzies W1105)
 
 ## MoVE
 
 If you are enrolled in a MoVE unit and forget your laptop, or do not own one as yet, please visit the locations below to borrow a laptop for an activity or part of a day:
-Clayton: Room 2.24 - Level 2, Learning and Teaching Building
+Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required to provide proof of ID (student card or personal ID) in order to borrow a laptop. This service is open from 7.45am - 7.00pm on Monday to Friday.
 
-You’re required to provide proof of ID (student card or personal ID) in order to borrow a laptop. This service is open from 7.45am - 7.00pm on Monday to Friday.
+*Access to R is through a server. Last year we found that this was a slow way to work. The most successful approach was to have a USB stick, attach to the borrowed laptop, and install R, RStudio and all your packages on this. Use this as your working environment, with the borrowed laptop simply as the computing engine.*
 
 ## Lecture notes
 

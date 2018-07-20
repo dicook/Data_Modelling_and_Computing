@@ -28,8 +28,8 @@ Welcome to ETC1010: Data Modelling and Computing, semester 2, 2018.
 
 - Di: a professor at Monash University in Melbourne Australia, research in statistics, data science, visualisation, and statistical computing. I like to play all sorts of sports, tennis, soccer, hockey, cricket, and go boogie boarding.
 - Steph: is a graduate from Monash, and just started a Masters of Statistics at QUT based at Monash, working on cancer maps for Australia.
-- Mitch:  
-- Zina: 
+- Mitch: 
+- Zina: a double major in mathematics and operations research, and Masters in Analytics. I like to play badminton!
 
 ## Language of data analysis
 
@@ -192,9 +192,10 @@ range(x)
 
 ### There are many ways...
 
+There can be many ways to achieve the same result. I don't know everything. You might find a better solution than I have give you. Your tutors might give you different ways to do it than I told you. 
+
 ![](http://compeap.com/wp-content/uploads/you-dont-know-everything.jpg)
 
-There can be many ways to achieve the same result. I don't know everything. You might find a better solution than I have give you. Your tutors might give you different ways to do it than I told you. 
 
 ## Packages
 
@@ -219,7 +220,7 @@ biocLite("ggbio")
 - From github repos
 ![](images/github.png)
 ```{r eval=FALSE, echo=TRUE}
-devtools::install_github("dicook/nullabor")
+devtools::install_github("skoval/deuce")
 ```
 
 ### Use packages
@@ -238,13 +239,89 @@ library(learnr)
 
 ## Course structure
 
+The [unit guide](https://unitguidemanager.monash.edu/view?unitCode=ETC1010&tpCode=S2-01&tpYear=2018) is the authority on the course structure.
+
+### Website
+
+http://dmac.dicook.org
+
+"dmac" stands for Data Modeling and Computing, and it runs off Prof Cook's website.
+
+Links to 
+
+- Textbook and other online resources related to topics
+- Lecture notes for each class
+- Assignment and project instructions
+- ED system for doing online quizzes, conduct discussions, ask questions about the course material and exercises, and turn in assignments and project.
+
+### Learning objectives
+
+The learning goals associated with this unit are to:
+
+1. apply principles and techniques of data management with computers and spreadsheet modelling to business and economic decision-making
+2. interpret and evaluate relationships between variables using simple and multiple linear regression
+3. apply statistical techniques for making decisions with quantitative and categorical data in business and economics.
+
+__Data preparation accounts for about 80% of the work of data scientists__
+
+[Gil Press, Forbes, 2016](https://www.forbes.com/sites/gilpress/2016/03/23/data-preparation-most-time-consuming-least-enjoyable-data-science-task-survey-says/##47cbbbf46f63)
+
+*This is one of the least taught parts of data science, and business analytics, and yet it is what data scientists spend most of their time on. By the end of this semester, we hope that you will have the tools to be more efficient and effective in this area, so that you have more time to spend on your mining and modeling.*
+
+### Philosophy
+
+"If you feed a person a fish, they eat for a day. If you teach a person to fish, they eat for a lifetime."
+
+Whatever I do in the data analysis that is shown to you during the class, you can do it, too.
+
 ### Grading
+
+- Reading quizzes: 5% - Prior to each class, check the web site. Quiz needs to be completed by class time. 
+- Lab exercise: 10% - Each class period will have a quiz to be completed individually.
+- Assignment: 10% - Every two weeks, completed as a group
+- Project: 15% - Data analysis, report and presentation
+- Final Exam: 60%
+
+### MoVE unit
+
+If you are enrolled in a MoVE unit and forget your laptop, or do not own one as yet, please visit the locations below to borrow a laptop for an activity or part of a day: Clayton: Room 2.24 - Level 2, Learning and Teaching Building
+
+You’re required to provide proof of ID (student card or personal ID) in order to borrow a laptop. This service is open from 7.45am - 7.00pm on Monday to Friday.
+
+*Access to R is through a server. Last year we found that this was a slow way to work. The most successful approach was to have a USB stick, attach to the borrowed laptop, and install R, RStudio and all your packages on this. Use this as your working environment, with the borrowed laptop simply as the computing engine.*
 
 ### Group assignments
 
-#### Exercise 
+Group assignments will be conducted according to the [Monash policies](https://www.monash.edu/__data/assets/pdf_file/0011/1098659/Team-Assessment-Guidelines.pdf). 
 
-Get connected with your group. 
+What we expect to see is that each member of the group completes the entire assignment, as best they can. Group members compare their answers and combine it into one document for the final asubmission. 
+
+Individual submissions will be done during Wednesday class, and the group submission will be done in the Friday class. 25% of the grade will come from the individual submission. If any individual assignment is a perfect match for another group member, both will receive zero. 50% of the grade will come from the final group submission. These points are awarded by the instructor's grading.
+
+The other 25% of the assignment grade will come from peer evaluation. Peer evaluation is an important learning tool. Each student will be randomly assigned another team's submission to provide feedback on three things: (1) Could you reproduce the analysis? (2) Did you learn something new from the other team's approach? (3) What would you suggest to improve their work?
+
+Conflicts can arise in group work. Conflict can be both productive and destructive. Teams need to work on managing conflicts and building on the strengths of all team members. If the group becomes unmanageble then the members need to consult with the instructor.
+
+#### Making the groups
+
+Here we are going to set up the groups for doing assignment work.
+
+1. Choose a hex sticker design from the bag. 
+2. Find the other people in the class with the same design as you
+3. Grab your gear and claim a table to work together at. 
+
+Here are some icebreakers to help you get to know each other:
+
+1. If you were a comic strip character, who would you be and why?
+2. What thought or message would you want to put in a fortune cookie?
+3. What is one food you'd never want to taste again?
+4. What award would you love to win and for what achievement?
+
+LASTLY, come up with a name for your team and tell this to a tutor, along with the names of members of the team.
+
+## Lab quiz
+
+Go to the ED page, and complete the lab quiz.
 
 ## Share and share alike
 
