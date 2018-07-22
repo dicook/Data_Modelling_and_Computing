@@ -125,7 +125,7 @@ which embeds the image from the web into your document:
 
 ![](http://compeap.com/wp-content/uploads/you-dont-know-everything.jpg)
 
-*Note on ethics:* When you use someone else's work, you need to (1) check if its allowed, that it has a [creative commons license](http://creativecommons.org/licenses/by/4.0/), (2) reference them as the source.
+*Note on ethics:* When you use someone else's work, you need to (1) check if it's allowed, that it has a [creative commons license](http://creativecommons.org/licenses/by/4.0/), (2) reference them as the source.
 
 ### Making the output
 
