@@ -55,7 +55,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 		 
 ## Assignments
 
-- Assignment 1: [Instructions](assignments/assignment1.html) [(Rmd)]() [SOLUTION]() [(Rmd)](); Data: [2006](assignments/data/ABS_ed_age_sex_2006.xlsx), [2011](assignments/data/ABS_ed_age_sex_2011.xlsx), [2016](assignments/data/ABS_ed_age_sex_2016.xlsx) **DUE: Week 3, individual on Wed, group Fri, during class**
+- Assignment 1: [Instructions](assignments/assignment1.html) [(Rmd)](assignments/assignment1.Rmd) [SOLUTION]() [(Rmd)](); Data: [2006](assignments/data/ABS_ed_age_sex_2006.xlsx), [2011](assignments/data/ABS_ed_age_sex_2011.xlsx), [2016](assignments/data/ABS_ed_age_sex_2016.xlsx) **DUE: Week 3, individual on Wed, group Fri, during class**
 - Assignment 2: 
 - Assignment 3:
 - Assignment 4:
