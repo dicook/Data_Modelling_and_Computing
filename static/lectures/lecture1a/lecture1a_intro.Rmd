@@ -103,7 +103,7 @@ Start with the [RStudio IDE cheatsheet](https://github.com/rstudio/cheatsheets/r
 
 - __Project__: This is like a multi-tab folder, or a filing cabinet, for your work! Create a project for your work in this class. Just one should be sufficient. You can call it anything you like, or "ETC1010" if you don't have any better ideas. *Remember: every time you start to work on something for this class, open this project!!*
 
-![](images/files.png)
+![](images/files.jpg)
 
 - __Source code editor__: This is where you edit your script! Experiment with writing your data analysis pipeline, ... You can have multiple files open, there are useful shortcuts (eg "Run", "Knit"), code is highlighted usefully and there is tab-completion when you start typing. *Also, if you want to look at any of the data you have read or created, it can be viewed in a tab on this pane.*
 - __Console window__: This is where the code is executed. There is a prompt ">" which says *R is waiting for your command*. You don't actually need to type anything in this pane, you can run code directly from the Editor pane. The functions will show up in this window, and the results will be here. (Although, if you use an R notebook the result will show up in that notebook.)
@@ -252,7 +252,7 @@ Links to
 - Textbook and other online resources related to topics
 - Lecture notes for each class
 - Assignment and project instructions
-- ED system for doing online quizzes, conduct discussions, ask questions about the course material and exercises, and turn in assignments and project.
+- ED system for doing online quizzes, conduct discussions, ask questions about the course material and exercises, and turn in assignments and project. *Only your name and email address are recorded in the ED systems.*
 
 ### Learning objectives
 
