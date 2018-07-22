@@ -40,7 +40,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - [Fri]() 
 - Week 3: Data cleaning, rearranging and transformation; 
 - Week 4: Data visualisation: 
-- Week 5: Handling missing values: 
+- Week 5: Handling missing values: [Reading Textbook 12.4-6](http://r4ds.had.co.nz/tidy-data.html)
 - Week 6: Introduction to modeling: 
 - Week 7: Intermediate models; 
 - Week 8: Advanced modeling;
@@ -55,7 +55,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 		 
 ## Assignments
 
-- Assignment 1: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]() **DUE: **
+- Assignment 1: [Instructions](assignments/assignment1.html) [(Rmd)]() [SOLUTION]() [(Rmd)](); Data: [2006](assignments/data/ABS_ed_age_sex_2006.xlsx), [2011](assignments/data/ABS_ed_age_sex_2011.xlsx), [2016](assignments/data/ABS_ed_age_sex_2016.xlsx) **DUE: Week 3, individual on Wed, group Fri, during class**
 - Assignment 2: 
 - Assignment 3:
 - Assignment 4:
