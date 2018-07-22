@@ -34,7 +34,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
 
 - Week 1: Getting started: 
     - [Wed](https://ebsmonash.shinyapps.io/lecture1a_intro/#section-about-your-instructors) [(Rmd)](dmac.dicook.org/lectures/lecture1a/lecture1a_intro.Rmd); [Reading Textbook 27.1-5](http://r4ds.had.co.nz/r-markdown.html) Go to ED and complete the reading quiz before Friday's class
-    - [Fri]() [(Rmd)]); Textbook reading: __I Explore__
+    - [Fri]() [(Rmd)]); 
 - Week 2: Tidy data principles;
 - Week 3: Data cleaning, rearranging and transformation; 
 - Week 4: Data visualisation: 
