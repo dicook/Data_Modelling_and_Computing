@@ -36,8 +36,8 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - [Wed](https://ebsmonash.shinyapps.io/lecture1a_intro/) [(Rmd)](http://dmac.dicook.org/lectures/lecture1a/lecture1a_intro.Rmd); [Reading Textbook 27.1-5](http://r4ds.had.co.nz/r-markdown.html) Go to ED and complete the reading quiz before Friday's class
     - [Fri](https://ebsmonash.shinyapps.io/lecture1b_intro/) [(Rmd)](http://dmac.dicook.org/lectures/lecture1b/lecture1b_intro.Rmd)); [Reading Textbook 12.1-3](http://r4ds.had.co.nz/tidy-data.html) Go to ED and complete the reading quiz before Wednesday's class
 - Week 2: Tidy data principles
-    - [Wed]() [Reading Textbook 12.4-6](http://r4ds.had.co.nz/tidy-data.html)
-    - [Fri]() 
+    - Wed [Reading Textbook 12.4-6](http://r4ds.had.co.nz/tidy-data.html)
+    - Fri 
 - Week 3: Data cleaning, rearranging and transformation; 
 - Week 4: Data visualisation: 
 - Week 5: Handling missing values: [Reading Textbook 12.4-6](http://r4ds.had.co.nz/tidy-data.html)
