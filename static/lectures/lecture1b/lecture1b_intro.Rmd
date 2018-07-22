@@ -1,6 +1,6 @@
 ---
 title: "ETC1010: Data Modelling and Computing"
-author: "Di Cook"
+author: "Professor Di Cook, EBS, Monash U."
 output: 
   learnr::tutorial:
     css: "css/logo.css"
@@ -26,354 +26,338 @@ library(lubridate)
 library(gridExtra)
 ```
 
-# Introduction
-## Financial data 
-
-### Cross-rates relative to USD
-
-Pull historical exchange rates from [http://openexchangerates.org/api/historical/](http://openexchangerates.org/api/historical/). 
-
-```{r eval=FALSE}
-library(jsonlite)
-ru <- NULL
-dt <- as.Date("2017-06-20")
-for (i in 3:27) {
-  cat(i,"\n")
-  url <- paste("http://openexchangerates.org/api/historical/",dt,".json?app_id=XXXX", sep="")
-  x <- fromJSON(url)
-  x <- x$rates
-  if (length(x) == 171) 
-    x <- x[-c(164,166)]
-  ru <- rbind(ru, data.frame(date=dt, x))
-  dt <- dt + days(1)
-}
-rownames(ru) <- ru$date
-write_csv(ru, path="data/rates.csv")
-```
-
-```{r}
-rates <- read_csv("data/rates.csv")
-rates_m <- rates %>% select(date, AUD, NZD, GBP) %>%
-  mutate_at(vars(AUD, NZD, GBP), scale) %>%
-  gather(currency, rate, -date)
-p1 <- ggplot(rates_m, aes(x=date, y=rate, colour=currency)) + 
-  geom_line() + xlab("Standardised rates") +
-  scale_colour_brewer(palette="Dark2") 
-p2 <- ggplot(rates, aes(AUD, NZD)) + 
-  geom_point() + ##geom_line() +
-  theme(aspect.ratio=1)
-p3 <- ggplot(rates, aes(AUD, GBP)) + 
-  geom_point() + ##geom_line() +
-  theme(aspect.ratio=1)
-p4 <- ggplot(rates, aes(NZD, GBP)) + 
-  geom_point() + ##geom_line() +
-  theme(aspect.ratio=1)
-library(ggplot2)
-library(gridExtra)
-grid.arrange(p1, p2, p3, p4, 
-             layout_matrix = matrix(c(1, 1, 1, 2, 3, 4), 
-                                    ncol=3, byrow=TRUE))
-```
-
-```{r rate-quiz}
-quiz(
-  question("Why is the axis of the line plot showing a standardised data scale? (centered at 0, and ranging from -2 to 2)",
-    answer("exchange rates are on z-scores"),
-    answer("the currencies have similar value"),
-    answer("the exchange rates have been standardised before plotting together", correct = TRUE))
-)
-```
-
-## Text analysis
-
-### Analysing tweets
-
-Is it possible to distinguish tweets coming from Donald Trump's phone vs his staff's phone? With a twitter api you can collect all tweets between certain times, from different people, with different hashtags, ... David Robinson wrote a [post](http://varianceexplained.org/r/trump-tweets/) during last year's US election cycle doing just this. Here's a re-creation of his analysis.
-
-Tweets from @realDonaldTrump were collected and passed through a sentiment analysis.
-
-```{r}
-#load(url("http://varianceexplained.org/files/trump_tweets_df.rda"))
-load("data/trump_tweets_df.rda")
-tweets <- trump_tweets_df %>%
-  select(id, statusSource, text, created) %>%
-  extract(statusSource, "source", "Twitter for (.*?)<") %>%
-  filter(source %in% c("iPhone", "Android"))
-tweets %>%
-  count(source, hour = hour(with_tz(created, "EST"))) %>%
-  mutate(percent = n / sum(n)*100) %>%
-  ggplot(aes(hour, percent, color = source)) +
-  geom_line() +
-  labs(x = "Hour of day (EST)",
-       y = "% of tweets",
-       color = "")
-```
-
-### Common words between devices
-
-```{r fig.height=7}
-library(tidytext)
-library(stringr)
-
-reg <- "([^A-Za-z\\d##@']|'(?![A-Za-z\\d##@]))"
-tweet_words <- tweets %>%
-  filter(!str_detect(text, '^"')) %>%
-  mutate(text = str_replace_all(text, "https://t.co/[A-Za-z\\d]+|&amp;", "")) %>%
-  unnest_tokens(word, text, token = "regex", pattern = reg) %>%
-  filter(!word %in% stop_words$word,
-         str_detect(word, "[a-z]"))
-android_iphone_ratios <- tweet_words %>%
-  count(word, source) %>%
-  filter(sum(n) >= 5) %>%
-  spread(source, n, fill = 0) %>%
-  mutate_at(vars(Android, iPhone), 
-            funs((. + 1) / sum(. + 1))) %>%
-  mutate(logratio = log2(Android / iPhone)) %>%
-  arrange(desc(logratio))
-android_iphone_ratios %>%
-  group_by(logratio > 0) %>%
-  top_n(15, abs(logratio)) %>%
-  ungroup() %>%
-  mutate(word = reorder(word, logratio)) %>%
-  ggplot(aes(word, logratio, fill = logratio < 0)) +
-  geom_bar(stat = "identity") +
-  coord_flip() +
-  ylab("Android / iPhone log ratio") +
-  scale_fill_manual(name = "", labels = c("Android", "iPhone"),
-                    values = c("red", "lightblue"))
-```
-
-### Sentiment analysis
-
-Poisson test of the differences between whether it is mode likely to emerge from the Android.
-
-```{r results='hide'}
-nrc <- sentiments %>%
-  filter(lexicon == "nrc") %>%
-  dplyr::select(word, sentiment)
-
-sources <- tweet_words %>%
-  group_by(source) %>%
-  mutate(total_words = n()) %>%
-  ungroup() %>%
-  distinct(id, source, total_words)
-
-by_source_sentiment <- tweet_words %>%
-  inner_join(nrc, by = "word") %>%
-  count(sentiment, id) %>%
-  ungroup() %>%
-  complete(sentiment, id, fill = list(n = 0)) %>%
-  inner_join(sources) %>%
-  group_by(source, sentiment, total_words) %>%
-  summarize(words = sum(n)) %>%
-  ungroup()
-
-library(broom)
-sentiment_differences <- by_source_sentiment %>%
-  group_by(sentiment) %>%
-  do(tidy(poisson.test(.$words, .$total_words))) %>%
-  ungroup() %>%
-  mutate(sentiment = reorder(sentiment, estimate))
-```
-
-```{r fig.width=6, fig.height=5}
-ggplot(sentiment_differences, aes(x=sentiment, y=estimate)) + 
-  geom_hline(yintercept=1, colour="white", size=3) +
-  geom_point() + 
-  geom_errorbar(aes(x=sentiment, ymin=conf.low, ymax=conf.high)) +
-  scale_y_continuous(breaks=seq(0.7, 2.2, 0.1)) + 
-  coord_flip()
-```
-
-```{r tweet-quiz}
-quiz(
-  question("What time of day are tweets from the Android phone more frequent?",
-    answer("6-9am", correct = TRUE),
-    answer("9am-12pm"),
-    answer("7pm-10pm")),
-  question("Negative sentiment was most likely to be expressed from which phone?",
-    answer("iphone"),
-    answer("android", correct = TRUE),
-    answer("pixel"))
-)
-```
-
-## Climate change
-
-### CO2 monitoring
-
-- Data is collected at a number of locations world wide. 
-- See [Scripps Inst. of Oceanography](http://scrippsco2.ucsd.edu/data/atmospheric_co2) 
-- Let's pull the data from the web and take a look ...
-- 
-- Recordings from South Pole (SPO), Kermadec Islands (KER), Mauna Loa Hawaii (MLF), La Jolla Pier, California (LJO), Point Barrow, Alaska (PTB).
-
-### Read data and plot
-
-```{r CO2, fig.width=10, fig.height=5}
-CO2.ptb<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ptb.csv", sep=",", skip=69)
-colnames(CO2.ptb)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
-CO2.ptb$lat<-71.3
-CO2.ptb$lon<-(-156.6)
-CO2.ptb$stn<-"ptb"
-
-CO2.ljo<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ljo.csv", sep=",", skip=69)
-colnames(CO2.ljo)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
-CO2.ljo$lat<-32.9
-CO2.ljo$lon<-(-117.3)
-CO2.ljo$stn<-"ljo"
-
-CO2.spo<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_spo.csv", sep=",", skip=69)
-colnames(CO2.spo)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
-CO2.spo$lat<- (-90.0)
-CO2.spo$lon<-0
-CO2.spo$stn<-"spo"
-
-CO2.ker<-read.table("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ker.csv", sep=",", skip=69)
-colnames(CO2.ker)<-c("date", "time", "day", "decdate", "n", "flg", "co2")
-CO2.ker$lat<-(-29.2)
-CO2.ker$lon<-(-177.9)
-CO2.ker$stn<-"ker"
-
-CO2.all<-rbind(CO2.ker,CO2.ljo,CO2.ptb,CO2.spo)
-CO2.all$date<-as.Date(CO2.all$date)
-
-CO2.all$invlat=-1*CO2.all$lat
-CO2.all$stn=reorder(CO2.all$stn,CO2.all$invlat)
-
-CO2.all.loc <- rbind(CO2.ker[1,],CO2.ljo[1,],CO2.ptb[1,],CO2.spo[1,])
-
-p1 <- qplot(date, co2, data=subset(CO2.all, flg < 2), colour=stn, geom="line",xlab="Year",ylab="CO2 (ppm)") + 
-		facet_wrap(~stn, ncol=1) + theme(axis.text.y=element_text(size = 6), legend.position="none")
-p2 <- qplot(date, co2, data=subset(CO2.all, flg < 2), colour=stn, geom="line",xlab="Year",ylab="CO2 (ppm)") + 
-  theme(axis.text.y=element_text(size = 6), legend.position="none")
-grid.arrange(p1, p2, ncol=2)
-```
-
-### on a map
-
-```{r CO2-map, fig.width=4.5, fig.height=2.5}
-world <- map_data("world")
-worldmap <- ggplot(world, aes(x=long, y=lat, group=group)) +
-  geom_path(color="grey80", size=0.5) + xlab("") + ylab("") +
-  scale_y_continuous(breaks=(-2:2) * 30) +
-  scale_x_continuous(breaks=(-4:4) * 45) +
-  theme_bw() + theme(aspect.ratio=0.6)
-worldmap + geom_point(data=CO2.all.loc, aes(x=lon, y=lat, group=1), colour="red", 
-                      size=2, alpha=0) +
-  geom_text(data=CO2.all.loc, aes(x=lon, y=lat, label=stn, group=1), 
-            colour="orange", size=5)
-```
-
-- CO2 is increasing, and it looks like it is exponential increase. 
-- The same trend is seen at every location - REALLY? Need some physics to understand this.
-- Some stations show seasonal pattern - actually the more north the more seasonality - WHY?
-
-```{r CO2-quiz}
-quiz(
-  question("CO2 measurements in the northern hemisphere are",
-    answer("higher than the southern hemisphere"),
-    answer("more towards the equator"),
-    answer("more seasonal than the southern hemisphere", correct = TRUE)),
-  question("CO2 is increasing at all measuring locations",
-    answer("in the same rate", correct = TRUE),
-    answer("differently"),
-    answer("its not, its decreasing"))
-)
-```
-
-## Spotify and US Gun Control
-
-These two examples were posted today on twitter:
-
-- [Scraping and analyzinf potify streaming data](https://ramirobentes.netlify.com/post/scraping-and-analyzing-spotify-streaming-data-using-r/)
-- [Persistence of Public Interest in Gun Control](https://rawgit.com/benmarwick/Persistence-of-Public-Interest-in-Gun-Control/master/README.html)
-
-## What is R?
-
-* Most commonly used data science software [kdnuggets](http://www.kdnuggets.com/2017/05/poll-analytics-data-science-machine-learning-software-leaders.html)
-* __Free__ to use, __open source__ so you can see what code is doing to your data
-* __Extensible__: Over 12000 user contributed add-on packages currently on CRAN! Bioconductor has more than 1300 packages, and many researchers provide packages through github.
-* __Powerful__: With the right tools, get more work done, faster, better.
-* __Flexible__: Not a question of _can_, but _how_.
-
-```{r, eval = FALSE, echo = FALSE}
-## devtools::install_github("metacran/crandb")
-## pkgs <- crandb::list_packages(limit = 999999)
-## length(pkgs)
-## [1] 12194
-```
-
-## RStudio is ...
-
-[From Julie Lowndes](http://jules32.github.io/resources/RStudio_intro/):  
-
-<blockquote>
-<b>If R were an airplane, RStudio would be the airport</b>, providing many, many supporting services that make it easier for you, the pilot, to take off and go to awesome places. Sure, you can fly an airplane without an airport, but having those runways and supporting infrastructure is a game-changer.
-</blockquote>
-
-## The RStudio IDE
-
-- Source editor: Docking station for multiple files, Useful shortcuts ("Knit"), Highlighting/Tab-completion, Code-checking (R, HTML, JS), Debugging features  
-- Console window: Highlighting/Tab-completion, Search recent commands
-- Other tabs/panes: Graphics, R documentation, Environment pane, File system navigation/access, Tools for package development, git, etc
-
-## Installing packages
-
-From CRAN
-
-```{r eval=FALSE, echo=TRUE}
-install.packages("learnr")
-```
-
-
-From bioconductor
-
-```{r eval=FALSE, echo=TRUE}
-source("https://bioconductor.org/biocLite.R")
-biocLite("ggbio")
-```
-
-From github repos
-
-```{r eval=FALSE, echo=TRUE}
-devtools::install_github("earowang/sugrrants")
-devtools::install_github("haleyjeppson/ggmosaic")
-```
+# Creating reproducible documents
 
 ## What is R Markdown?
 
-From the [R Markdown home page](http://rmarkdown.rstudio.com/):
-- R Markdown is an authoring format that enables easy creation of dynamic documents, presentations, and reports from R. 
+[R Markdown home page](http://rmarkdown.rstudio.com/)
+
+- R Markdown is an authoring format that enables easy creation of dynamic documents, presentations, and reports from R. It uses the R packages `rmarkdown` and `knitr` to make it all work.
 - It combines the core syntax of __markdown__ (an easy-to-write plain text format) __with embedded R code chunks__ that are run so their output can be included in the final document. 
 - R Markdown documents are fully reproducible (they can be automatically regenerated whenever underlying R code or data changes).
+- An R Markdown file is a plain text file that has the extension `.Rmd`
+- These lecture notes are created using R Markdown, flexdashboard output.
 
-## Open data, open source
+### YAML Headers
 
-- Data is available everywhere today, publicly, free
-- Software, very powerful software, for analysis of data is available publicly, free
-- Combined with a knowledge of mathematics and statistics empowers each of us to contribute to understand and improve our world
+The top of the R Markdown file sets up the title, author, date and output format to create. It is called YAML, an acronym for "Yet Another Markup Language"! 
+
+YAML has `---` at the top and bottom. For example, 
+
+```
+---
+title: "ETC1010: Data Modelling and Computing"
+author: "Professor Di Cook""
+output: html_document
+---
+```
+
+And just a few options to create the title, author, date and output. 
 
 
-## Summary
+![](images/yaml-why-you-no-json.jpg)
 
-Today's class was about what you can do if you have good data handling skills. 
+Source: https://memegenerator.net/instance/64206149/y-u-no-yaml-why-you-no-json
 
-Tomorrow is going to be getting everyone up and running with the software environment. 
+### Code chunks
 
-```{r tomorrow}
-quiz(
-  question("I need to bring these things to class",
-    answer("laptop, ready to install R, RStudio, and enrol in ED", correct = TRUE),
-    answer("printed lecture notes"),
-    answer("textbook")),
-  question("If I don't have a laptop, I can borrow one from",
-    answer("room 2.24 in the new Learning and Teaching building", correct = TRUE),
-    answer("Dr Cook"),
-    answer("my mum"))
+Chunks of R code surrounded by "```" and the "{r" specifies that this is R code. You can use other computer languages in the same document. For example this document has embedded a chunk of code, which loads the "tidyverse" library, makes a sample of the diamonds data from that package, and prints it to a table in the notes: 
+
+```{r test, echo=TRUE}
+library(tidyverse)
+smaller <- diamonds %>% 
+  filter(carat <= 2.5)
+smaller
+```
+
+
+### Markdown syntax
+
+#### Headings
+
+"#" is a top level heading, or section
+
+"##" is a second level heading, or subsection
+
+"###" is  a third level heading, or subsubsection
+
+#### Lists
+
+"-" or "*" or "+" on the beginning of several lines makes a bullet list
+
+If you use "1.", "2.", ... is creates a numbered lists
+
+Sub-lists can be done by indenting with FOUR spaces, followed by the same syntax. 
+
+For example:
+
+```
+- Item A
+     - Item a
+     - Item aa
+- Item B
+```
+
+produces:
+
+- Item A
+     - Item a
+     - Item aa
+- Item B
+
+### Links
+
+Simply enter the URL, or if you want different text use "[]" around the text followed by () around the link, eg
+
+```[RStudio cheatsheets](https://www.rstudio.com/resources/cheatsheets/)```
+
+will produce the following link:
+
+[RStudio cheatsheets](https://www.rstudio.com/resources/cheatsheets/)
+
+### Images
+
+A simple way to include images is
+
+`![](http://compeap.com/wp-content/uploads/you-dont-know-everything.jpg)`
+
+which embeds the image from the web into your document:
+
+![](http://compeap.com/wp-content/uploads/you-dont-know-everything.jpg)
+
+*Note on ethics:* When you use someone else's work, you need to (1) check if its allowed, that it has a [creative commons license](http://creativecommons.org/licenses/by/4.0/), (2) reference them as the source.
+
+### Making the output
+
+- Click on the "Knit" button to compile your document.
+
+- If you have a big document, build it up in pieces. You can run just one code chunk at a time, or the past several, or even one line of code. The "Run" button has a menu of options of doing the coding in pieces.
+
+### Your turn
+
+![](images/remember.png)
+
+**Open your class project when you start RStudio**
+
+
+
+1. Create a new notebook using `File > New File > R` Notebook. Read the instructions. Practice running the chunks. Verify that you can modify the code, re-run it, and see modified output.
+
+2. Create a new R Markdown document with `File > New File > R Markdown... Knit` it by clicking the appropriate button. Knit it by using the appropriate keyboard short cut. Verify that you can modify the input and see the output update.
+
+3. Compare and contrast the R notebook and R markdown files you created above. How are the outputs similar? How are they different? How are the inputs similar? How are they different? What happens if you copy the YAML header from one to the other?
+
+4. Give your `.Rmd` file to another member of your team. Have them test if they can compile it on their computer.
+
+## Code chunks
+
+In the code chunks `.Rmd` document, there are many options that are useful to know about.
+
+### Name
+
+Straight after the "```{r" you can use a text string to name the chunk. This has three advantages:
+
+1. You can more easily navigate to specific chunks using the drop-down code navigator in the bottom-left of the script editor.
+2. Graphics produced by the chunks will have useful names that make them easier to use elsewhere.
+3. You can set up networks of cached chunks to avoid re-performing expensive computations on every run. More on that below.
+
+### `eval = FALSE`
+
+Keeps the code chunk in the document but does not execute it! This can be very useful if you find that your document suddenly won't build. You can turn off the most recent chunks to learn if thay are the culprits causing the error. 
+
+Or if you have a chunk of code that takes a long time to run, you may want to onely run it once and save the output to read in, when you compile the document again. This way the reader can still determine what you have done with the data but you don't have to wait a long time everytime you build the document. 
+
+### `echo = FALSE`
+
+Most of the time you want the report to focus on your results not the code you used to get it. This option will show the results, but not the code. People can still look at your code, if you provide your `.Rmd` file along with the output file.
+
+### Don't print warnings
+
+`message = FALSE` or `warning = FALSE` (and also `error = FALSE` which could be dangerous) prevents messages or warnings from appearing in the finished file.
+
+### Hide results and plots
+
+Sometimes, but not very often, you may want to `results = 'hide'` hides printed output, and `fig.show = 'hide'` hides plots.
+
+### Global options
+
+You can set the default chunk behaviour once at the top of the `.Rmd` file using a chunk like:
+
+```
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 4,
+  fig.height = 4
 )
 ```
 
+then you will only need to add chunk options when you have the occasional one that you'd like to behave differently.
+
+## Different types of documents
+
+### Your turn
+
+1. Change the output of your current R Markdown file to produce a Word document. See if you can change it to produce pdf - this is harder because it involves installing more software (latex) on your computer, and especially on Windows its tricky.
+2. Create a new document that will produce a slide show `File > New R Markdown > Presentation`
+3. Create a flexdashboard document - you may need to install the package `flexdashboard` to see this option in the `File > New R Markdown > From template` list.
+4. Create a new web app using `File > Shiny Web app`
+
+Take a look at the [R Markdown Gallery](https://rmarkdown.rstudio.com/gallery.html). 
+
+## Making a report
+
+
+We are pull to take data from the Atlas of Living Australia, and write a short report on Platypus sightings. Install the package `ALA4R` and load it.
+
+![](images/ala-logo-2016-inline.png)
+
+```{r echo=TRUE}
+# install.packages("ALA4R")
+library(ALA4R)
+```
+
+Take a look at what the package does using the code `help(package="ALA4R")`
+
+Look up the scientific name for platypus using:
+
+```{r echo=TRUE}
+l <- specieslist("platypus")
+```
+
+This returns a lot of different organisms with "platypus" in the name, but you should be able to find one line with the relevant information, that its scientific name is "Ornithorhynchus anatinus". Pull all the records for the cute little creature, using:
+
+```{r echo=TRUE, eval=FALSE}
+platypus <- occurrences("Ornithorhynchus anatinus", download_reason_id=10)
+```
+
+This will generate almost 7Mb of data. We will save this data to a file, so that you have it for future analysis. Create a directory called **data** in your project for the course. This is where we will keep the data sets for the course.
+
+```{r echo=TRUE, eval=FALSE}
+save(platypus, file="data/platypus.rda")
+```
+
+When you want to use this data again, load it to your R session with:
+
+```{r echo=TRUE}
+load("data/platypus.rda")
+```
+
+Alternatively, you can save to all sorts of different file formats, eg `csv`, `xls`, using different saving or data output functions. Look up how to write a `csv` file using the function `write_csv` from the `tidyverse` suite of packages.  
+
+Add a section header called "About the data" to your document. Write a paragraph about the "Atlas of Living Australia" and how you pulled the copy of the data. (You could even try adding a picture of a platypus into your report. Be sure that it is an image that you are free to use.)
+
+### Adding plots
+
+Let's make some plots. Two of the variables in the data set are the latitude and longitude indicating where the animal was spotted. This is going to be the first plot, made using the `ggplot2` package from `tidyverse` suite.
+
+Before we can make the plot, though, we need to understand what's in the data. It is a `list` with two components, `data` and `meta`. It is only the first part that we need to start, and it will be easier if we extract this part only.
+
+```{r echo=TRUE}
+platydata <- platypus$data
+```
+
+Now we can make a plot:
+
+```{r echo=TRUE}
+library(tidyverse)
+ggplot(data=platydata) + geom_point(aes(x=longitude, y=latitude))
+```
+
+There are a lot of points, so using alpha might make it easier to see the density of occurrences.
+
+```{r echo=TRUE}
+ggplot(data=platydata) + geom_point(aes(x=longitude, y=latitude), alpha=0.1)
+```
+
+If you are good at recognising the shape of Australia, you might realise that the sightings are all along the east coast and Tasmania. There is a strange location, that looks like someone saw one in Antarctica! We might need to filter this observation out later, because its extremely unlikely to have been found that far south.
+
+But, we can make it look a bit more like Australia by making a map projection.
+
+
+```{r  echo=TRUE, fig.height=6}
+ggplot(data=platydata) + 
+  geom_point(aes(x=longitude, y=latitude), alpha=0.1) +
+  coord_map()
+```
+
+The locations would be even more recognisable if we added a real map underneath. One way this can be done is to use a google map. The `ggmap` package has an interface to extracting google maps. Install it and then grab a map of Australia with this code.
+
+```{r echo=TRUE}
+library(ggmap)
+oz <- get_map(location=c(lon=133.8807, lat=-23.6980), zoom=4)
+ggmap(oz) + 
+  geom_point(data=platydata, aes(x=longitude, y=latitude), 
+              alpha=0.1, colour="orange")
+```
+
+Write a couple of paragraphs about the locations of platypus in Australia, based on the map that you have created.
+
+### Temporal trend
+
+The date of the sighting is another variable in the data set. Let's make a plot of the sightings over time. The variable is called `eventDate`. It is considered to be a `character` variable by R, so the first step is to get R to recognise that it is a date time object.
+
+```{r echo=TRUE}
+library(lubridate)
+platydata <- platydata %>% 
+  mutate(eventDate = ymd(eventDate))
+```
+
+then we can simply plot occurrence over time.
+
+```{r echo=TRUE}
+ggplot(data=platydata) +
+  geom_point(aes(x=eventDate, y=1))
+```
+
+There are some records dating back before 1800. There were only records from 1770! And these first records are in the database!
+
+```{r eval=FALSE}
+# Check odd cases
+platydata %>% filter(latitude < (-50)) 
+# These jsut have the lat/long wrong
+platydata %>% filter(eventDate < ymd("1850-01-01")) 
+```
+
+Let's focus on records since 1900, and count the number for each year.
+
+```{r echo=TRUE}
+platydata1900 <- platydata %>% filter(year>1900) %>%
+  count(year) 
+ggplot(data=platydata1900) +
+  geom_point(aes(x=year, y=n))
+```
+
+Add a trend line.
+
+```{r echo=TRUE}
+ggplot(data=platydata1900, aes(x=year, y=n)) +
+  geom_point() +
+  geom_smooth(se=F)
+```
+
+Make it interactive so that we can investigate some observations.
+
+```{r echo=TRUE}
+library(plotly)
+ggplotly()
+```
+
+
+*Discussion question:* Was there a population explosion in 1980 and 2004? Is the population of platypus been increasing since 1900, and descreasing in the last decade?
+
+Add a new section to your report, titled "Temporal patterns". Write a couple of paragraphs on what you have learned about the data over time.
+
+### Check 
+
+Give your `.Rmd` file and data set to one of your team mates to compile. 
+
+## Lab quiz
+
+Take the quiz for today from ED.
 
 ## Share and share alike
 
