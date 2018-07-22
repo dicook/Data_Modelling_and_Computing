@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Di Cook" />
+<meta name="author" content="Professor Di Cook, EBS, Monash U." />
 
 
 <title>ETC 1010 Assignment 1</title>
@@ -91,6 +91,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -119,7 +122,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">ETC 1010 Assignment 1</h1>
-<h4 class="author"><em>Di Cook</em></h4>
+<h4 class="author"><em>Professor Di Cook, EBS, Monash U.</em></h4>
 
 </div>
 
@@ -127,38 +130,26 @@ $(document).ready(function () {
 <div id="instructions" class="section level1">
 <h1>Instructions</h1>
 <ul>
-<li>This is a team assignment. You can create your own team, of between 2-4 people.</li>
+<li>This is a team assignment.</li>
 <li>You need to write a report with answers to each of the questions.</li>
 <li>Turn in the <code>html</code> output file, and also the <code>Rmd</code> file.</li>
-<li>Create a team name, and use this on the report</li>
-<li>Separately you need to provide a separate page to one of the tutors that contains the team name, members of the team, and the % effort from each team member. Your grade for the assignment will be adjusted by % effort. If the effort is different from 1/n, all members need to sign off on this.</li>
-<li>Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative.</li>
+<li>Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative. Five points will be for individual effort. And the remaining 10 points will be the final group report.</li>
 </ul>
 </div>
 <div id="exercise" class="section level1">
 <h1>Exercise</h1>
 <ul>
-<li>From the web site <a href="https://bitre.gov.au/publications/ongoing/airport_traffic_data.aspx">Department of Infrastructure, Regional Development and Cities</a> download the Airport Traffic Data 1985–86 to 2016–17. It is 2.7Mb.</li>
-<li>Extract the “Airport Passengers” table into R with this code.</li>
+<li>From the ABS web site data has been extracted on educational attainment, age and sex from the most recent 3 Census collections. Read the data in, skipping the irrelevant lines, for example.</li>
 </ul>
 <pre><code>library(readxl)
-passengers &lt;- read_xls(&quot;data/WebAirport_FY_1986-2017.xls&quot;, sheet=3, skip=6)</code></pre>
-<ul>
-<li>Tidy the data, to produce a data set with these columns
-<ul>
-<li>airport: all of the airports. (You can remove the TOTAL, because this can be easily recalculated as needed.)</li>
-<li>year</li>
-<li>type_of_flight: DOMESTIC, INTERNATIONAL</li>
-<li>bound: IN or OUT</li>
-</ul></li>
-<li>Use your data to make
-<ul>
-<li>a barchart of type of flight facetted by year.</li>
-<li>a scatterplot of domestic inbound vs outbound passengers facetted by year. There are three airports with much higher numbers, which are these three?</li>
-<li>a scatterplot of international inbound vs outbound passengers facetted by year</li>
-</ul></li>
-<li>Write a paragraph explaining what you learn from each of the plots</li>
-</ul>
+census_2006 &lt;- read_xlsx(&quot;data/ABS_ed_age_sex_2006.xlsx&quot;, skip=6, n_max=50)</code></pre>
+<ol style="list-style-type: decimal">
+<li><p>Tidy the data, to produce a data set with these columns: census, educ, age, sex, count</p></li>
+<li><p>Combine the data from the three different census periods</p></li>
+<li><p>Aggregate the counts across sex, and age, and compute the totals across educ, for each census. Plot these totals against the census year, using a line connecting values for each educ group. Write a couple of paragraphs about what you learn.</p></li>
+<li><p>Subset the data to age group 25-29. Make a plot of educ counts by census year, facetted by sex. Write a couple of paragraphs about what you learn.</p></li>
+<li><p>Subset the data to age groups, 15-19, 20-24, 25-29, 30-34. Make a plot of educ counts by census year, facetted by age group and sex. Write a couple of paragraphs about what you learn.</p></li>
+</ol>
 </div>
 
 

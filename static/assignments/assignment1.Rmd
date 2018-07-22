@@ -1,6 +1,6 @@
 ---
 title: "ETC 1010 Assignment 1"
-author: "Di Cook"
+author: "Professor Di Cook, EBS, Monash U."
 output: html_document
 ---
 
@@ -20,33 +20,28 @@ knitr::opts_chunk$set(
 
 # Instructions
 
-- This is a team assignment. You can create your own team, of between 2-4 people. 
+- This is a team assignment. 
 - You need to write a report with answers to each of the questions. 
 - Turn in the `html` output file, and also the `Rmd` file. 
-- Create a team name, and use this on the report
-- Separately you need to provide a separate page to one of the tutors that contains the team name, members of the team, and the % effort from each team member. Your grade for the assignment will be adjusted by % effort. If the effort is different from 1/n, all members need to sign off on this.
-- Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative.
+- Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative. Five points will be for individual effort. And the remaining 10 points will be the final group report.
 
 # Exercise
 
-- From the web site [Department of Infrastructure, Regional Development and Cities](https://bitre.gov.au/publications/ongoing/airport_traffic_data.aspx) download the Airport Traffic Data 1985–86 to 2016–17. It is 2.7Mb.
-- Extract the "Airport Passengers" table into R with this code.
+- From the ABS web site data has been extracted on educational attainment, age and sex from the most recent 3 Census collections. Read the data in, skipping the irrelevant lines, for example.
 
 ```
 library(readxl)
-passengers <- read_xls("data/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+census_2006 <- read_xlsx("data/ABS_ed_age_sex_2006.xlsx", skip=6, n_max=50)
 ```
 
-- Tidy the data, to produce a data set with these columns
-    - airport: all of the airports. (You can remove the TOTAL, because this can be easily recalculated as needed.)
-    - year 
-    - type_of_flight: DOMESTIC, INTERNATIONAL
-    - bound: IN or OUT
+1. Tidy the data, to produce a data set with these columns: census, educ, age, sex, count
 
-- Use your data to make 
-    - a barchart of type of flight facetted by year.
-    - a scatterplot of domestic inbound vs outbound passengers facetted by year. There are three airports with much higher numbers, which are these three?
-    - a scatterplot of international inbound vs outbound passengers facetted by year
+2. Combine the data from the three different census periods
 
-- Write a paragraph explaining what you learn from each of the plots
+3. Aggregate the counts across sex, and age, and compute the totals across educ, for each census. Plot these totals against the census year, using a line connecting values for each educ group. Write a couple of paragraphs about what you learn.
+
+4. Subset the data to age group 25-29. Make a plot of educ counts by census year, facetted by sex. Write a couple of paragraphs about what you learn.
+
+5. Subset the data to age groups, 15-19, 20-24, 25-29, 30-34. Make a plot of educ counts by census year, facetted by age group and sex. Write a couple of paragraphs about what you learn.
+
 
