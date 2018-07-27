@@ -1,5 +1,6 @@
 ---
 title: "ETC1010: Data Modelling and Computing"
+author: "Professor Di Cook, EBS, Monash U."
 output: 
   learnr::tutorial:
     css: "css/logo.css"
@@ -23,7 +24,7 @@ tutorial_html_dependency()
 
 ## Course web site
 
-This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.netlify.com](http://dmac.netlify.com)
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: http://dmac.dicook.org
 
 ## Overview
 
@@ -42,7 +43,7 @@ grad <- read_csv("data/graduate-programs.csv")
 grad %>% top_n(10)
 ```
 
-What's special about the format?
+What's good about the format?
 
 - Rows contain information about the institution
 - Columns contain types of information, like average number of publications, average number of citations, % completion, 
@@ -71,22 +72,6 @@ quiz(
 )
 ```
 
-In the R window below, for economics programs: 
-
-- compute the mean and standard deviation of average number of publications. 
-- make a plot of average number of publications by average number of citations. Is there a relationship?
-
-Use this code to read the data:
-
-```
-library(tidyverse)
-grad <- read_csv("http://dmac.netlify.com/lectures/data/graduate-programs.csv")
-```
-
-```{r sandbox, exercise=TRUE}
-
-```
-
 ## Terminology of data
 
 - A __variable__ is a quantity, quality, or property that you can measure. For the grad programs, these would be all the column headers.
@@ -107,18 +92,7 @@ grad %>% gather(variable, value, -subject, -Inst)
 
 ## Different examples of data
 
-For each of these data examples, identify the variables and the observations - some are HARD!
-
-### Social survey
-
-```{r}
-pew <- read_delim(
-  file = "http://stat405.had.co.nz/data/pew.txt",
-  delim="\t",
-  col_names = TRUE
-)
-pew
-```
+For each of these data examples, let's try together to identify the variables and the observations - some are HARD!
 
 ### Genes experiment
 
@@ -165,7 +139,7 @@ Tidy data can be though of as legos. Once you have this form, you can put it tog
 
 Turn it into long form tidy
 
-```{r}
+```{r eval=FALSE}
 pew_long <- pew %>%
   gather(income, count, -religion)
 pew_long %>% top_n(10)
@@ -173,7 +147,7 @@ pew_long %>% top_n(10)
 
 ### Make calculations 
 
-```{r}
+```{r eval=FALSE}
 pew_long <- pew_long %>%
   group_by(religion) %>%
   mutate(prop = count / sum(count)) 
@@ -182,7 +156,7 @@ pew_long %>% top_n(10)
 
 ### Relationship between income and religion
 
-```{r}
+```{r eval=FALSE}
 pew_long %>%
   ggplot(aes(income, prop)) +
     geom_line(aes(group = religion)) +
