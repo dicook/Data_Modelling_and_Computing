@@ -32,6 +32,22 @@ This is a link to the course web site, in case you need to go back and forth bet
 - Terminology of data
 - Different examples of data 
 - Steps in making data tidy
+- Lots of examples
+
+![](images/1237b41b-7e70-4377-a230-90b0e3ff4001.jpg)
+
+Source: [Measure Evaluation](https://www.measureevaluation.org/resources/newsroom/blogs/tidy-data-and-how-to-get-it)
+
+### *FOLLOW ALONG WITH THE NOTES* 
+
+- Open your ETC1010 `Rproj`
+- Download the `Rmd` file from the class web site
+- Download these data files to your data directory
+    - `graduate-programs.csv`
+    - `genes.csv`
+    - `ASN00086282.dly`
+    - `TB_notifications_2018-03-18.csv`
+    - `rates.csv`
 
 ## Example: US graduate programs
 
@@ -96,6 +112,11 @@ For each of these data examples, let's try together to identify the variables an
 
 ### Genes experiment
 
+```{r echo=FALSE}
+library(emo)
+ji("thinking")
+```
+
 ```{r}
 genes <- read_csv("data/genes.csv")
 genes 
@@ -104,6 +125,10 @@ genes
 ### Melbourne weather
 
 What are the variables? Observations?
+
+```{r echo=FALSE}
+ji("scared")
+```
 
 ```{r}
 melbtemp <- read_fwf("data/ASN00086282.dly", 
@@ -115,10 +140,30 @@ melbtemp %>% select(X1, X2, X3, X4, X5, X9,
 
 ### TB incidence
 
-```{r}
-tb <- read_csv("data/tb.csv")
-tb %>% top_n(-10)
+This is current tuberculosis data taken from [WHO](http://www.who.int/tb/country/data/download/en/), the case notifications table.
+
+```{r echo=FALSE}
+set.seed(2018)
+ji("sick")
 ```
+
+```{r}
+tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>%
+  select(country, year, starts_with("new_sp_")) %>%
+  filter(year>1996, year<2012)
+tb %>% top_n(20)
+```
+
+### Contingency table
+
+This data is collated from this story: [41% Of Fliers Think You’re Rude If You Recline Your Seat](http://fivethirtyeight.com/datalab/airplane-etiquette-recline-seat/)
+
+```{r}
+fly <- read_csv("data/fly_tbl.csv")
+fly
+```
+
+What are the variables?
 
 ## Messy vs tidy
 
@@ -134,41 +179,6 @@ Tidy data can be though of as legos. Once you have this form, you can put it tog
 - `spread`: variables in columns (used to be called casting)
 - `nest`/`unnest`: working with list variables
 - `separate`/`unite`: split and combine columns
-
-## Tidying contingency table
-
-Turn it into long form tidy
-
-```{r eval=FALSE}
-pew_long <- pew %>%
-  gather(income, count, -religion)
-pew_long %>% top_n(10)
-```
-
-### Make calculations 
-
-```{r eval=FALSE}
-pew_long <- pew_long %>%
-  group_by(religion) %>%
-  mutate(prop = count / sum(count)) 
-pew_long %>% top_n(10)
-```
-
-### Relationship between income and religion
-
-```{r eval=FALSE}
-pew_long %>%
-  ggplot(aes(income, prop)) +
-    geom_line(aes(group = religion)) +
-    facet_wrap(~religion, ncol=6) + 
-    scale_x_discrete(labels=c("<$10k"="10", 
-      "$10-20k"="20", "$20-30k"="30", 
-      "$30-40k"="40", "$40-50k"="50", 
-      "$50-75k"="75", "$75-100k"="100",
-      "$100-150k"="150", ">150k"="200",
-      "Don't know/refused"="N"))
-```
-
 
 ## Tidying genes data
 
@@ -317,9 +327,9 @@ quiz(
   question("Which is the best description of the temperature units? ",
     answer("degrees farehnheit F"),
     answer("degrees Kelvin K"),
-    answer("tenths of degrees C", correct = TRUE)),
+    answer("degrees C x10", correct = TRUE)),
   question("What is the best description of the precipitation units",
-    answer("tenths of mm", correct = TRUE),
+    answer("mm x10", correct = TRUE),
     answer("inches")),
   question("What does -9999 mean?",
     answer("it was really cold"),
@@ -351,30 +361,6 @@ ggplot(melbtemp_wide, aes(x=year, y=TMAX)) +
 
 Make the same plot, except use minimum temperature. Is there a trend for the minimum, like there is for the maximum? 
 
-Read the data in first with this code:
-
-```
-library(tidyverse)
-melbtemp <- read_fwf("http://dmac.netlify.com/lectures/data/ASN00086282.dly",
-  col_positions=fwf_widths(c(11, 4, 2, 4, 
-        rep(c(5, 1, 1, 1), 31)), 
-      col_names = c("station", "year", "month",
-        "variable", paste0("X", 5:128))))
-melbtemp <- melbtemp[,c(1:4, seq(5,128,4))] 
-melbtemp_wide <- melbtemp %>% 
-  gather(day, value, X5:X125) %>%
-  mutate(day = sub("X", "", day)) %>%
-  mutate(day = as.numeric(day)%/%4) %>%
-  mutate(day = as.integer(day)) %>% 
-  filter(variable %in% c("PRCP", "TMAX", "TMIN")) %>% 
-  mutate(value=ifelse(value==-9999, NA, value)) %>%
-  spread(variable, value) %>%
-  mutate(PRCP=PRCP/10, TMAX=TMAX/10, TMIN=TMIN/10) 
-```
-
-```{r sandbox2, exercise=TRUE}
-
-```
 
 ## Lab exercise 1
 

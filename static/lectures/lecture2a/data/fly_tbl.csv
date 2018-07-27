@@ -1,4 +1,4 @@
-V1,V2:Always,V2:Usually,V2:About half the time,V2:Once in a while,V2:Never
+Is_it_rude_to_recline,I_recline_seat:Always,I_recline_seat:Usually,I_recline_seat:About half the time,I_recline_seat:Once in a while,I_recline_seat:Never
 "No, not rude at all",124,145,82,116,35
 "Yes, somewhat rude",9,27,35,129,81
 "Yes, very rude",3,3,NA,11,54
