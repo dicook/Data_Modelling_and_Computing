@@ -85,6 +85,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - [graduate-programs.csv](http://dmac.dicook.org/lectures/data/graduate-programs.csv) US Graduate programs 
 - [ASN00086282.dly](http://dmac.dicook.org/lectures/data/ASN00086282.dly) Melbourne weather
 - [french_fries.rda](http://dmac.dicook.org/lectures/data/french_fries.rda) Hot chips data
+- [platypus.rda](http://dmac.dicook.org/lectures/data/platypus.rda) Platypus data from the Living Atlas of Australia
 - [WebAirport_FY_1986-2017.xls](http://dmac.dicook.org/lectures/data/WebAirport_FY_1986-2017.xls) Airport Traffic Data 1985–86 to 2016–17.
 - [foragers.csv](http://dmac.dicook.org/lectures/data/foragers.csv) Howell's foragers data
 - Simpsons: [scripts](http://dmac.dicook.org/lectures/data/simpsons_script_lines.csv), [characters](http://dmac.dicook.org/lectures/data/simpsons_characters.csv)
