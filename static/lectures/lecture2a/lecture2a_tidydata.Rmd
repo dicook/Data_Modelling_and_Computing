@@ -51,6 +51,7 @@ Source: [Measure Evaluation](https://www.measureevaluation.org/resources/newsroo
     - `TB_notifications_2018-03-18.csv`
     - `french_fries.rda`
     - `rates.csv`
+    - `WebAirport_FY_1986-2017.xls`
 - Open the `lecture2a_tidydata.Rmd` file, that you have just downloaded in your RStudio window, and run the chunks of code as we talk about them. 
 - Also have the [notes](https://ebsmonash.shinyapps.io/lecture2a_tidydata/)) open in your web browser, so you can do the inline quizzes - for fun.
 
@@ -187,18 +188,18 @@ Tidy data can be though of as legos. Once you have this form, you can put it tog
 
 - `gather`: specify the **keys** (identifiers) and the **values** (measures) to make long form (used to be called melting)
 - `spread`: variables in columns (used to be called casting)
-- `nest`/`unnest`: working with list variables
-- `separate`/`unite`: split and combine columns
+- `separate`: split character columns
 
 ## Tidying genes data
 
 ```{r}
+genes
 genes_long <- genes %>% 
   gather(variable, expr, -id) 
 genes_long
 ```
 
-### separate Columns
+### Separate columns
 
 ```{r}
 genes_long %>%
@@ -211,33 +212,37 @@ genes_long %>%
   separate(leftover, c("time", "rep"), "\\.") 
 ```
 
-### Trim redundant information 
+### Now spread to examine different aspects
+
+#### Examine treatments against each other
 
 ```{r}
-gtidy <- genes_long %>%
+genes_long <- genes_long %>%
   separate(variable, c("trt", "leftover"), "-") %>%
-  separate(leftover, c("time", "rep"), "\\.") %>%
-  mutate(trt = sub("W", "", trt)) %>%
-  mutate(rep = sub("R", "", rep))
-gtidy
+  separate(leftover, c("time", "rep"), "\\.") 
+genes_long %>%
+  spread(trt, expr) %>%
+  ggplot(aes(x=WI, y=WM, colour=id)) + geom_point()
 ```
 
-### Make summaries and plot
+Generally, some negative association within each gene, WM is low if WI is high. 
+
+#### Examine replicates against each other
 
 ```{r}
-gmean <- gtidy %>% 
-  group_by(id, trt, time) %>% 
-  summarise(expr = mean(expr))
-ggplot(data = gtidy, aes(trt, expr, colour = time)) + 
-         geom_point() + 
-  xlab("Type of modification") + ylab("Expression") + 
-  facet_wrap(~id) +
-  geom_line(data = gmean, aes(group = time))
+genes_long %>%
+  spread(rep, expr) %>%
+  ggplot(aes(x=R1, y=R4, colour=id)) + 
+  geom_point() + coord_equal()
 ```
 
-What do we learn about the data? At 12 hours the expression for Gene 1 is different between genotypes I and M, because the variability in replicates is small relative to the difference between means. For the rest of the numbers and genes the variability is too high to be able to say anything about difference between means. 
+Very roughly, replicate 4 is like replicate 1, eg if one is low, the other is low. That's a good thing, that the replicates are fairly similar.
 
 ## Tidying Melbourne weather
+
+This is seriously messy!
+
+Read the data first, just the columns that we need. The data is in fixed column width format, which means a certain number of columns are designated for the particular records, eg columns 1-11 contains the station id, columns 12-15 contain the year, ...
 
 ```{r}
 melbtemp <- read_fwf("data/ASN00086282.dly", 
@@ -248,13 +253,15 @@ melbtemp <- read_fwf("data/ASN00086282.dly",
 melbtemp
 ```
 
+X5, X9, ... contain the temperature and precipitation records. The remaining columns have data quality flags. We want to ignore the data quality flags for now, and select every fourth variable.
+
 ### Sometime easier to index select
 
 - `[...]` allows indexing of elements of a vector, or collection of numbers
 - `c(1:4, seq(5,128,4))` means collect items 1 through 4, and then every 4th item until the 128'th
 
 ```{r}
-melbtemp <- melbtemp[,c(1:4, seq(5,128,4))] 
+melbtemp <- melbtemp[,c(1:4, seq(5, 128, 4))] 
 melbtemp
 ```
 
@@ -266,69 +273,23 @@ melbtemp_long <- melbtemp %>%
 melbtemp_long
 ```
 
-### Create day variable
+This is basically what we need. The day variable doesn't have the right values in it, but we can fix this later.
 
-```{r}
-melbtemp_long %>% 
-  mutate(day = sub("X", "", day))
-```
+### Use spread to look at different things
 
-```{r}
-melbtemp_long <- melbtemp_long %>% 
-  mutate(day = sub("X", "", day)) %>%
-  mutate(day = as.numeric(day)%/%4) %>%
-  mutate(day = as.integer(day))
-melbtemp_long
-```
-
-### Take a look
-
-It looks like there are just three variables, PRCP, TMAX, TMIN but there are actually quite a few more.
-
-```{r}
-melbtemp_long %>% count(variable)
-```
-
-We are only interested in PRCP, TMAX, TMIN, so filter.
+But there are a couple of things that I need to fix to make it possible to do these plots. We will discuss these operations next week.
 
 ```{r}
 melbtemp_long <- melbtemp_long %>% 
-  filter(variable %in% c("PRCP", "TMAX", "TMIN"))
-melbtemp_long %>% count(variable)
-```
-
-### Check the data
-
-```{r}
-melbtemp_long
-```
-
-### Convert month to numeric
-
-```{r}
-melbtemp_long <- melbtemp_long %>% 
-  mutate(month = as.integer(month))
-```
-
-### Spread the variables into wide form
-
-```{r}
-melbtemp_wide <- melbtemp_long %>% 
-  spread(variable, value)
-melbtemp_wide
-```
-
-### Check the data summaries
-
-```{r}
-summary(melbtemp_wide)
+  filter(variable %in% c("TMIN", "TMAX", "PRCP")) %>%
+  mutate(value = ifelse(value == -9999, NA, value))
 ```
 
 ### What are the numbers?
 
 - What is the range of temperature and precipitation?
 - What units could this be in?
-- Why the -9999?
+- Why are some values -9999?
 
 Go to the data source: [https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt](https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt)
 
@@ -348,28 +309,30 @@ quiz(
 )
 ```
 
-### Fix missings and scale
+### Now use spread
+
+#### Max vs Min
 
 ```{r}
-melbtemp_wide <- melbtemp_long %>% 
-  mutate(value=ifelse(value==-9999, NA, value)) %>%
-  spread(variable, value) %>%
-  mutate(PRCP=PRCP/10, TMAX=TMAX/10, TMIN=TMIN/10) 
-melbtemp_wide
+melbtemp_long %>% spread(variable, value) %>%
+  ggplot(aes(x=TMIN, y=TMAX)) + geom_point() + 
+  coord_equal() + geom_abline(slope=1, intercept=0)
 ```
 
-### Make some plots
+Oh, TMAX is always higher than TMIN. This is a good thing.
 
-This plot examines the long term trend in maximum temperatures. Rather than plotting the data, a model is fitted, and this is displayed.  
+#### Winter vs Summer
 
 ```{r}
-ggplot(melbtemp_wide, aes(x=year, y=TMAX)) + 
-  geom_smooth(method="lm")
+melbtemp_long %>% 
+  filter(variable == "TMAX") %>%
+  spread(month, value) %>%
+  ggplot(aes(x=`07`, y=`01`)) + geom_point() + 
+  xlab("July") + ylab("Jan") +
+  coord_equal() + geom_abline(slope=1, intercept=0)
 ```
 
-### Your turn
-
-Make the same plot, except use minimum temperature. Is there a trend for the minimum, like there is for the maximum? 
+Same day of the month, same year, January has higher maximum temperatures than July. Except two days, the July max exceeded the January max. (This comparison is a bit whacky, though right?)
 
 
 ## Lab exercise 1
@@ -384,7 +347,7 @@ fly_tbl
 a. What are the variables and observations in this data?
 b. Put the data in tidy long form (using the names `V2` as the key variable, and `count` as the value). 
 
-You can get the data from  [data/fly_tbl.csv](http://dmac.netlify.com/lectures/data/fly_tbl.csv) 
+You can get the data from  [data/fly_tbl.csv](http://dmac.dicook.org/lectures/data/fly_tbl.csv) 
 
 ```{r echo=FALSE, eval=FALSE}
 library(tidyverse)
@@ -399,13 +362,19 @@ Your job is to tidy the TB incidence data.
 - Write down the steps that will be needed go from raw data to tidy
 - Write the code piece by piece
 
-You can get the data from  [tb.csv](http://dmac.netlify.com/lectures/data/tb.csv) 
+You can get the data from  [tb.csv](http://dmac.dicook.org/lectures/data/tb.csv) 
 
 ```{r echo=FALSE, eval=FALSE}
-library(tidyverse)
-tb <- read_csv("data/tb.csv")
-tb_tidy <- tb %>% gather(variable, count, -iso2, -year) %>%
-  separate(variable, c("gender", "age")) 
+tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>%
+  select(country, year, starts_with("new_sp_")) %>%
+  filter(year>1996, year<2012)
+tb %>% top_n(20)
+tb_tidy <- tb %>% 
+  gather(stuff, count, starts_with("new_sp_")) %>%
+  separate(stuff, c("stuff1", "stuff2", "genderage")) %>%
+  separate(genderage, c("gender", "age"), sep=1) %>%
+  select(-stuff1, -stuff2)
+tb_tidy
 ```
 
 ## Lab exercise 3
@@ -418,9 +387,8 @@ head(rates)
 ```
 
 a. What are the variables and observations?
-b. Make a time series (line plot) of the Australian dollar cross rate with the USA. What day was the best day to exchange USD into AUD during this period?
-c. Focusing on the five currencies, AUD, GBP, JPY, CNY, CAD, make it into tidy long form.
-d. Make line plots of the currencies, like the plot below, and describe the similarities and differences between the currencies. 
+b. Gather the five currencies, AUD, GBP, JPY, CNY, CAD, make it into tidy long form.
+c. Make line plots of the currencies, like the plot below, and describe the similarities and differences between the currencies. 
 
 You can get the data from [rates.csv](http://dmac.netlify.com/lectures/data/rates.csv) 
 
@@ -436,4 +404,32 @@ rates_long <- rates %>% select(date, AUD, GBP, JPY, CNY, CAD) %>%
 ggplot(rates_long, aes(x=date, y=rate)) + 
   geom_line() +
   facet_wrap(~currency, ncol=1, scales="free_y")
+```
+
+## Lab exercise 4
+
+From the web site [Department of Infrastructure, Regional Development and Cities](https://bitre.gov.au/publications/ongoing/airport_traffic_data.aspx) download the Airport Traffic Data 1985–86 to 2016–17. It is 2.7Mb.
+- Extract the "Airport Passengers" table into R with this code
+
+```{r}
+library(readxl)
+passengers <- read_xls("data/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+```
+
+Tidy the data, to produce a data set with these columns
+    - airport: all of the airports. (You can remove the TOTAL, because this can be easily recalculated as needed.)
+    - year 
+    - type_of_flight: DOMESTIC, INTERNATIONAL
+    - bound: IN or OUT
+
+```{r eval=FALSE}
+passengers <- passengers %>% 
+  filter(!is.na(AIRPORT)) %>%
+  select(airport = AIRPORT,
+         Year, IN_DOM = INBOUND, OUT_DOM = OUTBOUND,
+         IN_INTL = INBOUND__1, 
+         OUT_INTL = OUTBOUND__1) %>%
+  filter(!airport %in%  "TOTAL AUSTRALIA") %>%
+  gather(key = "where", value = "amount", IN_DOM:OUT_INTL) %>%
+  separate(where, into=c("bound", "type_of_flight"))
 ```

@@ -34,9 +34,9 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
 
 - Week 1: Getting started: 
     - [Wed](https://ebsmonash.shinyapps.io/lecture1a_intro/) [(Rmd)](http://dmac.dicook.org/lectures/lecture1a/lecture1a_intro.Rmd); [Reading Textbook 27.1-5](http://r4ds.had.co.nz/r-markdown.html) Go to ED and complete the reading quiz before Friday's class
-    - [Fri](https://ebsmonash.shinyapps.io/lecture1b_intro/) [(Rmd)](http://dmac.dicook.org/lectures/lecture1b/lecture1b_intro.Rmd)); [Reading Textbook 12.1-3](http://r4ds.had.co.nz/tidy-data.html) Go to ED and complete the reading quiz before Wednesday's class
+    - [Fri](https://ebsmonash.shinyapps.io/lecture1b_intro/) [(Rmd)](http://dmac.dicook.org/lectures/lecture1b/lecture1b_intro.Rmd)); [Reading Textbook 12.1-4](http://r4ds.had.co.nz/tidy-data.html) Go to ED and complete the reading quiz before Wednesday's class
 - Week 2: Tidy data principles
-    - Wed [Reading Textbook 12.4-6](http://r4ds.had.co.nz/tidy-data.html)
+    - [Wed](https://ebsmonash.shinyapps.io/lecture2a_tidydata/) [(Rmd)](http://dmac.dicook.org/lectures/lecture2a/lecture2a_tidydata.Rmd);  [Reading Textbook 5.1, 5.2, 5.3, 5.4, 5.5, 5.6 *only the first paragraph of each section!*](http://r4ds.had.co.nz/transform.html)
     - Fri 
 - Week 3: Data cleaning, rearranging and transformation; 
 - Week 4: Data visualisation: 
@@ -85,6 +85,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - [graduate-programs.csv](http://dmac.dicook.org/lectures/data/graduate-programs.csv) US Graduate programs 
 - [ASN00086282.dly](http://dmac.dicook.org/lectures/data/ASN00086282.dly) Melbourne weather
 - [french_fries.rda](http://dmac.dicook.org/lectures/data/french_fries.rda) Hot chips data
+- [WebAirport_FY_1986-2017.xls](http://dmac.dicook.org/lectures/data/WebAirport_FY_1986-2017.xls) Airport Traffic Data 1985–86 to 2016–17.
 - [foragers.csv](http://dmac.dicook.org/lectures/data/foragers.csv) Howell's foragers data
 - Simpsons: [scripts](http://dmac.dicook.org/lectures/data/simpsons_script_lines.csv), [characters](http://dmac.dicook.org/lectures/data/simpsons_characters.csv)
 - Harry Potter: [hpchars](http://dmac.dicook.org/lectures/lecture10b/data/hpchars.rda), [hpedges](http://dmac.dicook.org/lectures/lecture10b/data/hpedges.rda)
