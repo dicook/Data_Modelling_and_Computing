@@ -408,28 +408,33 @@ ggplot(rates_long, aes(x=date, y=rate)) +
 
 ## Lab exercise 4
 
+This is tough!
+
 From the web site [Department of Infrastructure, Regional Development and Cities](https://bitre.gov.au/publications/ongoing/airport_traffic_data.aspx) download the Airport Traffic Data 1985–86 to 2016–17. It is 2.7Mb.
-- Extract the "Airport Passengers" table into R with this code
+
+Extract the "Airport Passengers" table into R with this code
 
 ```{r}
 library(readxl)
 passengers <- read_xls("data/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+passengers
 ```
 
 Tidy the data, to produce a data set with these columns
-    - airport: all of the airports. (You can remove the TOTAL, because this can be easily recalculated as needed.)
+    - airport: all of the airports. 
     - year 
     - type_of_flight: DOMESTIC, INTERNATIONAL
     - bound: IN or OUT
 
-```{r eval=FALSE}
+```{r eval=FALSE, echo=FALSE}
 passengers <- passengers %>% 
-  filter(!is.na(AIRPORT)) %>%
-  select(airport = AIRPORT,
-         Year, IN_DOM = INBOUND, OUT_DOM = OUTBOUND,
-         IN_INTL = INBOUND__1, 
-         OUT_INTL = OUTBOUND__1) %>%
-  filter(!airport %in%  "TOTAL AUSTRALIA") %>%
-  gather(key = "where", value = "amount", IN_DOM:OUT_INTL) %>%
-  separate(where, into=c("bound", "type_of_flight"))
+  select(-X__1, -X__2, -Rank, -starts_with("TOTAL")) %>%
+  rename(INBOUND_DOM=INBOUND, INBOUND_INTL=INBOUND__1, 
+         OUTBOUND_DOM=OUTBOUND, OUTBOUND_INTL=OUTBOUND__1,
+         INBOUND_TOTL=INBOUND__2, OUTBOUND_TOTL=OUTBOUND__2) %>%
+  gather(where, amount, starts_with("IN"), starts_with("OUT")) 
 ```
+
+## Lab quiz
+
+Time to take the lab quiz.
