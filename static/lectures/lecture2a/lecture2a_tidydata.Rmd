@@ -9,6 +9,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(learnr)
+library(emo) 
 knitr::opts_chunk$set(echo = TRUE,   
                       message = FALSE,
                       warning = FALSE,
@@ -16,7 +17,8 @@ knitr::opts_chunk$set(echo = TRUE,
                       fig.height = 4,
                       fig.width = 8,
                       fig.align = "center",
-                      cache = FALSE)
+                      cache = FALSE,
+                      comment = NA )
 tutorial_html_dependency()
 ```
 
@@ -47,7 +49,10 @@ Source: [Measure Evaluation](https://www.measureevaluation.org/resources/newsroo
     - `genes.csv`
     - `ASN00086282.dly`
     - `TB_notifications_2018-03-18.csv`
+    - `french_fries.rda`
     - `rates.csv`
+- Open the `lecture2a_tidydata.Rmd` file, that you have just downloaded in your RStudio window, and run the chunks of code as we talk about them. 
+- Also have the [notes](https://ebsmonash.shinyapps.io/lecture2a_tidydata/)) open in your web browser, so you can do the inline quizzes - for fun.
 
 ## Example: US graduate programs
 
@@ -108,14 +113,11 @@ grad %>% gather(variable, value, -subject, -Inst)
 
 ## Different examples of data
 
-For each of these data examples, let's try together to identify the variables and the observations - some are HARD!
+For each of these data examples, **let's try together to identify the variables and the observations** - some are HARD!
 
 ### Genes experiment
 
-```{r echo=FALSE}
-library(emo)
-ji("thinking")
-```
+`r ji("thinking")`
 
 ```{r}
 genes <- read_csv("data/genes.csv")
@@ -126,9 +128,7 @@ genes
 
 What are the variables? Observations?
 
-```{r echo=FALSE}
-ji("scared")
-```
+`r ji("scared")`
 
 ```{r}
 melbtemp <- read_fwf("data/ASN00086282.dly", 
@@ -142,10 +142,7 @@ melbtemp %>% select(X1, X2, X3, X4, X5, X9,
 
 This is current tuberculosis data taken from [WHO](http://www.who.int/tb/country/data/download/en/), the case notifications table.
 
-```{r echo=FALSE}
-set.seed(2018)
-ji("sick")
-```
+`r set.seed(2018); ji("sick")`
 
 ```{r}
 tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>%
@@ -153,6 +150,19 @@ tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>%
   filter(year>1996, year<2012)
 tb %>% top_n(20)
 ```
+
+### French fries
+
+10 week sensory experiment, 12 individuals assessed taste of french fries on several scales (how potato-y, buttery, grassy, rancid, paint-y do they taste?), fried in one of 3 different oils, replicated twice. First few rows:
+
+```{r}
+load("data/french_fries.rda")
+french_fries %>% top_n(10)
+```
+
+![](images/french_fries.png)
+
+What are the variables? Observations?
 
 ### Contingency table
 

@@ -40,7 +40,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - Fri 
 - Week 3: Data cleaning, rearranging and transformation; 
 - Week 4: Data visualisation: 
-- Week 5: Handling missing values: [Reading Textbook 12.4-6](http://r4ds.had.co.nz/tidy-data.html)
+- Week 5: Handling missing values: 
 - Week 6: Introduction to modeling: 
 - Week 7: Intermediate models; 
 - Week 8: Advanced modeling;

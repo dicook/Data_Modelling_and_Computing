@@ -61,7 +61,29 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <li>Steps in making data tidy</li>
 <li>Lots of examples</li>
 </ul>
-<p><img src="images/1237b41b-7e70-4377-a230-90b0e3ff4001.jpg" /> Source: <a href="https://www.measureevaluation.org/resources/newsroom/blogs/tidy-data-and-how-to-get-it">Measure Evaluation</a></p>
+<div class="figure">
+<img src="images/1237b41b-7e70-4377-a230-90b0e3ff4001.jpg" />
+
+</div>
+<p>Source: <a href="https://www.measureevaluation.org/resources/newsroom/blogs/tidy-data-and-how-to-get-it">Measure Evaluation</a></p>
+<div id="section-follow-along-with-the-notes" class="section level3">
+<h3><em>FOLLOW ALONG WITH THE NOTES</em></h3>
+<ul>
+<li>Open your ETC1010 <code>Rproj</code></li>
+<li>Download the <code>Rmd</code> file from the class web site</li>
+<li>Download these data files to your data directory
+<ul>
+<li><code>graduate-programs.csv</code></li>
+<li><code>genes.csv</code></li>
+<li><code>ASN00086282.dly</code></li>
+<li><code>TB_notifications_2018-03-18.csv</code></li>
+<li><code>french_fries.rda</code></li>
+<li><code>rates.csv</code></li>
+</ul></li>
+<li>Open the <code>lecture2a_tidydata.Rmd</code> file, that you have just downloaded in your RStudio window, and run the chunks of code as we talk about them.</li>
+<li>Also have the <a href="https://ebsmonash.shinyapps.io/lecture2a_tidydata/">notes</a>) open in your web browser, so you can do the inline quizzes - for fun.</li>
+</ul>
+</div>
 </div>
 <div id="section-example-us-graduate-programs" class="section level2">
 <h2>Example: US graduate programs</h2>
@@ -104,27 +126,27 @@ grad %&gt;% top_n(10)</code></pre>
 <tr>
 <td>
 
-<div id="htmlwidget-40499ca23c17e855d509" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-1e9da7b2906905336762" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-40499ca23c17e855d509">{"x":{"question":"The average number of graduate students per economics program is ","answers":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"label":"variable-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"The average number of graduate students per economics program is ","a":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-1e9da7b2906905336762">{"x":{"question":"The average number of graduate students per economics program is ","answers":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"label":"variable-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"The average number of graduate students per economics program is ","a":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-0a12a592b41d65b48bb9" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-b520ca9144c3ce6ebe58" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-0a12a592b41d65b48bb9">{"x":{"question":"What is the best description of the relationship between number of students and median time to degree?","answers":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"label":"variable-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the relationship between number of students and median time to degree?","a":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-b520ca9144c3ce6ebe58">{"x":{"question":"What is the best description of the relationship between number of students and median time to degree?","answers":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"label":"variable-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the relationship between number of students and median time to degree?","a":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 </table>
@@ -152,10 +174,10 @@ grad %&gt;% top_n(10)</code></pre>
 </div>
 <div id="section-different-examples-of-data" class="section level2">
 <h2>Different examples of data</h2>
-<p>For each of these data examples, let’s try together to identify the variables and the observations - some are HARD!</p>
+<p>For each of these data examples, <strong>let’s try together to identify the variables and the observations</strong> - some are HARD!</p>
 <div id="section-genes-experiment" class="section level3">
 <h3>Genes experiment</h3>
-<pre><code>## 🤔</code></pre>
+<p>🤔</p>
 <pre class="r"><code>genes &lt;- read_csv(&quot;data/genes.csv&quot;)
 genes </code></pre>
 <div data-pagedtable="false">
@@ -167,7 +189,7 @@ genes </code></pre>
 <div id="section-melbourne-weather" class="section level3">
 <h3>Melbourne weather</h3>
 <p>What are the variables? Observations?</p>
-<pre><code>## 😨</code></pre>
+<p>😨</p>
 <pre class="r"><code>melbtemp &lt;- read_fwf(&quot;data/ASN00086282.dly&quot;, 
    col_positions=fwf_widths(c(11, 4, 2, 4, 
         rep(c(5, 1, 1, 1), 31))))
@@ -182,7 +204,7 @@ melbtemp %&gt;% select(X1, X2, X3, X4, X5, X9,
 <div id="section-tb-incidence" class="section level3">
 <h3>TB incidence</h3>
 <p>This is current tuberculosis data taken from <a href="http://www.who.int/tb/country/data/download/en/">WHO</a>, the case notifications table.</p>
-<pre><code>## 🤒</code></pre>
+<p>🤒</p>
 <pre class="r"><code>tb &lt;- read_csv(&quot;data/TB_notifications_2018-03-18.csv&quot;) %&gt;%
   select(country, year, starts_with(&quot;new_sp_&quot;)) %&gt;%
   filter(year&gt;1996, year&lt;2012)
@@ -276,7 +298,7 @@ ggplot(data = gtidy, aes(trt, expr, colour = time)) +
   xlab(&quot;Type of modification&quot;) + ylab(&quot;Expression&quot;) + 
   facet_wrap(~id) +
   geom_line(data = gmean, aes(group = time))</code></pre>
-<p><img src="lecture2a_tidydata_files/figure-html/unnamed-chunk-13-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2a_tidydata_files/figure-html/unnamed-chunk-10-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>What do we learn about the data? At 12 hours the expression for Gene 1 is different between genotypes I and M, because the variability in replicates is small relative to the difference between means. For the rest of the numbers and genes the variability is too high to be able to say anything about difference between means.</p>
 </div>
 </div>
@@ -385,20 +407,20 @@ melbtemp_wide</code></pre>
 <div id="section-check-the-data-summaries" class="section level3">
 <h3>Check the data summaries</h3>
 <pre class="r"><code>summary(melbtemp_wide)
-##    station               year          month             day    
-##  Length:16399       Min.   :1970   Min.   : 1.000   Min.   : 1  
-##  Class :character   1st Qu.:1981   1st Qu.: 4.000   1st Qu.: 8  
-##  Mode  :character   Median :1992   Median : 7.000   Median :16  
-##                     Mean   :1992   Mean   : 6.501   Mean   :16  
-##                     3rd Qu.:2003   3rd Qu.: 9.000   3rd Qu.:24  
-##                     Max.   :2014   Max.   :12.000   Max.   :31  
-##       PRCP              TMAX                TMIN        
-##  Min.   :-9999.0   Min.   :-9999.000   Min.   :-9999.0  
-##  1st Qu.:    0.0   1st Qu.:  145.000   1st Qu.:   62.0  
-##  Median :    0.0   Median :  184.000   Median :   90.0  
-##  Mean   : -183.7   Mean   :   -6.446   Mean   : -117.2  
-##  3rd Qu.:    8.0   3rd Qu.:  232.000   3rd Qu.:  122.0  
-##  Max.   : 1388.0   Max.   :  468.000   Max.   :  305.0</code></pre>
+   station               year          month             day    
+ Length:16399       Min.   :1970   Min.   : 1.000   Min.   : 1  
+ Class :character   1st Qu.:1981   1st Qu.: 4.000   1st Qu.: 8  
+ Mode  :character   Median :1992   Median : 7.000   Median :16  
+                    Mean   :1992   Mean   : 6.501   Mean   :16  
+                    3rd Qu.:2003   3rd Qu.: 9.000   3rd Qu.:24  
+                    Max.   :2014   Max.   :12.000   Max.   :31  
+      PRCP              TMAX                TMIN        
+ Min.   :-9999.0   Min.   :-9999.000   Min.   :-9999.0  
+ 1st Qu.:    0.0   1st Qu.:  145.000   1st Qu.:   62.0  
+ Median :    0.0   Median :  184.000   Median :   90.0  
+ Mean   : -183.7   Mean   :   -6.446   Mean   : -117.2  
+ 3rd Qu.:    8.0   3rd Qu.:  232.000   3rd Qu.:  122.0  
+ Max.   : 1388.0   Max.   :  468.000   Max.   :  305.0  </code></pre>
 </div>
 <div id="section-what-are-the-numbers" class="section level3">
 <h3>What are the numbers?</h3>
@@ -414,40 +436,40 @@ melbtemp_wide</code></pre>
 <tr>
 <td>
 
-<div id="htmlwidget-c9ce1bf37b93fc8379db" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-55337916d86754318f70" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-c9ce1bf37b93fc8379db">{"x":{"question":"Which is the best description of the temperature units? ","answers":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"degrees C x10","correct":true,"message":null}],"label":"units-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Which is the best description of the temperature units? ","a":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"degrees C x10","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-55337916d86754318f70">{"x":{"question":"Which is the best description of the temperature units? ","answers":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"degrees C x10","correct":true,"message":null}],"label":"units-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Which is the best description of the temperature units? ","a":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"degrees C x10","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-5f6d24e7fe053ae31696" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-7fd1fe28b3116eb95a42" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-5f6d24e7fe053ae31696">{"x":{"question":"What is the best description of the precipitation units","answers":[{"option":"mm x10","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"label":"units-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the precipitation units","a":[{"option":"mm x10","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-7fd1fe28b3116eb95a42">{"x":{"question":"What is the best description of the precipitation units","answers":[{"option":"mm x10","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"label":"units-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the precipitation units","a":[{"option":"mm x10","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-5b3a715328d13b157a95" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-87e937f7e70a34e5d1ea" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-5b3a715328d13b157a95">{"x":{"question":"What does -9999 mean?","answers":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"label":"units-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What does -9999 mean?","a":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-87e937f7e70a34e5d1ea">{"x":{"question":"What does -9999 mean?","answers":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"label":"units-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What does -9999 mean?","a":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 </table>
@@ -471,7 +493,7 @@ melbtemp_wide</code></pre>
 <p>This plot examines the long term trend in maximum temperatures. Rather than plotting the data, a model is fitted, and this is displayed.</p>
 <pre class="r"><code>ggplot(melbtemp_wide, aes(x=year, y=TMAX)) + 
   geom_smooth(method=&quot;lm&quot;)</code></pre>
-<p><img src="lecture2a_tidydata_files/figure-html/unnamed-chunk-26-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2a_tidydata_files/figure-html/unnamed-chunk-23-1.png" width="768" style="display: block; margin: auto;" /></p>
 </div>
 <div id="section-your-turn" class="section level3">
 <h3>Your turn</h3>
@@ -520,9 +542,10 @@ head(rates)</code></pre>
 <li>Make line plots of the currencies, like the plot below, and describe the similarities and differences between the currencies.</li>
 </ol>
 <p>You can get the data from <a href="http://dmac.netlify.com/lectures/data/rates.csv">rates.csv</a></p>
-<img src="lecture2a_tidydata_files/figure-html/unnamed-chunk-32-1.png" width="576" style="display: block; margin: auto;" /> 
+<img src="lecture2a_tidydata_files/figure-html/unnamed-chunk-29-1.png" width="576" style="display: block; margin: auto;" /> 
 <script type="application/shiny-prerendered" data-context="server-start">
 library(learnr)
+library(emo) 
 knitr::opts_chunk$set(echo = TRUE,   
                       message = FALSE,
                       warning = FALSE,
@@ -530,7 +553,8 @@ knitr::opts_chunk$set(echo = TRUE,
                       fig.height = 4,
                       fig.width = 8,
                       fig.align = "center",
-                      cache = FALSE)
+                      cache = FALSE,
+                      comment = NA )
 tutorial_html_dependency()
 </script>
  
