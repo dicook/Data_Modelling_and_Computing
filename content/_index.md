@@ -64,30 +64,31 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 ## Data 
 
-- [music-sub.csv](http://dmac.netlify.com/lectures/data/music-sub.csv)
-- [Pedestrian_sensor_locations.csv](http://dmac.netlify.com/lectures/data/Pedestrian_sensor_locations.csv)
-- [ped.rda](http://dmac.netlify.com/lectures/data/ped.rda) Melbourne Central pedestrian counts for 2017
-- [rates.csv](http://dmac.netlify.com/lectures/data/rates.csv) Cross rates for different currencies
-- [data1.wav](http://dmac.netlify.com/lectures/data/data1.wav)
-- [data2.wav](http://dmac.netlify.com/lectures/data/data2.wav)
-- [data3.wav](http://dmac.netlify.com/lectures/data/data3.wav)
-- [statistics1.wav](http://dmac.netlify.com/lectures/data/statistics1.wav)
-- [statistics2.wav](http://dmac.netlify.com/lectures/data/statistics2.wav)
-- [statistics3.wav](http://dmac.netlify.com/lectures/data/statistics3.wav)
-- [pisa_au.rda](http://dmac.netlify.com/lectures/data/pisa_au.rda) Programme for International student assessment
-- [pisa_au_sub.rda](http://dmac.netlify.com/lectures/lecture7a/data/pisa_au_sub.rda) PISA Australia subset
-- [PISA_Codebook_CMB.xlsx](http://dmac.netlify.com/lectures/data/PISA_Codebook_CMB.xlsx) Codebook for Programme for International student assessment
-- [plane_N4YRAA.rda](http://dmac.netlify.com/lectures/data/plane_N4YRAA.rda)
-- [airports.csv](http://dmac.netlify.com/lectures/data/airports.csv)
-- [tb.csv](http://dmac.netlify.com/lectures/data/tb.csv) Tuberculosis incidence
-- [TB_notifications_2018-03-18.csv](http://dmac.netlify.com/lectures/data/TB_notifications_2018-03-18.csv) Up-to-date tuberculosis incidence
-- [fly_tbl.csv](http://dmac.netlify.com/lectures/data/fly_tbl.csv) Etiquette of flying
-- [graduate-programs.csv](http://dmac.netlify.com/lectures/data/graduate-programs.csv) US Graduate programs 
-- [ASN00086282.dly](http://dmac.netlify.com/lectures/data/ASN00086282.dly) Melbourne weather
-- [foragers.csv](http://dmac.netlify.com/lectures/data/foragers.csv) Howell's foragers data
-- Simpsons: [scripts](http://dmac.netlify.com/lectures/data/simpsons_script_lines.csv), [characters](http://dmac.netlify.com/lectures/data/simpsons_characters.csv)
-- Harry Potter: [hpchars](http://dmac.netlify.com/lectures/lecture10b/data/hpchars.rda), [hpedges](http://dmac.netlify.com/lectures/lecture10b/data/hpedges.rda)
-- Newcastle Jets: [facebook posts](http://dmac.netlify.com/lectures/data/ncj_posts.rda), [scores](http://dmac.netlify.com/lectures/data/ncj.csv)
+- [music-sub.csv](http://dmac.dicook.org/lectures/data/music-sub.csv)
+- [Pedestrian_sensor_locations.csv](http://dmac.dicook.org/lectures/data/Pedestrian_sensor_locations.csv)
+- [ped.rda](http://dmac.dicook.org/lectures/data/ped.rda) Melbourne Central pedestrian counts for 2017
+- [rates.csv](http://dmac.dicook.org/lectures/data/rates.csv) Cross rates for different currencies
+- [data1.wav](http://dmac.dicook.org/lectures/data/data1.wav)
+- [data2.wav](http://dmac.dicook.org/lectures/data/data2.wav)
+- [data3.wav](http://dmac.dicook.org/lectures/data/data3.wav)
+- [statistics1.wav](http://dmac.dicook.org/lectures/data/statistics1.wav)
+- [statistics2.wav](http://dmac.dicook.org/lectures/data/statistics2.wav)
+- [statistics3.wav](http://dmac.dicook.org/lectures/data/statistics3.wav)
+- [pisa_au.rda](http://dmac.dicook.org/lectures/data/pisa_au.rda) Programme for International student assessment
+- [pisa_au_sub.rda](http://dmac.dicook.org/lectures/lecture7a/data/pisa_au_sub.rda) PISA Australia subset
+- [PISA_Codebook_CMB.xlsx](http://dmac.dicook.org/lectures/data/PISA_Codebook_CMB.xlsx) Codebook for Programme for International student assessment
+- [plane_N4YRAA.rda](http://dmac.dicook.org/lectures/data/plane_N4YRAA.rda)
+- [airports.csv](http://dmac.dicook.org/lectures/data/airports.csv)
+- [tb.csv](http://dmac.dicook.org/lectures/data/tb.csv) Tuberculosis incidence
+- [TB_notifications_2018-03-18.csv](http://dmac.dicook.org/lectures/data/TB_notifications_2018-03-18.csv) Up-to-date tuberculosis incidence
+- [fly_tbl.csv](http://dmac.dicook.org/lectures/data/fly_tbl.csv) Etiquette of flying
+- [graduate-programs.csv](http://dmac.dicook.org/lectures/data/graduate-programs.csv) US Graduate programs 
+- [ASN00086282.dly](http://dmac.dicook.org/lectures/data/ASN00086282.dly) Melbourne weather
+- [french_fries.rda](http://dmac.dicook.org/lectures/data/french_fries.rda) Hot chips data
+- [foragers.csv](http://dmac.dicook.org/lectures/data/foragers.csv) Howell's foragers data
+- Simpsons: [scripts](http://dmac.dicook.org/lectures/data/simpsons_script_lines.csv), [characters](http://dmac.dicook.org/lectures/data/simpsons_characters.csv)
+- Harry Potter: [hpchars](http://dmac.dicook.org/lectures/lecture10b/data/hpchars.rda), [hpedges](http://dmac.dicook.org/lectures/lecture10b/data/hpedges.rda)
+- Newcastle Jets: [facebook posts](http://dmac.dicook.org/lectures/data/ncj_posts.rda), [scores](http://dmac.dicook.org/lectures/data/ncj.csv)
 
 
 ## Project
