@@ -50,4 +50,60 @@ library(tidyverse)
 
 For example, there is a `filter` function in the `stats` package that comes with the R distribution. This can cause confusion when you want to use the filter function in `dplyr` (part of tidyverse). To be sure the function you use is the one you want to use, you can prefix it with the package name, `dplyr::filter()`.
 
+```{r echo=FALSE}
+library(gridExtra)
+library(ggthemes)
+```
 
+## Example: french fries
+
+![](images/french_fries.png)
+
+- Load the data
+- Gather into long form
+
+```{r}
+load("data/french_fries.rda")
+ff_long <- french_fries %>% 
+  gather(type, rating, -subject, -time, -treatment, -rep) %>%
+  mutate(type=as.factor(type))
+```
+
+### The story of the french fries data....
+
+This was an actual experiment in Food Sciences at Iowa State University. The goal was to find out if some cheaper oil options could be used to make hot chips: that people would not be able to distinguish the difference between chips fried in the new oils relative to those fried in the current market leader.
+
+Twelve tasters were recruited to sample two chips from each batch, over a period of ten weeks. The same oil was kept for a period of 10 weeks! May be a bit gross by the end!
+
+This data set was brought to R by Hadley Wickham, and was one of the problems that inspired the thinking about tidy data and the plyr tools. 
+
+## filter: choose observations
+
+Filter records for subject 10.
+
+```{r}
+ff_long_subj10 <- ff_long %>%
+  filter(subject == 10)
+ff_long_subj10
+```
+
+`==` does a logical equals check. This works nicely for characters or factors but not for numerical data.
+
+To filter you need to do some comparison to find the subset of observations you are interested in. For example:
+
+- `subject != 10` finds rows corresponding to all subjects except subject 10
+- `x > 10` find all rows where variable `x` has values bigger than 10
+- `x >= 10` find all rows where variable `x` has values bigger than *or equal to* 10
+- `class %in% c("A", "B")` finds all records where variable `class` is either A or B
+- `!is.na(y)` finds all the records that *DO NOT* have a missing value for variable `y`
+
+### Your turn
+
+Filter the french fries data to have:
+
+- only week 1
+- weeks 1-4 only
+- oil type 1 (oil type is called treatment)
+- oil types 1 and 3 but not 2
+
+## select
