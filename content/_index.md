@@ -68,6 +68,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - [Pedestrian_sensor_locations.csv](http://dmac.dicook.org/lectures/data/Pedestrian_sensor_locations.csv)
 - [ped.rda](http://dmac.dicook.org/lectures/data/ped.rda) Melbourne Central pedestrian counts for 2017
 - [rates.csv](http://dmac.dicook.org/lectures/data/rates.csv) Cross rates for different currencies
+- [genes.csv](http://dmac.dicook.org/lectures/data/genes.csv) Gene epression data
 - [data1.wav](http://dmac.dicook.org/lectures/data/data1.wav)
 - [data2.wav](http://dmac.dicook.org/lectures/data/data2.wav)
 - [data3.wav](http://dmac.dicook.org/lectures/data/data3.wav)
