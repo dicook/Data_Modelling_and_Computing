@@ -69,6 +69,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - [ped.rda](http://dmac.dicook.org/lectures/data/ped.rda) Melbourne Central pedestrian counts for 2017
 - [rates.csv](http://dmac.dicook.org/lectures/data/rates.csv) Cross rates for different currencies
 - [genes.csv](http://dmac.dicook.org/lectures/data/genes.csv) Gene epression data
+- [koala_bilby.csv](http://dmac.dicook.org/lectures/data/koala_bilby.csv) Koala bilby gather/spread try it yourself data
 - [data1.wav](http://dmac.dicook.org/lectures/data/data1.wav)
 - [data2.wav](http://dmac.dicook.org/lectures/data/data2.wav)
 - [data3.wav](http://dmac.dicook.org/lectures/data/data3.wav)
