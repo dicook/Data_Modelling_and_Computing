@@ -127,27 +127,27 @@ grad %&gt;% top_n(10)</code></pre>
 <tr>
 <td>
 
-<div id="htmlwidget-b6f1c6ff87013879092e" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-477dfe049d792fce868e" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-b6f1c6ff87013879092e">{"x":{"question":"The average number of graduate students per economics program is ","answers":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"label":"variable-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"The average number of graduate students per economics program is ","a":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-477dfe049d792fce868e">{"x":{"question":"The average number of graduate students per economics program is ","answers":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"label":"variable-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"The average number of graduate students per economics program is ","a":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-bb3ef401e54085727b74" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-b73b871683ea6bda97ec" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-bb3ef401e54085727b74">{"x":{"question":"What is the best description of the relationship between number of students and median time to degree?","answers":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"label":"variable-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the relationship between number of students and median time to degree?","a":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-b73b871683ea6bda97ec">{"x":{"question":"What is the best description of the relationship between number of students and median time to degree?","answers":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"label":"variable-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the relationship between number of students and median time to degree?","a":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 </table>
@@ -190,7 +190,7 @@ genes </code></pre>
 <div id="section-melbourne-weather" class="section level3">
 <h3>Melbourne weather</h3>
 <p>What are the variables? Observations?</p>
-<p>😱</p>
+<p>😨</p>
 <pre class="r"><code>melbtemp &lt;- read_fwf(&quot;data/ASN00086282.dly&quot;, 
    col_positions=fwf_widths(c(11, 4, 2, 4, 
         rep(c(5, 1, 1, 1), 31))))
@@ -320,6 +320,54 @@ genes_long %&gt;%
 </div>
 </div>
 </div>
+<div id="section-try-this-yourself" class="section level2">
+<h2>Try this yourself</h2>
+<p>Here is a little data set to practice gather, spread and separate on.</p>
+<pre class="r"><code>kb &lt;- read_csv(&quot;data/koala_bilby.csv&quot;)
+kb</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["ID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["koala_NSW"],"name":[2],"type":["int"],"align":["right"]},{"label":["koala_VIC"],"name":[3],"type":["int"],"align":["right"]},{"label":["bilby_NSW"],"name":[4],"type":["int"],"align":["right"]},{"label":["bilby_VIC"],"name":[5],"type":["int"],"align":["right"]}],"data":[{"1":"grey","2":"23","3":"43","4":"11","5":"8"},{"1":"cream","2":"56","3":"89","4":"22","5":"17"},{"1":"white","2":"35","3":"72","4":"13","5":"6"},{"1":"black","2":"28","3":"44","4":"19","5":"16"},{"1":"taupe","2":"25","3":"37","4":"21","5":"12"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Try to do these by yourself, but the code is in the Rmd file if you need help.</p>
+<div id="section-exercise-1" class="section level3">
+<h3>Exercise 1</h3>
+<p>Gather the data into long form, naming the two new variables, <code>label</code> and <code>count</code></p>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["ID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["label"],"name":[2],"type":["chr"],"align":["left"]},{"label":["count"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"grey","2":"koala_NSW","3":"23"},{"1":"cream","2":"koala_NSW","3":"56"},{"1":"white","2":"koala_NSW","3":"35"},{"1":"black","2":"koala_NSW","3":"28"},{"1":"taupe","2":"koala_NSW","3":"25"},{"1":"grey","2":"koala_VIC","3":"43"},{"1":"cream","2":"koala_VIC","3":"89"},{"1":"white","2":"koala_VIC","3":"72"},{"1":"black","2":"koala_VIC","3":"44"},{"1":"taupe","2":"koala_VIC","3":"37"},{"1":"grey","2":"bilby_NSW","3":"11"},{"1":"cream","2":"bilby_NSW","3":"22"},{"1":"white","2":"bilby_NSW","3":"13"},{"1":"black","2":"bilby_NSW","3":"19"},{"1":"taupe","2":"bilby_NSW","3":"21"},{"1":"grey","2":"bilby_VIC","3":"8"},{"1":"cream","2":"bilby_VIC","3":"17"},{"1":"white","2":"bilby_VIC","3":"6"},{"1":"black","2":"bilby_VIC","3":"16"},{"1":"taupe","2":"bilby_VIC","3":"12"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="section-exercise-2" class="section level3">
+<h3>Exercise 2</h3>
+<p>Separate the labels into two new variables, <code>animal</code>, <code>state</code></p>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["ID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["animal"],"name":[2],"type":["chr"],"align":["left"]},{"label":["state"],"name":[3],"type":["chr"],"align":["left"]},{"label":["count"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"grey","2":"koala","3":"NSW","4":"23"},{"1":"cream","2":"koala","3":"NSW","4":"56"},{"1":"white","2":"koala","3":"NSW","4":"35"},{"1":"black","2":"koala","3":"NSW","4":"28"},{"1":"taupe","2":"koala","3":"NSW","4":"25"},{"1":"grey","2":"koala","3":"VIC","4":"43"},{"1":"cream","2":"koala","3":"VIC","4":"89"},{"1":"white","2":"koala","3":"VIC","4":"72"},{"1":"black","2":"koala","3":"VIC","4":"44"},{"1":"taupe","2":"koala","3":"VIC","4":"37"},{"1":"grey","2":"bilby","3":"NSW","4":"11"},{"1":"cream","2":"bilby","3":"NSW","4":"22"},{"1":"white","2":"bilby","3":"NSW","4":"13"},{"1":"black","2":"bilby","3":"NSW","4":"19"},{"1":"taupe","2":"bilby","3":"NSW","4":"21"},{"1":"grey","2":"bilby","3":"VIC","4":"8"},{"1":"cream","2":"bilby","3":"VIC","4":"17"},{"1":"white","2":"bilby","3":"VIC","4":"6"},{"1":"black","2":"bilby","3":"VIC","4":"16"},{"1":"taupe","2":"bilby","3":"VIC","4":"12"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="section-exercise-3" class="section level3">
+<h3>Exercise 3</h3>
+Spread the long form data into wide form, where the columns are the states.
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["ID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["animal"],"name":[2],"type":["chr"],"align":["left"]},{"label":["NSW"],"name":[3],"type":["int"],"align":["right"]},{"label":["VIC"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"black","2":"bilby","3":"19","4":"16"},{"1":"black","2":"koala","3":"28","4":"44"},{"1":"cream","2":"bilby","3":"22","4":"17"},{"1":"cream","2":"koala","3":"56","4":"89"},{"1":"grey","2":"bilby","3":"11","4":"8"},{"1":"grey","2":"koala","3":"23","4":"43"},{"1":"taupe","2":"bilby","3":"21","4":"12"},{"1":"taupe","2":"koala","3":"25","4":"37"},{"1":"white","2":"bilby","3":"13","4":"6"},{"1":"white","2":"koala","3":"35","4":"72"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="section-exercise-4" class="section level3">
+<h3>Exercise 4</h3>
+<p>Spread the long form data into wide form, where the columns are the animals.</p>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["ID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["state"],"name":[2],"type":["chr"],"align":["left"]},{"label":["bilby"],"name":[3],"type":["int"],"align":["right"]},{"label":["koala"],"name":[4],"type":["int"],"align":["right"]}],"data":[{"1":"black","2":"NSW","3":"19","4":"28"},{"1":"black","2":"VIC","3":"16","4":"44"},{"1":"cream","2":"NSW","3":"22","4":"56"},{"1":"cream","2":"VIC","3":"17","4":"89"},{"1":"grey","2":"NSW","3":"11","4":"23"},{"1":"grey","2":"VIC","3":"8","4":"43"},{"1":"taupe","2":"NSW","3":"21","4":"25"},{"1":"taupe","2":"VIC","3":"12","4":"37"},{"1":"white","2":"NSW","3":"13","4":"35"},{"1":"white","2":"VIC","3":"6","4":"72"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
 <div id="section-tidying-melbourne-weather" class="section level2">
 <h2>Tidying Melbourne weather</h2>
 <p>This is seriously messy!</p>
@@ -383,40 +431,40 @@ melbtemp_long</code></pre>
 <tr>
 <td>
 
-<div id="htmlwidget-a0dd69bde5732acbbf9f" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-30da383b87ab95f07fef" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-a0dd69bde5732acbbf9f">{"x":{"question":"Which is the best description of the temperature units? ","answers":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"degrees C x10","correct":true,"message":null}],"label":"units-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Which is the best description of the temperature units? ","a":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"degrees C x10","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-30da383b87ab95f07fef">{"x":{"question":"Which is the best description of the temperature units? ","answers":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"degrees C x10","correct":true,"message":null}],"label":"units-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Which is the best description of the temperature units? ","a":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"degrees C x10","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-a8cb7ad88612cfcc1c0a" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-9963eedc0fc88c6b3ba0" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-a8cb7ad88612cfcc1c0a">{"x":{"question":"What is the best description of the precipitation units","answers":[{"option":"mm x10","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"label":"units-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the precipitation units","a":[{"option":"mm x10","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-9963eedc0fc88c6b3ba0">{"x":{"question":"What is the best description of the precipitation units","answers":[{"option":"mm x10","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"label":"units-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the precipitation units","a":[{"option":"mm x10","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-a481b9b33d9299213c71" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-170adc5f1d7b9af46748" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-a481b9b33d9299213c71">{"x":{"question":"What does -9999 mean?","answers":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"label":"units-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What does -9999 mean?","a":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-170adc5f1d7b9af46748">{"x":{"question":"What does -9999 mean?","answers":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"label":"units-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What does -9999 mean?","a":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 </table>
@@ -429,7 +477,7 @@ melbtemp_long</code></pre>
 <pre class="r"><code>melbtemp_long %&gt;% spread(variable, value) %&gt;%
   ggplot(aes(x=TMIN, y=TMAX)) + geom_point() + 
   coord_equal() + geom_abline(slope=1, intercept=0)</code></pre>
-<p><img src="lecture2a_tidydata_files/figure-html/unnamed-chunk-16-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2a_tidydata_files/figure-html/unnamed-chunk-21-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Oh, TMAX is always higher than TMIN. This is a good thing.</p>
 </div>
 <div id="section-winter-vs-summer" class="section level4">
@@ -440,7 +488,7 @@ melbtemp_long</code></pre>
   ggplot(aes(x=`07`, y=`01`)) + geom_point() + 
   xlab(&quot;July&quot;) + ylab(&quot;Jan&quot;) +
   coord_equal() + geom_abline(slope=1, intercept=0)</code></pre>
-<p><img src="lecture2a_tidydata_files/figure-html/unnamed-chunk-17-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2a_tidydata_files/figure-html/unnamed-chunk-22-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Same day of the month, same year, January has higher maximum temperatures than July. Except two days, the July max exceeded the January max. (This comparison is a bit whacky, though right?)</p>
 </div>
 </div>
@@ -468,7 +516,7 @@ fly_tbl</code></pre>
 <li>Write down the steps that will be needed go from raw data to tidy</li>
 <li>Write the code piece by piece</li>
 </ul>
-<p>You can get the data from <a href="http://dmac.dicook.org/lectures/data/tb.csv">tb.csv</a></p>
+<p>You can get the data from <a href="http://dmac.dicook.org/lectures/data/TB_notifications_2018-03-18.csv">TB_notifications_2018-03-18.csv</a></p>
 </div>
 <div id="section-lab-exercise-3" class="section level2">
 <h2>Lab exercise 3</h2>
@@ -486,7 +534,7 @@ head(rates)</code></pre>
 <li>Make line plots of the currencies, like the plot below, and describe the similarities and differences between the currencies.</li>
 </ol>
 <p>You can get the data from <a href="http://dmac.netlify.com/lectures/data/rates.csv">rates.csv</a></p>
-<p><img src="lecture2a_tidydata_files/figure-html/unnamed-chunk-23-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="lecture2a_tidydata_files/figure-html/unnamed-chunk-28-1.png" width="576" style="display: block; margin: auto;" /></p>
 </div>
 <div id="section-lab-exercise-4" class="section level2">
 <h2>Lab exercise 4</h2>

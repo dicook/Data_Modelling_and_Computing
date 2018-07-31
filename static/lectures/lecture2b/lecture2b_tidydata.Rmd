@@ -107,3 +107,25 @@ Filter the french fries data to have:
 - oil types 1 and 3 but not 2
 
 ## select
+
+## Lab exercise 2
+
+Your job is to tidy the TB incidence data. 
+
+- Write down the steps that will be needed go from raw data to tidy
+- Write the code piece by piece
+
+You can get the data from  [tb.csv](http://dmac.dicook.org/lectures/data/tb.csv) 
+
+```{r echo=FALSE, eval=FALSE}
+tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>%
+  select(country, year, starts_with("new_sp_")) %>%
+  filter(year>1996, year<2012)
+tb %>% top_n(20)
+tb_tidy <- tb %>% 
+  gather(stuff, count, starts_with("new_sp_")) %>%
+  separate(stuff, c("stuff1", "stuff2", "genderage")) %>%
+  separate(genderage, c("gender", "age"), sep=1) %>%
+  select(-stuff1, -stuff2)
+tb_tidy
+```

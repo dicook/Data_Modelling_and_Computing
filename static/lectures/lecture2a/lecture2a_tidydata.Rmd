@@ -238,6 +238,51 @@ genes_long %>%
 
 Very roughly, replicate 4 is like replicate 1, eg if one is low, the other is low. That's a good thing, that the replicates are fairly similar.
 
+## Try this yourself
+
+Here is a little data set to practice gather, spread and separate on.
+
+```{r}
+kb <- read_csv("data/koala_bilby.csv")
+kb
+```
+
+Try to do these by yourself, but the code is in the Rmd file if you need help.
+
+### Exercise 1
+
+Gather the data into long form, naming the two new variables, `label` and `count`
+
+```{r echo=FALSE}
+kb_long <- kb %>% gather(label, count, -ID)
+kb_long
+```
+
+### Exercise 2
+
+Separate the labels into two new variables, `animal`, `state`
+
+```{r echo=FALSE}
+kb_long <- kb_long %>%
+  separate(label, c("animal", "state"))
+kb_long
+```
+
+### Exercise 3
+
+Spread the long form data into wide form, where the columns are the states. 
+```{r echo=FALSE}
+kb_long %>% spread(state, count)
+```
+
+### Exercise 4
+
+Spread the long form data into wide form, where the columns are the animals. 
+
+```{r echo=FALSE}
+kb_long %>% spread(animal, count)
+```
+
 ## Tidying Melbourne weather
 
 This is seriously messy!
@@ -362,7 +407,7 @@ Your job is to tidy the TB incidence data.
 - Write down the steps that will be needed go from raw data to tidy
 - Write the code piece by piece
 
-You can get the data from  [tb.csv](http://dmac.dicook.org/lectures/data/tb.csv) 
+You can get the data from  [TB_notifications_2018-03-18.csv](http://dmac.dicook.org/lectures/data/TB_notifications_2018-03-18.csv) 
 
 ```{r echo=FALSE, eval=FALSE}
 tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>%
