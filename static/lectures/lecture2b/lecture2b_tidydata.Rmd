@@ -22,6 +22,10 @@ tutorial_html_dependency()
 
 # Wrangling your data
 
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: http://dmac.dicook.org
+
 ## Overview
 
 - filter
@@ -106,26 +110,281 @@ Filter the french fries data to have:
 - oil type 1 (oil type is called treatment)
 - oil types 1 and 3 but not 2
 
+```{r eval=FALSE, echo=FALSE}
+ff_long %>%
+  filter(week == 1)
+ff_long %>%
+  filter(week < 5)
+ff_long %>%
+  filter(treatment == 1)
+ff_long %>%
+  filter(week != 2)
+```
+
+
 ## select
 
-## Lab exercise 2
+`select` chooses which variables to keep in the data set. It is useful when there are a lot of variables but you only need some of them for an analysis. 
 
-Your job is to tidy the TB incidence data. 
+```{r}
+tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>%
+  select(country, year, starts_with("new_sp_")) 
+tb %>% top_n(20)
+```
 
-- Write down the steps that will be needed go from raw data to tidy
-- Write the code piece by piece
+- Generally a comma separated list of the variables, by name. 
+- You can use text-matching of the names like `starts_with`, `ends_with()`, `contains()`, `matches()`, `num_range()`, `one_of()` or `everything()`
+- You can use `:` to choose variables in order of the columns, eg `select(df, V4:V6)`
+- And you can use it to NOT select some variables by prefixing with `-`
 
-You can get the data from  [tb.csv](http://dmac.dicook.org/lectures/data/tb.csv) 
+### Your turn
+
+For the french fries data, use select to do these tasks:
+
+- choose time, treatment and rep
+- choose subject through to rating
+- drop subject
+
+```{r eval=FALSE, echo=FALSE}
+ff_long %>% 
+  select(time, treatment, rep)
+ff_long %>%
+  select(subject:rating)
+ff_long %>%
+  select(-subject)
+```
+
+## mutate
+
+`mutate` is used to create a new variable. 
+
+```{r}
+load("data/pisa_au.rda")
+pisa_au <- pisa_au %>%
+  select(PV1MATH:PV10MATH)
+pisa_au %>%
+  mutate(math = (PV1MATH+PV2MATH+PV3MATH)/3)
+```
+
+### Your turn
+
+- Compute a standised math score, by subtracting the mean from PV1MATH and dividing by the standard deviation
+- For the french fries data compute a new variable called lrating by taking a log of the rating
+
+```{r eval=FALSE, echo=FALSE}
+pisa_au %>%
+  mutate(PV1MATH = (PV1MATH-mean(PV1MATH))/sd(PV1MATH))
+ff_long %>%
+  mutate(lrating=log10(rating))
+```
+
+## summarise and group_by
+
+`summarise` generates a summary of a variable. It is most useful when working on subsets of the data, and `group_by` can automate this.
+
+```{r}
+ff_long %>% 
+  group_by(type) %>%
+  summarise(rating = mean(rating, na.rm=TRUE))
+```
+
+### Your turn
+
+- Compute the average rating by subject
+- Compute the average rancid rating per week
+
+```{r eval=FALSE, echo=FALSE}
+ff_long %>% 
+  group_by(subject) %>%
+  summarise(rating = mean(rating, na.rm=TRUE))
+ff_long %>% 
+  filter(type == "rancid") %>%
+  group_by(time) %>%
+  summarise(rating = mean(rating, na.rm=TRUE))
+```
+
+## arrange
+
+`arrange` orders a table by a given variable. Its usful for display of results, primarily.
+
+```{r}
+ff_long %>% 
+  group_by(type) %>%
+  summarise(rating = mean(rating, na.rm=TRUE)) %>%
+  arrange(rating)
+```
+
+### Your turn
+
+- Arrange the average rating by type in decreasing order
+- Arrange the average subject rating in order lowest to highest.
 
 ```{r echo=FALSE, eval=FALSE}
-tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>%
-  select(country, year, starts_with("new_sp_")) %>%
-  filter(year>1996, year<2012)
-tb %>% top_n(20)
-tb_tidy <- tb %>% 
-  gather(stuff, count, starts_with("new_sp_")) %>%
-  separate(stuff, c("stuff1", "stuff2", "genderage")) %>%
-  separate(genderage, c("gender", "age"), sep=1) %>%
-  select(-stuff1, -stuff2)
-tb_tidy
+ff_long %>% 
+  group_by(type) %>%
+  summarise(rating = mean(rating, na.rm=TRUE)) %>%
+  arrange(desc(rating))
+ff_long %>% 
+  group_by(subject) %>%
+  summarise(rating = mean(rating, na.rm=TRUE)) %>%
+  arrange(rating)
 ```
+
+## count, tally
+
+These are convenience functions to compute numbers in different categories.
+
+```{r}
+ff_long %>% count(type, sort=TRUE)
+```
+
+## Putting it together to problem solve
+
+### Are ratings similar?
+
+```{r}
+ff_long %>% 
+  group_by(type) %>%
+  summarise(m = mean(rating, na.rm=TRUE), 
+            sd = sd(rating, na.rm=TRUE)) %>%
+  arrange(desc(m))
+```
+
+The scales of the ratings are quite different. Mostly the chips are rated highly on potato'y, but low on grassy. 
+
+Make a picture too!
+
+```{r}
+ff_long %>% 
+  ggplot(aes(x=type, y=rating)) +
+    geom_boxplot()
+```
+
+### Are reps like each other
+
+```{r}
+ff_long %>% 
+  spread(rep, rating) %>%
+  summarise(r=cor(`1`, `2`, use="complete.obs"))
+```
+
+Make a picture, too!
+
+```{r}
+ff_long %>% 
+  spread(rep, rating) %>%
+  ggplot(aes(x=`1`, y=`2`)) + geom_point()
+```
+
+This data is poor quality - the replicates do not look like each other!
+
+### Replicates by rating type
+
+```{r}
+ff_long %>% 
+  spread(rep, rating) %>%
+  group_by(type) %>%
+  summarise(r=cor(`1`, `2`, use="complete.obs"))
+```
+
+Make a picture, to!
+
+```{r}
+ff_long %>% 
+  spread(rep, rating) %>%
+  ggplot(aes(x=`1`, y=`2`)) + 
+    geom_point() +
+    facet_wrap(~type, ncol=5)
+```
+
+Potato'y and buttery have better replication than the other scales, but there is still a lot of variation from rep 1 to 2.
+
+## Lab exercise
+
+This question is about the 2015 PISA results. The data is downloaded from [http://www.oecd.org/pisa/data/2015database/](http://www.oecd.org/pisa/data/2015database/). The SPSS format "Student questionnaire data file (419MB)" is downloaded and processed using this code, to extract results for Australia:
+
+```{r eval=FALSE}
+library(haven)
+pisa_2015 <- read_sav(file.choose())
+pisa_au <- pisa_2015 %>% filter(CNT == "AUS")
+save(pisa_au, file="pisa_au.rda")
+```
+
+You don't need to do this, because the Australia data is extracted and saved for you. Your task is to answer these questions about Australia. At times it may be helpful to examine the data dictionary, which is provided as an excel file (you can also download this directly from the OECD PISA site too).
+
+A large amount of pre-processing is done on the data, as performed by this code:
+
+```{r}
+load("data/pisa_au.rda")
+pisa_au <- pisa_au %>% mutate(state=as.character(substr(STRATUM, 4, 5)),
+                schtype_yr=as.character(substr(STRATUM, 6, 7))) %>%
+  mutate(state=recode(state, "01"="ACT", "02"="NSW", "03"="VIC",
+       "04"="QLD", "05"="SA", "06"="WA", "07"="TAS", "08"="NT")) %>%
+  mutate(schtype_yr=recode(schtype_yr,
+            "01"="Catholic_Y10", "02"="Catholic_noY10",
+            "03"="Gov_Y10", "04"="Gov_noY10",
+            "05"="Ind_Y10", "06"="Ind_noY10",
+            "07"="Catholic_Y10", "08"="Catholic_noY10",
+            "09"="Gov_Y10", "10"="Gov_noY10",
+            "11"="Ind_Y10", "12"="Ind_noY10",
+            "13"="Catholic_Y10", "14"="Catholic_noY10",
+            "15"="Gov_Y10", "16"="Gov_noY10",
+            "17"="Ind_Y10", "18"="Ind_noY10",
+            "19"="Catholic_Y10", "20"="Catholic_noY10",
+            "21"="Gov_Y10", "22"="Gov_noY10",
+            "23"="Ind_Y10", "24"="Ind_noY10",
+            "25"="Catholic_Y10", "26"="Catholic_noY10",
+            "27"="Gov_Y10", "28"="Gov_noY10",
+            "29"="Ind_Y10", "30"="Ind_noY10",
+            "31"="Catholic_Y10", "32"="Catholic_noY10",
+            "33"="Gov_Y10", "34"="Gov_noY10",
+            "35"="Ind_Y10", "36"="Ind_noY10",
+            "37"="Catholic_Y10", "38"="Catholic_noY10",
+            "39"="Gov_Y10", "40"="Gov_noY10",
+            "41"="Ind_Y10", "42"="Ind_noY10",
+            "43"="Catholic_Y10", "44"="Catholic_noY10",
+            "45"="Gov_Y10", "46"="Gov_noY10",
+            "47"="Ind_Y10", "48"="Ind_noY10")) %>%
+  separate(schtype_yr, c("schtype","yr")) %>%
+  rename(birthmonth=ST003D02T, birthyr=ST003D03T,
+         gender=ST004D01T, desk=ST011Q01TA,
+         room=ST011Q02TA, computer=ST011Q04TA, internet=ST011Q06TA,
+         solarpanels=ST011D17TA, tvs=ST012Q01TA, cars=ST012Q02TA,
+         music_instr=ST012Q09NA, books=ST013Q01TA, birthcnt=ST019AQ01T,
+         mother_birthcnt=ST019BQ01T, father_birthcnt=ST019CQ01T,
+         test_anxiety=ST118Q01NA, ambitious=ST119Q04NA,
+         prefer_team=ST082Q01NA, make_friends_easy=ST034Q02TA,
+         tardy=ST062Q03TA, science_fun=ST094Q01NA, breakfast=ST076Q01NA,
+         work_pay=ST078Q10NA, sport=ST078Q11NA, internet_use=IC006Q01TA,
+         install_software=IC015Q02NA,
+         outhours_study=OUTHOURS, math_time=MMINS, read_time=LMINS,
+         science_time=SMINS, belong=BELONG,
+         anxtest=ANXTEST, motivat=MOTIVAT, language=LANGN,
+         home_edres=HEDRES, home_poss=HOMEPOS, wealth=WEALTH,
+         stuweight=W_FSTUWT) %>%
+    mutate(math=(PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+
+                     PV6MATH+PV7MATH+PV8MATH+PV9MATH+PV10MATH)/10,
+           science=(PV1SCIE+PV2SCIE+PV3SCIE+PV4SCIE+PV5SCIE+
+                        PV6SCIE+PV7SCIE+PV8SCIE+PV9SCIE+PV10SCIE)/10,
+           read=(PV1READ+PV2READ+PV3READ+PV4READ+PV5READ+
+                     PV6READ+PV7READ+PV8READ+PV9READ+PV10READ)/10) %>%
+   select(state, schtype, yr, birthmonth, birthyr, gender, desk, room,
+          computer, internet, solarpanels, tvs, cars, music_instr, books,
+          birthcnt, mother_birthcnt, father_birthcnt, test_anxiety,
+          ambitious, prefer_team, make_friends_easy, tardy, science_fun,
+          breakfast, work_pay, sport, internet_use, install_software,
+          outhours_study, math_time, read_time, science_time, belong,
+          anxtest, motivat, language, home_edres, home_poss, wealth,
+          stuweight, math, science, read) %>%
+  mutate(gender=factor(gender, levels=1:2, labels=c("female", "male"))) %>% 
+  mutate(birthmonth=factor(birthmonth, levels=1:12,
+    labels=c("jan", "feb", "mar", "apr", "may", "jun", "jul", "aug",
+                            "sep", "oct", "nov", "dec")))
+```
+
+a. Explain how the STRATUM variable is processed to create three new variables state, schtype and yr.
+b. Compute the average of math scores by state. Which state does best, on average, on math? (You should use the stuweight variable to compute a weighted average. This is survey data, and the weights indicate how representative that individual is of the population.)
+c. Compute the difference in average male and female math scores by state. Which state has the smallest average gender difference?
+d. Does test anxiety have an effect math score? (Use the variable `anxtest`, and a simple regression model to answer this question.)
+e. Explain what the `rename` operation is doing.
+f. Come up with two more questions as a group, based on the data description. Do the wrangling to answer these questions. Discuss these with a tutor.
