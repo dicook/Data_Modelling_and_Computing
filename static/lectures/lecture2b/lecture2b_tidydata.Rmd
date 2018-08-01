@@ -388,3 +388,5 @@ c. Compute the difference in average male and female math scores by state. Which
 d. Does test anxiety have an effect math score? (Use the variable `anxtest`, and a simple regression model to answer this question.)
 e. Explain what the `rename` operation is doing.
 f. Come up with two more questions as a group, based on the data description. Do the wrangling to answer these questions. Discuss these with a tutor.
+
+Now you are ready to complete the lab quiz.
