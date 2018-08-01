@@ -54,11 +54,6 @@ library(tidyverse)
 
 For example, there is a `filter` function in the `stats` package that comes with the R distribution. This can cause confusion when you want to use the filter function in `dplyr` (part of tidyverse). To be sure the function you use is the one you want to use, you can prefix it with the package name, `dplyr::filter()`.
 
-```{r echo=FALSE}
-library(gridExtra)
-library(ggthemes)
-```
-
 ## Example: french fries
 
 ![](images/french_fries.png)
