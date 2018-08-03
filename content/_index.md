@@ -8,8 +8,10 @@ title: Home
 
 ## Semester 2 2018
 
-- Lecturers: Professor Di Cook 
+- Lecturers: Professor Di Cook (dicook@monash.edu)
 - Tutors: Steph Kobakian, Mitch O'Hara-Wild, Zina Quryakos
+
+Unless your question is a personal issue or an administrative matter, please do not send us direct email. The [ED site](https://edstem.org/courses/2714/) is appropriate for questions related to the course material.
 
 ## Schedule
 
