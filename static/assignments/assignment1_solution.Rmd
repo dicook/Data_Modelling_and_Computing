@@ -2,8 +2,6 @@
 title: "ETC 1010 Assignment 1"
 author: "SOLUTION"
 output: html_document
-editor_options: 
-  chunk_output_type: console
 ---
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
@@ -20,81 +18,178 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Instructions
-
-- This is a team assignment. You can create your own team, of between 2-4 people. 
-- You need to write a report with answers to each of the questions. 
-- Turn in the `html` output file, and also the `Rmd` file. 
-- Create a team name, and use this on the report
-- Separately you need to provide a separate page to one of the tutors that contains the team name, members of the team, and the % effort from each team member. Your grade for the assignment will be adjusted by % effort. If the effort is different from 1/n, all members need to sign off on this.
-- Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative.
-
 # Exercise
 
-- From the web site [Department of Infrastructure, Regional Development and Cities](https://bitre.gov.au/publications/ongoing/airport_traffic_data.aspx) download the Airport Traffic Data 1985–86 to 2016–17. It is 2.7Mb.
-- Extract the "Airport Passengers" table into R with this code.
+- From the ABS web site data has been extracted on educational attainment, age and sex from the most recent 3 Census collections. Read the data in, skipping the irrelevant lines, for example.
 
-```{r readdata}
+```{r}
 library(readxl)
-passengers <- read_xls("data/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
+census_2006 <- read_xlsx("data/ABS_ed_age_sex_2006.xlsx", skip=9, n_max=10)
+census_2011 <- read_xlsx("data/ABS_ed_age_sex_2011.xlsx", skip=9, n_max=10)
+census_2016 <- read_xlsx("data/ABS_ed_age_sex_2016.xlsx", skip=9, n_max=10)
 ```
 
-- (5pts) Tidy the data, to produce a data set with these columns
-    - airport: all of the airports. (You can remove the TOTAL, because this can be easily recalculated as needed.)
-    - year 
-    - type_of_flight: DOMESTIC, INTERNATIONAL
-    - bound: IN or OUT
-    
-```{r tidydata}
+The first 9 rows are general information about the data, not actual data. There are 10 rows of data, containing categories of education. The 10th row contains the summ of the other rows. We could drop this and re-calculate totals on the fly. 
+
+1. Tidy the data, to produce a data set with these columns: census, educ, age, sex, count
+
+The format is really awkward! The main problem in that pairs of columns are age groups, and every second column is a different gender. A first step is getting these column labels to be descriptive, and then gather and separate. The first column contains nothing useful and should be dropped. Also drop the last two columns because these are totals for the education level.
+
+```{r}
 library(tidyverse)
-passengers <- passengers %>% 
-  filter(!is.na(AIRPORT)) %>%
-  select(airport = AIRPORT,
-         Year, IN_DOM = INBOUND, OUT_DOM = OUTBOUND,
-         IN_INTL = INBOUND__1, 
-         OUT_INTL = OUTBOUND__1) %>%
-  filter(!airport %in%  "TOTAL AUSTRALIA") %>%
-  gather(key = "where", value = "amount", IN_DOM:OUT_INTL) %>%
-  separate(where, into=c("bound", "type_of_flight"))
+census_2006_long <- census_2006 %>%
+  select(-`Sex Male/Female (SEXP)`, -Male__21, -Female__21) %>%
+  rename(educ=X__1, 
+         m_0004=Male, f_0004=Female, 
+         m_0509=Male__1, f_0509=Female__1,
+         m_1014=Male__2, f_1014=Female__2,
+         m_1519=Male__3, f_1519=Female__3,
+         m_2024=Male__4, f_2024=Female__4,
+         m_2529=Male__5, f_2529=Female__5,
+         m_3034=Male__6, f_3034=Female__6,
+         m_3539=Male__7, f_3539=Female__7,
+         m_4044=Male__8, f_4044=Female__8,
+         m_4549=Male__9, f_4549=Female__9,
+         m_5054=Male__10, f_5054=Female__10,
+         m_5559=Male__11, f_5559=Female__11,
+         m_6064=Male__12, f_6064=Female__12,
+         m_6569=Male__13, f_6569=Female__13,
+         m_7074=Male__14, f_7074=Female__14,
+         m_7579=Male__15, f_7579=Female__15,
+         m_8084=Male__16, f_8084=Female__16,
+         m_8589=Male__17, f_8589=Female__17,
+         m_9094=Male__18, f_9094=Female__18,
+         m_9599=Male__19, f_9599=Female__19,
+         m_100=Male__20, f_100=Female__20) %>%
+  filter(educ != "Total") %>%
+  gather(label, count, -educ) %>%
+  separate(label, c("gender", "age"))
 ```
 
-- (5pts) Use your data to make 
-    - bar chart of domestic and international passengers facetted by year
-    - a scatterplot of domestic inbound vs outbound passengers facetted by year. There are three airports with much higher numbers, which are these three?
-    - a scatterplot of international inbound vs outbound passengers facetted by year
+2. Combine the data from the three different census periods
 
-```{r bar, fig.height=8, fig.width=6}
-ggplot(passengers) + 
-  geom_col(aes(x=type_of_flight, y=amount)) + 
-  facet_wrap(~Year, ncol=4)
+The same code from question 1 is repeated. We add a new columnm called year (2006, 2011, 2016), and bind the rows together.
+
+```{r}
+library(tidyverse)
+census_2011_long <- census_2011 %>%
+  select(-`Sex (SEXP)`, -Male__21, -Female__21) %>%
+  rename(educ=X__1, 
+         m_0004=Male, f_0004=Female, 
+         m_0509=Male__1, f_0509=Female__1,
+         m_1014=Male__2, f_1014=Female__2,
+         m_1519=Male__3, f_1519=Female__3,
+         m_2024=Male__4, f_2024=Female__4,
+         m_2529=Male__5, f_2529=Female__5,
+         m_3034=Male__6, f_3034=Female__6,
+         m_3539=Male__7, f_3539=Female__7,
+         m_4044=Male__8, f_4044=Female__8,
+         m_4549=Male__9, f_4549=Female__9,
+         m_5054=Male__10, f_5054=Female__10,
+         m_5559=Male__11, f_5559=Female__11,
+         m_6064=Male__12, f_6064=Female__12,
+         m_6569=Male__13, f_6569=Female__13,
+         m_7074=Male__14, f_7074=Female__14,
+         m_7579=Male__15, f_7579=Female__15,
+         m_8084=Male__16, f_8084=Female__16,
+         m_8589=Male__17, f_8589=Female__17,
+         m_9094=Male__18, f_9094=Female__18,
+         m_9599=Male__19, f_9599=Female__19,
+         m_100=Male__20, f_100=Female__20) %>%
+  filter(educ != "Total") %>%
+  gather(label, count, -educ) %>%
+  separate(label, c("gender", "age"))
+census_2016_long <- census_2016 %>%
+  select(-`SEXP Sex`, -Male__21, -Female__21) %>%
+  rename(educ=X__1, 
+         m_0004=Male, f_0004=Female, 
+         m_0509=Male__1, f_0509=Female__1,
+         m_1014=Male__2, f_1014=Female__2,
+         m_1519=Male__3, f_1519=Female__3,
+         m_2024=Male__4, f_2024=Female__4,
+         m_2529=Male__5, f_2529=Female__5,
+         m_3034=Male__6, f_3034=Female__6,
+         m_3539=Male__7, f_3539=Female__7,
+         m_4044=Male__8, f_4044=Female__8,
+         m_4549=Male__9, f_4549=Female__9,
+         m_5054=Male__10, f_5054=Female__10,
+         m_5559=Male__11, f_5559=Female__11,
+         m_6064=Male__12, f_6064=Female__12,
+         m_6569=Male__13, f_6569=Female__13,
+         m_7074=Male__14, f_7074=Female__14,
+         m_7579=Male__15, f_7579=Female__15,
+         m_8084=Male__16, f_8084=Female__16,
+         m_8589=Male__17, f_8589=Female__17,
+         m_9094=Male__18, f_9094=Female__18,
+         m_9599=Male__19, f_9599=Female__19,
+         m_100=Male__20, f_100=Female__20) %>%
+  filter(educ != "Total") %>%
+  gather(label, count, -educ) %>%
+  separate(label, c("gender", "age"))
 ```
-    
-```{r scat1}
-passengers %>%
-  filter(type_of_flight == "DOM") %>%
-  spread(key = bound, value = amount) %>%
-  ggplot() + geom_point(aes(x=IN, y=OUT)) +
-  facet_wrap(~Year, ncol=8) +
-  coord_equal()
-passengers %>% 
-  filter(Year == "2016-17", type_of_flight == "DOM", bound == "IN") %>%
-  select(airport, amount) %>%
-  arrange(desc(amount)) %>% top_n(3)
+
+Now create the new variable, and bind the rows.
+
+```{r}
+census_2006_long <- census_2006_long %>% 
+  mutate(year = 2006)
+census_2011_long <- census_2011_long %>% 
+  mutate(year = 2011)
+census_2016_long <- census_2016_long %>% 
+  mutate(year = 2016)
+census <- bind_rows(census_2006_long, census_2011_long, census_2016_long)
 ```
 
-```{r scat2}
-passengers %>%
-  filter(type_of_flight == "INTL") %>%
-  spread(key = bound, value = amount) %>%
-  ggplot() + geom_point(aes(x=IN, y=OUT)) +
-  facet_wrap(~Year, ncol=8) +
-  coord_equal()
-passengers %>% 
-  filter(Year == "2016-17", type_of_flight == "INTL", bound == "IN") %>%
-  select(airport, amount) %>%
-  arrange(desc(amount)) %>% top_n(4)
+3. Aggregate the counts across sex, and age, and compute the totals across educ, for each census. Plot these totals against the census year, using a line connecting values for each educ group. Write a couple of paragraphs about what you learn.
+
+```{r}
+census_educ <- census %>% 
+  group_by(year, educ) %>%
+  summarise(count = sum(count, na.rm=TRUE))
+ggplot(census_educ, aes(x=year, y=count, colour=educ)) + 
+  geom_point() + geom_line()
 ```
 
-- (5pts) Write a paragraph explaining what you learn from each of the plots
+The main thing to notice is that there are a lot of education categories, and they are not all the same from one year to another. Filter out the non-categories, e.g. "Not applicable", to focus on the different education levels in the plot. The categories of high school education have changed, and the categories of certificates have changed. We would need to do some re-working of these category names to compare these across years. This eill be covered later in the course.
 
-From both the bar chart and the scatterplot, you can see that the number of flights has been increasing over the years. From the bar chart, you can see that the number of domestic passengers is much larger than the international passengers. From the scatterplot, you can see that the number of inbound flights equals the number of outbound flights, which is what we would expect. There are three much busier domestic airportsm and these can be seen to be Sydney, Melbourne and Brisbane. The pattern of inbound vs outbound international flights is similar to domestic, except that there are four major airports by passenger count: Perth joins the other three in the top.
+```{r}
+census_educ_short <- census_educ %>%
+  filter(educ %in% c("Advanced Diploma and Diploma Level",
+                     "Bachelor Degree Level", 
+                     "Graduate Diploma and Graduate Certificate Level",
+                     "Postgraduate Degree Level"))
+ggplot(census_educ_short, aes(x=year, y=count, colour=educ)) + 
+  geom_point() + geom_line()
+```
+
+The number of people with all levels of university education have increased over this time period.
+
+4. Subset the data to age group 25-29. Make a plot of educ counts by census year, facetted by sex. Write a couple of paragraphs about what you learn.
+
+```{r}
+census %>% filter(age == "2529") %>%
+  filter(educ %in% c("Advanced Diploma and Diploma Level",
+                     "Bachelor Degree Level", 
+                     "Graduate Diploma and Graduate Certificate Level",
+                     "Postgraduate Degree Level")) %>%
+  ggplot(aes(x=year, y=count, colour=educ)) + 
+  geom_point() + geom_line() +
+  facet_wrap(~gender)
+```
+
+Over both women and men, numbers are increasing. In each education level number of women is high than men.
+
+5. Subset the data to age groups, 15-19, 20-24, 25-29, 30-34. Make a plot of educ counts by census year, facetted by age group and sex. Write a couple of paragraphs about what you learn.
+
+```{r}
+census %>% filter(age %in% c("1519", "2024", "2529", "3034")) %>%
+  filter(educ %in% c("Advanced Diploma and Diploma Level",
+                     "Bachelor Degree Level", 
+                     "Graduate Diploma and Graduate Certificate Level",
+                     "Postgraduate Degree Level")) %>%
+  ggplot(aes(x=year, y=count, colour=educ)) + 
+  geom_point() + geom_line() +
+  facet_grid(age~gender)
+```
+
+The youngest age group, 15-19 tend not to have any university qualifications - we should expect that. Many 20-24 year olds (on the order of 100k) have degrees but not post-graduate degrees. 25-29 and 30-34 year olds have a similar pattern university qualifications. Numbers in all categories have increased over the time period, with perhaps less increase for grad certificates.
