@@ -107,6 +107,11 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - [2017 exam](exam/exam2017.pdf) 
 - [2017 exam solution](exam/exam2017_solution.pdf)
 
+## Useful resources
+
+- [Amazing new book on data visualisation by Kieran Healy](http://socviz.co/index.html#preface)
+- [The R Generation](https://rss.onlinelibrary.wiley.com/doi/epdf/10.1111/j.1740-9713.2018.01169.x)
+
 ## Computing information
 
 - R version 3.5.1 (2018-07-02) -- "Feather Spray", install on your computer from https://cran.r-project.org
