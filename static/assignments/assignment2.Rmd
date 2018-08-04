@@ -1,6 +1,6 @@
 ---
 title: "ETC 1010 Assignment 2"
-author: "Di Cook"
+author: "Professor Di Cook, EBS, Monash U."
 output: html_document
 ---
 
@@ -18,51 +18,51 @@ knitr::opts_chunk$set(
 )
 ```
 
-![](calvin-new.jpg)
-
 # Instructions
 
-- This is a team assignment. You can create your own team, of between 2-4 people. 
-- You need to write a report that 
-    - details each step in the data cleaning that you have done. Try to do it all in R, if you need help, there are consultation times Thu, Fri, Mon. The data is small enough that you could make all the changes in excel, but if you meet a much larger data set, this would be terribly painful. 
-    - provides some good summary plots of interesting things about the class. Aim for about 2-3 pages, only include what you think are the most interesting things to learn.
-- Turn in your cleaned data, the `html` output file, and also the `Rmd` file.
-- Use your team name on the report
-- Separately you need to provide a separate page to one of the tutors that contains the team name, members of the team, and the % effort from each team member. Your grade for the assignment will be adjusted by % effort. If the effort is different from 1/n, all members need to sign off on this.
-- Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative.
+- This is a team assignment. 
+- You need to write a report with answers to each of the questions. 
+- Turn in the `html` output file, and also the `Rmd` file. 
+- Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative. Five points will be for individual effort. And the remaining 10 points will be the final group report.
 
 # Exercise
 
-- Tidy the class survey data
-- Tell us some interesting facts about your classmates
+Smart meters are now installed at every property in Melbourne. The Victorian government has a current initiative to encourage households to examine their energy use and particularly to get a better deal on energy pricing. Their tool to compare suppliers is at https://compare.energy.vic.gov.au. If you use this tool between now and the end of the year, you will get an energy rebate of $50.
 
-# Help
+Your task is to get the electricity usage data for your household. It is relatively straightforward. You need to go to your provider's page, which can be determined by visiting https://www.energy.vic.gov.au/electricity/electricity-distributors. If you have a recent bill, your meter number will be on it. You need this to create a login, so that you can download your data. 
 
-- A pdf copy of the survey is provided, so you can remember what the questions were, and what answers were possible. 
+The format of the data should `csv` and look something like mine, which is provided, `meter1.csv`. In addition, there should be a web page, [like this one from citipower](https://customermeterdata.portal.powercor.com.au/customermeterdata/articles/Question/A12-How-do-I-read-the-detailed-report?retURL=%2Fcustomermeterdata%2Fapex%2FCADArticleList&popup=true) describing the format of the data, that will be useful when you are trying to tidy it. You should be able to see half hourly electricity usage. 
 
-- You can read the data in with this code:
+You only need one data set per group. Everyone in the group should work on this one. If you have problems getting your own data, we will provide you with some. 
 
-```{r}
-library(tidyverse)
-survey <- read_csv("data/survey.csv")
+1. Describe the steps that you will need to take to read in your electricity usage, and tidy it. 
+
+2. Tidy your data, using the `tidyverse` functions. The end product should look something like this:
+
+```
+  date       halfhour   kwh
+  <date>        <dbl> <dbl>
+1 2017-11-24      0.5     0
+2 2017-11-24      0.5     0
+3 2017-11-24      1       0
+4 2017-11-24      1       0
+5 2017-11-24      1.5     0
+6 2017-11-24      1.5     0
 ```
 
-- These are many problems with the data, that need to be fixed in order to do analysis, or even make good plots. Here are some
-    - Answers to Q2 include "1/2" (you would need to change this to 0.5), "2 hours ( to uni)" (you would need to remove everything except 2), ...
-    - Answers to Q5 include "Choosing not to answer" (needs to be turned into NA), "72\n" (needs the "\n" removed), "40hrs" (needs "hrs" removed)
-    - Answers to Q10 are pretty good, with the exception of "1\n" (needs "\n" removed)
-    - Answers to Q21 are pretty good, with the exception of "7;30" and "6\n"
-    - Answers to Q22 are pretty good, with the exception of "3days"
-    - Answers to Q23 are pretty good, with the exception of "XXI"
-    - Answers to Q24 are pretty good, with the exception of "I don't know", needs to be turned into NA.
-    - Q1 should be recoded from A, .., E to 1, 2, 3, 4, Other
-    - Q4 has multiple different capitalisations, "Hip Hop", "Hip hop", hip hop", "hip-hop", "hip-pop"
-    - ...
+although your `halfhour` variable might be more explicit like 12:00-12:30, 12:30-01:00, 01:00-01:30, ... And you might want to add week day, month, year variables. 
+
+3. Make a line plot of half-hourly usage for these two days, Sunday August 5, 2018 and Wednesday Aug 8, 2018. Describe what you learn about electricity use on these two days. 
+
+4. Aggregate your daily kwh usage. Make a side-by-side boxplot of usage by week day. Are there some days of the week that you use more electricity than others?
+
+5. Decide on several (about 3) more types of plots to make to learn about your energy usage. Make these plots and write some paragraphs describing what you have learned. 
 
 # Grading
 
 Points for the assignment will be based on:
 
-- How well detailed your cleaning description is
-- Whether the Rmd file, can take the data file as provided, and produce the cleaned version
-- Your graphical summaries of the data are well chosen and interesting overview of the survey
+- How well you have explained your tidying procedures.
+- Whether the Rmd file, can take your data file as provided,  produce the tidy data, and plots reported in your final submission.
+- Accuracy of your answers to the given questions. 
+- Creativeness in exploring your energy use, and plots used to tell a story. 
