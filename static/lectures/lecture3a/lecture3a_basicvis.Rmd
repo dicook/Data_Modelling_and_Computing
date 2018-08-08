@@ -224,13 +224,13 @@ save(ped, file="data/ped_July18.rda")
 
 2. Make a side-by-side boxplot of pedestrian counts by sensor. Describe what you learn.
 
-```{r eval=FALSE}
+```{r echo=FALSE, eval=FALSE}
 ggplot(ped, aes(x=Sensor, y=Count)) + geom_boxplot()
 ```
 
 3. Subset to Monday of the first week of Monash classes. Make line plots of Count by Time, separately for each sensor. Describe the differences in the pedestrian patterns at both locations.
 
-```{r eval=FALSE}
+```{r echo=FALSE, eval=FALSE}
 ped %>%
   filter(Date == dmy("23072018")) %>%
 ggplot(aes(x=Time, y=Count)) + 
