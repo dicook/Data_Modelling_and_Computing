@@ -65,6 +65,27 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Assignment 4:
 - Assignment 5:
 
+<!--
+[Peer evaluation assignments](evaluation_assignment.csv)
+- 1_PUORG_0101_CTE [html]() [Rmd]()
+- Agridat [html]() [Rmd]()
+- Blueberries [html]() [Rmd]()
+- Bomrang [html]() [Rmd]()
+- Data Confusion [html]() [Rmd]()
+- Eagles [html]() [Rmd]()
+- GeoZoo [html]() [Rmd]()
+- Infinite [html]() [Rmd]()
+- nine-nine [html]() [Rmd]()
+- Paperclip [html]() [Rmd]()
+- R Rated [html]() [Rmd]()
+- R studio artists [html]() [Rmd]()
+- R44 [html]() [Rmd]()
+- RnR [html]() [Rmd]()
+- Team Rocket [html]() [Rmd]()
+- The Standard Deviations [html]() [Rmd]()
+- Thor [html]() [Rmd]()
+- Titanic{float=False} [html]() [Rmd]()
+-->
 
 ## Data [ZIP](http://dmac.netlify.com/lectures/data/alldata.zip) 
 
