@@ -42,7 +42,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - [Fri](https://ebsmonash.shinyapps.io/lecture2b_tidydata) [(Rmd)](http://dmac.dicook.org/lectures/lecture2b/lecture2b_tidydata.Rmd) [Reading Text book 3.1-3.3](http://r4ds.had.co.nz/data-visualisation.html)
 - Week 3: Data cleaning, rearranging and transformation
     - [Wed](https://ebsmonash.shinyapps.io/lecture3a_basicvis) [(Rmd)](http://dmac.dicook.org/lectures/lecture3a/lecture3a_basicvis.Rmd) [Reading Textbook 16.1, 16.2, 16.3.1](http://r4ds.had.co.nz/dates-and-times.html)
-    - Fri [Reading Text book 3.5-3.7](http://r4ds.had.co.nz/data-visualisation.html)
+    - [Fri](https://ebsmonash.shinyapps.io/lecture3b_time) [(Rmd)](http://dmac.dicook.org/lectures/lecture3b/lecture3b_time.Rmd) [Reading Text book 3.5-3.7](http://r4ds.had.co.nz/data-visualisation.html)
 - Week 4: Data visualisation: 
 - Week 5: Handling missing values: 
 - Week 6: Introduction to modeling: 
