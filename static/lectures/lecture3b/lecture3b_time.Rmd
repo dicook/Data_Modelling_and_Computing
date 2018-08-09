@@ -284,5 +284,6 @@ prettify(p1)
 ## Lab exercise
 
 Pull the 2017 data for the sensor Birrarung Marr. Make plots to answer these questions. 
-    a. Is there the same daily pattern as observed at Melbourne Central? If not, how does it differ?
-    b. Can you detect special events, like the Australian Open tennis, based on pedestrian counts?  What dates does it appear that there were events on? Can you match these with known events, found from web searching?
+
+1. Is there the same daily pattern as observed at Melbourne Central? If not, how does it differ?
+2. Can you detect special events, like the Australian Open tennis, based on pedestrian counts?  What dates does it appear that there were events on? Can you match these with known events, found from web searching?
