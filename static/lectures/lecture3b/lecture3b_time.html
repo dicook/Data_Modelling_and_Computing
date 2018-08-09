@@ -105,13 +105,13 @@ ymd(&quot;2018-08-10&quot;, tz = &quot;America/Los_Angeles&quot;)
 <p>A list of acceptable time zones can be found at <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones" class="uri">https://en.wikipedia.org/wiki/List_of_tz_database_time_zones</a></p>
 <p>Time zones may make more sense with functions like:</p>
 <pre class="r"><code>today()
-## [1] &quot;2018-08-09&quot;
+## [1] &quot;2018-08-10&quot;
 today(tz = &quot;America/Los_Angeles&quot;)
 ## [1] &quot;2018-08-09&quot;
 now()
-## [1] &quot;2018-08-09 20:14:05 AEST&quot;
+## [1] &quot;2018-08-10 09:31:39 AEST&quot;
 now(tz = &quot;America/Los_Angeles&quot;)
-## [1] &quot;2018-08-09 03:14:05 PDT&quot;</code></pre>
+## [1] &quot;2018-08-09 16:31:39 PDT&quot;</code></pre>
 </div>
 <div id="section-parsing-date-with-times" class="section level3">
 <h3>Parsing date with times</h3>
@@ -264,6 +264,10 @@ prettify(p1)</code></pre>
 </div>
 <div id="section-holidays" class="section level3">
 <h3>Holidays</h3>
+<div class="figure">
+<img src="images/tsibble.png" />
+
+</div>
 <pre class="r"><code>library(tsibble)
 vic_holidays &lt;- holiday_aus(2017, state = &quot;VIC&quot;)
 ped &lt;- ped %&gt;%

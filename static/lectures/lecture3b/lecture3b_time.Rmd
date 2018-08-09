@@ -268,6 +268,8 @@ prettify(p1)
 
 ### Holidays
 
+![](images/tsibble.png)
+
 ```{r fig.height=6}
 library(tsibble)
 vic_holidays <- holiday_aus(2017, state = "VIC")
