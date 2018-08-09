@@ -30,6 +30,15 @@ This is a link to the course web site, in case you need to go back and forth bet
 - Working with dates
 - Building up data plots
 
+### *FOLLOW ALONG WITH THE NOTES* 
+
+- Open your ETC1010 `Rproj`
+- Download the `Rmd` file from the class web site
+
+### Turn in your GROUP assignment
+
+ONE PERSON IN THE GROUP go to ED, the assessments tab. Upload your `Rmd`, and `html`, files. 
+
 ## Working with dates
 
 There are numerous challenges of working with date variables
