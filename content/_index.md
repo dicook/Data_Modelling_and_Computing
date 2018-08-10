@@ -39,8 +39,10 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - [Fri](https://ebsmonash.shinyapps.io/lecture1b_intro/) [(Rmd)](http://dmac.dicook.org/lectures/lecture1b/lecture1b_intro.Rmd)); [Reading Textbook 12.1-4](http://r4ds.had.co.nz/tidy-data.html) Go to ED and complete the reading quiz before Wednesday's class
 - Week 2: Tidy data principles
     - [Wed](https://ebsmonash.shinyapps.io/lecture2a_tidydata) [(Rmd)](http://dmac.dicook.org/lectures/lecture2a/lecture2a_tidydata.Rmd);  [Reading Textbook 5.1, 5.2, 5.3, 5.4, 5.5, 5.6 *only the first paragraph of each section!*](http://r4ds.had.co.nz/transform.html)
-    - [Fri](https://ebsmonash.shinyapps.io/lecture2b_tidydata) [(Rmd)](http://dmac.dicook.org/lectures/lecture2b/lecture2b_tidydata.Rmd)) [Reading Text book 3.1-3.3](http://r4ds.had.co.nz/data-visualisation.html)
-- Week 3: Data cleaning, rearranging and transformation; 
+    - [Fri](https://ebsmonash.shinyapps.io/lecture2b_tidydata) [(Rmd)](http://dmac.dicook.org/lectures/lecture2b/lecture2b_tidydata.Rmd) [Reading Text book 3.1-3.3](http://r4ds.had.co.nz/data-visualisation.html)
+- Week 3: Data cleaning, rearranging and transformation
+    - [Wed](https://ebsmonash.shinyapps.io/lecture3a_basicvis) [(Rmd)](http://dmac.dicook.org/lectures/lecture3a/lecture3a_basicvis.Rmd) [Reading Textbook 16.1, 16.2, 16.3.1](http://r4ds.had.co.nz/dates-and-times.html)
+    - [Fri](https://ebsmonash.shinyapps.io/lecture3b_time) [(Rmd)](http://dmac.dicook.org/lectures/lecture3b/lecture3b_time.Rmd) [Reading Textbook 13.1, 13.2](http://r4ds.had.co.nz/relational-data.html)
 - Week 4: Data visualisation: 
 - Week 5: Handling missing values: 
 - Week 6: Introduction to modeling: 
@@ -58,11 +60,32 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 ## Assignments
 
 - Assignment 1: [Instructions](assignments/assignment1.html) [(Rmd)](assignments/assignment1.Rmd) [SOLUTION]() [(Rmd)](); Data: [2006](assignments/data/ABS_ed_age_sex_2006.xlsx), [2011](assignments/data/ABS_ed_age_sex_2011.xlsx), [2016](assignments/data/ABS_ed_age_sex_2016.xlsx) **DUE: Week 3, individual on Wed, group Fri, during class**
-- Assignment 2: 
+- Assignment 2: [Instructions](assignments/assignment2.html) [(Rmd)](assignments/assignment2.Rmd) [SOLUTION]() [(Rmd)](); [Example data](data/meter1.csv) **DUE: Week 4, individual on Wed, group Fri, during class**
 - Assignment 3:
 - Assignment 4:
 - Assignment 5:
 
+<!--
+[Peer evaluation assignments](evaluation_assignment.csv)
+- 1_PUORG_0101_CTE [html]() [Rmd]()
+- Agridat [html]() [Rmd]()
+- Blueberries [html]() [Rmd]()
+- Bomrang [html]() [Rmd]()
+- Data Confusion [html]() [Rmd]()
+- Eagles [html]() [Rmd]()
+- GeoZoo [html]() [Rmd]()
+- Infinite [html]() [Rmd]()
+- nine-nine [html]() [Rmd]()
+- Paperclip [html]() [Rmd]()
+- R Rated [html]() [Rmd]()
+- R studio artists [html]() [Rmd]()
+- R44 [html]() [Rmd]()
+- RnR [html]() [Rmd]()
+- Team Rocket [html]() [Rmd]()
+- The Standard Deviations [html]() [Rmd]()
+- Thor [html]() [Rmd]()
+- Titanic{float=False} [html]() [Rmd]()
+-->
 
 ## Data [ZIP](http://dmac.netlify.com/lectures/data/alldata.zip) 
 
@@ -108,6 +131,11 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - [Practice exam solution](exam/practice_exam2017_solution.pdf)
 - [2017 exam](exam/exam2017.pdf) 
 - [2017 exam solution](exam/exam2017_solution.pdf)
+
+## Useful resources
+
+- [Amazing new book on data visualisation by Kieran Healy](http://socviz.co/index.html#preface)
+- [The R Generation](https://rss.onlinelibrary.wiley.com/doi/epdf/10.1111/j.1740-9713.2018.01169.x)
 
 ## Computing information
 
