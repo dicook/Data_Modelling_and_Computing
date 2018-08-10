@@ -1,0 +1,69 @@
+STUDENT_CODE,GROUP,Evaluation Group
+29025206,1_PUORG_0101_CTE,R Rated
+25167669,1_PUORG_0101_CTE,The Standard Deviations
+28689607,1_PUORG_0101_CTE,RnR
+29909961,1_PUORG_0101_CTE,Eagles
+28014561,Agridat,Titanic{float=False}
+28798686,Agridat,GeoZoo
+28817389,Agridat,Titanic{float=False}
+28785002,Blueberries,Agridat
+29110459,Blueberries,Thor
+27843467,Blueberries,Paperclip
+28435281,Blueberries,Team Rocket
+25993534,Bomrang,Data Confusion
+29176026,Bomrang,Data Confusion
+27351963,Bomrang,R44
+29091985,Bomrang,Agridat
+28802020,Data Confusion,1_PUORG_0101_CTE
+25186949,Data Confusion,R Rated
+28796527,Data Confusion,1_PUORG_0101_CTE
+27929574,Data Confusion,R44
+27842339,Eagles,Bomrang
+28748662,Eagles,Team Rocket
+29663776,Eagles,1_PUORG_0101_CTE
+28824229,GeoZoo,Agridat
+27821927,GeoZoo,Data Confusion
+27724654,GeoZoo,Team Rocket
+28762479,Infinite,Blueberries
+28676076,Infinite,Titanic{float=False}
+29679370,nine-nine,Infinite
+26900246,nine-nine,The Standard Deviations
+27790568,nine-nine,RnR
+28396294,nine-nine,The Standard Deviations
+29695848,nine-nine,Thor
+28786777,Paperclip,Eagles
+29619114,Paperclip,R studio artists
+25976281,Paperclip,Bomrang
+28445732,Paperclip,Team Rocket
+26980770,R Rated,GeoZoo
+28741005,R Rated,Blueberries
+27888983,R Rated,1_PUORG_0101_CTE
+28748441,R Rated,The Standard Deviations
+26921162,R studio artists,nine-nine
+26921812,R studio artists,R44
+28458230,R studio artists,Data Confusion
+28768361,R studio artists,Titanic{float=False}
+27494152,R44,Thor
+28943112,R44,R studio artists
+27243923,R44,Infinite
+29233879,R44,RnR
+27811891,RnR,Bomrang
+28762347,RnR,nine-nine
+25150901,RnR,Bomrang
+27839397,Team Rocket,R studio artists
+26287641,Team Rocket,Thor
+28414136,Team Rocket,Blueberries
+29706149,Team Rocket,R studio artists
+28831772,The Standard Deviations,Paperclip
+28775554,The Standard Deviations,Blueberries
+29098947,The Standard Deviations,Paperclip
+28759230,The Standard Deviations,GeoZoo
+26025671,Thor,nine-nine
+29490979,Thor,R44
+29726794,Thor,R Rated
+29668301,Thor,nine-nine
+29584760,Thor,R Rated
+28832655,Titanic{float=False},nine-nine
+29709547,Titanic{float=False},Thor
+29681006,Titanic{float=False},Paperclip
+26929740,Titanic{float=False},Eagles
