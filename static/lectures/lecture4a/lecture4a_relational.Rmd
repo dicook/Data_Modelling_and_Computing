@@ -1,0 +1,225 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+author: "Professor Di Cook, EBS, Monash U."
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 4,
+                      fig.width = 8,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+```
+
+# Relational data, and joins
+
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: http://dmac.dicook.org
+
+## Overview
+
+- What is relational data?
+- Keys
+- Different sorts of joins
+- Using joins to follow an aircraft flight path
+
+### *FOLLOW ALONG WITH THE NOTES* 
+
+- Open your ETC1010 `Rproj`
+- Download the `Rmd` file from the class web site
+- You should already have the data sets that you need, from last class
+
+## Relational data
+
+It’s rare that a data analysis involves only a single table of data. Typically you have many tables of data, and you must combine them to answer the questions that you’re interested in. Collectively, multiple tables of data are called *relational data* because it is the relations, not just the individual datasets, that are important.
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+```
+
+The `nycflights13` is a small example data set, flights that departed NYC in 2013, taken from a public database of all commercial airline flights in the USA,  https://www.transtats.bts.gov. It has five tables, 
+
+```{r}
+flights
+airlines
+airports
+planes
+weather
+```
+
+## Keys
+
+Keys are variables used to connect the records in one table, with those in another. In the `nycflights13` data, 
+
+- flights connects to planes by a single variable `tailnum`
+- flights connects to airlines by a single variable `carrier`
+- flights connects to airports by two variables, `origin` and `dest`
+- flights connects to weather using multiple variables, `origin`, and `year`, `month`, `day` and `hour`.
+
+### Your turn
+
+The `Lahman` package contains multiple tables of baseball data. What key(s) connect the batting table with the salary table?
+
+```{r}
+library(Lahman)
+glimpse(Batting)
+glimpse(Salaries)
+```
+
+## Joins
+
+The textbook calls them "mutating joins", add variables from one table to another. There is always a decision on what observations are copied to the new table as well. 
+
+### The coat explanation of joins 
+
+Different types of joins explained using a person and a coat, by [Leight Tami](https://twitter.com/leigh_tami18/status/1021471889309487105/photo/1)
+
+![](images/joins_using_coat.jpg)
+
+### Types of joins
+
+- **Inner join**: intersection between the two tables, only the observations that are in both
+- **Outer (full) join**: union of the two tables, all observations from both, and missing values might get added
+- **Left join**: All observations from the "left" table, but only the observations from the "right" table that match those in the left.
+- **Right join**: Same as left in reverse.
+
+### Example: airlines
+
+If you want to add the full airline name to the flights2 data, you can combine the `airlines` and `flights` data frames with `left_join()`:
+
+```{r}
+flights %>% left_join(airlines, by="carrier") %>% glimpse()
+```
+
+## Airline travel, ontime data
+
+```{r}
+library(tidyverse)
+library(ggmap)
+library(lubridate)
+library(ggthemes)
+load("data/plane_N4YRAA.rda")
+plane_N4YRAA %>% glimpse()
+```
+
+### Airline travel, airport location
+
+```{r}
+airport <- read_csv("data/airports.csv")
+airport %>% select(AIRPORT, LATITUDE, LONGITUDE, AIRPORT_STATE_NAME) %>%
+  glimpse()
+```
+
+### Joining the two tables
+
+- Purpose is to show flight movement on the map
+- Key is the airport three letter code, 
+    - called ORIGIN or DEST in plane_N4YRAA table
+    - called AIRPORT in the airport table
+- One table, plane_N4YRAA, has less airports than the other
+    - Only want to keep the rows of airport table, for those that appear in the plane_N4YRAA table
+
+```{r}
+airport <- airport %>%
+  select(AIRPORT, LATITUDE, LONGITUDE, AIRPORT_IS_LATEST, DISPLAY_AIRPORT_NAME) %>%
+  filter(AIRPORT_IS_LATEST == 1) %>%
+  select(-AIRPORT_IS_LATEST)
+
+N4YRAA_latlon <- left_join(plane_N4YRAA, airport,
+                           by = c("ORIGIN"="AIRPORT")) %>%
+  rename("ORIGIN_LATITUDE"="LATITUDE",
+         "ORIGIN_LONGITUDE"="LONGITUDE")
+N4YRAA_latlon %>% 
+  select(ORIGIN, ORIGIN_LATITUDE, ORIGIN_LONGITUDE, 
+         DISPLAY_AIRPORT_NAME)
+```
+
+The variables ORIGIN_LATITUDE, ORIGIN_LONGITUDE, DISPLAY_AIRPORT_NAME are added to corresponding row in the plane_N4YRAA table.
+
+### Add destination locations
+
+- Added the spatial coordinates (lat, lon) for the origin airport
+- The same needs to be done for the destination airport
+- Then the airports can be drawn over a map
+
+```{r}
+N4YRAA_latlon <- left_join(N4YRAA_latlon, airport,
+                           by = c("DEST"="AIRPORT")) %>%
+  rename("DEST_LATITUDE"="LATITUDE",
+         "DEST_LONGITUDE"="LONGITUDE")
+
+N4YRAA_latlon <- N4YRAA_latlon %>% arrange(FL_DATE, DEP_TIME)
+```
+
+### Map it
+
+```{r}
+map <- get_map(c(lon=-92.20562, lat=36.20259), zoom=5)
+ggmap(map) +
+  geom_segment(data=filter(N4YRAA_latlon,
+                           FL_DATE == ymd("2017-05-06")),
+               aes(x=ORIGIN_LONGITUDE, xend=DEST_LONGITUDE,
+                   y=ORIGIN_LATITUDE, yend=DEST_LATITUDE),
+               color="navyblue") +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE == ymd("2017-05-06")),
+             aes(x=ORIGIN_LONGITUDE,
+                 y=ORIGIN_LATITUDE), color="orange",
+             alpha=0.3, size=3) +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE == ymd("2017-05-06")),
+             aes(x=DEST_LONGITUDE,
+                 y=DEST_LATITUDE), color="red",
+             alpha=0.3, size=1) +
+   theme_map()
+```
+
+## Lab exercise
+
+Complete these exercises about the `nycflights13` data using wrangling operations, an appropriate join, and a plot.
+
+1. Make a map that shows the origin to destinations made by Delta flights, from La Guardia airport, for the month of August. You will need to 
+    a. Filter the flights data to contain just Delta flights, for August
+    b. Add the airport locations (lat, long) of the origin and destination to the flights data 
+    c. Pull a google map, and plot it
+    d. Draw lines connecting origin to destination airports on the map
+2. Does wind direction, when windspeed is stronger, affect the operations at the airport? You will need to
+    a. Join the weather data to the flights data
+    b. Filter by airport and higher wind speeds
+    c. Plot delay against wind direction, perhaps focusing a restricted range of delay or using only a smoother instead of all the points
+
+```{r echo=FALSE, eval=FALSE}
+airports %>% filter(faa == "LGA")
+delta <- flights %>% 
+  filter(carrier == "DL", origin == "LGA", month == 8) %>%
+  left_join(airports, by = c("dest"="faa")) %>%
+  mutate(orig_lon = -73.9, orig_lat = 40.8)
+map <- get_map(c(lon=-92.20562, lat=36.20259), zoom=4)
+ggmap(map) +
+  geom_segment(data=delta,
+               aes(x=orig_lon, xend=lon,
+                   y=orig_lat, yend=lat),
+               color="navyblue", alpha=0.2) 
+flgt_weath <- flights %>% 
+  filter(origin == "LGA") %>%
+  left_join(weather, by=c("origin", "time_hour")) %>%
+  filter(wind_speed > 25)
+ggplot(flgt_weath, aes(x=wind_dir, y=dep_delay)) + 
+  #geom_point(alpha=0.1) + 
+  geom_smooth(se=FALSE) 
+```
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
