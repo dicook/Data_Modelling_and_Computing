@@ -194,7 +194,7 @@ Complete these exercises about the `nycflights13` data using wrangling operation
     b. Add the airport locations (lat, long) of the origin and destination to the flights data 
     c. Pull a google map, and plot it
     d. Draw lines connecting origin to destination airports on the map
-2. Does wind direction, when windspeed is stronger, affect the operations at the airport? You will need to
+2. Does wind direction, when windspeed is stronger, affect the operations at the airport? Generally cross winds affect airport operations. If the wind is reasonably strong and blowing across the runway, there are likely to be more delays. It could be helpful if you can find maps of the three airports in NYC to check how many runways they have, and the orientation of them. You will need to
     a. Join the weather data to the flights data
     b. Filter by airport and higher wind speeds
     c. Plot delay against wind direction, perhaps focusing a restricted range of delay or using only a smoother instead of all the points

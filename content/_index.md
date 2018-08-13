@@ -43,7 +43,8 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
 - Week 3: Data cleaning, rearranging and transformation
     - [Wed](https://ebsmonash.shinyapps.io/lecture3a_basicvis) [(Rmd)](http://dmac.dicook.org/lectures/lecture3a/lecture3a_basicvis.Rmd) [Reading Textbook 16.1, 16.2, 16.3.1](http://r4ds.had.co.nz/dates-and-times.html)
     - [Fri](https://ebsmonash.shinyapps.io/lecture3b_time) [(Rmd)](http://dmac.dicook.org/lectures/lecture3b/lecture3b_time.Rmd) [Reading Textbook 13.1, 13.2](http://r4ds.had.co.nz/relational-data.html)
-- Week 4: Data visualisation: 
+- Week 4: Data visualisation
+   - [Wed](https://ebsmonash.shinyapps.io/lecture4a_relational) [(Rmd)](http://dmac.dicook.org/lectures/lecture4a/lecture4a_relational.Rmd) [Reading Textbook 3.5-3.7](http://r4ds.had.co.nz/data-visualisation.html)
 - Week 5: Handling missing values: 
 - Week 6: Introduction to modeling: 
 - Week 7: Intermediate models; 
@@ -59,7 +60,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 		 
 ## Assignments
 
-- Assignment 1: [Instructions](assignments/assignment1.html) [(Rmd)](assignments/assignment1.Rmd) [SOLUTION]() [(Rmd)](); Data: [2006](assignments/data/ABS_ed_age_sex_2006.xlsx), [2011](assignments/data/ABS_ed_age_sex_2011.xlsx), [2016](assignments/data/ABS_ed_age_sex_2016.xlsx) **DUE: Week 3, individual on Wed, group Fri, during class**
+- Assignment 1: [Instructions](assignments/assignment1.html) [(Rmd)](assignments/assignment1.Rmd) [SOLUTION](assignments/assignment1_solution.html) [(Rmd)](assignments/assignment1_solution.Rmd); Data: [2006](assignments/data/ABS_ed_age_sex_2006.xlsx), [2011](assignments/data/ABS_ed_age_sex_2011.xlsx), [2016](assignments/data/ABS_ed_age_sex_2016.xlsx) **DUE: Week 3, individual on Wed, group Fri, during class**
 - Assignment 2: [Instructions](assignments/assignment2.html) [(Rmd)](assignments/assignment2.Rmd) [SOLUTION]() [(Rmd)](); [Example data](assignments/data/meter1.csv) **DUE: Week 4, individual on Wed, group Fri, during class**
 - Assignment 3:
 - Assignment 4:

@@ -1,5 +1,6 @@
 ---
 title: "ETC1010: Data Modelling and Computing"
+author: "Professor Di Cook, EBS, Monash U."
 output: 
   learnr::tutorial:
     css: "css/logo.css"
@@ -19,35 +20,51 @@ knitr::opts_chunk$set(echo = TRUE,
 tutorial_html_dependency()
 ```
 
-```{r}
+```{r echo=FALSE}
 library(tidyverse)
 ```
 
-# Visualising data
+# Making effective data plots
 
 ## Course web site
 
-This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.netlify.com](http://dmac.netlify.com)
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: http://dmac.dicook.org
 
 ## Overview
 
 - Coordinate systems
-- Layering: overlaying multiple data sets, or multiple geometric elements
-- Interpreting plots
-- Designing good plots
-- Interactive graphics
+- Mapping variables to graphical elements
+- Scales, transforming your variables
+- Layering statistical summaries
+- Colour palettes and colour blindness
+- Pre-attentive
+- Proximity
+- Change blindness
+- Hierarchy of mappings
+- Adding interactivity
+
+### *FOLLOW ALONG WITH THE NOTES* 
+
+- Open your ETC1010 `Rproj`
+- Download the `Rmd` file from the class web site
+- You should already have the data sets that you need, from last class
+
+### Turn in your individual assignment
+
+Go to ED, the assessments tab. Upload your `Rmd`, and `html`, and `csv` files. 
 
 ## Coordinate systems
 
 - *Cartesian, polar:* most plots are made in Cartesian coordinates. Just a few are in polar coordinates, primarily the pie chart. Polar coordinates use radius and angle to describe position in 2D space. Occasionally measurements like wind (direction and speed) make sense to be plotted in polar coordinates.
-- *fixed, equal:* When variables are made on scales that should be comparable, it may be important to reflect this in the axes limits and page space that the plot takes. 
+- *fixed, equal:* When variables are made on scales that should be comparable, it may be important to reflect this in the axes limits and page space that the plot takes. (This is different from `theme(aspect.ratio=1)` which sets the physical size of the plot to be the same, or in some ratio.)
 - *map:* Maps come in conventional formats, most often with a specific aspect ratio of vertical to horizontal axes, that depends on latitude. 
 - *flip:* Useful for generating a plot with a categorical variable on the x axis and then flipping it sideways to look at.
 
 ```{r}
-df <- data.frame(x=runif(100), y=runif(100)*10)
+df <- tibble(x=runif(100), y=runif(100)*10)
 ggplot(df, aes(x=x, y=y)) + geom_point() + coord_fixed()
-ggplot(df, aes(x=x, y=y)) + geom_point() + coord_fixed(ratio=0.1)
+ggplot(df, aes(x=x, y=y)) + geom_point() + coord_fixed(ratio=0.2)
+ggplot(df, aes(x=x, y=y)) + geom_point() + theme(aspect.ratio=1)
 ```
 
 ## Layering
@@ -55,17 +72,21 @@ ggplot(df, aes(x=x, y=y)) + geom_point() + coord_fixed(ratio=0.1)
 - *Statistical summaries:* It is common to layer plots, particularly by adding statistical summaries, like a model fit, or means and standard deviations. The purpose is to show the **trend** in relation to the **variation**. 
 - *Maps:* Commonly maps provide the framework for data collected spatially. One layer for the map, and another for the data.
 
-## Designing good plots
+```{r}
+df <- tibble(x=runif(100), y1=4*x + rnorm(100), 
+             y2= -x + 10*(x-0.5)^2+ rnorm(100))
+ggplot(df, aes(x=x, y=y1)) + geom_point() 
+ggplot(df, aes(x=x, y=y1)) + geom_point() + 
+  geom_smooth(method="lm", se=FALSE)
+ggplot(df, aes(x=x, y=y2)) + geom_point() 
+ggplot(df, aes(x=x, y=y2)) + geom_point() + 
+  geom_smooth(method="lm", se=FALSE)
+ggplot(df, aes(x=x, y=y2)) + geom_point() + 
+  geom_smooth(se=FALSE)
+```
 
-- What type of variable should be mapped to what type of plot element
-- Colour palettes
-- Color blindness
-- Pre-attentive
-- Proximity
-- Change blindness
-- Hierarchy of mappings
 
-### Variable types and mapping
+## Variable types and mapping
 
 ```{r vartype, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 vartype <- 
@@ -94,7 +115,7 @@ vartype <- hux(
 vartype
 ```
 
-### Colour palettes 
+## Colour palettes 
 
 - Qualitative: categorical variables
 - Sequential: low to high numeric values
@@ -103,6 +124,10 @@ vartype
 ```{r echo=FALSE, fig.height=7, fig.width=12}
 library(RColorBrewer)
 display.brewer.all()
+```
+
+```{r}
+
 ```
 
 ### Colour blindness
@@ -124,7 +149,7 @@ clrs <- dichromat(hue_pal()(3))
 p + scale_colour_manual("", values=clrs) 
 ```
 
-### Pre-attentive
+## Pre-attentive
 
 Can you find the odd one out?
 
@@ -145,7 +170,7 @@ ggplot(data=df, aes(x, y, colour=cl)) +
   scale_colour_brewer(palette="Dark2")
 ```
 
-### Proximity
+## Proximity
 
 - Basic rule: place the groups that you want to compare close to each other
 
@@ -186,7 +211,7 @@ tb_au %>% filter(year == 2012) %>%
   scale_fill_brewer(palette="Dark2")
 ```
 
-### Hierarchy of mappings
+## Hierarchy of mappings
 
 1. Position - common scale (BEST): axis system
 2. Position - nonaligned scale: boxes in a side-by-side boxplot
@@ -215,7 +240,7 @@ ggplot(df, aes(x=x, y=y)) +
 ```
 
 
-## Interactive plots
+## Adding interactivity to plots
 
 Interaction on a plot can help de-clutter it, by making labels only show on mouse over. Occasionally it can be useful to zoom into parts of the plot. Often it is useful to change the aspect ratio.
 
@@ -251,6 +276,7 @@ ggplotly(p)
 
 ## Resources
 
+- Kieran Healy [Data Visualization](http://socviz.co/index.html)
 - Winston Chang (2012) [Cookbook for R](graphics cookbook)
 - Antony Unwin (2014) [Graphical Data Analysis](http://www.gradaanwr.net)
 - Naomi Robbins (2013) [Creating More Effective Charts](http://www.nbr-graphs.com)

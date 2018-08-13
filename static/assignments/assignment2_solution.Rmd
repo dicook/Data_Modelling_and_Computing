@@ -1,791 +1,115 @@
 ---
-title: "Assignment 2 solution"
-author: ""
-date: "28 March 2018"
+title: "ETC 1010 Assignment 2"
+author: "SOLUTION"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE, 
+  collapse = TRUE,
+  comment = "",
+  fig.height = 8,
+  fig.width = 12,
+  fig.align = "center",
+  cache = FALSE
+)
 ```
 
+# Instructions
 
-```{r}
+- This is a team assignment. 
+- You need to write a report with answers to each of the questions. 
+- Turn in the `html` output file, and also the `Rmd` file. 
+- Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative. Five points will be for individual effort. And the remaining 10 points will be the final group report.
+
+# Exercise
+
+Smart meters are now installed at every property in Melbourne. The Victorian government has a current initiative to encourage households to examine their energy use and particularly to get a better deal on energy pricing. Their tool to compare suppliers is at https://compare.energy.vic.gov.au. If you use this tool between now and the end of the year, you will get an energy rebate of $50.
+
+Your task is to get the electricity usage data for your household. It is relatively straightforward. You need to go to your provider's page, which can be determined by visiting https://www.energy.vic.gov.au/electricity/electricity-distributors. If you have a recent bill, your meter number will be on it. You need this to create a login, so that you can download your data. 
+
+The format of the data should `csv` and look something like mine, which is provided, `meter1.csv`. In addition, there should be a web page, [like this one from citipower](https://customermeterdata.portal.powercor.com.au/customermeterdata/articles/Question/A12-How-do-I-read-the-detailed-report?retURL=%2Fcustomermeterdata%2Fapex%2FCADArticleList&popup=true) describing the format of the data, that will be useful when you are trying to tidy it. You should be able to see half hourly electricity usage. 
+
+You only need one data set per group. Everyone in the group should work on this one. If you have problems getting your own data, we will provide you with some. 
+
+1. Describe the steps that you will need to take to read in your electricity usage, and tidy it. 
+
+*a. Filter only rows with code id "300"*
+
+*b. Gather the data into long form, to create a variable indicating the half hourly intervals, and the kwh in each.*
+
+2. Tidy your data, using the `tidyverse` functions. The end product should look something like this:
+
+```
+  date       halfhour   kwh
+  <date>        <dbl> <dbl>
+1 2017-11-24      0.5     0
+2 2017-11-24      0.5     0
+3 2017-11-24      1       0
+4 2017-11-24      1       0
+5 2017-11-24      1.5     0
+6 2017-11-24      1.5     0
+```
+
+although your `halfhour` variable might be more explicit like 12:00-12:30, 12:30-01:00, 01:00-01:30, ... And you might want to add week day, month, year variables. 
+
+```{r echo=TRUE}
 library(tidyverse)
-library(stringr)
-survey <- read_csv("data/survey.csv",
-                   na = c("n/a", "NA")) %>%
-  filter(id != 64)
+library(lubridate)
+library(glue)
+elec <- read_csv("data/smart_meter/di1.csv", skip=1, 
+    col_names = c("id", "date", paste0("d", 1:48), paste0("stuff", 1:5)), 
+    col_types = "ccddddddddddddddddddddddddddddddddddddddddddddddddccccc")
+elec <- elec %>% filter(id == 300) 
+elec <- elec %>%
+  mutate(date = ymd(date)) %>%
+  select(id:d48) %>%
+  gather(halfhour, kwh, d1:d48) %>%
+  mutate(halfhour = as.numeric(sub("d", "", halfhour))/2) %>%
+  arrange(date, halfhour) %>%
+  mutate(wday = wday(date, label = TRUE, abbr = TRUE, 
+                     week_start = 1),
+         month = month(date, label = TRUE, abbr = TRUE),
+         year = year(date)) %>%
+         mutate(dt = ymd_hm(glue("{date} 12:00"), 
+                           tz = "Australia/Melbourne") +
+           minutes(60*halfhour))
+elec
 ```
 
-## Question 1
-What year of uni are you in?
+3. Make a line plot of half-hourly usage for these two days, Sunday August 5, 2018 and Wednesday Aug 8, 2018. Describe what you learn about electricity use on these two days. 
+
+```{r echo=TRUE}
+elec %>% 
+  filter(date %in% c(ymd("2018-07-29"), ymd("2018-08-01"))) %>%
+  ggplot(aes(x=halfhour, y=kwh, group=date, colour=date)) + geom_line()
+```
+
+`The days both have peaks aound 9am, and again in the evening. The weekend day also has multiple peaks during the day. For my household, this is likely the clothes dryer being put on several times on the weekend.`
+
+4. Aggregate your daily kwh usage. Make a side-by-side boxplot of usage by week day. Are there some days of the week that you use more electricity than others?
 
 ```{r}
-survey %>% count(Q1, sort=TRUE) 
-
-survey <- survey %>% 
-  mutate(Q1 = sub("A", 1, Q1),
-         Q1 = sub("B", 2, Q1),
-         Q1 = sub("C", 3, Q1),
-         Q1 = sub("D", 4, Q1), 
-         Q1 = sub("E", "Other", Q1))
-
-ggplot(survey, aes(x=Q1)) + geom_bar()
+elec %>% 
+  group_by(date) %>%
+  summarise(dkwh = sum(kwh, na.rm=TRUE)) %>%
+  mutate(wday = wday(date, label = TRUE, abbr = TRUE, 
+                     week_start = 1)) %>%
+  ggplot(aes(x=wday, y=dkwh)) + geom_boxplot()
 ```
 
-## Question 2
-How much time do you spend commuting to university each week? (Enter the
-number of hours or fraction of an hour, as a number only.)
+`The weekend days have higher medians than the week days, which means these are the high energy use days. There are some week days that have outliers in usage, that mean unusually high energy use days. Thursday has the biggest variation in usage.`
 
-```{r}
-survey %>% count(Q2, sort=TRUE) 
+5. Decide on several (about 3) more types of plots to make to learn about your energy usage. Make these plots and write some paragraphs describing what you have learned. 
 
-survey <- survey %>%
-  mutate(Q2 = sub("1/2", "0.5", Q2),
-         Q2 = sub(" hours", "", Q2),
-         Q2 = sub("\n", "", Q2),
-         Q2 = sub("hrs", "", Q2),
-         Q2 = sub("HOUR", "", Q2),
-         Q2 = sub("4/7", "0.57", Q2),
-         Q2 = sub("three times", "", Q2))
+# Grading
 
-survey$Q2[27] <- "2.0"
+Points for the assignment will be based on:
 
-survey <- survey %>% mutate(Q2 = as.numeric(Q2))
-ggplot(survey, aes(x=Q2)) + geom_histogram(binwidth=0.5)
-```
-
-120? Is this an outlier? If we presume it is meant to be 12 we can replace 120 with 12
-
-```{r}
-survey <- survey %>%
-  mutate(Q2 = sub(120, 12, Q2))
-survey <- survey %>% mutate(Q2 = as.numeric(Q2))
-
-ggplot(survey, aes(x=Q2)) + geom_histogram(binwidth=0.5)
-```
-
-
-
-## Question 4
-What is your favourite/most listened to genre of music?
-
-```{r}
-survey %>% count(Q4, sort = TRUE)
-
-survey <- survey  %>%
-mutate(Q4 = sub("music", "", Q4),
-       Q4 = sub("\n", "", Q4),
-       Q4 = sub("hip", "Hip", Q4),
-       Q4 = sub("hop", "Hop", Q4),
-       Q4 = sub("-", " ", Q4),
-       Q4 = sub("HipHop", "Hip Hop", Q4),
-       Q4 = sub("Hip pop", "Hip Hop", Q4),
-       Q4 = sub("Rock and/or Roll", "Rock", Q4),
-       Q4 = sub("R&B", "RnB", Q4),
-       Q4 = sub("Pop ", "Pop", Q4),
-       Q4 = sub("alt rock", "Alternative Rock", Q4),
-       Q4 = str_to_lower(Q4))
-
-survey$Q4[22] <- NA
-survey$Q4[46] <- NA
-  
-survey$Q4 %>% table() %>% as.data.frame() %>% arrange(desc(Freq)) %>%
- ggplot() + geom_col(aes(x=reorder(., Freq), y=Freq)) + coord_flip() + xlab("Genre")
-```
-
-
-## Question 5
-How much time do you spend on the internet each week? (Enter the number of hours or fraction of an hour, as a number only.)
-
-```{r}
-survey %>% count(Q5, sort=TRUE) 
-
-survey <- survey %>%
-  mutate(Q5 = sub("-", NA, Q5),
-         Q5 = sub("Choosing not to answer", NA, Q5),
-         Q5 = sub(" hours", "", Q5),
-         Q5 = sub(" Hours", "", Q5),
-         Q5 = sub("hrs", "", Q5),
-         Q5 = sub("HOUR", "", Q5),
-         Q5 = sub("\n", "", Q5)) 
-survey <- survey %>% mutate(Q5 = as.numeric(Q5))
-ggplot(survey, aes(x=Q5)) + geom_histogram(binwidth=5)
-
-```
-
-## Question 6
-If you could have a super power what would it be?
-
-
-```{r}
-survey %>% count(Q6, sort=TRUE) 
-
-survey <- survey %>% mutate(Q6 = str_to_lower(Q6)) %>%
-  mutate(Q6 = sub("\n", "", Q6),
-         Q6 = sub("fly", "flight", Q6),
-         Q6 = sub("flying", "flight", Q6),
-         Q6 = sub("time control", "time travel", Q6),
-         Q6 = sub("time-reverse", "time travel", Q6),
-         Q6 = sub("go back to a past time", "time travel", Q6) ,
-         Q6 = sub("can go to wherever i want in any time", "time travel", Q6),
-         Q6 = sub("control time", "time travel", Q6),
-         Q6 = sub("freeze time", "time travel", Q6),
-         Q6 = sub("invisible", "invisibility", Q6),
-         Q6 = sub("imortality", "immortality", Q6),
-         Q6 = sub("i don't need any super power.", NA, Q6),
-         Q6 = sub("nothing", NA, Q6),
-         Q6 = sub("teleporting", "teleportation", Q6),
-         Q6 = sub("super-", "", Q6),
-         Q6 = sub("forecasting", "predict the future", Q6),
-         Q6 = sub("forecast the future", "predict the future", Q6),
-         Q6 = sub("to never have to sleep", "never need sleep", Q6),
-         Q6 = sub("not needing sleep", "never need sleep", Q6),
-         Q6 = sub("remember everything i saw", "never forget", Q6))
-         
-
-survey$Q6[which(survey$Q6=="time")] <- "time travel" 
-
-survey$Q6 <- factor(survey$Q6,
-                    levels=names(sort(table(survey$Q6), decreasing=FALSE)))
-
-ggplot(survey, aes(x=Q6)) + geom_bar() + coord_flip()
-```
-
-## Question 7
-Would you rather your shirts be always two sizes too big or one size too small?
-
-```{r}
-survey %>% count(Q7, sort=TRUE) 
-
-survey <- survey %>% 
-  mutate(Q7 = sub("A", "two sizes too big", Q7),
-         Q7 = sub("B", "one size too small", Q7),
-         Q7 = sub("C", "neither of these", Q7))
-
-ggplot(survey, aes(x=Q7)) + geom_bar() + coord_flip()
-```
-
-
-## Question 8
-How many hours do you spend on study a week?
-
-```{r}
-survey %>% count(Q8, sort=TRUE) 
-
-survey <- survey %>% 
-  mutate(Q8 = sub("A", "[0,3)", Q8),
-         Q8 = sub("B", "[3,6)", Q8),
-         Q8 = sub("C", "[6,9)", Q8),
-         Q8 = sub("D", "[9,12)", Q8),
-         Q8 = sub("E", "More than 12", Q8))
-
-ggplot(survey, aes(x=Q8)) + geom_bar() + coord_flip()
-```
-
-## Question 9
-Which streaming service do you use to watch television?
-
-```{r}
-survey %>% count(Q9, sort=TRUE) 
-
-doNotWatch<-c("Don't watch television",
-              "dont watch", "dont watch tv", "don't watch television", "I do not watch television.","I don't", "I don't watch television\n", "I don't watch television.","i don't watch tv", "no idea\n", "No television", "non", "None", "Nothing")
-
-survey <- survey %>%
-  mutate(Q9 = ifelse(Q9 %in% doNotWatch, "No Television", Q9),
-  Q9 = str_to_lower(Q9),
-  Q9 = sub("\n", "", Q9),
-  Q9 = sub("\\...", "", Q9),
-  Q9 = sub("netlfix", "netflix", Q9),
-  Q9 = sub("netflix & stan", "netflix", Q9),
-  Q9 = sub("youtube, netflix", "youtube", Q9)
-  )
-  
-  survey$Q9 <- factor(survey$Q9, 
-                    levels=names(sort(table(survey$Q9), decreasing=FALSE)))
-
-ggplot(survey, aes(x=Q9)) + geom_bar() +coord_flip()
-```
-
-
-## Question 10
-How many litres of water do you drink a day? (Enter a number only)
-
-```{r}
-survey %>% count(Q10, sort=TRUE)
-
-survey <- survey %>%
-  # the \\ is needed as ? has special use in replacement in r, the \\ allows ? to be considered as a character
-  mutate(Q10 = sub("\\?", NA, Q10)) %>%
-  mutate(Q10 = sub("\n", "", Q10))
-
-
-survey <- survey %>% mutate(Q10 = as.numeric(Q10))
-ggplot(survey, aes(x=Q10)) + geom_histogram(binwidth=0.5)
-```
-
-
-## Question 11
-Are you taking this subject as an elective or core unit?
-
-```{r}
-survey %>% count(Q11, sort=T)
-
-survey <- survey %>% 
-  mutate(Q11 = sub("A", "elective", Q11),
-         Q11 = sub("B", "core", Q11))
-
-survey$Q11 <- factor(survey$Q11, levels=names(sort(table(survey$Q11), decreasing=FALSE)))
-
-
-ggplot(survey, aes(x=Q11)) + geom_bar() + coord_flip()
-```
-
-
-## Question 12
-Do you study a single or double degree?
-
-```{r}
-survey %>% count(Q12, sort=T)
-
-survey$Q12 <- factor(survey$Q12,                                      levels=names(sort(table(survey$Q12), decreasing=FALSE)))
-
-survey <- survey %>% 
-  mutate(Q12 = sub("A", "single", Q12),
-         Q12 = sub("B", "double", Q12))
-
-ggplot(survey, aes(x=Q12)) + geom_bar() + coord_flip()
-```
-
-
-## Question 13
-How much do you spend on food each day, on average? (Answer in dollars,
-with only a number.)
-
-```{r}
-survey %>% count(Q13, sort=T)
-
-survey <- survey %>%
-  mutate(Q13 = sub("\\$", "", Q13),
-         Q13 = sub("dollars", "", Q13),
-         Q13 = sub("\n", "", Q13))
-
-survey$Q13 <- as.numeric(survey$Q13)
-
-ggplot(survey, aes(x=Q13)) + geom_histogram(bins=20)
-```
-
-
-300? Is this an outlier? If we presume it is meant to be 30 we can replace 300 with 30
-
-
-
-## Question 14
-How many "Sam"'s do you know as a friend?
-
-```{r}
-survey %>% count(Q14, sort=T)
-
-survey <- survey %>%
-  mutate(Q14 = sub("A", 0, Q14),
-         Q14 = sub("B", 1, Q14),
-         Q14 = sub("C", 2, Q14),
-         Q14 = sub("D", 3, Q14),
-         Q14 = sub("E", 4, Q14),
-         Q14 = sub("F", 5, Q14),
-         Q14 = sub("G", "more than 5", Q14))
-
-survey$Q14 <- factor(survey$Q14, levels=names(sort(table(survey$Q14), decreasing=FALSE)))
-
-ggplot(survey, aes(x=Q14)) + geom_bar() + coord_flip()
-```
-
-
-## Question 15
-Do you prefer cucumbers or carrots?
-
-```{r}
-survey %>% count(Q15, sort=T)
-
-survey <- survey %>%
-  mutate(Q15 = sub("A", "cucumbers", Q15),
-         Q15 = sub("B", "carrots", Q15),
-         Q15 = sub("C", "neither", Q15))
-
-survey$Q15 <- factor(survey$Q15,                                      levels=names(sort(table(survey$Q15), decreasing=FALSE)))
-
-ggplot(survey, aes(x=Q15)) + geom_bar() + coord_flip()
-```
-
-## Question 16
-What pets do you have?
-
-```{r}
-survey %>% count(Q16, sort=T)
-
-pets <- survey %>% select(id, Q16) %>% 
-  mutate(dog = ifelse(grepl("A", Q16), 1, 0),
-  cat = ifelse(grepl("B", Q16), 1, 0),
-  rabbit = ifelse(grepl("C", Q16), 1, 0),
-  bird = ifelse(grepl("D", Q16), 1, 0),
-  reptile = ifelse(grepl("E", Q16), 1, 0),
-  other = ifelse(grepl("F", Q16), 1, 0)) %>%
-  mutate(id=factor(id)) %>% as.tibble()
-
-```
-  
-## Question 17
-Do you have prior coding experience?
-
-```{r}
-survey %>% count(Q17, sort=T)
-
-survey <- survey %>% 
-  mutate(Q17 = sub("A", "yes", Q17)) %>% 
-  mutate(Q17 = sub("B", "no", Q17))
-
-survey$Q17 <- factor(survey$Q17,                                      levels=names(sort(table(survey$Q17), decreasing=FALSE)))
-
-ggplot(survey, aes(x=Q17)) + geom_bar() + coord_flip()
-```
-
-## Question 18
-What do you do to take a break from study?
-
-```{r, fig.height=7}
-survey %>% count(Q18, sort=T)
-
-survey$Q18[which(survey$Q18=="games")] <- "play games"
-survey$Q18[which(survey$Q18=="youtube")] <- "watch youtube"
-survey$Q18[which(survey$Q18=="tv")] <- "watch tv"
-survey$Q18[which(survey$Q18=="listen music")] <- "listen to music"
-
-survey$Q18 <- factor(survey$Q18,                                      levels=names(sort(table(survey$Q18), decreasing=FALSE)))
-
-ggplot(survey, aes(x=Q18)) + geom_bar() + coord_flip()
-```
-
-## Question 19
-What operating system do you use?
-
-```{r}
-survey %>% count(Q19, sort=T)
-
-survey <- survey %>%
-  mutate(Q19 = sub("A", "Windows", Q19)) %>%
-  mutate(Q19 = sub("B", "Mac", Q19)) %>%
-  mutate(Q19 = sub("C", "Linux", Q19)) %>%
-  mutate(Q19 = sub("D", "Other", Q19))
-
-ggplot(survey, aes(x=Q19)) + geom_bar()
-```
-
-## Question 20
-I support same-sex marriage.
-
-```{r}
-survey %>% count(Q20, sort=T)
-
-ggplot(survey, aes(x=Q20)) + geom_bar()
-```
-
-## Question 21
-How many hours do you sleep one day on average? (Enter just a number)
-
-```{r}
-survey %>% count(Q21, sort=T)
-
-survey <- survey %>%
-  mutate(Q21 = sub(";30", ".5", Q21)) %>%
-  mutate(Q21 = sub("\n", "", Q21))
-
-
-survey <- survey %>% mutate(Q21 = as.numeric(Q21))
-ggplot(survey, aes(x=Q21)) + geom_histogram(binwidth=1)
-```
-
-## Question 22 
-
-How many times do you catch up with friends per week? (Enter a number, as an integer)
-
-```{r}
-survey %>% count(Q22, sort=T)
-
-survey <- survey %>%
-  mutate(Q22 = sub("days", "", Q22)) 
-
-
-survey <- survey %>% mutate(Q22 = as.numeric(Q22))
-ggplot(survey, aes(x=Q22)) + geom_histogram(binwidth=1)
-```
-
-
-## Question 23
-What' s your age? (in years)
-
-
-```{r}
-survey %>% count(Q23, sort=T)
-
-survey <- survey %>%
-  mutate(Q23 = sub("XXI", 21, Q23),
-         Q23 = sub("1997", 2018-1997, Q23)) 
-
-survey <- survey %>% mutate(Q23 = as.numeric(Q23))
-ggplot(survey, aes(x=Q23)) + geom_histogram(binwidth=1)
-```
-
-
-## Question 24
-How tall are you? (Answer in cms, only writing a number)
-
-
-```{r}
-survey %>% count(Q24, sort=T)
-survey$Q24[38] <- "NA"
-
-survey <- survey %>% mutate(Q24 = as.numeric(Q24))
-ggplot(survey, aes(x=Q24)) + geom_histogram()
-```
-
-## Question 25
-What is your favourite sport?
-
-```{r}
-survey %>% count(Q25, sort=T)
-
-survey <- survey %>% mutate(Q25 = str_to_lower(Q25)) %>% 
-  mutate(Q25 = sub("\n", "", Q25))
-
-survey$Q25[which(survey$Q25=="choosing not to answer")] <- NA
-survey$Q25[which(survey$Q25=="yes")] <- NA
-survey$Q25[which(survey$Q25=="swim")] <- "swimming"
-
-survey$Q25 <- factor(survey$Q25,
-                    levels=names(sort(table(survey$Q25), decreasing=FALSE)))
-
-ggplot(survey, aes(x=Q25)) + geom_bar() + coord_flip()
-```
-    
-## Question 26
-What is your gender?
-
-```{r}
-survey %>% count(Q26, sort=T)
-
-survey <- survey %>% 
-  mutate(Q26 = sub("A", "female", Q26),
-         Q26 = sub("B", "male", Q26),
-         Q26 = sub("C", "prefer not to answer", Q26))
-
-survey$Q26 <- factor(survey$Q26,
-                    levels=names(sort(table(survey$Q26), decreasing=FALSE)))
-
-ggplot(survey, aes(x=Q26)) + geom_bar() + coord_flip()
-```
-
- 
-## Question 27
-Do you put tomato sauce in the fridge or the pantry?
-
-```{r}
-survey %>% count(Q27, sort=T)
-
-survey <- survey %>% 
-  mutate(Q27 = sub("A", "fridge", Q27),
-         Q27 = sub("B", "pantry", Q27)) 
-
-survey$Q27 <- factor(survey$Q27,
-                    levels=names(sort(table(survey$Q27), decreasing=FALSE)))
-
-ggplot(survey, aes(x=Q27)) + geom_bar() + coord_flip()
-```
-
-## Question 28
-How many books did you read in the last year?
-
-```{r}
-survey %>% count(Q28, sort=T)
-
-survey <- survey %>% 
-  mutate(Q28 = sub("A", "0", Q28),
-         Q28 = sub("B", "1-5", Q28),
-         Q28 = sub("C", "6-10", Q28),
-         Q28 = sub("D", "10-20", Q28),
-         Q28 = sub("E", "more than 20", Q28)) 
-
-ggplot(survey, aes(x=Q28)) + geom_bar() + coord_flip()
-```
-
-## Question 29
-Have you been to the Australian Open?
-
-```{r}
-survey %>% count(Q29, sort=T)
-
-survey <- survey %>% 
-  mutate(Q29 = sub("A", "yes", Q29)) %>% 
-  mutate(Q29 = sub("B", "no", Q29)) 
-
-survey$Q29 <- factor(survey$Q29,
-                    levels=names(sort(table(survey$Q29), decreasing=FALSE)))
-
-ggplot(survey, aes(x=Q29)) + geom_bar() + coord_flip()
-```
-
-
-## Question 30
-Are you struggling with this unit?
-
-```{r}
-survey %>% count(Q30, sort=T)
-
-survey <- survey %>% 
-  mutate(Q30 = sub("A", "no", Q30),
-         Q30 = sub("B", "yes", Q30)) 
-
-survey$Q30 <- factor(survey$Q30,
-                    levels=names(sort(table(survey$Q30), decreasing=FALSE)))
-
-ggplot(survey, aes(x=Q30)) + geom_bar() + coord_flip()
-```
-
-
-
-## Question 31
-Do you like ETC1010?
-
-```{r}
-survey %>% count(Q31, sort=T)
-
-survey <- survey %>% 
-  mutate(Q31 = sub("A", "yes", Q31),
-         Q31 = sub("B", "no", Q31)) 
-
-survey$Q31 <- factor(survey$Q31,
-                    levels=names(sort(table(survey$Q31), decreasing=FALSE)))
-
-ggplot(survey, aes(x=Q31)) + geom_bar() + coord_flip()
-```
-
-
-
-## Question 32
-If you were a kitchen utensil, which one would you be?
-
-```{r}
-survey %>% count(Q32, sort=T)
-
-survey <- survey %>% mutate(Q32 = str_to_lower(Q32),
-                            Q32 = sub("a spoon", "spoon", Q32))
-
-survey$Q32[which(survey$Q32=="that thing that cuts eggs")] <- "whisk"
-survey$Q32[which(survey$Q32=="chopstick(s)")] <- "chopsticks"
-survey$Q32[which(survey$Q32=="none")] <- NA
-
-survey$Q32 <- factor(survey$Q32,
-                    levels=names(sort(table(survey$Q32), decreasing=FALSE)))
-
-ggplot(survey, aes(x=Q32)) + geom_bar() + coord_flip()
-```
-
-## Top picks of the plots
-
-* The Markdown Mates
-
-```{r}
-ggplot(survey, aes(x=Q30, fill = Q17)) + geom_bar(position = "fill") + labs(x = "Prior coding experience?", y = "") + scale_fill_brewer(name="Are you struggling?", palette="Dark2") 
-```
-
-If this is your first coding experience, then you are finding it difficult.
-
-* Group One
-
-```{r}
-ggplot(survey) +
-  geom_boxplot(aes(x = Q8, y = Q5)) +
-  xlab("Time Spent Studying (Hours)") +
-  ylab("Time Spent on Internet (Hours)")
-```
-
-The graph can be divided into two parts. First is students spending 0-3 hours studying. Their time spent on the internet is typically much higher, than the other groups, ranging from 30 hours to 90 hours. For the remaining students, there is a positive relationship between time spent on study and on the internet. The reason for this general trend might be that studying needs internet as well. The exception in the first group however (studying up to only 3 hours) is that this time on the internet is spent procrastinating (eg streaming tv shows or online games). This extreme internet use takes away from study time. **Problem with this interpretation is that the group reporting only 0-3 hours studying is really tiny, only five students, and of these three are spnding a lot of time on the internet.**
-
-```{r}
-ggplot(survey) + 
-  geom_bar(aes(x = Q30, fill = Q31), position = "fill") +
-  xlab("Struggling with the Unit")  +
-  scale_fill_brewer(name="Enjoy the Unit", palette="Dark2")
-```
-
-The graph shows that for students struggling with this unit, half of them likes this unit and half do not like it. This indicates that simply struggling is not enough of a reason not to like it, there must be other factors at play. For students not struggling with it however, the majority of them likes it. This is probably as the unit is easy for them and does not require much work.
-
-* Group 5
-
-```{r}
-ggplot(data = survey) + 
-  geom_bar(mapping = aes(x = fct_infreq(Q16), fill = Q16)) +
-  labs(y = "Number of pets", x = "Pets")
-```
-
-The highest option was others (F). This is a very arbitary graph, because option other (F) in the questions could mean two different things. Firstly, it could selected if the respondent does not have a pet, as there was no “no pet” option. Secondly it could mean that other than: dogs, cats, birds, reptiles and rabbits the respondent has anothe pet. For those respodents that chose more than one field, they were placed into the multiple option.
-
-Clearly two results can be stated: either the cohort cares for unique pets, or most of the cohort does not have pets. The team believes the latter to be true. This is because there are many internationl students in our unit, and generally they would not have time or space to care for a pet.
-
-A pie chart was not applied, because too many options would lead to the data being unreadable.
-
-```{r eval=FALSE, echo=FALSE}
-devtools::install_github("hadley/emo")
-```
-
-* Bandicoot `r emo::ji("wink")`
-
-```{r}
-library(productplots)
-prodplot(survey, ~ Q17 + Q1, mosaic("h")) + 
-  aes(fill = Q17) +
-  scale_fill_brewer(palette = "Dark2")  
-```
-
-1. All of the first-year students have no prior coding experience. 
-2. There are more sophomores than freshmen enrolled in the class.
-3. More senior level you are in Uni, more likely you have prior coding experience. 
-
-## Appendix: Stuart's advanced cleaning code
-
-### Read in the data
-```{r}
-# code "n/a" as NA
-# last row is all NA so filter that out
-survey <- read_csv("./data/survey.csv", 
-                   na = c("n/a", "NA")) %>%
-  filter(id != 64)
-```
-
-### Tidying the data
-
-So begins the fun-filled process of tidying up the data
-
-```{r}
-# Q1 is ok
-# Q2 should be a double
-# - trim white space
-# - delete any non number ('three times' should be missing as not proper answer)
-# - parse fractions as integers
-# Q3 should be logical
-# Q4 turn make everything lower case
-# replace any hyphen with white space
-# replace any instance of 'music' with white space
-# replace rnb with r&b
-# replace alt rock with alternative rock
-# replace rock and/or roll with rock
-# replace popular with pop
-# fix up all hip hop variants
-# trim any white space
-# replace empty string with NA
-# Q5 similar strat to to Q2
-# Q6 like Q4 fun times
-# Q7, Q8 are fine 
-# Q9 more fun string processing
-# Q10 simple removing 
-# Q11, Q12 ok
-# Q13, trim whitespace, remove dollar sign and dollar
-# Q14, Q15 ok
-# Q16 - E is possibly a missing value but will leave it
-# Q17 ok
-# Q18 is a mess and I'm leaving it
-# Q19 ok
-# Q20 set to logical
-# Q21 same as Q10
-# Q22, Q23, Q24 same as Q21
-# Q25 fix up spelling
-# Q26 - Q31 are ok
-# Q32 put to lower case , remove punctation marks
-# Q33 change to logical
-survey <- survey %>%
-  mutate(Q2 = Q2 %>% 
-           str_trim() %>%
-           str_remove_all("[:alpha:]") %>%
-           str_remove_all("\\(|\\)") %>%
-           str_split("\\/") %>%
-           map_dbl(function(.) {
-             if (length(.) == 2) return(as.numeric(.[1]) / as.numeric(.[2]))
-             return(as.numeric(.))
-           }),
-         Q3 = as.logical(Q3),
-         Q4 = Q4 %>%
-           str_to_lower() %>%
-           str_replace("-", " ") %>%
-           str_replace("music", " ") %>%
-           str_replace("rnb", "r&b") %>% 
-           str_replace("alt rock", "alternative rock") %>% 
-           str_replace("rock and\\/or roll", "rock") %>%
-           str_replace("popular", "pop") %>% 
-           str_replace("hiphop", "hip hop") %>% 
-           str_replace("hip pop", "hip hop") %>% 
-           str_trim(),
-         Q4 = if_else(str_length(Q4) == 0, NA_character_, Q4),
-         Q5 = Q5 %>% 
-           str_trim() %>%
-           str_remove_all("[:alpha:]") %>%
-           str_remove_all("-") %>%
-           as.numeric(),
-         Q6 = Q6 %>%
-           str_to_lower() %>%
-           str_replace("invisibility", "invisible") %>%
-           str_replace("teleporting", "teleportation") %>%
-           str_replace("fly$", "flight") %>%
-           str_replace("flying", "flight") %>% 
-           str_replace("go back to a past time", "time travel") %>% 
-           str_replace("can go to wherever i want in any time", "time travel") %>% 
-           str_replace("to never have to sleep", "not needing sleep") %>% 
-           str_replace("forecast the future", "forecasting") %>% 
-           str_replace("predict the future", "forecasting") %>% 
-           str_replace("time control", "control time") %>% 
-           str_replace("^time$", "control time") %>% 
-           str_replace("freeze time", "control time") %>% 
-           str_replace("time-reverse", "control time") %>% 
-           str_trim(),
-         Q9 = str_to_lower(Q9),
-         Q9 = if_else(str_detect(Q9, "dont|don't|do not|no"), 
-                      "none",Q9, NA_character_) %>% 
-           str_replace("netlfix", "netflix") %>% 
-           str_remove("\n") %>% 
-           str_remove("\\.{3}"),
-         Q10 = Q10 %>% 
-           str_remove("\\?") %>% 
-           str_remove("\n") %>% 
-           as.numeric(),
-         Q13 = Q13 %>% 
-           str_remove("\\$") %>% 
-           str_remove("dollars") %>% 
-           as.numeric(),
-         Q18 = str_to_lower(Q18),
-         Q20 = as.logical(Q20),
-         Q21 = Q21 %>% 
-           str_remove("\n") %>% 
-           str_replace(";", ".") %>% 
-           as.numeric(),
-         Q22 = Q22 %>% 
-           str_remove("days") %>% 
-           as.integer(),
-         Q23 = Q23 %>% 
-           str_replace("1997", "21") %>% 
-           str_remove("[:alpha:]") %>% 
-           as.integer(),
-         Q24 = Q24 %>% 
-           str_remove("[:alpha:]") %>% 
-           as.integer(),
-         Q25 = str_to_lower(Q25) %>% 
-           str_replace("^swim$", "swimming") %>% 
-           str_remove("choosing not to answer") %>% 
-           str_remove("yes"),
-         Q25 = if_else(str_length(Q25) == 0, NA_character_, Q25),
-         Q32 = Q32 %>% 
-           str_to_lower() %>% 
-           str_remove("[:punct:]"),
-         Q33 = as.logical(Q33))
-
-visdat::vis_dat(survey)
-```
+- How well you have explained your tidying procedures.
+- Whether the Rmd file, can take your data file as provided,  produce the tidy data, and plots reported in your final submission.
+- Accuracy of your answers to the given questions. 
+- Creativeness in exploring your energy use, and plots used to tell a story. 

@@ -29,7 +29,7 @@ census_2011 <- read_xlsx("data/ABS_ed_age_sex_2011.xlsx", skip=9, n_max=10)
 census_2016 <- read_xlsx("data/ABS_ed_age_sex_2016.xlsx", skip=9, n_max=10)
 ```
 
-The first 9 rows are general information about the data, not actual data. There are 10 rows of data, containing categories of education. The 10th row contains the summ of the other rows. We could drop this and re-calculate totals on the fly. 
+The first 9 rows are general information about the data, not actual data. There are 10 rows of data, containing categories of education. The 10th row contains the sum of the other rows. We could drop this and re-calculate totals on the fly. 
 
 1. Tidy the data, to produce a data set with these columns: census, educ, age, sex, count
 
@@ -68,7 +68,7 @@ census_2006_long <- census_2006 %>%
 
 2. Combine the data from the three different census periods
 
-The same code from question 1 is repeated. We add a new columnm called year (2006, 2011, 2016), and bind the rows together.
+The same code from question 1 is repeated. We add a new column called year (2006, 2011, 2016), and bind the rows together.
 
 ```{r}
 library(tidyverse)
@@ -150,7 +150,7 @@ ggplot(census_educ, aes(x=year, y=count, colour=educ)) +
   geom_point() + geom_line()
 ```
 
-The main thing to notice is that there are a lot of education categories, and they are not all the same from one year to another. Filter out the non-categories, e.g. "Not applicable", to focus on the different education levels in the plot. The categories of high school education have changed, and the categories of certificates have changed. We would need to do some re-working of these category names to compare these across years. This eill be covered later in the course.
+The main thing to notice is that there are a lot of education categories, and they are not all the same from one year to another. Filter out the non-categories, e.g. "Not applicable", to focus on the different education levels in the plot. The categories of high school education have changed, and the categories of certificates have changed. We would need to do some re-working of these category names to compare these across years. This will be covered later in the course.
 
 ```{r}
 census_educ_short <- census_educ %>%
@@ -164,7 +164,7 @@ ggplot(census_educ_short, aes(x=year, y=count, colour=educ)) +
 
 The number of people with all levels of university education have increased over this time period.
 
-4. Subset the data to age group 25-29. Make a plot of educ counts by census year, facetted by sex. Write a couple of paragraphs about what you learn.
+4. Subset the data to age group 25-29. Make a plot of educ counts by census year, faceted by sex. Write a couple of paragraphs about what you learn.
 
 ```{r}
 census %>% filter(age == "2529") %>%
@@ -179,7 +179,7 @@ census %>% filter(age == "2529") %>%
 
 Over both women and men, numbers are increasing. In each education level number of women is high than men.
 
-5. Subset the data to age groups, 15-19, 20-24, 25-29, 30-34. Make a plot of educ counts by census year, facetted by age group and sex. Write a couple of paragraphs about what you learn.
+5. Subset the data to age groups, 15-19, 20-24, 25-29, 30-34. Make a plot of educ counts by census year, faceted by age group and sex. Write a couple of paragraphs about what you learn.
 
 ```{r}
 census %>% filter(age %in% c("1519", "2024", "2529", "3034")) %>%
