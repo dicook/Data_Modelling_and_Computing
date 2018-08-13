@@ -66,27 +66,28 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Assignment 4:
 - Assignment 5:
 
-<!--
+## Assignment 1 peer evaluation
+
 [Peer evaluation assignments](evaluation_assignment.csv)
-- 1_PUORG_0101_CTE [html]() [Rmd]()
-- Agridat [html]() [Rmd]()
-- Blueberries [html]() [Rmd]()
-- Bomrang [html]() [Rmd]()
-- Data Confusion [html]() [Rmd]()
-- Eagles [html]() [Rmd]()
-- GeoZoo [html]() [Rmd]()
-- Infinite [html]() [Rmd]()
-- nine-nine [html]() [Rmd]()
-- Paperclip [html]() [Rmd]()
-- R Rated [html]() [Rmd]()
-- R studio artists [html]() [Rmd]()
-- R44 [html]() [Rmd]()
-- RnR [html]() [Rmd]()
-- Team Rocket [html]() [Rmd]()
-- The Standard Deviations [html]() [Rmd]()
-- Thor [html]() [Rmd]()
-- Titanic{float=False} [html]() [Rmd]()
--->
+
+- 1_PUORG_0101_CTE [zip](assignments/assignment1_2018/1_PUORG_0101_CTE.zip)
+- Agridat [zip](assignments/assignment1_2018/Agridat.zip)
+- Blueberries [zip](assignments/assignment1_2018/Blueberries.zip)
+- Bomrang [zip](assignments/assignment1_2018/Bomrang.zip)
+- Data Confusion [zip](assignments/assignment1_2018/Data Confusion.zip)
+- Eagles [zip](assignments/assignment1_2018/Eagles.zip)
+- GeoZoo [zip](assignments/assignment1_2018/GeoZoo.zip)
+- Infinite [zip](assignments/assignment1_2018/Infinite.zip)
+- nine-nine [zip](assignments/assignment1_2018/nine-nine.zip)
+- Paperclip [zip](assignments/assignment1_2018/Paperclip.zip)
+- R Rated [zip](assignments/assignment1_2018/R Rated.zip)
+- R studio artists [zip](assignments/assignment1_2018/R studio artists.zip)
+- R44 [zip](assignments/assignment1_2018/R44.zip)
+- RnR [zip](assignments/assignment1_2018/RnR.zip)
+- Team Rocket [zip](assignments/assignment1_2018/Team Rocket.zip)
+- The Standard Deviations [zip](assignments/assignment1_2018/The Standard Deviations.zip)
+- Thor [zip](assignments/assignment1_2018/Thor.zip)
+- Titanic{float=False} [zip](assignments/assignment1_2018/Titanic{float=False}.zip)
 
 ## Data [ZIP](http://dmac.netlify.com/lectures/data/alldata.zip) 
 
