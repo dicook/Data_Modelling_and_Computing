@@ -68,6 +68,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 ## Assignment 1 peer evaluation
 
+<!--
 [Peer evaluation assignments](evaluation_assignment.csv)
 
 - 1_PUORG_0101_CTE [zip](assignments/assignment1_2018/1_PUORG_0101_CTE.zip)
@@ -88,6 +89,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - The Standard Deviations [zip](assignments/assignment1_2018/The Standard Deviations.zip)
 - Thor [zip](assignments/assignment1_2018/Thor.zip)
 - Titanic{float=False} [zip](assignments/assignment1_2018/Titanic{float=False}.zip)
+-->
 
 ## Data [ZIP](http://dmac.netlify.com/lectures/data/alldata.zip) 
 
