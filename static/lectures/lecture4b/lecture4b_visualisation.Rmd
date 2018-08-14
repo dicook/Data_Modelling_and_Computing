@@ -126,11 +126,71 @@ library(RColorBrewer)
 display.brewer.all()
 ```
 
-```{r}
+### Choropleth map
 
+```{r echo=TRUE}
+# Read the tb data
+tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>% 
+  select(country, year, new_sp_m04:new_sp_fu) %>%
+  gather(stuff, count, new_sp_m04:new_sp_fu) %>%
+  separate(stuff, c("stuff1", "stuff2", "genderage")) %>%
+  select(-stuff1, -stuff2) %>%
+  mutate(gender=substr(genderage, 1, 1), 
+         age=substr(genderage, 2, length(genderage))) %>%
+  select(-genderage)
+# Compute relative difference between 2012 and 2002
+tb_inc <- tb %>% 
+  filter(year %in% c(2002, 2012)) %>%
+  group_by(country, year) %>%
+  summarise(count = sum(count, na.rm=TRUE)) %>%
+  spread(year, count) %>%
+  mutate(reldif = ifelse(`2002` == 0, 0, (`2012`-`2002`)/(`2002`))) %>%
+  ungroup()
+
+# Join with a world map  
+library(maps)
+library(ggthemes)
+world_map <- map_data("world")
+# Names of countries need to be the same in both data tables
+tb_inc <- tb_inc %>% 
+  mutate(country=recode(country, 
+                       "United States of America"="USA", 
+                       "United Kingdom of Great Britain and Northern Ireland"="UK",
+                       "Russian Federation"="Russia"))
+tb_map <- left_join(world_map, tb_inc, by=c("region"="country"))
 ```
 
-### Colour blindness
+#### Sequential
+
+Default
+
+```{r}
+ggplot(tb_map) + 
+  geom_polygon(aes(x=long, y=lat, group=group, fill=reldif)) +
+      theme_map() 
+```
+
+Modified rainbow
+
+```{r}
+library(viridis)
+ggplot(tb_map) + 
+  geom_polygon(aes(x=long, y=lat, group=group, fill=reldif)) +
+      theme_map() +
+    scale_fill_viridis(na.value = "white")  
+```
+
+#### Diverging
+
+```{r}
+ggplot(tb_map) + 
+  geom_polygon(aes(x=long, y=lat, group=group, fill=reldif)) +
+      theme_map() +
+    scale_fill_distiller(palette="PRGn", na.value = "white", 
+                         limits = c(-7, 7))  
+```
+
+## Colour blindness
 
 - About 10% of the population have difficulty distonguishing between red and green. 
 - There are several colour blind tested palettes: RColorbrewer has an associated web site [colorbrewer.org](http://colorbrewer2.org) where the palettes are labelled, and the `colorblind` package has all palettes readable by everyone.
@@ -167,7 +227,7 @@ ggplot(data=df, aes(x, y, colour=cl)) +
   geom_point() +
   theme_bw() + 
   theme(legend.position="None", aspect.ratio=1) +
-  scale_colour_brewer(palette="Dark2")
+  scale_colour_brewer(palette="Set1")
 ```
 
 ## Proximity
@@ -274,23 +334,15 @@ p <- passengers %>%
 ggplotly(p)
 ```
 
-## Resources
-
-- Kieran Healy [Data Visualization](http://socviz.co/index.html)
-- Winston Chang (2012) [Cookbook for R](graphics cookbook)
-- Antony Unwin (2014) [Graphical Data Analysis](http://www.gradaanwr.net)
-- Naomi Robbins (2013) [Creating More Effective Charts](http://www.nbr-graphs.com)
-
 ## Lab exercises
 
-1. Download the data on the [women's AFL](https://github.com/ropenscilabs/ozwomensport). These are the stats from the inaugural season, 2017. There are two tables, one for players and one for teams. Be careful how you download. It may be easier to download the zip file. 
-2. Make a barchart of the total kicks by team, sorted from highest to lowest. What do you learn?
+1. Download the data on the [women's AFL](https://github.com/ropenscilabs/ozwomensport). These are the stats the first two seasons. There are two tables, one for players and one for teams. Be careful how you download. It may be easier to download the zip file. 
+2. Make a barchart of the total kicks by team, sorted from highest to lowest, for each season. What do you learn?
 3. To compare teams, should you use average or total numbers? Explain your thinking.
-4. Make a scatterplot of average kicks by average handballs? Use an aspect ratio of 1. What do you learn? Make the plot interactive and report the name of the team that has the highest on both variables. 
-5. Make a scatterplot of average frees for by against? Use an aspect ratio of 1. What do you learn? Make the plot interactive and report the name of the team that has the most frees against and fewest for. 
-6. Make a side-by-side boxplot of the players' average kicks by team. What do you learn? Which team had the player with the highest average kicks? Do some teams appear to have "star" players, and others have more even skils in this area?
-7. Make a scatterplot of average kicks against handballs. Overlay a linear model. Add interaction. Which players are more likely to kick vs hand ball? Also handball rather than kick?
-8. Come up with a few more questions to answer on this data. 
+4. Make a scatterplot of average kicks by average handballs, for each season? Use an aspect ratio of 1. What do you learn? Make the plot interactive and report the name of the team(s) that has(ve) the highest on both variables. 
+5. Make a scatterplot of average frees for by against, for each season? Use an aspect ratio of 1. What do you learn? Make the plot interactive and report the name of the team that has the most frees against and fewest for. 
+6. Make a side-by-side boxplot of the players' average kicks by team, for each season. What do you learn? Which team had the player with the highest average kicks? Do some teams appear to have "star" players, and others have more even skills in this area?
+7. Make a scatterplot of average kicks against handballs, for each season. Overlay a linear model. Add interaction. Which players are more likely to kick vs hand ball? Also handball rather than kick?
 
 ```{r eval=FALSE, echo=FALSE}
 library(tidyverse)
@@ -308,6 +360,13 @@ ggplot(players, aes(x=Club, y=Kicks_AVG)) + geom_boxplot()
 p <- ggplot(players, aes(x=Kicks_AVG, y=Handballs_AVG, label=Player)) + geom_point() + geom_smooth(method="lm") + theme(aspect.ratio=1)
 ggplotly()
 ```
+
+## Resources
+
+- Kieran Healy [Data Visualization](http://socviz.co/index.html)
+- Winston Chang (2012) [Cookbook for R](graphics cookbook)
+- Antony Unwin (2014) [Graphical Data Analysis](http://www.gradaanwr.net)
+- Naomi Robbins (2013) [Creating More Effective Charts](http://www.nbr-graphs.com)
 
 ## Share and share alike
 
