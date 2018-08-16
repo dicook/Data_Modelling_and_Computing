@@ -94,6 +94,8 @@ Different types of joins explained using a person and a coat, by [Leight Tami](h
 - **Left join**: All observations from the "left" table, but only the observations from the "right" table that match those in the left.
 - **Right join**: Same as left in reverse.
 
+And a really simple explanation with animations can be found [here](https://twitter.com/grrrck/status/1029567123029467136).
+
 ### Example: airlines
 
 If you want to add the full airline name to the flights2 data, you can combine the `airlines` and `flights` data frames with `left_join()`:

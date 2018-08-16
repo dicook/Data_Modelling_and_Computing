@@ -69,7 +69,7 @@ smpl <- stns_vic$stn[sample(1:nrow(stns_vic), 500)]
 # The R package rnoaa can also be used to pull the data
 vic_weather <- NULL
 #for (i in 1:length(smpl)) {
-for (i in 65:100) {
+for (i in 101:150) {
   cat(i, "\n")
   filenm <- paste0("https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all/",
                    smpl[i],".dly")
