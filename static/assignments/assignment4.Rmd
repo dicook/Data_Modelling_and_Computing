@@ -2,6 +2,8 @@
 title: "ETC 1010 Assignment 4"
 author: "Di Cook"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
@@ -54,10 +56,20 @@ stns <- read_fwf("https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.
 stns_oz <- stns[grep("ASN", stns$stn),]
 keep <- stns_oz %>% 
   filter(lat > -43, lat < -12, lon > 113.6, lon < 153.6)
-smpl <- stns_oz$stn[sample(1:nrow(keep), 1000)]
+library(ggmap)
+oz <- get_map(location=c(lon=133.8807, lat=-23.6980), zoom=4)
+ggmap(oz) + 
+  geom_point(data=stns_oz, aes(x=lon, y=lat), 
+              alpha=0.5, colour="orange", size=0.5)
+
+stns_vic <- stns_oz %>% 
+  filter(lat > -38.4, lat < -34.4, lon > 141.8, lon < 150.0)
+  
+smpl <- stns_vic$stn[sample(1:nrow(stns_vic), 500)]
 # The R package rnoaa can also be used to pull the data
-oz_weather <- NULL
-for (i in 1:length(smpl)) {
+vic_weather <- NULL
+#for (i in 1:length(smpl)) {
+for (i in 65:100) {
   cat(i, "\n")
   filenm <- paste0("https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all/",
                    smpl[i],".dly")
@@ -66,7 +78,7 @@ for (i in 1:length(smpl)) {
         rep(c(5, 1, 1, 1), 31)), 
         col_names = c("station", "year", "month",
               "variable", paste0("X", 5:128))))
-   oz_weather <- bind_rows(oz_weather, x)
+   vic_weather <- bind_rows(vic_weather, x)
 }
 oz_weather <- oz_weather %>% filter(variable == "PRCP")
 oz_weather <- oz_weather[,c(1:4, seq(5,128,4))] 

@@ -193,3 +193,42 @@ census %>% filter(age %in% c("1519", "2024", "2529", "3034")) %>%
 ```
 
 The youngest age group, 15-19 tend not to have any university qualifications - we should expect that. Many 20-24 year olds (on the order of 100k) have degrees but not post-graduate degrees. 25-29 and 30-34 year olds have a similar pattern university qualifications. Numbers in all categories have increased over the time period, with perhaps less increase for grad certificates.
+
+# Feedback on submissions
+
+The most surprising thing I learned from this data is that there are more females doing Bachelors degrees, and also post-graduate degrees.
+
+There were several approaches to making plots of these variables. All are ok, but the line plot coloured by education is the best for answering "What is the trend in education over time?" Why? Lines connecting time within education category focuses on the temporal dependence, and trend. 
+
+```{r fig.height=10}
+library(gridExtra)
+p1 <- ggplot(census_educ_short, aes(x=year, y=count, colour=educ)) + 
+  geom_point() + geom_line()
+p2 <- ggplot(census_educ_short, aes(x=educ, y=count, group=year, colour=year)) + 
+  geom_point() + geom_line() + coord_flip()
+p3 <- ggplot(census_educ_short, aes(x=educ, y=count, fill=educ)) + 
+  geom_col() + facet_wrap(~year) + coord_flip() + theme(legend.position = "none")
+grid.arrange(p1, p2, p3, ncol=1)
+```
+
+In Q4, faceting by gender puts the emphasis on comparing education level separately for each gender. To compare genders at each education level it is easier if separate plots are made for each education level. 
+
+```{r }
+p1 <- census %>% filter(age == "2529") %>%
+  filter(educ %in% c("Advanced Diploma and Diploma Level",
+                     "Bachelor Degree Level", 
+                     "Graduate Diploma and Graduate Certificate Level",
+                     "Postgraduate Degree Level")) %>%
+  ggplot(aes(x=year, y=count, colour=educ)) + 
+  geom_point() + geom_line() +
+  facet_wrap(~gender) + theme(legend.position="bottom", legend.direction="vertical")
+p2 <- census %>% filter(age == "2529") %>%
+  filter(educ %in% c("Advanced Diploma and Diploma Level",
+                     "Bachelor Degree Level", 
+                     "Graduate Diploma and Graduate Certificate Level",
+                     "Postgraduate Degree Level")) %>%
+  ggplot(aes(x=year, y=count, colour=gender)) + 
+  geom_point() + geom_line() +
+  facet_wrap(~educ, ncol=2)
+grid.arrange(p1, p2, ncol=2)
+```

@@ -100,6 +100,7 @@ If you want to add the full airline name to the flights2 data, you can combine t
 
 ```{r}
 flights %>% left_join(airlines, by="carrier") %>% glimpse()
+flights %>% left_join(airports, by=c("origin"="faa")) %>% glimpse()
 ```
 
 ## Airline travel, ontime data
@@ -183,6 +184,22 @@ ggmap(map) +
                  y=DEST_LATITUDE), color="red",
              alpha=0.3, size=1) +
    theme_map()
+ggmap(map) +
+  geom_segment(data=N4YRAA_latlon,
+               aes(x=ORIGIN_LONGITUDE, xend=DEST_LONGITUDE,
+                   y=ORIGIN_LATITUDE, yend=DEST_LATITUDE),
+               color="navyblue") +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE == ymd("2017-05-06")),
+             aes(x=ORIGIN_LONGITUDE,
+                 y=ORIGIN_LATITUDE), color="orange",
+             alpha=0.3, size=3) +
+  geom_point(data=filter(N4YRAA_latlon,
+                         FL_DATE == ymd("2017-05-06")),
+             aes(x=DEST_LONGITUDE,
+                 y=DEST_LATITUDE), color="red",
+             alpha=0.3, size=1) +
+   theme_map() + facet_wrap(~FL_DATE)
 ```
 
 ## Lab exercise
