@@ -49,7 +49,7 @@ This is a link to the course web site, in case you need to go back and forth bet
 - Download the `Rmd` file from the class web site
 - You should already have the data sets that you need, from last class
 
-### Turn in your individual assignment
+### Turn in your group assignment
 
 Go to ED, the assessments tab. Upload your `Rmd`, and `html`, and `csv` files. 
 
@@ -334,6 +334,15 @@ p <- passengers %>%
 ggplotly(p)
 ```
 
+```{r eval=FALSE, echo=FALSE}
+# devtools::install_github("ropenscilabs/eechidna")
+library(eechidna)
+launchApp(
+  age = c("Age25_34", "Age35_44", "Age55_64"),
+  religion = c("Christianity", "Catholic", "NoReligion"),
+  other = c("NotOwned", "Indigenous", "Population")
+)
+```
 ## Lab exercises
 
 1. Download the data on the [women's AFL](https://github.com/ropenscilabs/ozwomensport). These are the stats the first two seasons. There are two tables, one for players and one for teams. Be careful how you download. It may be easier to download the zip file. 
@@ -360,6 +369,7 @@ ggplot(players, aes(x=Club, y=Kicks_AVG)) + geom_boxplot()
 p <- ggplot(players, aes(x=Kicks_AVG, y=Handballs_AVG, label=Player)) + geom_point() + geom_smooth(method="lm") + theme(aspect.ratio=1)
 ggplotly()
 ```
+
 
 ## Resources
 

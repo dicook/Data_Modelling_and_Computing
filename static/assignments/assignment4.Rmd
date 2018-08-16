@@ -69,7 +69,7 @@ smpl <- stns_vic$stn[sample(1:nrow(stns_vic), 500)]
 # The R package rnoaa can also be used to pull the data
 vic_weather <- NULL
 #for (i in 1:length(smpl)) {
-for (i in 101:150) {
+for (i in 301:400) {
   cat(i, "\n")
   filenm <- paste0("https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all/",
                    smpl[i],".dly")
@@ -80,6 +80,78 @@ for (i in 101:150) {
               "variable", paste0("X", 5:128))))
    vic_weather <- bind_rows(vic_weather, x)
 }
+vic_weather <- vic_weather %>% filter(year > 1950)
+vic_weather <- vic_weather %>% filter(variable == "PRCP")
+vic_weather <- vic_weather[,c(1:4, seq(5,128,4))] 
+vic_weather_long <- vic_weather %>% 
+  gather(day, value, X5:X125)
+vic_weather_long <- vic_weather_long %>% 
+  mutate(day = sub("X", "", day)) %>%
+  mutate(day = as.numeric(day)%/%4) %>%
+  mutate(day = as.integer(day)) %>% 
+  mutate(value=ifelse(value==-9999, NA, value)) %>%
+  select(-variable) %>%
+  rename(prcp = value) %>%
+  mutate(prcp=prcp/10) %>%
+  mutate(month=as.numeric(month))
+vic_prcp_longterm <- vic_weather_long %>%
+  filter(year < 2017) %>%
+  group_by(station, month, year) %>%
+  summarise(prcp = sum(prcp, na.rm=T)) %>%
+  group_by(station, month) %>%
+  summarise(prcp_av = mean(prcp))
+vic_prcp_recent <- vic_weather_long %>%
+  filter(year >= 2017) %>%
+  group_by(station, month, year) %>%
+  summarise(prcp_recent = sum(prcp, na.rm=T)) %>%
+  ungroup()
+
+
+long_enough <- oz_yr_prcp %>% count(station, sort=TRUE) %>%
+  filter(n>50)
+oz_yr_prcp <- oz_yr_prcp %>% filter(station %in% long_enough$station)
+recent <- oz_yr_prcp %>% group_by(station) %>% filter(2017 %in% year)
+oz_yr_prcp <- oz_yr_prcp %>% filter(station %in% recent$station)
+
+ggplot(oz_yr_prcp, aes(x=year, y=prcp, group=station, colour=station)) + 
+  geom_point(alpha=0.1) + theme(legend.position = "none") +
+  geom_smooth(se=FALSE)
+```
+
+```{r}
+library(rvest)
+library(lubridate)
+x <- read_html("https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all/?C=M;O=A")
+tb <- x %>% html_table()
+
+asn <- read_csv("data/asn.csv")
+asn <- asn %>%
+  select(-junk) %>%
+  mutate(datetime = dmy_hm(datetime)) %>%
+  mutate(date = date(datetime))
+asn %>% filter(date > ymd("20180228"))
+# 98 with august, july, jun, may
+# 100 for april
+# 3792 for march
+asn_aug <- asn %>% filter(date > ymd("20180731"))
+asn_aug <- asn_aug %>% mutate(station=substr(station, 1, 11))
+stns_aug <- stns_oz %>% filter(stn %in% asn_aug$station)
+ggmap(oz) + 
+  geom_point(data=stns_aug, aes(x=lon, y=lat), 
+              alpha=0.5, colour="orange")
+oz_weather <- NULL
+for (i in 1:nrow(asn_aug)) {
+  cat(i, "\n")
+  filenm <- paste0("https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all/",
+                   asn_aug$station[i],".dly")
+   x <- read_fwf(filenm, 
+   col_positions=fwf_widths(c(11, 4, 2, 4, 
+        rep(c(5, 1, 1, 1), 31)), 
+        col_names = c("station", "year", "month",
+              "variable", paste0("X", 5:128))))
+   oz_weather <- bind_rows(oz_weather, x)
+}
+oz_weather <- oz_weather %>% filter(year > 1950)
 oz_weather <- oz_weather %>% filter(variable == "PRCP")
 oz_weather <- oz_weather[,c(1:4, seq(5,128,4))] 
 oz_weather_long <- oz_weather %>% 
@@ -91,20 +163,35 @@ oz_weather_long <- oz_weather_long %>%
   mutate(value=ifelse(value==-9999, NA, value)) %>%
   select(-variable) %>%
   rename(prcp = value) %>%
-  mutate(prcp=prcp/10) 
-oz_yr_prcp <- oz_weather_long %>%
-  group_by(station, year) %>%
-  summarise(prcp = mean(prcp, na.rm=T)*365) %>%
-  filter(year > 1920, year < 2018)
-long_enough <- oz_yr_prcp %>% count(station, sort=TRUE) %>%
-  filter(n>50)
-oz_yr_prcp <- oz_yr_prcp %>% filter(station %in% long_enough$station)
-recent <- oz_yr_prcp %>% group_by(station) %>% filter(2017 %in% year)
-oz_yr_prcp <- oz_yr_prcp %>% filter(station %in% recent$station)
+  mutate(prcp=prcp/10) %>%
+  mutate(month=as.numeric(month))
+oz_prcp_longterm <- oz_weather_long %>%
+  filter(year <= 2017) %>%
+  group_by(station, month, year) %>%
+  summarise(prcp = sum(prcp, na.rm=T)) %>%
+  group_by(station, month) %>%
+  summarise(prcp_av = mean(prcp))
+oz_prcp_recent <- oz_weather_long %>%
+  filter(year > 2017) %>%
+  group_by(station, month, year) %>%
+  summarise(prcp_tot = sum(prcp, na.rm=T)) %>%
+  ungroup()
+oz_prcp_longterm %>% count(station, sort=TRUE)
+oz_prcp_recent %>% count(station, sort=TRUE)
 
-ggplot(oz_yr_prcp, aes(x=year, y=prcp, group=station, colour=station)) + 
-  geom_point(alpha=0.1) + theme(legend.position = "none") +
-  geom_smooth(se=FALSE)
+ggplot(oz_prcp_recent, aes(x=month, y=prcp_tot)) + 
+  geom_point() + geom_line(aes(group=station))
+
+oz_prcp_compare <- oz_prcp_recent %>% left_join(oz_prcp_longterm, by=c("station", "month"))
+oz_prcp_compare <- oz_prcp_compare %>% mutate(dry = prcp_av - prcp_tot)
+oz_prcp_compare <- oz_prcp_compare %>% left_join(stns_oz, by=c("station"="stn"))
+ggmap(oz) + 
+  geom_point(data=oz_prcp_compare, aes(x=lon, y=lat, colour=dry)) +
+  facet_wrap(~month, ncol=4) +
+  scale_colour_gradient2(low="blue", high="brown", midpoint=0, mid="white", limits=c(-50,50))
+#  scale_colour_distiller(type="div", mid=0)
+ggplot(data=oz_prcp_compare, aes(x=dry)) + geom_density()
+ggplot(data=oz_prcp_compare, aes(x=1, y=dry)) + geom_boxplot()
 ```
 
 1. Make a plot of precipitation by year, for each station. There is one station that recorded more than 30000mm of rain in one year. How much rain is this per day? Describe the pattern of precipitation over the years. How will the patterns affect modeling? 
