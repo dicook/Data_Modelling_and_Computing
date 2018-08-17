@@ -67,30 +67,28 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Assignment 4:
 - Assignment 5:
 
-## Assignment 1 peer evaluation
+## Assignment 2 peer evaluation
 
-<!--
 [Peer evaluation assignments](evaluation_assignment.csv)
 
-- 1_PUORG_0101_CTE [zip](assignments/assignment1_2018/1_PUORG_0101_CTE.zip)
-- Agridat [zip](assignments/assignment1_2018/Agridat.zip)
-- Blueberries [zip](assignments/assignment1_2018/Blueberries.zip)
-- Bomrang [zip](assignments/assignment1_2018/Bomrang.zip)
-- Data Confusion [zip](assignments/assignment1_2018/Data Confusion.zip)
-- Eagles [zip](assignments/assignment1_2018/Eagles.zip)
-- GeoZoo [zip](assignments/assignment1_2018/GeoZoo.zip)
-- Infinite [zip](assignments/assignment1_2018/Infinite.zip)
-- nine-nine [zip](assignments/assignment1_2018/nine-nine.zip)
-- Paperclip [zip](assignments/assignment1_2018/Paperclip.zip)
-- R Rated [zip](assignments/assignment1_2018/R Rated.zip)
-- R studio artists [zip](assignments/assignment1_2018/R studio artists.zip)
-- R44 [zip](assignments/assignment1_2018/R44.zip)
-- RnR [zip](assignments/assignment1_2018/RnR.zip)
-- Team Rocket [zip](assignments/assignment1_2018/Team Rocket.zip)
-- The Standard Deviations [zip](assignments/assignment1_2018/The Standard Deviations.zip)
-- Thor [zip](assignments/assignment1_2018/Thor.zip)
-- Titanic{float=False} [zip](assignments/assignment1_2018/Titanic{float=False}.zip)
--->
+- 1_PUORG_0101_CTE [zip](assignments/assignment2_2018/1_PUORG_0101_CTE.zip)
+- Agridat [zip](assignments/assignment2_2018/Agridat.zip)
+- Blueberries [zip](assignments/assignment2_2018/Blueberries.zip)
+- Bomrang [zip](assignments/assignment2_2018/Bomrang.zip)
+- Data Confusion [zip](assignments/assignment2_2018/Data Confusion.zip)
+- Eagles [zip](assignments/assignment2_2018/Eagles.zip)
+- GeoZoo [zip](assignments/assignment2_2018/GeoZoo.zip)
+- Infinite [zip](assignments/assignment2_2018/Infinite.zip)
+- nine-nine [zip](assignments/assignment2_2018/nine-nine.zip)
+- Paperclip [zip](assignments/assignment2_2018/Paperclip.zip)
+- R Rated [zip](assignments/assignment2_2018/R Rated.zip)
+- R studio artists [zip](assignments/assignment2_2018/R studio artists.zip)
+- R44 [zip](assignments/assignment2_2018/R44.zip)
+- RnR [zip](assignments/assignment2_2018/RnR.zip)
+- Team Rocket [zip](assignments/assignment2_2018/Team Rocket.zip)
+- The Standard Deviations [zip](assignments/assignment2_2018/The Standard Deviations.zip)
+- Thor [zip](assignments/assignment2_2018/Thor.zip)
+- Titanic{float=False} [zip](assignments/assignment2_2018/Titanic{float=False}.zip)
 
 ## Data
 
