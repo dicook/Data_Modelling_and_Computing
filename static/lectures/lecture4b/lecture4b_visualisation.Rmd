@@ -63,6 +63,7 @@ Go to ED, the assessments tab. Upload your `Rmd`, and `html`, and `csv` files.
 ```{r}
 df <- tibble(x=runif(100), y=runif(100)*10)
 ggplot(df, aes(x=x, y=y)) + geom_point() + coord_fixed()
+ggplot(df, aes(x=x, y=y)) + geom_point() + coord_equal()
 ggplot(df, aes(x=x, y=y)) + geom_point() + coord_fixed(ratio=0.2)
 ggplot(df, aes(x=x, y=y)) + geom_point() + theme(aspect.ratio=1)
 ```
@@ -78,6 +79,8 @@ df <- tibble(x=runif(100), y1=4*x + rnorm(100),
 ggplot(df, aes(x=x, y=y1)) + geom_point() 
 ggplot(df, aes(x=x, y=y1)) + geom_point() + 
   geom_smooth(method="lm", se=FALSE)
+ggplot(df, aes(x=x, y=y1)) + geom_point() + 
+  geom_smooth(method="lm")
 ggplot(df, aes(x=x, y=y2)) + geom_point() 
 ggplot(df, aes(x=x, y=y2)) + geom_point() + 
   geom_smooth(method="lm", se=FALSE)
@@ -359,9 +362,9 @@ players <- read_csv("data/players.csv")
 teams <- read_csv("data/teams.csv")
 teams <- teams %>% filter(Club != "All Clubs")
 library(forcats)
-teams <- teams %>% mutate(Club = fct_reorder(Club, Kicks_TOT, .desc=TRUE))
-ggplot(teams, aes(x=Club, y=Kicks_TOT)) +
-  geom_col()
+teams <- teams %>% mutate(Club = fct_reorder(Club, `Kicks TOT`, .desc=TRUE))
+ggplot(teams, aes(x=Club, y=`Kicks TOT`)) +
+  geom_col() + coord_flip()
 ggplot(teams, aes(x=Kicks_AVG, y=Handballs_AVG)) + geom_point() + theme(aspect.ratio=1)
 ggplot(teams, aes(x=`Frees For_AVG`, y=`Frees Agst_AVG`)) + geom_point() + theme(aspect.ratio=1)
 players <- players %>% mutate(Club = fct_reorder(Club, Kicks_AVG, "median", .desc=TRUE))

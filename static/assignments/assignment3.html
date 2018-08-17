@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Di Cook" />
+<meta name="author" content="Professor Di Cook, EBS, Monash U." />
 
 
 <title>ETC 1010 Assignment 3</title>
@@ -91,6 +91,9 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
@@ -119,7 +122,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">ETC 1010 Assignment 3</h1>
-<h4 class="author"><em>Di Cook</em></h4>
+<h4 class="author"><em>Professor Di Cook, EBS, Monash U.</em></h4>
 
 </div>
 
@@ -127,51 +130,118 @@ $(document).ready(function () {
 <div id="instructions" class="section level1">
 <h1>Instructions</h1>
 <ul>
-<li>This is a team assignment, of between 2-4 people. You can work with the same team from the previous assignments, or you can create a new team.</li>
-<li>You need to write a report that
-<ul>
-<li>provides a selection of good overview plots</li>
-<li>produces the best model you can make</li>
-<li>summarise the model numerically, including equations that would make it easy for others to apply to new data</li>
-<li>justify your model based on goodness-of-fit statistics, residual plots, and plots of the model.</li>
-</ul></li>
-<li>Turn in <code>html</code> output file, and also the <code>Rmd</code> file, and a file documenting the team name, team members and %effort by each.</li>
-<li>Use your team name on the report</li>
-<li>Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your summaries, explanations and justifications understandable and informative.</li>
+<li>This is a team assignment.</li>
+<li>You need to write a report with answers to each of the questions.</li>
+<li>Turn in the <code>html</code> output file, and also the <code>Rmd</code> file.</li>
+<li>Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative. Five points will be for individual effort. And the remaining 10 points will be the final group report.</li>
 </ul>
 </div>
 <div id="exercise" class="section level1">
 <h1>Exercise</h1>
+<p><em>I love a sunburnt country</em></p>
+<p><em>A land of sweeping plains</em></p>
+<p><em>Of ragged mountain ranges</em></p>
+<p><em>Of droughts and flooding rains</em></p>
+<p>(From the poem My Country by Dorothea MacKellar)</p>
+<p>In this last week there have been many news stories about an ongoing dry period in large parts of Australia. In the west of NSW, large parts of Queensland, and even the Gippsland region of Victoria it is reported that there has been insufficient rain for many months and this is severely affecting many farmers. This assignment is designed to examine what is happening using publicly available data.</p>
+<div id="data-collection" class="section level2">
+<h2>Data collection</h2>
+<p>This is what I have done to get the data to this point. The <a href="https://www.ncdc.noaa.gov/ghcn-daily-description">Global Historical Climate Network maintained by NOAA</a> curates weather records for stations across the globe.</p>
 <ul>
-<li>Read in the Melbourne housing data (originally pulled from <a href="https://www.kaggle.com/anthonypino/melbourne-housing-market" class="uri">https://www.kaggle.com/anthonypino/melbourne-housing-market</a>)</li>
-<li>Focus ONLY on the variables Price, Rooms, Type, Distance, Bedroom2, Bathroom</li>
-<li>Make a missing values summary, and a strategy for dealing with the missings</li>
-<li>Make some good plots summarising the relationship between price</li>
-<li>Build your model, explaining your choices of transformations, variable selection, interactions</li>
-<li>Summarise your final model, and justify why you think it is the best</li>
-</ul>
-</div>
-<div id="help" class="section level1">
-<h1>Help</h1>
-<ul>
-<li>You can read the data in with this code:</li>
+<li>You can get the list of stations and their latitude and longitude from the <code>ghcnd-stations.txt</code> file from the raw files site <a href="https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/" class="uri">https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/</a>. Australian stations have “ASN” prefixing the station id. There are 17219 recording stations across Australia. Some of them are on Antartica, remote islands, and possibly on Naval ships because the locations of these few are far from the mainland.</li>
 </ul>
 <pre class="r"><code>library(tidyverse)
-houses &lt;- read_csv(&quot;data/Melbourne_housing_FULL.csv&quot;)</code></pre>
+stns &lt;- read_fwf(&quot;https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt&quot;, 
+   fwf_widths(c(11, 9, 10, 7, 3, 30, 4, 4, 6),
+   c(&quot;stn&quot;, &quot;lat&quot;, &quot;lon&quot;, &quot;elev&quot;, &quot;state&quot;, &quot;name&quot;, &quot;flg1&quot;, &quot;flg2&quot;, &quot;wmo&quot;)))
+stns_oz &lt;- stns[grep(&quot;ASN&quot;, stns$stn),]
+keep &lt;- stns_oz %&gt;% 
+  filter(lat &gt; -43, lat &lt; -12, lon &gt; 113.6, lon &lt; 153.6)
+library(ggmap)
+oz &lt;- get_map(location=c(lon=133.8807, lat=-23.6980), zoom=4)
+ggmap(oz) + 
+  geom_point(data=stns_oz, aes(x=lon, y=lat), 
+              alpha=0.5, colour=&quot;orange&quot;, size=0.5)</code></pre>
 <ul>
-<li>Think about missing values handling, and what would be most appropriate</li>
-<li>You may need ot make some transformations of variables</li>
-<li>Some interactions could by important, but not all</li>
+<li>The data is stored in a single file for each station. The Australian Bureau of Meteorolgy links to this site for Australian data, and you can download station by station from their site, but this is a very inefficient interface. We can get multiple files read by scripting it in R. (You could pay BOM to download your preferred summaries.) I pulled weather data from stations around Victoria as a first pass, and checked the precipitation of the most recent records. It was clear quickly that a lot of stations have not had their data updated recently on this database. So I needed a way to get just the data from stations that had measurements for this year, all the way through to August. The web page with the list of files available for all stations has a “modified date” for each file, so I extracted this information and used it to select only stations in Australia that had data modified this month.</li>
 </ul>
+<pre class="r"><code>library(rvest)
+library(lubridate)
+x &lt;- read_html(&quot;https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all/?C=M;O=A&quot;)
+tb &lt;- x %&gt;% html_table()
+
+asn &lt;- read_csv(&quot;data/asn.csv&quot;)
+asn &lt;- asn %&gt;%
+  select(-junk) %&gt;%
+  mutate(datetime = dmy_hm(datetime)) %&gt;%
+  mutate(date = date(datetime))
+asn_aug &lt;- asn %&gt;% filter(date &gt; ymd(&quot;20180731&quot;))
+asn_aug &lt;- asn_aug %&gt;% mutate(station=substr(station, 1, 11))
+stns_aug &lt;- stns_oz %&gt;% filter(stn %in% asn_aug$station)
+ggmap(oz) + 
+  geom_point(data=stns_aug, aes(x=lon, y=lat), 
+              alpha=0.5, colour=&quot;orange&quot;)</code></pre>
+<ul>
+<li>The next step is to go file by file, and pull the data for these stations, combine it into a single data file. This is the same as what we did for the Melbourne weather station during a past class.</li>
+</ul>
+<pre class="r"><code>oz_weather &lt;- NULL
+for (i in 1:nrow(asn_aug)) {
+  cat(i, &quot;\n&quot;)
+  filenm &lt;- paste0(&quot;https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all/&quot;,
+                   asn_aug$station[i],&quot;.dly&quot;)
+   x &lt;- read_fwf(filenm, 
+   col_positions=fwf_widths(c(11, 4, 2, 4, 
+        rep(c(5, 1, 1, 1), 31)), 
+        col_names = c(&quot;station&quot;, &quot;year&quot;, &quot;month&quot;,
+              &quot;variable&quot;, paste0(&quot;X&quot;, 5:128))))
+   oz_weather &lt;- bind_rows(oz_weather, x)
+}
+oz_weather &lt;- oz_weather %&gt;% filter(year &gt; 1950)
+oz_weather &lt;- oz_weather %&gt;% filter(variable == &quot;PRCP&quot;)
+oz_weather &lt;- oz_weather[,c(1:4, seq(5,128,4))] 
+write_csv(oz_weather, path=&quot;data/oz_weather.csv&quot;)</code></pre>
+<p><strong>Your don’t need to repeat what I have done. Start by reading in the data that is already created.</strong></p>
+<pre class="r"><code>library(tidyverse)
+oz_weather &lt;- read_csv(&quot;data/oz_weather.csv&quot;)</code></pre>
+</div>
+<div id="your-tasks" class="section level2">
+<h2>Your tasks</h2>
+<ol style="list-style-type: decimal">
+<li>Use your web surfing skills and find an article on the CURRENT drought in Australia. Report the link to the article and write a few sentences summarising its main points.</li>
+<li>Read in the raw data and put it into tidy form. Filter out any records before 1950. The code is provided, with a few spots where you need to fill in the functions. Where you see <code>???</code> in the code, is where you need to fill in to make it work.</li>
+</ol>
+<pre><code>oz_weather_long &lt;- oz_weather %&gt;% 
+  gather(day, prcp, X5:X125) %&gt;% 
+  mutate(day = sub(&quot;X&quot;, &quot;&quot;, day)) %&gt;%
+  mutate(day = as.numeric(day)%/%4) %&gt;%
+  mutate(day = as.integer(day)) %&gt;% 
+  mutate(value=ifelse(value==???, NA, value)) %&gt;%
+  select(-variable) %&gt;%
+  mutate(prcp=prcp/???) %&gt;%
+  mutate(month=as.numeric(???))</code></pre>
+<pre><code>a. What value is used in the raw data to indicate a missing value?
+b. Why do the precipitation values divided by something?</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Compute the monthly precipitation for each year. (You need to sum up the precipitation for each month, for each year.) When working with precipitation it is important to summarise using totals. This is different from working with temperature, where we would typically summarise using means. Why should you use totals to summarise precipitation?</li>
+<li>Make a line plot of monthly precipitation by month, grouping by station, for 2018. Overlay a smoother. Is there generally a decreasing trend in rainfall this year across the country?</li>
+<li>Compute the long term average monthly precipitation for each station. (Use your previous summary and then average the values by month.) This is going to be a baseline for comparing precipitation this year.</li>
+<li>Now we want to look at the general pattern of rainfall this year, whether it is higher of lower than expected. Compute the relative change between monthly precipitation of the first 7 months of this year, 2018, and the long term monthly average precipitation, for each station. Plot this difference on a map of Australia. (Make sure you use an appropriate colour scale. To calculate relative change, use this formula:</li>
+</ol>
+<p><span class="math display">\[Relative~change~ = \frac{T_{2018}-T_{longterm}}{T_{longterm}}\]</span></p>
+<ol start="7" style="list-style-type: decimal">
+<li>This is another way to look at how this year compares with previous years. For each month, compute the percentile of this year’s rainfall. That is count the number of years since 1950 that this month had lower precipitation than this year. Find a location (or few) where this year’s rainfall has been in the lowest 10% of years consistently for each month (Jan-Jul).</li>
+<li>Find another historical long period of well below normal rainfall for the first half of the year, for this station (or another). Do a web search to see if there were any news stories about that drought period.</li>
+</ol>
+</div>
 </div>
 <div id="grading" class="section level1">
 <h1>Grading</h1>
 <p>Points for the assignment will be based on:</p>
 <ul>
-<li>Whether the Rmd file, can take the data file as provided, and produce the data summaries, model fitting and model summaries</li>
-<li>Good choices of initial summary plots and explanations</li>
-<li>Choices made in the model building are reasonable and well explained</li>
-<li>Model summaries are clear and understandable</li>
+<li>Accuracy of your answers to the given questions.</li>
+<li>How well you have conducted the analysis, and written your answers.</li>
+<li>Whether the Rmd file, can take data file as provided, produce the tidy data, and plots reported in your final submission.</li>
+<li>How well you have worked with your group members on completing this work. Your score for the group component will be adjusted by the amount of effort your team mates independently and anonymously report.</li>
 </ul>
 </div>
 

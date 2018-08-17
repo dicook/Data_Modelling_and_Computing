@@ -18,13 +18,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Instructions
-
-- This is a team assignment. 
-- You need to write a report with answers to each of the questions. 
-- Turn in the `html` output file, and also the `Rmd` file. 
-- Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative. Five points will be for individual effort. And the remaining 10 points will be the final group report.
-
 # Exercise
 
 Smart meters are now installed at every property in Melbourne. The Victorian government has a current initiative to encourage households to examine their energy use and particularly to get a better deal on energy pricing. Their tool to compare suppliers is at https://compare.energy.vic.gov.au. If you use this tool between now and the end of the year, you will get an energy rebate of $50.
@@ -35,11 +28,13 @@ The format of the data should `csv` and look something like mine, which is provi
 
 You only need one data set per group. Everyone in the group should work on this one. If you have problems getting your own data, we will provide you with some. 
 
-1. Describe the steps that you will need to take to read in your electricity usage, and tidy it. 
+1. (1pt) Describe the steps that you will need to take to read in your electricity usage, and tidy it. 
 
 *a. Filter only rows with code id "300"*
 
-*b. Gather the data into long form, to create a variable indicating the half hourly intervals, and the kwh in each.*
+*b. Gather the data into long form, to create two variables: half hourly intervals and the kwh.*
+
+*c. It may be necessary to transform the half hourly variable into a numeric variable.*
 
 2. Tidy your data, using the `tidyverse` functions. The end product should look something like this:
 
@@ -55,6 +50,8 @@ You only need one data set per group. Everyone in the group should work on this 
 ```
 
 although your `halfhour` variable might be more explicit like 12:00-12:30, 12:30-01:00, 01:00-01:30, ... And you might want to add week day, month, year variables. 
+
+*Here is the code for this data set, and the results*
 
 ```{r echo=TRUE}
 library(tidyverse)
@@ -77,10 +74,10 @@ elec <- elec %>%
          mutate(dt = ymd_hm(glue("{date} 12:00"), 
                            tz = "Australia/Melbourne") +
            minutes(60*halfhour))
-elec
+glimpse(elec)
 ```
 
-3. Make a line plot of half-hourly usage for these two days, Sunday August 5, 2018 and Wednesday Aug 8, 2018. Describe what you learn about electricity use on these two days. 
+3. (2pts) Make a line plot of half-hourly usage for these two days, Sunday August 5, 2018 and Wednesday Aug 8, 2018. Describe what you learn about electricity use on these two days. 
 
 ```{r echo=TRUE}
 elec %>% 
@@ -88,11 +85,13 @@ elec %>%
   ggplot(aes(x=halfhour, y=kwh, group=date, colour=date)) + geom_line()
 ```
 
-`The days both have peaks aound 9am, and again in the evening. The weekend day also has multiple peaks during the day. For my household, this is likely the clothes dryer being put on several times on the weekend.`
+*The patterns in each time series, and the difference between series need to be explained. For example: The days both have peaks aound 9am, and again in the evening. The weekend day also has multiple peaks during the day. For my household, this is likely the clothes dryer being put on several times on the weekend.*
 
 4. Aggregate your daily kwh usage. Make a side-by-side boxplot of usage by week day. Are there some days of the week that you use more electricity than others?
 
-```{r}
+* Here is the code and result. You need to have summed the kwh to total per day.*
+
+```{r echo=TRUE}
 elec %>% 
   group_by(date) %>%
   summarise(dkwh = sum(kwh, na.rm=TRUE)) %>%
@@ -101,9 +100,13 @@ elec %>%
   ggplot(aes(x=wday, y=dkwh)) + geom_boxplot()
 ```
 
-`The weekend days have higher medians than the week days, which means these are the high energy use days. There are some week days that have outliers in usage, that mean unusually high energy use days. Thursday has the biggest variation in usage.`
+*The general distribution from one day to the next needs to be explained. For example: The weekend days have higher medians than the week days, which means these are the high energy use days. There are some week days that have outliers in usage, that mean unusually high energy use days. Thursday has the biggest variation in usage.*
 
-5. Decide on several (about 3) more types of plots to make to learn about your energy usage. Make these plots and write some paragraphs describing what you have learned. 
+5. (4pts) Decide on several (about 3) more types of plots to make to learn about your energy usage. Make these plots and write some paragraphs describing what you have learned. 
+
+*Some reasonable plots to look at are monthly usage as side-by-side boxplots, time of day usage as side-by-side boxplots, a calendar plot of usage, a long time series of the entire period. There's probably lots of creative submissions here. Each needs to have a paragraph explaining what is learned about their energy usage from the plot.*
+
+(1 point for overall readability of the report.)
 
 # Grading
 
