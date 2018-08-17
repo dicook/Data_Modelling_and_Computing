@@ -63,10 +63,11 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 - Assignment 1: [Instructions](assignments/assignment1.html) [(Rmd)](assignments/assignment1.Rmd) [SOLUTION](assignments/assignment1_solution.html) [(Rmd)](assignments/assignment1_solution.Rmd); Data: [2006](assignments/data/ABS_ed_age_sex_2006.xlsx), [2011](assignments/data/ABS_ed_age_sex_2011.xlsx), [2016](assignments/data/ABS_ed_age_sex_2016.xlsx) **DUE: Week 3, individual on Wed, group Fri, during class**
 - Assignment 2: [Instructions](assignments/assignment2.html) [(Rmd)](assignments/assignment2.Rmd) [SOLUTION]() [(Rmd)](); [Example data](assignments/data/meter1.csv) **DUE: Week 4, individual on Wed, group Fri, during class**
-- Assignment 3:
+- Assignment 3: [Instructions](assignments/assignment3.html) [(Rmd)](assignments/assignment3.Rmd) [oz_weather.csv](assignments/data/oz_weather.csv)
 - Assignment 4:
 - Assignment 5:
 
+<!--
 ## Assignment 2 peer evaluation
 
 [Peer evaluation assignments](evaluation_assignment.csv)
@@ -89,6 +90,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - The Standard Deviations [zip](assignments/assignment2_2018/The Standard Deviations.zip)
 - Thor [zip](assignments/assignment2_2018/Thor.zip)
 - Titanic{float=False} [zip](assignments/assignment2_2018/Titanic{float=False}.zip)
+-->
 
 ## Data
 
