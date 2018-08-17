@@ -92,7 +92,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Titanic{float=False} [zip](assignments/assignment1_2018/Titanic{float=False}.zip)
 -->
 
-## Data [ZIP](http://dmac.netlify.com/lectures/data/alldata.zip) 
+## Data
 
 - [music-sub.csv](http://dmac.dicook.org/lectures/data/music-sub.csv)
 - [Pedestrian_sensor_locations.csv](http://dmac.dicook.org/lectures/data/Pedestrian_sensor_locations.csv)
