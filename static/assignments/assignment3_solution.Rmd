@@ -4,7 +4,7 @@ author: "Professor Di Cook, EBS, Monash U."
 output: html_document
 ---
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, warning = FALSE}
 knitr::opts_chunk$set(
   echo = FALSE,
   message = FALSE,
@@ -46,7 +46,7 @@ This is what I have done to get the data to this point. The [Global Historical C
 
 - You can get the list of stations and their latitude and longitude from the `ghcnd-stations.txt` file from the raw files site https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/. Australian stations have "ASN" prefixing the station id. There are 17219 recording stations across Australia. Some of them are on Antartica, remote islands, and possibly on Naval ships because the locations of these few are far from the mainland. 
 
-```{r eval=FALSE, echo=TRUE}
+```{r eval=FALSE}
 library(tidyverse)
 stns <- read_fwf("https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt", 
    fwf_widths(c(11, 9, 10, 7, 3, 30, 4, 4, 6),
@@ -63,7 +63,7 @@ ggmap(oz) +
 
 - The data is stored in a single file for each station. The Australian Bureau of Meteorolgy links to this site for Australian data, and you can download station by station from their site, but this is a very inefficient interface. We can get multiple files read by scripting it in R. (You could pay BOM to download your preferred summaries.) I pulled weather data from stations around Victoria as a first pass, and checked the precipitation of the most recent records. It was clear quickly that a lot of stations have not had their data updated recently on this database. So I needed a way to get just the data from stations that had measurements for this year, all the way through to August. The web page with the list of files available for all stations has a "modified date" for each file, so I extracted this information and used it to select only stations in Australia that had data modified this month.
 
-```{r eval=FALSE, echo=TRUE}
+```{r eval=FALSE}
 library(rvest)
 library(lubridate)
 x <- read_html("https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all/?C=M;O=A")
@@ -84,7 +84,7 @@ ggmap(oz) +
 
 - The next step is to go file by file, and pull the data for these stations, combine it into a single data file. This is the same as what we did for the Melbourne weather station during a past class.
 
-```{r eval=FALSE, echo=TRUE}
+```{r eval=FALSE}
 oz_weather <- NULL
 for (i in 1:nrow(asn_aug)) {
   cat(i, "\n")
@@ -105,71 +105,134 @@ write_csv(oz_weather, path="data/oz_weather.csv")
 
 **Your don't need to repeat what I have done. Start by reading in the data that is already created.**
 
-```{r echo=TRUE}
+```{r}
 library(tidyverse)
 oz_weather <- read_csv("data/oz_weather.csv")
+stn_nyrs <- oz_weather %>% count(station, month)
 ```
 
 ## Your tasks
 
 1. Use your web surfing skills and find an article on the CURRENT drought in Australia. Report the link to the article and write a few sentences summarising its main points. 
-2. Read in the raw data and put it into tidy form. Filter out any records before 1950. The code is provided, with a few spots where you need to fill in the functions. Where you see `???` in the code, is where you need to fill in to make it work.
 
-```
+*Various possibilities here*
+
+2. Read in the raw data and put it into tidy form. The code is provided, with a few spots where you need to fill in the functions. Where you see `???` in the code, is where you need to fill in to make it work.
+
+```{r}
 oz_weather_long <- oz_weather %>% 
   gather(day, prcp, X5:X125) %>% 
   mutate(day = sub("X", "", day)) %>%
   mutate(day = as.numeric(day)%/%4) %>%
   mutate(day = as.integer(day)) %>% 
-  mutate(value=ifelse(value==???, NA, value)) %>%
+  mutate(prcp=ifelse(prcp==-9999, NA, prcp)) %>%
   select(-variable) %>%
-  mutate(prcp=prcp/???) %>%
-  mutate(month=as.numeric(???))
+  mutate(prcp=prcp/10) %>%
+  mutate(month=as.numeric(month)) 
 ```
-    a. What value is used in the raw data to indicate a missing value?
-    b. Why do the precipitation values divided by something?
+
+    a. What value is used in the raw data to indicate a missing value? *-9999*
+    b. Why do the precipitation values divided by something? *It was reported in tenths of mm, with the decimal point dropped.*
     
 3. Compute the monthly precipitation for each year. (You need to sum up the precipitation for each month, for each year.) When working with precipitation it is important to summarise using totals. This is different from working with temperature, where we would typically summarise using means. Why should you use totals to summarise precipitation?
-4. Make a line plot of monthly precipitation by month, grouping by station, for 2018. Overlay a smoother. Is there generally a decreasing trend in rainfall this year across the country?
-5. Compute the long term average monthly precipitation for each station. (Use your previous summary and then average the values by month.) This is going to be a baseline for comparing precipitation this year.
-6. Now we want to look at the general pattern of rainfall this year, whether it is higher of lower than expected. Compute the relative change between monthly precipitation of the first 7 months of this year, 2018, and the long term monthly average precipitation, for each station. Plot this difference on a map of Australia. (Make sure you use an appropriate colour scale. To calculate relative change, use this formula:
 
-$$Relative~change~ = \frac{T_{2018}-T_{longterm}}{T_{longterm}}$$
-
-7. This is another way to look at how this year compares with previous years. For each month, compute the percentile of this year's rainfall. That is count the number of years since 1950 that this month had lower precipitation than this year. Find a location (or few) where this year's rainfall has been in the lowest 10% of years consistently for each month (Jan-Jul). 
-8. Find another historical long period of well below normal rainfall for the first half of the year, for this station (or another). Do a web search to see if there were any news stories about that drought period.
-
-
-
-```{r eval=FALSE, echo-FALSE}
-oz_prcp_longterm <- oz_weather_long %>%
-  filter(year <= 2017) %>%
-  group_by(station, month, year) %>%
-  summarise(prcp = sum(prcp, na.rm=T)) %>%
-  group_by(station, month) %>%
-  summarise(prcp_av = mean(prcp))
-oz_prcp_recent <- oz_weather_long %>%
-  filter(year > 2017) %>%
+```{r}
+oz_prcp_mthyr <- oz_weather_long %>%
+  filter(!(year == 2018 & month == 8)) %>%
   group_by(station, month, year) %>%
   summarise(prcp_tot = sum(prcp, na.rm=T)) %>%
   ungroup()
-oz_prcp_longterm %>% count(station, sort=TRUE)
-oz_prcp_recent %>% count(station, sort=TRUE)
-
-ggplot(oz_prcp_recent, aes(x=month, y=prcp_tot)) + 
-  geom_point() + geom_line(aes(group=station))
-
-oz_prcp_compare <- oz_prcp_recent %>% left_join(oz_prcp_longterm, by=c("station", "month"))
-oz_prcp_compare <- oz_prcp_compare %>% mutate(dry = prcp_av - prcp_tot)
-oz_prcp_compare <- oz_prcp_compare %>% left_join(stns_oz, by=c("station"="stn"))
-ggmap(oz) + 
-  geom_point(data=oz_prcp_compare, aes(x=lon, y=lat, colour=dry)) +
-  facet_wrap(~month, ncol=4) +
-  scale_colour_gradient2(low="blue", high="brown", midpoint=0, mid="white", limits=c(-50,50))
-#  scale_colour_distiller(type="div", mid=0)
-ggplot(data=oz_prcp_compare, aes(x=dry)) + geom_density()
-ggplot(data=oz_prcp_compare, aes(x=1, y=dry)) + geom_boxplot()
 ```
+
+4. Make a line plot of monthly precipitation by month, grouping by station, for 2018. Overlay a smoother. Is there generally a decreasing trend in rainfall this year across the country?
+
+```{r}
+oz_prcp_mthyr %>% 
+  filter(year == 2018) %>%
+  ggplot(aes(x=month, y=prcp_tot)) + 
+  geom_line(aes(group=station), alpha=0.2) +
+  geom_smooth(se=FALSE, alpha=1)
+```
+
+*The first few months saw a lot of rain at a few locations. There was les rain in recent months. It is not clear if this is the usual pattern across these stations for the first 7 months of the year.*
+
+5. Compute the long term average monthly precipitation for each station. (Use your previous summary and then average the values by month.) This is going to be a baseline for comparing precipitation this year.
+
+```{r}
+oz_prcp_longterm <- oz_prcp_mthyr %>%
+  filter(year < 2018) %>%
+  group_by(station, month) %>%
+  summarise(prcp_av = mean(prcp_tot))
+ggplot(oz_prcp_longterm, aes(x=month, y=prcp_av)) + 
+  geom_line(aes(group=station), alpha=0.2) 
+```
+
+6. Now we want to look at the general pattern of rainfall this year, whether it is higher of lower than expected. Compute the relative change between monthly precipitation of the first 7 months of this year, 2018, and the long term monthly average precipitation, for each station. Plot this difference on a map of Australia. (Make sure you use an appropriate colour scale.) To calculate relative change, use this formula:
+
+$$Relative~change~ = \frac{T_{2018}-T_{longterm}}{T_{longterm}}$$
+
+(While you have this map, make it interactive with plotly, so that the station id pops up on mouseover. Find a station in the west of NSW or southwest of Qld, or even in Gippsland.  Keep the id for this station for the next question.)
+
+```{r}
+stns_oz <- read_csv("data/stns_oz.csv")
+oz_prcp_rel_change <- oz_prcp_mthyr %>%
+  filter(year == 2018) %>%
+  left_join(oz_prcp_longterm, by=c("station", "month")) %>%
+  mutate(relch = (prcp_tot - prcp_av)/prcp_av)
+oz_prcp_rel_change <- oz_prcp_rel_change %>%
+  left_join(stns_oz, by=c("station"="stn"))
+library(ggmap)
+oz <- get_map(location=c(lon=133.8807, lat=-23.6980), zoom=4)
+ggmap(oz) + 
+  geom_point(data=oz_prcp_rel_change, aes(x=lon, y=lat, colour=relch)) +
+  facet_wrap(~month, ncol=4) +
+  scale_colour_gradient2(low="brown", high="blue", midpoint=0, 
+                         mid="white", limits=c(-1,1))
+```
+
+7. This is another way to look at how this year compares with previous years. For each month, compute the percentile of this year's rainfall. That is count the number of years since 1950 that this month had lower precipitation than this year. Find a location (or few) where this year's rainfall has been consistently low for each month (Jan-Jul), relative to other years. 
+
+```{r}
+oz_prcp_2018 <- oz_prcp_mthyr %>%
+  filter(year == 2018) %>%
+  rename(prcp_tot18 = prcp_tot)
+oz_prcp_2018_pctl <- oz_prcp_mthyr %>%
+  filter(year < 2018, month < 8) %>%
+  left_join(oz_prcp_2018, by=c("station", "month")) %>%
+  group_by(station, month) %>%
+  summarise(nless=length(prcp_tot[prcp_tot < prcp_tot18]), n=length(prcp_tot)) %>%
+  mutate(pct = nless/n) %>%
+  ungroup()
+oz_prcp_2018_pctl %>% arrange(pct) %>% print(n=50)
+oz_prcp_2018_pctl %>% group_by(station) %>% summarise(s = sum(pct)) %>% filter(s < 2)
+oz_prcp_2018_pctl %>% filter(station == "ASN00044021")
+oz_prcp_2018_pctl %>% filter(station == "ASN00043109")
+oz_prcp_2018_pctl %>% filter(station == "ASN00048027")
+oz_prcp_2018_pctl %>% filter(station == "ASN00085298")
+dry_stns <- oz_prcp_mthyr %>% 
+  filter(station %in% c("ASN00044021", "ASN00043109", "ASN00048027", "ASN00085298")) %>%
+  left_join(stns_oz, by=c("station"="stn"))
+ggmap(oz) + geom_point(data=dry_stns, aes(x=lon, y=lat), colour="brown") + 
+  geom_text(data=dry_stns, aes(x=lon, y=lat, label=station), colour="brown")
+ggplot(dry_stns, aes(x=factor(month), y=prcp_tot, label=year)) + 
+  geom_line(aes(group=year), alpha=0.2) + geom_point() +
+  geom_line(data=filter(dry_stns, year==2018), aes(x=month, y=prcp_tot), 
+             colour="brown", size=1.5) +
+  facet_wrap(~station)
+```
+
+8. Find another historical long period of well below normal rainfall for the first half of the year, for this station (or another). Do a web search to see if there were any news stories about that drought period.
+
+```{r}
+stnASN00044021 <- oz_prcp_mthyr %>% filter(station=="ASN00044021") %>%
+  arrange(year, month)
+stnASN00044021_dryyrs <- stnASN00044021 %>%
+  group_by(year) %>%
+  summarise(s = sum(prcp_tot[1:7]))
+stnASN00044021_dryyrs %>% arrange(s)
+```
+
+*The 1965 drought in Eastern Australia is described on [wikipedia](https://en.wikipedia.org/wiki/Drought_in_Australia)*
 
 # Grading
 

@@ -112,8 +112,10 @@ oz_weather <- read_csv("data/oz_weather.csv")
 
 ## Your tasks
 
+There is some help with the code required for this assignment. Where you see `???` in the code, is where you need to fill in to make it work.
+
 1. Use your web surfing skills and find an article on the CURRENT drought in Australia. Report the link to the article and write a few sentences summarising its main points. 
-2. Read in the raw data and put it into tidy form. Filter out any records before 1950. The code is provided, with a few spots where you need to fill in the functions. Where you see `???` in the code, is where you need to fill in to make it work.
+2. Read in the raw data and put it into tidy form. The code is provided, with a few spots where you need to fill in the functions. 
 
 ```
 oz_weather_long <- oz_weather %>% 
@@ -121,7 +123,7 @@ oz_weather_long <- oz_weather %>%
   mutate(day = sub("X", "", day)) %>%
   mutate(day = as.numeric(day)%/%4) %>%
   mutate(day = as.integer(day)) %>% 
-  mutate(value=ifelse(value==???, NA, value)) %>%
+  mutate(prcp=ifelse(prcp==???, NA, prcp)) %>%
   select(-variable) %>%
   mutate(prcp=prcp/???) %>%
   mutate(month=as.numeric(???))
@@ -130,14 +132,83 @@ oz_weather_long <- oz_weather %>%
     b. Why do the precipitation values divided by something?
     
 3. Compute the monthly precipitation for each year. (You need to sum up the precipitation for each month, for each year.) When working with precipitation it is important to summarise using totals. This is different from working with temperature, where we would typically summarise using means. Why should you use totals to summarise precipitation?
+
+```
+oz_prcp_mthyr <- oz_weather_long %>%
+  filter(!(year == ??? & month == ???)) %>%
+  group_by(???, ???, ???) %>%
+  summarise(prcp_tot = sum(???, na.rm=T)) %>%
+  ungroup()
+```
+
 4. Make a line plot of monthly precipitation by month, grouping by station, for 2018. Overlay a smoother. Is there generally a decreasing trend in rainfall this year across the country?
+
+```
+oz_prcp_mthyr %>% 
+  filter(year == ???) %>%
+  ggplot(aes(x=???, y=???)) + 
+  geom_line(aes(group=???), alpha=0.2) +
+  geom_???(se=FALSE, alpha=1)
+```
+
 5. Compute the long term average monthly precipitation for each station. (Use your previous summary and then average the values by month.) This is going to be a baseline for comparing precipitation this year.
-6. Now we want to look at the general pattern of rainfall this year, whether it is higher of lower than expected. Compute the relative change between monthly precipitation of the first 7 months of this year, 2018, and the long term monthly average precipitation, for each station. Plot this difference on a map of Australia. (Make sure you use an appropriate colour scale. To calculate relative change, use this formula:
+
+```
+oz_prcp_longterm <- oz_prcp_mthyr %>%
+  filter(??? < 2018) %>%
+  group_by(???, ???) %>%
+  summarise(prcp_av = mean(???))
+ggplot(oz_prcp_longterm, aes(x=???, y=???)) + 
+  geom_line(aes(group=???), alpha=0.2) 
+```
+
+6. Now we want to look at the general pattern of rainfall this year, whether it is higher of lower than expected. Compute the relative change between monthly precipitation of the first 7 months of this year, 2018, and the long term monthly average precipitation, for each station. Plot this difference on a map of Australia. (Make sure you use an appropriate colour scale.) To calculate relative change, use this formula:
 
 $$Relative~change~ = \frac{T_{2018}-T_{longterm}}{T_{longterm}}$$
 
-7. This is another way to look at how this year compares with previous years. For each month, compute the percentile of this year's rainfall. That is count the number of years since 1950 that this month had lower precipitation than this year. Find a location (or few) where this year's rainfall has been in the lowest 10% of years consistently for each month (Jan-Jul). 
+(While you have this map, make it interactive with plotly, so that the station id pops up on mouseover. Find a station in the west of NSW or southwest of Qld, or even in Gippsland.  Keep the id for this station for the next question.)
+
+```
+stns_oz <- read_csv("data/stns_oz.csv")
+oz_prcp_rel_change <- oz_prcp_mthyr %>%
+  filter(??? == 2018) %>%
+  left_join(oz_prcp_longterm, by=c(???, ???)) %>%
+  mutate(relch = (??? - ???)/???)
+oz_prcp_rel_change <- oz_prcp_rel_change %>%
+  left_join(stns_oz, by=c(???=???))
+library(ggmap)
+oz <- get_map(location=c(lon=???, lat=???), zoom=???)
+ggmap(oz) + 
+  geom_???(data=oz_prcp_rel_change, aes(x=???, y=???, colour=???)) +
+  facet_wrap(~???, ncol=4) +
+  scale_colour_gradient2(???, limits=c(-1,1))
+```
+
+7. This is another way to look at how this year's rainfall compares with previous years. For each month, compute the percentile of this year's rainfall. That is, count the number of years since 1950 that this month had lower precipitation than this year. Look at the values for the station you identified in the previous question. Write a sentence or two describing the rainfall pattern for this year at your chosen station, relative to the same month in other years.  Make a line plot of precipitation by month for all years, and overlay this year's in a highlight colour, like orange. Describe the relative amount of rain for this year based on this plot.
+
+```
+oz_prcp_2018 <- oz_prcp_mthyr %>%
+  filter(??? == 2018) %>%
+  rename(prcp_tot18 = ???)
+oz_prcp_2018_pctl <- oz_prcp_mthyr %>%
+  filter(year < ???, month < 8) %>%
+  left_join(oz_prcp_2018, by=c(???, ???)) %>%
+  group_by(???, ???) %>%
+  summarise(nless=length(???[???t < prcp_tot18]), n=length(???)) %>%
+  mutate(pct = ???/n) %>%
+  ungroup()
+```
+
 8. Find another historical long period of well below normal rainfall for the first half of the year, for this station (or another). Do a web search to see if there were any news stories about that drought period.
+
+```
+mystn <- oz_prcp_mthyr %>% filter(station==???) %>%
+  arrange(year, month)
+mystn_dryyrs <- mystn %>%
+  group_by(???) %>%
+  summarise(s = sum(???[1:7]))
+mystn_dryyrs %>% arrange(s)
+```
 
 # Grading
 

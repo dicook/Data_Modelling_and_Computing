@@ -206,16 +206,17 @@ oz_weather &lt;- read_csv(&quot;data/oz_weather.csv&quot;)</code></pre>
 </div>
 <div id="your-tasks" class="section level2">
 <h2>Your tasks</h2>
+<p>There is some help with the code required for this assignment. Where you see <code>???</code> in the code, is where you need to fill in to make it work.</p>
 <ol style="list-style-type: decimal">
 <li>Use your web surfing skills and find an article on the CURRENT drought in Australia. Report the link to the article and write a few sentences summarising its main points.</li>
-<li>Read in the raw data and put it into tidy form. Filter out any records before 1950. The code is provided, with a few spots where you need to fill in the functions. Where you see <code>???</code> in the code, is where you need to fill in to make it work.</li>
+<li>Read in the raw data and put it into tidy form. The code is provided, with a few spots where you need to fill in the functions.</li>
 </ol>
 <pre><code>oz_weather_long &lt;- oz_weather %&gt;% 
   gather(day, prcp, X5:X125) %&gt;% 
   mutate(day = sub(&quot;X&quot;, &quot;&quot;, day)) %&gt;%
   mutate(day = as.numeric(day)%/%4) %&gt;%
   mutate(day = as.integer(day)) %&gt;% 
-  mutate(value=ifelse(value==???, NA, value)) %&gt;%
+  mutate(prcp=ifelse(prcp==???, NA, prcp)) %&gt;%
   select(-variable) %&gt;%
   mutate(prcp=prcp/???) %&gt;%
   mutate(month=as.numeric(???))</code></pre>
@@ -223,15 +224,69 @@ oz_weather &lt;- read_csv(&quot;data/oz_weather.csv&quot;)</code></pre>
 b. Why do the precipitation values divided by something?</code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>Compute the monthly precipitation for each year. (You need to sum up the precipitation for each month, for each year.) When working with precipitation it is important to summarise using totals. This is different from working with temperature, where we would typically summarise using means. Why should you use totals to summarise precipitation?</li>
+</ol>
+<pre><code>oz_prcp_mthyr &lt;- oz_weather_long %&gt;%
+  filter(!(year == ??? &amp; month == ???)) %&gt;%
+  group_by(???, ???, ???) %&gt;%
+  summarise(prcp_tot = sum(???, na.rm=T)) %&gt;%
+  ungroup()</code></pre>
+<ol start="4" style="list-style-type: decimal">
 <li>Make a line plot of monthly precipitation by month, grouping by station, for 2018. Overlay a smoother. Is there generally a decreasing trend in rainfall this year across the country?</li>
+</ol>
+<pre><code>oz_prcp_mthyr %&gt;% 
+  filter(year == ???) %&gt;%
+  ggplot(aes(x=???, y=???)) + 
+  geom_line(aes(group=???), alpha=0.2) +
+  geom_???(se=FALSE, alpha=1)</code></pre>
+<ol start="5" style="list-style-type: decimal">
 <li>Compute the long term average monthly precipitation for each station. (Use your previous summary and then average the values by month.) This is going to be a baseline for comparing precipitation this year.</li>
-<li>Now we want to look at the general pattern of rainfall this year, whether it is higher of lower than expected. Compute the relative change between monthly precipitation of the first 7 months of this year, 2018, and the long term monthly average precipitation, for each station. Plot this difference on a map of Australia. (Make sure you use an appropriate colour scale. To calculate relative change, use this formula:</li>
+</ol>
+<pre><code>oz_prcp_longterm &lt;- oz_prcp_mthyr %&gt;%
+  filter(??? &lt; 2018) %&gt;%
+  group_by(???, ???) %&gt;%
+  summarise(prcp_av = mean(???))
+ggplot(oz_prcp_longterm, aes(x=???, y=???)) + 
+  geom_line(aes(group=???), alpha=0.2) </code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>Now we want to look at the general pattern of rainfall this year, whether it is higher of lower than expected. Compute the relative change between monthly precipitation of the first 7 months of this year, 2018, and the long term monthly average precipitation, for each station. Plot this difference on a map of Australia. (Make sure you use an appropriate colour scale.) To calculate relative change, use this formula:</li>
 </ol>
 <p><span class="math display">\[Relative~change~ = \frac{T_{2018}-T_{longterm}}{T_{longterm}}\]</span></p>
+<p>(While you have this map, make it interactive with plotly, so that the station id pops up on mouseover. Find a station in the west of NSW or southwest of Qld, or even in Gippsland. Keep the id for this station for the next question.)</p>
+<pre><code>stns_oz &lt;- read_csv(&quot;data/stns_oz.csv&quot;)
+oz_prcp_rel_change &lt;- oz_prcp_mthyr %&gt;%
+  filter(??? == 2018) %&gt;%
+  left_join(oz_prcp_longterm, by=c(???, ???)) %&gt;%
+  mutate(relch = (??? - ???)/???)
+oz_prcp_rel_change &lt;- oz_prcp_rel_change %&gt;%
+  left_join(stns_oz, by=c(???=???))
+library(ggmap)
+oz &lt;- get_map(location=c(lon=???, lat=???), zoom=???)
+ggmap(oz) + 
+  geom_???(data=oz_prcp_rel_change, aes(x=???, y=???, colour=???)) +
+  facet_wrap(~???, ncol=4) +
+  scale_colour_gradient2(???, limits=c(-1,1))</code></pre>
 <ol start="7" style="list-style-type: decimal">
-<li>This is another way to look at how this year compares with previous years. For each month, compute the percentile of this year’s rainfall. That is count the number of years since 1950 that this month had lower precipitation than this year. Find a location (or few) where this year’s rainfall has been in the lowest 10% of years consistently for each month (Jan-Jul).</li>
+<li>This is another way to look at how this year’s rainfall compares with previous years. For each month, compute the percentile of this year’s rainfall. That is, count the number of years since 1950 that this month had lower precipitation than this year. Look at the values for the station you identified in the previous question. Write a sentence or two describing the rainfall pattern for this year at your chosen station, relative to the same month in other years. Make a line plot of precipitation by month for all years, and overlay this year’s in a highlight colour, like orange. Describe the relative amount of rain for this year based on this plot.</li>
+</ol>
+<pre><code>oz_prcp_2018 &lt;- oz_prcp_mthyr %&gt;%
+  filter(??? == 2018) %&gt;%
+  rename(prcp_tot18 = ???)
+oz_prcp_2018_pctl &lt;- oz_prcp_mthyr %&gt;%
+  filter(year &lt; ???, month &lt; 8) %&gt;%
+  left_join(oz_prcp_2018, by=c(???, ???)) %&gt;%
+  group_by(???, ???) %&gt;%
+  summarise(nless=length(???[???t &lt; prcp_tot18]), n=length(???)) %&gt;%
+  mutate(pct = ???/n) %&gt;%
+  ungroup()</code></pre>
+<ol start="8" style="list-style-type: decimal">
 <li>Find another historical long period of well below normal rainfall for the first half of the year, for this station (or another). Do a web search to see if there were any news stories about that drought period.</li>
 </ol>
+<pre><code>mystn &lt;- oz_prcp_mthyr %&gt;% filter(station==???) %&gt;%
+  arrange(year, month)
+mystn_dryyrs &lt;- mystn %&gt;%
+  group_by(???) %&gt;%
+  summarise(s = sum(???[1:7]))
+mystn_dryyrs %&gt;% arrange(s)</code></pre>
 </div>
 </div>
 <div id="grading" class="section level1">
