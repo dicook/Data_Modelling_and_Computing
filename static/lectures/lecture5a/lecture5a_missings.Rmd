@@ -1,5 +1,6 @@
 ---
 title: "ETC1010: Data Modelling and Computing"
+author: "Professor Di Cook, EBS, Monash U."
 output: 
   learnr::tutorial:
     css: "css/logo.css"
@@ -23,14 +24,49 @@ tutorial_html_dependency()
 
 ## Course web site
 
-This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.netlify.com](http://dmac.netlify.com)
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: http://dmac.dicook.org
 
 ## Overview
 
+- The story of missing flights
 - Data set overviews
 - Missingness patterns
 - Common ways to impute
 - Checking imputed values
+
+### *FOLLOW ALONG WITH THE NOTES* 
+
+- Open your ETC1010 `Rproj`
+- Download the `Rmd` file from the class web site
+- You should already have the data sets that you need, from last class
+
+## A story of missing flights
+
+![](images/plane.jpg)
+
+Do you know what a *ghost flight* is?
+
+When we were were first analysing the US airline traffic data, we found that it quite often occurred that a plane (identified by its tail number) landed at one airport but took off from another airport, e.g.
+
+```
+Year Month DayofMonth DepTime ArrTime Origin  Dest Diverted 
+1995 3     8          1102    1256    PIT     CVG  0 
+1995 3     8          1311    NA      CVG     PIT  1 
+1995 3     8          1913    2050    RIC     PIT  0 
+1995 3     8          2134    2300    PIT     MSY  0 
+```
+
+The plane landed in Pittsburgh but took off in Richmond. 
+
+This happens when a plane is needed at a location where there's a shortage. A plane flies empty and it doesn't get listed in the database. When it happens a lot, it indicates that the company is operating inefficiently. 
+
+An example was AirTran in March 2003. 46 flights, for a total of 31510 miles. 
+
+![](images/airtran.png)
+
+Airtran repeatedly had financial difficulties in the following years, and finally ceased operations in 2014. 
+
+**Missing values are not always obvious in data.**
 
 ## Data set overview
 
@@ -38,17 +74,26 @@ This is a link to the course web site, in case you need to go back and forth bet
 library(tidyverse)
 library(visdat)
 library(naniar)
-survey <- read_csv("data/survey_tidy.csv")
-vis_dat(survey, palette = "cb_safe")
+tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>% 
+  select(country, iso3, year, new_sp_m04:new_sp_fu) %>%
+  gather(stuff, count, new_sp_m04:new_sp_fu) %>%
+  separate(stuff, c("stuff1", "stuff2", "genderage")) %>%
+  select(-stuff1, -stuff2) %>%
+  mutate(gender=substr(genderage, 1, 1), 
+         age=substr(genderage, 2, length(genderage))) %>%
+  select(-genderage)
+
+tb_au <- tb %>% 
+  filter(country == "Australia") 
+vis_dat(tb_au)
 ```
 
-Overview of the tidied class survey data. 
+Overview of the tb incidence in Australia. 
 
 This type of display is called a "heatmap", displays the data table, with cells coloured according to some other information. In this case it is type of variable, and missingness status. What do we learn?
 
-- Most of the variables are `character` (text) variables
-- There are several `integer`, `numeric` and `logical` variables.
-- Missing values are sporadically located throughout the data. That means that no single variable has a lot of missings, and no single person wrote all missing.
+- Most of the variables are `character` (text) variables, or `integer` variables.
+- Missing values are located only in the counts, but it is in blocks, so perhaps corresponds to some category levels of the other variables.
 
 ## Missing value patterns
 
@@ -154,11 +199,6 @@ What do we learn?
 - There is a different missingness pattern in each of the years
 - Year needs to be accounted for in finding good substitute values.
 
-
-### Two minute challenge
-
-- Copy and paste the code into your RStudio window, make sure it works for you, and try tweaking it a little
-
 ## Shadow matrix
 
 The shadow table is created to mark the location of missings in the original data table. Here, this gets appended to the original data, and then can be used to submet, or colour by different types of missingness.
@@ -183,7 +223,7 @@ What do we learn?
 
 ### Two minute challenge
 
-- In your RStudio window, generate the shadow matrix and make a plot of the winds, coloured by missingness on humidity.
+- Generate the shadow matrix and make a plot of the winds, coloured by missingness on humidity.
 
 ## Strategy
 
@@ -266,7 +306,7 @@ What do we learn?
 
 ### Two minute challenge
 
-- In your RStudio window, run the code above. Change it to plot sea temperature against humidity, with colour representing missing humidity values. What do you learn about the imputations?
+- Change the code to plot sea temperature against humidity, with colour representing missing humidity values. What do you learn about the imputations?
 
 
 ###  Nearest neighbors imputation
@@ -325,15 +365,20 @@ ggplot(tao_shadow,
 
 ### Two minute challenge
 
-- In your RStudio window, run the code above. Change it to plot sea temperature against humidity, with colour representing missing humidity values. What do you learn about the imputations?
+- Change the code to plot sea temperature against humidity, with colour representing missing humidity values. What do you learn about the imputations?
 
 ## Lab exercise
 
-- Take a look at the class survey data.
-- Summarise the missingness patterns. Which variables have mssings, how many,...
-- Strategise a way to impute the missing values. For numeric variables, we can use a mean value to impute the missing. What statistic would you suggest for a categorical variable? Or a logical variable?
-- Do your best to impute all the missings for this data.
+We are going to examine Melbourne house prices, using a data set available at https://www.kaggle.com/anthonypino/melbourne-housing-market). It was constructed by scraping the auction reports over several years, and adding more information on property details by scraping the web pages on the properties at domain.com.
 
+```{r}
+houses <- read_csv("data/Melbourne_housing_FULL.csv")
+```
+
+- Focus ONLY on the variables Price, Rooms, Type, Distance, Bedroom2, Bathroom
+- Make a missing values summary, and a strategy for dealing with the missings
+- Make some good plots summarising the relationship between price
+- Do your best to impute good values for the missings
 
 ## Share and share alike
 
