@@ -46,7 +46,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
 - Week 4: Data visualisation
    - [Wed](https://ebsmonash.shinyapps.io/lecture4a_relational) [(Rmd)](http://dmac.dicook.org/lectures/lecture4a/lecture4a_relational.Rmd) [Reading Textbook 3.5-3.7](http://r4ds.had.co.nz/data-visualisation.html)
    - [Fri](https://ebsmonash.shinyapps.io/lecture4b_visualisation) [(Rmd)](http://dmac.dicook.org/lectures/lecture4b/lecture4b_visualisation.Rmd) [Reading on handling missing values](https://cran.r-project.org/web/packages/naniar/vignettes/getting-started-w-naniar.html)
-- Week 5: Handling missing values:  
+- Week 5: Handling missing values  
     - [Wed](https://ebsmonash.shinyapps.io/lecture5a_missings) [(Rmd)](http://dmac.dicook.org/lectures/lecture5a/lecture5a_missings.Rmd)
 - Week 6: Introduction to modeling: 
 - Week 7: Intermediate models; 
