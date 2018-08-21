@@ -408,13 +408,24 @@ ggplot(tao_shadow,
 <div id="section-lab-exercise" class="section level2">
 <h2>Lab exercise</h2>
 <p>We are going to examine Melbourne house prices, using a data set available at <a href="https://www.kaggle.com/anthonypino/melbourne-housing-market" class="uri">https://www.kaggle.com/anthonypino/melbourne-housing-market</a>). It was constructed by scraping the auction reports over several years, and adding more information on property details by scraping the web pages on the properties at domain.com.</p>
-<pre class="r"><code>houses &lt;- read_csv(&quot;data/Melbourne_housing_FULL.csv&quot;)</code></pre>
-<ul>
-<li>Focus ONLY on the variables Price, Rooms, Type, Distance, Bedroom2, Bathroom</li>
-<li>Make a missing values summary, and a strategy for dealing with the missings</li>
-<li>Make some good plots summarising the relationship between price</li>
-<li>Do your best to impute good values for the missings</li>
-</ul>
+<ol style="list-style-type: decimal">
+<li>Make an overview plot of the full data. Which variables have missings?</li>
+<li>Focus ONLY on the variables Price, Rooms, Type, Distance, Bedroom2, Bathroom. Remove the observations that have missing values on Price, because this is the response variable that we want to ultimately predict. We can’t build a stable model for price if we don’t know the price.</li>
+<li>Make a missing values summary of all the data - what proportion of observations are missing on Price?</li>
+<li>Make the shadow matrix, and plot Bathroom vs Bedroom2 coloured by missingness on Bedroom2. Why don’t any missing values show up?</li>
+<li>Impute the missing values for Bedroom2 and Bathroom, by using mean imputation. Make a plot of the two variables, with the imputed values coloured. Describe the pattern that you see.</li>
+<li>Impute the missing values for Bedroom2 and Bathroom, using a linear model on th variable Rooms. Make a plot of the two variables, with the imputed values coloured. Is this better or worse than the mean value imputed values? Explain your thinking. (You can use the code below to help do this type of imputation. )</li>
+</ol>
+<pre class="r"><code>houses_sub &lt;- houses %&gt;% select(Price, Rooms, Type, Distance, Bedroom2, Bathroom)
+houses_sub &lt;- houses_sub %&gt;% bind_shadow()
+br2 &lt;- lm(Bedroom2~Rooms, data=houses_sub)
+ba &lt;- lm(Bathroom~Rooms, data=houses_sub)
+houses_sub &lt;- houses_sub %&gt;%
+  mutate(Bedroom2=ifelse(is.na(Bedroom2), predict(br2, new=houses_sub), Bedroom2),
+         Bathroom=ifelse(is.na(Bathroom), predict(br2, new=houses_sub), Bathroom))
+ggplot(houses_sub, aes(x=Bedroom2, y=Bathroom,
+                       colour=Bedroom2_NA)) +
+  geom_point(alpha=0.2)</code></pre>
 </div>
 <div id="section-share-and-share-alike" class="section level2">
 <h2>Share and share alike</h2>

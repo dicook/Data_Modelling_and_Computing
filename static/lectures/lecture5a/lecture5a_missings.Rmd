@@ -371,10 +371,25 @@ ggplot(tao_shadow,
 
 We are going to examine Melbourne house prices, using a data set available at https://www.kaggle.com/anthonypino/melbourne-housing-market). It was constructed by scraping the auction reports over several years, and adding more information on property details by scraping the web pages on the properties at domain.com.
 
-- Focus ONLY on the variables Price, Rooms, Type, Distance, Bedroom2, Bathroom
-- Make a missing values summary, and a strategy for dealing with the missings
-- Make some good plots summarising the relationship between price
-- Do your best to impute good values for the missings
+1. Make an overview plot of the full data. Which variables have missings? 
+2. Focus ONLY on the variables Price, Rooms, Type, Distance, Bedroom2, Bathroom. Remove the observations that have missing values on Price, because this is the response variable that we want to ultimately predict. We can't build a stable model for price if we don't know the price. 
+3. Make a missing values summary of all the data - what proportion of observations are missing on Price?
+4. Make the shadow matrix, and plot Bathroom vs Bedroom2 coloured by missingness on Bedroom2. Why don't any missing values show up?
+5. Impute the missing values for Bedroom2 and Bathroom, by using mean imputation. Make a plot of the two variables, with the imputed values coloured. Describe the pattern that you see.
+6. Impute the missing values for Bedroom2 and Bathroom, using a linear model on th variable Rooms. Make a plot of the two variables, with the imputed values coloured. Is this better or worse than the mean value imputed values? Explain your thinking. (You can use the code below to help do this type of imputation. )
+
+```{r echo=TRUE, eval=FALSE}
+houses_sub <- houses %>% select(Price, Rooms, Type, Distance, Bedroom2, Bathroom)
+houses_sub <- houses_sub %>% bind_shadow()
+br2 <- lm(Bedroom2~Rooms, data=houses_sub)
+ba <- lm(Bathroom~Rooms, data=houses_sub)
+houses_sub <- houses_sub %>%
+  mutate(Bedroom2=ifelse(is.na(Bedroom2), predict(br2, new=houses_sub), Bedroom2),
+         Bathroom=ifelse(is.na(Bathroom), predict(br2, new=houses_sub), Bathroom))
+ggplot(houses_sub, aes(x=Bedroom2, y=Bathroom,
+                       colour=Bedroom2_NA)) +
+  geom_point(alpha=0.2)
+```
 
 ## Share and share alike
 
