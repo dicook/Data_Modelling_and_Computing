@@ -1,0 +1,363 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+author: "Professor Di Cook, EBS, Monash U."
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 6,
+                      fig.width = 6,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+library(tidyverse)
+library(plotly)
+```
+
+# Harvesting data
+
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: http://dmac.dicook.org
+
+## Overview
+
+- Different file formats
+    - Audio
+    - Binary format from other software
+- Web data
+    - scraping
+    - JSON
+    - twitter
+    - facebook
+
+## Web scraping
+
+<img src="images/web-scraping.png" height=200>
+
+A lot of data is available in html tables on web sites. Extracting the data from these tables is called "web scraping". 
+
+*Image created by Heike Hofmann, Iowa State University*
+
+### Scraping cricket data
+
+We are going to extract cricket statistics, from the ESPN CricInfo web site. As a start, point your web browser to this [site](http://stats.espncricinfo.com/ci/engine/stats/index.html?class=10;page=1;team=289;template=results;type=batting;wrappertype=print). You can also get to this page by starting from the Stats home page and navigating through various choices, 
+
+The R package `rvest` (and `xml2`) is the key tools to be used.
+
+### All the information
+
+`read_html` gets *all* the information from a URL
+
+```{r}
+library(rvest)
+site <- "http://stats.espncricinfo.com/ci/engine/stats/index.html?class=10;page=1;team=289;template=results;type=batting;wrappertype=print"
+raw_html <- read_html(site)
+```
+
+### Only the tables
+
+`html_table` extracts all tables from the sourced html into a list of data frames:
+
+```{r}
+tables <- raw_html %>% html_table(fill=TRUE)
+length(tables)
+tables[[1]]
+```
+
+### Cleanup
+
+Most tables need a bit of cleanup. 
+
+```{r}
+ausw_t20 <- tables[[3]]
+glimpse(ausw_t20)
+```
+
+- All the columns of the Australian women's T20 data are character variables. Why? (Except for the `Mat` column.)
+- The table has "*" indicating not out, and "-" indicating missing information
+
+```{r}
+ausw_t20 <- ausw_t20 %>%
+  mutate(HS = sub("\\*", "", HS)) %>%
+  #mutate_all(funs(sub("*", "", .))) %>%
+  mutate_all(funs(sub("-", "", .))) %>%
+  mutate_at(vars(Inns:`6s`), as.numeric)
+  # mutate_at(c("Inns", "NO", "Runs", "HS", "Ave", "BF", "SR", "100", "50", "0", "4s", "6s"), as.numeric)
+```
+
+### All done
+
+Make some pictures!
+
+```{r}
+p <- ggplot(ausw_t20, aes(x=Ave, y=SR, label=Player)) + geom_point()
+ggplotly(p)
+```
+
+### `cricinfo` package
+
+The `cricinfo` package makes this all a lot easier!
+
+```{r}
+# devtools::install_github("ropenscilabs/cricketdata")
+library(cricketdata)
+ausw_t20 <- fetch_cricinfo("T20", "Women", country="Aust")
+p <- ggplot(ausw_t20, aes(x=Average, y=StrikeRate, label=Player)) + geom_point()
+ggplotly(p)
+```
+
+```{r}
+IndiaODIBowling <- fetch_cricinfo("ODI", "men", "bowling", country="india")
+p <- ggplot(IndiaODIBowling, aes(x=Matches, y=Average, 
+                                 label=Player)) + geom_point(alpha=0.5)
+ggplotly(p)
+```
+
+### Ethics and legality
+
+The cricket data falls under copyright of ESPN Sports. The policy of use is detailed on the [web site](http://www.espncricinfo.com/ci/content/site/company/terms_use.html). 
+
+### Your turn
+
+- Use the cricket data package to extract *batting* data of male players for your two favorite countries.
+- Between 2010 and 2015, which country has the better record? Explain the reason for your answer, and your analysis choices.
+
+## Scraping basketball salary data
+
+ ESPN provides basketball players' salaries for the 2017-2018 season at [http://espn.go.com/nba/salaries](http://espn.go.com/nba/salaries)
+ 
+
+### One page
+
+```{r}
+site <- "http://espn.go.com/nba/salaries"
+raw_html <- read_html(site)
+tables <- raw_html %>% html_table(fill=TRUE, header=TRUE)
+tables
+```
+
+### Multiple pages
+
+- Click on the link to move to the next page. Look at the URL. 
+- Move to page 3, what has changed in the URL?
+- The actual URL for the full set of data is basically the same from page to page, with the exception of a page number. We can use this, and a loop to pull all the data
+
+```{r echo=TRUE}
+nba <- NULL
+for (i in 1:12) {
+  site <- paste0("http://espn.go.com/nba/salaries/_/page/",i,"/seasontype/3")
+  raw_html <- read_html(site)
+  temp <- raw_html %>% html_table(fill=TRUE, header=TRUE)
+  nba <- bind_rows(nba, temp)
+}
+```
+
+### Cleaning
+
+```{r warning=TRUE}
+head(nba$SALARY)
+
+# get rid of $ and , in salaries and convert to numeric:
+gsub("[$,]", "", head(nba$SALARY))
+nba <- nba %>%
+  mutate(SALARY = as.numeric(gsub("[$,]", "", SALARY)))
+```
+
+- Where does the warning come from?
+
+```{r}
+nba %>% filter(is.na(SALARY)) %>% head()
+```
+
+- We don't want these lines
+
+```{r}
+nba <- nba %>% filter(!is.na(SALARY)) 
+```
+
+### Working with text
+
+```{r}
+nba <- nba %>% 
+  mutate(NAME = as.character(NAME)) %>% 
+  separate(NAME, c("full_name", "position"), ",") %>% 
+  separate(full_name, c("first", "last"), " ") 
+head(nba)
+```
+
+### Make some pictures
+
+Are NBA players rich?
+
+```{r}
+ggplot(data=nba, aes(x=SALARY)) + geom_histogram()
+```
+
+```{r nba, echo=FALSE}
+quiz(
+  question("What was the lowest salary for an NBA player?",
+    answer("$0k"),
+    answer("$15k", correct=TRUE),
+    answer("$100k")),
+  question("What percentage of players earned less than $100k?",
+    answer("None"),
+    answer("1%"),
+    answer("4%", correct=TRUE)),
+  question("What position tends to earn the lowest salary?",
+    answer("PG"),
+    answer("SG"),
+    answer("G", correct=TRUE)),
+  question("Which of these teams tends to have the higher salary payout?",
+    answer("Cleveland Cavaliers", correct=TRUE),
+    answer("Miami Heat"),
+    answer("New York Knicks")))
+```
+
+```{r eval=FALSE}
+nba %>% summarise(ms = min(SALARY))
+nba %>% filter(SALARY < 100000) %>% tally()
+ggplot(data=nba, aes(x=position, y=SALARY)) + geom_boxplot()
+library(forcats)
+ggplot(data=nba, aes(x=fct_reorder(TEAM, SALARY), y=SALARY)) + 
+  geom_boxplot() + coord_flip()
+```
+
+## Detecting and reading multiple files from a site
+
+- Often data comes in multiple excel format files
+- It it tedious, and inefficient to manually convert each to csv and read
+- Easier to automate reading multiple files, in the original format
+- Example: Rental market in Tasmania from [data.gov.au](http://data.gov.au/dataset/rental-bond-and-rental-data-tasmania-2016-to-2017)
+
+### `sawfish` package
+
+```{r}
+library(readxl)
+# devtools::install_github("AnthonyEbert/sawfish")
+library(sawfish) 
+url<-"http://data.gov.au/dataset/rental-bond-and-rental-data-tasmania-2016-to-2017"
+fls <- find_files(url, "xlsx")
+f1 <- tempfile()
+download.file(fls[1], f1, mode="wb")
+t1 <- read_xlsx(path=f1, sheet=1)
+t1
+```
+
+```{r cache=TRUE}
+rentals <- NULL
+for (i in 1:length(fls)) {
+  download.file(fls[i], f1, mode="wb")
+  t1 <- read_xlsx(path=f1, sheet=1)
+  rentals <- bind_rows(rentals, t1)
+}
+dim(rentals)
+```
+
+### Make some pictures
+
+How have rents changed over time?
+
+```{r}
+library(lubridate)
+rentals %>% 
+  mutate(month=month(`Bond Lodgement date (DD/MM/YYYY)`), 
+         year=year(`Bond Lodgement date (DD/MM/YYYY)`)) %>%
+  group_by(Postcode, month, year, `No of Bedrooms`) %>%
+  summarise(rent=mean(`Weekly Rent`, na.rm=TRUE)) %>%
+  mutate(time=dmy(paste("01", month, year, sep="-"))) %>%
+  ggplot(aes(x=time, y=rent)) +
+    geom_line(aes(group=Postcode)) +
+    facet_wrap(~`No of Bedrooms`, ncol = 3) +
+    ylab("Weekly rent")
+```
+
+Clean data and re-plot
+
+```{r echo=TRUE, fig.show='hide'}
+rentals %>% 
+  mutate(month=month(`Bond Lodgement date (DD/MM/YYYY)`), 
+         year=year(`Bond Lodgement date (DD/MM/YYYY)`)) %>%
+  group_by(Postcode, month, year, `No of Bedrooms`) %>%
+  summarise(rent=mean(`Weekly Rent`, na.rm=TRUE)) %>%
+  mutate(time=dmy(paste("01", month, year, sep="-"))) %>%
+  filter(!is.na(`No of Bedrooms`)) %>%
+  filter(`No of Bedrooms`<6, `No of Bedrooms`>0) %>%
+  ggplot(aes(x=time, y=rent)) +
+    geom_line(aes(group=Postcode), alpha=0.5) +
+    facet_wrap(~`No of Bedrooms`, ncol = 3) +
+    ylab("Weekly rent") + ylim(c(0, 1000)) +
+    geom_smooth(se=FALSE)
+```
+
+## JSON format files
+
+With the advent of web communication, comes JavaScript Object Notation (JSON). It is a language-independent data format, and supplants extensible markup language (XML). It is a verbose data descriptor. Here's an example from [wikipedia](https://en.wikipedia.org/wiki/JSON) describing a person:
+
+```
+{
+  "firstName": "John",
+  "lastName": "Smith",
+  "isAlive": true,
+  "age": 25,
+  "address": {
+    "streetAddress": "21 2nd Street",
+    "city": "New York",
+    "state": "NY",
+    "postalCode": "10021-3100"
+  },
+  "phoneNumbers": 
+    {
+      "type": "home",
+      "number": "212 555-1234"
+    },
+    {
+      "type": "office",
+      "number": "646 555-4567"
+    },
+    {
+      "type": "mobile",
+      "number": "123 456-7890"
+    }
+  ],
+  "children": [],
+  "spouse": null
+}
+```
+
+### Example: Crossrates 
+
+An example we have seen is the cross rates data available at [https://openexchangerates.org/](https://openexchangerates.org/). To access this data you need to:
+
+1. Get a free plan from https://openexchangerates.org/signup/free
+2. Tell this function your API key -- `Sys.setenv("OER_KEY" = "your-key-here")`
+
+Then you can access the data using a command like:
+
+```
+u <- sprintf(
+    "https://openexchangerates.org/api/historical/%s.json?app_id=%s",
+    day, Sys.getenv("OER_KEY")
+  )
+res <- jsonlite::fromJSON(u)
+```
+
+There's a nice help page by [Carson Sievert here](https://gist.github.com/cpsievert/e05da83fc4253e6d1986). 
+
+### Your turn
+
+- Pull the crossrates for the month of March 2018
+- Make a plot of the AUD vs JPY
+
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
