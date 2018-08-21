@@ -24,15 +24,18 @@ ggplot(houses_sub, aes(x=Bedroom2, y=Bathroom,
                        colour=Bathroom_NA)) +
   geom_point()
 
+# Mean imputation
+houses_sub <- houses %>% select(Price, Rooms, Type, Distance, Bedroom2, Bathroom)
+houses_sub <- houses_sub %>% bind_shadow()
 houses_sub <- houses_sub %>%
   mutate(Bedroom2 = impute_mean(Bedroom2),
          Bathroom = impute_mean(Bathroom))
 ggplot(houses_sub, aes(x=Bedroom2, y=Bathroom,
                        colour=Bedroom2_NA)) +
-  geom_point()
+  geom_point(alpha=0.5)
 ggplot(houses_sub, aes(x=Bedroom2, y=Bathroom,
                        colour=Bathroom_NA)) +
-  geom_point()
+  geom_point(alpha=0.5)
 
 # Nearest neighbours doesn't work for this data
 houses_bb <- houses_sub %>%
@@ -58,7 +61,7 @@ houses_sub <- houses_sub %>%
          Bathroom=ifelse(is.na(Bathroom), predict(br2, new=houses_sub), Bathroom))
 ggplot(houses_sub, aes(x=Bedroom2, y=Bathroom,
                        colour=Bedroom2_NA)) +
-  geom_point(alpha=0.2)
+  geom_point(alpha=0.5)
 ggplot(houses_sub, aes(x=Bedroom2, y=Bathroom,
                        colour=Bathroom_NA)) +
   geom_point(alpha=0.2)
