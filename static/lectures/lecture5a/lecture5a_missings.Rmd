@@ -311,8 +311,9 @@ What do we learn?
 
 ###  Nearest neighbors imputation
 
-```{r eval=FALSE, echo=FALSE}
-# This is Di's preferred method
+The package `impute` from Bioconductor has a nice nearest neighbor imputation implementation.
+
+```{r eval=FALSE}
 #source("https://bioconductor.org/biocLite.R")
 #biocLite("impute")
 library(impute)
@@ -336,7 +337,7 @@ ggplot(tao_shadow,
 
 ### by year
 
-```{r eval=FALSE, echo=FALSE}
+```{r eval=FALSE}
 library(impute)
 tao_impute_93 <- bind_shadow(oceanbuoys) %>%
   arrange(year, sea_temp_c, air_temp_c) %>%

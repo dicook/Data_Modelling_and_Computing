@@ -349,9 +349,53 @@ ggplot(tao_shadow,
 </div>
 <div id="section-nearest-neighbors-imputation" class="section level3">
 <h3>Nearest neighbors imputation</h3>
+<p>The package <code>impute</code> from Bioconductor has a nice nearest neighbor imputation implementation.</p>
+<pre class="r"><code>#source(&quot;https://bioconductor.org/biocLite.R&quot;)
+#biocLite(&quot;impute&quot;)
+library(impute)
+tao_impute &lt;- bind_shadow(oceanbuoys) %&gt;%
+  arrange(year, sea_temp_c, air_temp_c) %&gt;%
+  select(sea_temp_c, air_temp_c) 
+tao_impute &lt;- impute.knn(as.matrix(tao_impute), 5)
+tao_shadow &lt;- bind_shadow(oceanbuoys) %&gt;%
+  arrange(year, sea_temp_c, air_temp_c) %&gt;%
+  mutate(sea_temp_c = tao_impute$data[,1],
+         air_temp_c = tao_impute$data[,2])
+ggplot(tao_shadow,
+       aes(x = sea_temp_c,
+           y = air_temp_c, 
+           colour=air_temp_c_NA)) +
+  geom_point(alpha=0.7) + 
+  facet_wrap(~year) + 
+  scale_colour_brewer(palette=&quot;Dark2&quot;) +
+  theme(aspect.ratio=1)</code></pre>
 </div>
 <div id="section-by-year-1" class="section level3">
 <h3>by year</h3>
+<pre class="r"><code>library(impute)
+tao_impute_93 &lt;- bind_shadow(oceanbuoys) %&gt;%
+  arrange(year, sea_temp_c, air_temp_c) %&gt;%
+  filter(year==&quot;1993&quot;) %&gt;%
+  select(sea_temp_c, air_temp_c) 
+tao_impute_93 &lt;- impute.knn(as.matrix(tao_impute_93), 5)
+tao_impute_97 &lt;- bind_shadow(oceanbuoys) %&gt;%
+  arrange(year, sea_temp_c, air_temp_c) %&gt;%
+  filter(year==&quot;1997&quot;) %&gt;%
+  select(sea_temp_c, air_temp_c)
+tao_impute_97 &lt;- impute.knn(as.matrix(tao_impute_97), 5)
+tao_impute &lt;- rbind(tao_impute_93$data, tao_impute_97$data)
+tao_shadow &lt;- bind_shadow(oceanbuoys) %&gt;%
+  arrange(year, sea_temp_c, air_temp_c) %&gt;%
+  mutate(sea_temp_c = tao_impute[,1],
+         air_temp_c = tao_impute[,2])
+ggplot(tao_shadow,
+       aes(x = sea_temp_c,
+           y = air_temp_c, 
+           colour=air_temp_c_NA)) +
+  geom_point(alpha=0.5) + 
+  facet_wrap(~year) + 
+  scale_colour_brewer(palette=&quot;Dark2&quot;) +
+  theme(aspect.ratio=1)</code></pre>
 </div>
 <div id="section-two-minute-challenge-2" class="section level3">
 <h3>Two minute challenge</h3>
