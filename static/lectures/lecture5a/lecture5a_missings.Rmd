@@ -371,10 +371,6 @@ ggplot(tao_shadow,
 
 We are going to examine Melbourne house prices, using a data set available at https://www.kaggle.com/anthonypino/melbourne-housing-market). It was constructed by scraping the auction reports over several years, and adding more information on property details by scraping the web pages on the properties at domain.com.
 
-```{r eval=FALSE}
-houses <- read_csv("data/Melbourne_housing_FULL.csv")
-```
-
 - Focus ONLY on the variables Price, Rooms, Type, Distance, Bedroom2, Bathroom
 - Make a missing values summary, and a strategy for dealing with the missings
 - Make some good plots summarising the relationship between price
