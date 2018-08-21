@@ -20,6 +20,7 @@ knitr::opts_chunk$set(echo = TRUE,
 tutorial_html_dependency()
 library(tidyverse)
 library(plotly)
+library(gridExtra)
 ```
 
 # Harvesting data
@@ -38,6 +39,94 @@ This is a link to the course web site, in case you need to go back and forth bet
     - JSON
     - twitter
     - facebook
+
+![](https://www.kdnuggets.com/images/cartoon-turkey-data-science.jpg)
+
+## Audio files
+
+
+```{r}
+library(tuneR)
+m1 <- readWave("data/data3.wav")
+m1 <- extractWave(m1, from = 25000, to = 75000)
+m1_df <- data.frame(t=1:length(m1@left), 
+                    left=m1@left, 
+                    right=m1@right)
+p1 <- ggplot(m1_df, aes(x=t, y=left)) + geom_line() + ggtitle("Say `data`")
+m2 <- readWave("data/statistics1.wav")
+m2 <- extractWave(m2, from = 25000, to = 75000)
+m2_df <- data.frame(t=1:length(m2@left), 
+                    left=m2@left, 
+                    right=m2@right)
+p2 <- ggplot(m2_df, aes(x=t, y=left)) + geom_line() + ggtitle("Say `statistics`")
+grid.arrange(p1, p2, ncol=1)
+```
+
+### Compare left and right channels
+
+```{r}
+p1 <- ggplot(m1_df, aes(x=left, y=right)) + 
+  geom_point() + theme(aspect.ratio=1)
+p2 <- ggplot(m2_df, aes(x=left, y=right)) + 
+  geom_point() + theme(aspect.ratio=1)
+grid.arrange(p1, p2, ncol=2)
+```
+
+Oh, same sound is on both channels! A tad drab.
+
+### Compute statistics
+
+```{r}
+m1_df <- m1_df %>% gather(channel, value, left, right) %>%
+  mutate(word="data")
+m2_df <- m2_df %>% gather(channel, value, left, right) %>%
+  mutate(word="statistics")
+m_df <- bind_rows(m1_df, m2_df)
+m_df %>% filter(channel == "left") %>%
+  group_by(word) %>%
+  summarise(m = mean(value), s = sd(value), 
+            mx = max(value), mn = min(value))
+```
+
+### My music - please don't laugh
+
+```{r}
+music <- read.csv("data/music-sub.csv", 
+                  row.names=1, stringsAsFactors = FALSE)
+ggplot(music, aes(x=artist, y=lave)) + geom_boxplot() +
+  xlab("") + ylab("Average amplitude")
+```
+
+```{r fig.height=4, fig.weight=4}
+ggplot(music, aes(x=lvar, y=lave, colour=artist)) + 
+  geom_point(size=5, alpha=0.5) +
+  scale_colour_brewer(palette="Dark2") +
+  xlab("Std amplitude") + ylab("Average amplitude") +
+  theme(aspect.ratio = 1)
+```
+
+Abba is just different from everyone else!
+
+
+```{r audio}
+quiz(
+  question("How does `data` appear different than `statistics` in the time series?",
+    answer("statistics is longer"),
+    answer("statistics has more peaks", correct=TRUE),
+    answer("they are the same")),
+  question("What format is the data in an audio file?",
+    answer("binary", correct=TRUE),
+    answer("text"),
+    answer("comma separated"),
+    answer("tab separated"),
+    answer("JSON")),
+  question("How is Abba different from the other music clips?",
+    answer("It has more variation"),
+    answer("It has less variation"),
+    answer("It has a higher average amplitude"),
+    answer("It has a lower average amplitude", correct=TRUE))
+)
+```
 
 ## Web scraping
 
