@@ -129,7 +129,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 ## Project
 
-- 
+- [Project instructions](project/project-ETC1010.pdf) 
 
 ## Exam information
 
