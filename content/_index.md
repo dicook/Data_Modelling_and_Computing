@@ -138,6 +138,8 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - [Practice exam solution](exam/practice_exam2017_solution.pdf)
 - [2017 exam](exam/exam2017.pdf) 
 - [2017 exam solution](exam/exam2017_solution.pdf)
+- [2018 exam S1](exam/exam2018.pdf) 
+- [2018 exam S1 solution](exam/exam2018_solution.pdf)
 
 ## Useful resources
 
