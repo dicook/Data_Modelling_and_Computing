@@ -215,11 +215,6 @@ ggplotly(p)
 
 The cricket data falls under copyright of ESPN Sports. The policy of use is detailed on the [web site](http://www.espncricinfo.com/ci/content/site/company/terms_use.html). 
 
-### Your turn
-
-- Use the cricket data package to extract *batting* data of male players for your two favorite countries.
-- Between 2010 and 2015, which country has the better record? Explain the reason for your answer, and your analysis choices.
-
 ## Scraping basketball salary data
 
  ESPN provides basketball players' salaries for the 2017-2018 season at [http://espn.go.com/nba/salaries](http://espn.go.com/nba/salaries)
@@ -441,10 +436,13 @@ res <- jsonlite::fromJSON(u)
 
 There's a nice help page by [Carson Sievert here](https://gist.github.com/cpsievert/e05da83fc4253e6d1986). 
 
-### Your turn
 
-- Pull the crossrates for the month of March 2018
-- Make a plot of the AUD vs JPY
+## Lab exercise
+
+1. Use the cricket data package to extract *batting* data of male players for your two favorite countries.
+2. Between 2010 and 2015, which country has the better record? Explain the reason for your answer, and your analysis choices.
+3. Pull the crossrates for the month of August 2018
+4. Make a plot to compare the crossrates for AUD, EUR, GBP, NZD, JPY. Make a descriptive summary of what you learn.
 
 
 ## Share and share alike

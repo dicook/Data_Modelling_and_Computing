@@ -36,7 +36,7 @@ You only need one data set per group. Everyone in the group should work on this 
 
 *c. It may be necessary to transform the half hourly variable into a numeric variable.*
 
-2. Tidy your data, using the `tidyverse` functions. The end product should look something like this:
+2. (1pt) Tidy your data, using the `tidyverse` functions. The end product should look something like this:
 
 ```
   date       halfhour   kwh
@@ -87,7 +87,7 @@ elec %>%
 
 *The patterns in each time series, and the difference between series need to be explained. For example: The days both have peaks aound 9am, and again in the evening. The weekend day also has multiple peaks during the day. For my household, this is likely the clothes dryer being put on several times on the weekend.*
 
-4. Aggregate your daily kwh usage. Make a side-by-side boxplot of usage by week day. Are there some days of the week that you use more electricity than others?
+4. (1pt) Aggregate your daily kwh usage. Make a side-by-side boxplot of usage by week day. Are there some days of the week that you use more electricity than others?
 
 * Here is the code and result. You need to have summed the kwh to total per day.*
 
