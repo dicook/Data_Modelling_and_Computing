@@ -187,6 +187,12 @@ s_miss_group$miss_case_table
 ## 4  1993              1      90    24.5  
 ## 5  1993              2       2     0.543
 ## 6  1993              3       2     0.543</code></pre>
+<p>You can call these separately with:</p>
+<ul>
+<li><code>prop_miss</code> - The proportion of missings</li>
+<li><code>miss_var_prop</code> - The proportion of variables with a missing</li>
+<li><code>miss_case_table</code> - The proportion of cases with <span class="math inline">\(k\)</span> missings</li>
+</ul>
 </div>
 <div id="section-tend-to-get-ignored-by-most-software" class="section level3">
 <h3>Tend to get ignored by most software</h3>
@@ -283,20 +289,17 @@ tao_shadow</code></pre>
 <h3>Mean</h3>
 <p>ignoring year.</p>
 <pre class="r"><code>tao_shadow &lt;- tao_shadow %&gt;%
-  mutate(sea_temp_c = ifelse(is.na(sea_temp_c), 
-                             mean(sea_temp_c, na.rm=TRUE),
-                             sea_temp_c),
-         air_temp_c = ifelse(is.na(air_temp_c), 
-                             mean(air_temp_c, na.rm=TRUE),
-                             air_temp_c))
+  impute_mean_at(vars(sea_temp_c,
+                      air_temp_c))
+
 ggplot(tao_shadow,
        aes(x = sea_temp_c,
            y = air_temp_c, 
-           colour=air_temp_c_NA)) +
-  geom_point(alpha=0.7) + 
+           colour = air_temp_c_NA)) +
+  geom_point(alpha = 0.7) + 
   facet_wrap(~year) + 
-  scale_colour_brewer(palette=&quot;Dark2&quot;) +
-  theme(aspect.ratio=1)</code></pre>
+  scale_colour_brewer(palette = &quot;Dark2&quot;) +
+  theme(aspect.ratio = 1)</code></pre>
 <p><img src="lecture5a_missings_files/figure-html/unnamed-chunk-14-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>What do we learn?</p>
 <ul>
@@ -306,24 +309,10 @@ ggplot(tao_shadow,
 </div>
 <div id="section-by-year" class="section level3">
 <h3>by year</h3>
-<pre class="r"><code>t93 &lt;- bind_shadow(oceanbuoys) %&gt;% 
-  filter(year==&quot;1993&quot;) %&gt;%
-  mutate(sea_temp_c = ifelse(is.na(sea_temp_c), 
-                             mean(sea_temp_c, na.rm=TRUE),
-                             sea_temp_c),
-         air_temp_c = ifelse(is.na(air_temp_c), 
-                             mean(air_temp_c, na.rm=TRUE),
-                             air_temp_c)) 
-t97 &lt;- bind_shadow(oceanbuoys) %&gt;% 
-  filter(year==&quot;1997&quot;) %&gt;%
-  mutate(sea_temp_c = ifelse(is.na(sea_temp_c), 
-                             mean(sea_temp_c, na.rm=TRUE),
-                             sea_temp_c),
-         air_temp_c = ifelse(is.na(air_temp_c), 
-                             mean(air_temp_c, na.rm=TRUE),
-                             air_temp_c))
- 
-tao_shadow &lt;- bind_rows(t93, t97)  
+<pre class="r"><code>tao_shadow &lt;- tao_shadow %&gt;%
+  group_by(year) %&gt;%
+  impute_mean_at(vars(sea_temp_c,
+                      air_temp_c))
 
 ggplot(tao_shadow,
        aes(x = sea_temp_c,

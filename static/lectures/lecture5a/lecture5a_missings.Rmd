@@ -210,15 +210,19 @@ What do we learn?
 The shadow table is created to mark the location of missings in the original data table. Here, this gets appended to the original data, and then can be used to submet, or colour by different types of missingness.
 
 ```{r}
+as_shadow(oceanbuoys)
 tao_shadow <- bind_shadow(oceanbuoys)
 tao_shadow
+glimpse(tao_shadow)
 ```
 
 ### Relationship with other variables
 
 ```{r}
 ggplot(data = tao_shadow,
-       aes(x = wind_ew, y=wind_ns, colour=air_temp_c_NA)) +
+       aes(x = wind_ew, 
+           y=wind_ns, 
+           colour=air_temp_c_NA)) +
        scale_colour_brewer(palette="Dark2") +
        geom_point(alpha=0.7) + theme(aspect.ratio=1) 
 ```
@@ -230,6 +234,15 @@ What do we learn?
 ### Two minute challenge
 
 - Generate the shadow matrix and make a plot of the winds, coloured by missingness on humidity.
+
+```{r}
+ggplot(data = tao_shadow,
+       aes(x = wind_ew, 
+           y=wind_ns, 
+           colour=humidity_NA)) +
+       scale_colour_brewer(palette="Dark2") +
+       geom_point(alpha=0.7) + theme(aspect.ratio=1) 
+```
 
 ## Strategy
 
@@ -272,6 +285,7 @@ What do we learn?
 ### by year
 
 ```{r}
+tao_shadow <- bind_shadow(oceanbuoys)
 tao_shadow <- tao_shadow %>%
   group_by(year) %>%
   impute_mean_at(vars(sea_temp_c,
@@ -298,6 +312,22 @@ What do we learn?
 
 - Change the code to plot sea temperature against humidity, with colour representing missing humidity values. What do you learn about the imputations?
 
+```{r}
+tao_shadow <- bind_shadow(oceanbuoys)
+tao_shadow <- tao_shadow %>%
+  group_by(year) %>%
+  impute_mean_at(vars(sea_temp_c,
+                      air_temp_c,
+                      humidity))
+ggplot(tao_shadow,
+       aes(x = sea_temp_c,
+           y = humidity, 
+           colour=humidity_NA)) +
+  geom_point(alpha=0.7) + 
+  facet_wrap(~year) + 
+  scale_colour_brewer(palette="Dark2") +
+  theme(aspect.ratio=1)
+```
 
 ###  Nearest neighbors imputation
 
