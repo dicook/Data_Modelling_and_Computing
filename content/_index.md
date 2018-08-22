@@ -124,7 +124,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Simpsons: [scripts](http://dmac.dicook.org/lectures/data/simpsons_script_lines.csv), [characters](http://dmac.dicook.org/lectures/data/simpsons_characters.csv)
 - Harry Potter: [hpchars](http://dmac.dicook.org/lectures/lecture10b/data/hpchars.rda), [hpedges](http://dmac.dicook.org/lectures/lecture10b/data/hpedges.rda)
 - Newcastle Jets: [facebook posts](http://dmac.dicook.org/lectures/data/ncj_posts.rda), [scores](http://dmac.dicook.org/lectures/data/ncj.csv)
-- Melbourne housing data: [Melbourne_housing_FULL.csv](Melbourne_housing_FULL.csv)
+- Melbourne housing data: [Melbourne_housing_FULL.csv](http://dmac.dicook.org/lectures/data/Melbourne_housing_FULL.csv)
 
 
 ## Project
