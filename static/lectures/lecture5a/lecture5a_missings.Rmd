@@ -148,6 +148,12 @@ s_miss_group <- oceanbuoys %>%
 s_miss_group$miss_case_table
 ```
 
+You can call these separately with:
+
+- `prop_miss` - The proportion of missings
+- `miss_var_prop` - The proportion of variables with a missing
+- `miss_case_table` - The proportion of cases with $k$ missings
+
 ### Tend to get ignored by most software
 
 and this is a problem, because results computed on data with missing values might be biased. for example, `ggplot` ignores them, but at least tells you its ignoring them:
@@ -245,20 +251,17 @@ ignoring year.
 
 ```{r}
 tao_shadow <- tao_shadow %>%
-  mutate(sea_temp_c = ifelse(is.na(sea_temp_c), 
-                             mean(sea_temp_c, na.rm=TRUE),
-                             sea_temp_c),
-         air_temp_c = ifelse(is.na(air_temp_c), 
-                             mean(air_temp_c, na.rm=TRUE),
-                             air_temp_c))
+  impute_mean_at(vars(sea_temp_c,
+                      air_temp_c))
+
 ggplot(tao_shadow,
        aes(x = sea_temp_c,
            y = air_temp_c, 
-           colour=air_temp_c_NA)) +
-  geom_point(alpha=0.7) + 
+           colour = air_temp_c_NA)) +
+  geom_point(alpha = 0.7) + 
   facet_wrap(~year) + 
-  scale_colour_brewer(palette="Dark2") +
-  theme(aspect.ratio=1)
+  scale_colour_brewer(palette = "Dark2") +
+  theme(aspect.ratio = 1)
 ```
 
 What do we learn?
@@ -269,24 +272,10 @@ What do we learn?
 ### by year
 
 ```{r}
-t93 <- bind_shadow(oceanbuoys) %>% 
-  filter(year=="1993") %>%
-  mutate(sea_temp_c = ifelse(is.na(sea_temp_c), 
-                             mean(sea_temp_c, na.rm=TRUE),
-                             sea_temp_c),
-         air_temp_c = ifelse(is.na(air_temp_c), 
-                             mean(air_temp_c, na.rm=TRUE),
-                             air_temp_c)) 
-t97 <- bind_shadow(oceanbuoys) %>% 
-  filter(year=="1997") %>%
-  mutate(sea_temp_c = ifelse(is.na(sea_temp_c), 
-                             mean(sea_temp_c, na.rm=TRUE),
-                             sea_temp_c),
-         air_temp_c = ifelse(is.na(air_temp_c), 
-                             mean(air_temp_c, na.rm=TRUE),
-                             air_temp_c))
- 
-tao_shadow <- bind_rows(t93, t97)  
+tao_shadow <- tao_shadow %>%
+  group_by(year) %>%
+  impute_mean_at(vars(sea_temp_c,
+                      air_temp_c))
 
 ggplot(tao_shadow,
        aes(x = sea_temp_c,
@@ -297,6 +286,7 @@ ggplot(tao_shadow,
   scale_colour_brewer(palette="Dark2") +
   theme(aspect.ratio=1)
 ```
+
 
 What do we learn?
 
