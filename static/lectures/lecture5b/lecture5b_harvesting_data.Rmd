@@ -263,7 +263,7 @@ nba %>% filter(is.na(SALARY)) %>% head()
 - We don't want these lines
 
 ```{r}
-nba <- nba %>% filter(!is.na(SALARY)) 
+nba <- nba %>% filter(!is.na(SALARY))
 ```
 
 ### Working with text
@@ -437,11 +437,11 @@ There's a nice help page by [Carson Sievert here](https://gist.github.com/cpsiev
 
 ## Lab exercise
 
-1. Use the `cricketdata` package to extract *batting* data of male players for your two favorite countries.
+1. Use the `cricketdata` package to extract the T20 *batting* data of male players for your two favorite countries.
 2. Between 2010 and 2015, which country has the better record? Explain the reason for your answer, and your analysis choices.
 3. Pull the crossrates for the month of August 2018
 4. Make a plot to compare the crossrates for AUD, EUR, GBP, NZD, JPY. Make a descriptive summary of what you learn.
-5. Web scrape the ODI and T20 ratings for men's cricekt teams, from https://www.icc-cricket.com/rankings/mens/team-rankings . Make a plot of the ODI vs T20 rating. What countries do better in T20 relative to their ODI performance?
+5. Web scrape the ODI and T20 ratings for men's cricket teams, from https://www.icc-cricket.com/rankings/mens/team-rankings . Make a plot of the ODI vs T20 rating. What countries do better in T20 relative to their ODI performance?
 6. Use your scraping skills to pull the data on NBA scoring per game, from http://www.espn.com/nba/statistics/player/_/stat/scoring-per-game . Make a plot to answer this question: What player position tends to score the most?
 
 
