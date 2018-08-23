@@ -177,10 +177,8 @@ glimpse(ausw_t20)
 ```{r}
 ausw_t20 <- ausw_t20 %>%
   mutate(HS = sub("\\*", "", HS)) %>%
-  #mutate_all(funs(sub("*", "", .))) %>%
   mutate_all(funs(sub("-", "", .))) %>%
   mutate_at(vars(Inns:`6s`), as.numeric)
-  # mutate_at(c("Inns", "NO", "Runs", "HS", "Ave", "BF", "SR", "100", "50", "0", "4s", "6s"), as.numeric)
 ```
 
 ### All done
@@ -192,9 +190,9 @@ p <- ggplot(ausw_t20, aes(x=Ave, y=SR, label=Player)) + geom_point()
 ggplotly(p)
 ```
 
-### `cricinfo` package
+### `cricketdata` package
 
-The `cricinfo` package makes this all a lot easier!
+The `cricketdata` package makes this all a lot easier!
 
 ```{r}
 # devtools::install_github("ropenscilabs/cricketdata")
@@ -306,7 +304,7 @@ quiz(
     answer("New York Knicks")))
 ```
 
-```{r eval=FALSE}
+```{r echo=FALSE, eval=FALSE}
 nba %>% summarise(ms = min(SALARY))
 nba %>% filter(SALARY < 100000) %>% tally()
 ggplot(data=nba, aes(x=position, y=SALARY)) + geom_boxplot()
@@ -439,10 +437,12 @@ There's a nice help page by [Carson Sievert here](https://gist.github.com/cpsiev
 
 ## Lab exercise
 
-1. Use the cricket data package to extract *batting* data of male players for your two favorite countries.
+1. Use the `cricketdata` package to extract *batting* data of male players for your two favorite countries.
 2. Between 2010 and 2015, which country has the better record? Explain the reason for your answer, and your analysis choices.
 3. Pull the crossrates for the month of August 2018
 4. Make a plot to compare the crossrates for AUD, EUR, GBP, NZD, JPY. Make a descriptive summary of what you learn.
+5. Web scrape the ODI and T20 ratings for men's cricekt teams, from https://www.icc-cricket.com/rankings/mens/team-rankings . Make a plot of the ODI vs T20 rating. What countries do better in T20 relative to their ODI performance?
+6. Use your scraping skills to pull the data on NBA scoring per game, from http://www.espn.com/nba/statistics/player/_/stat/scoring-per-game . Make a plot to answer this question: What player position tends to score the most?
 
 
 ## Share and share alike
