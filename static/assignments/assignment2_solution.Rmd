@@ -127,6 +127,12 @@ This plot by Team Rocket, shows a creative exploration, to look at good Friday v
 
 *Energy use has significantly be reduced between Good Friday and the Week after Good Friday. There may be a few flaws with this comparison, such as Fridays generally being more likely to use less power as seen in previous data, and also as previously discussed, Good Friday should be considered a rest day, and most likely all members of the household would be home.*
 
+And this is a calendar plot provide by team GeoZoo!
+
+![](assignment2_plots/geozoo.png)
+
+*This graph shows the daily usages of energy on a halfhour basis for all the months. Here, it allows us to clearly see which months have the highest amounts of usage of energy. We hypothesised that the colder/Winter months would have more energy usage as more households utilise appliances to keep themselves warm. From this graph we can see that Aug 2017 has a high usage of energy almost daily, as well as the end of May, start of Jun, and end of Jul 2018. These months all appear to have a higher daily usage of energy when compared to the warmer months of Nov-Dec 2017 and Jan-Mar 2018. We can also see in this graph that there are certain periods where there was no energy usage. This may be because the house owner may have left for a holiday or travelled for business purposes. i.e. most of Sept 2017 and end Jun-start Jul 2018.*
+
 (1 point for overall readability of the report.)
 
 # Grading
