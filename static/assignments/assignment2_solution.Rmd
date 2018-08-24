@@ -106,6 +106,27 @@ elec %>%
 
 *Some reasonable plots to look at are monthly usage as side-by-side boxplots, time of day usage as side-by-side boxplots, a calendar plot of usage, a long time series of the entire period. There's probably lots of creative submissions here. Each needs to have a paragraph explaining what is learned about their energy usage from the plot.*
 
+Here are some good examples from the reports. These are three from group Thor. What is terrific about these plots is the way they break down time in a logical way. 
+
+![](assignment2_plots/thor1.png)
+
+*The graph above shows the average amount of electricity used each halfhour each year. From 00:00 until 05:00, the least amount of eletricity was used in 2016. Additionally, The highest peak amount of electricity used occurred in 2018 at 15:00. Although 2018 had the highest peak, the drop after that was much more steep than in 2016 and 2017, indicating that less electricity was used later in the evening compared to the previous years.*
+
+![](assignment2_plots/thor2.png)
+
+*From this graph we can see that the highest electricity usage is in Winter. This could be because of the increased usage of heating systems within the house and the fact that families generally go out less in Winter. Contrastingly, summer has the lowest energy usage. This could be because every summer, families tend to go away and thus will not use electricity within the house.Spring and autumn are quite close, which is expected as nothing different happens within those two months.*
+
+![](assignment2_plots/thor3.png)
+
+*Throughout the entire year, there has been significantly more electricity used during the day than night, which makes sense as this is the time when people are usually awake and active. The least amount of electricity used during the day is in April, while during the night it was in December. On the otherhand, the most amount of electricity used during the day is in January, whil during the night it is in June.*
+
+This plot by Team Rocket, shows a creative exploration, to look at good Friday vs the week after, people at home vs at work, possibly.
+
+
+![](assignment2_plots/teamrocket1.png)
+
+*Energy use has significantly be reduced between Good Friday and the Week after Good Friday. There may be a few flaws with this comparison, such as Fridays generally being more likely to use less power as seen in previous data, and also as previously discussed, Good Friday should be considered a rest day, and most likely all members of the household would be home.*
+
 (1 point for overall readability of the report.)
 
 # Grading

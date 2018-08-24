@@ -235,8 +235,8 @@ tables
 
 ```{r echo=TRUE}
 nba <- NULL
-for (i in 1:12) {
-  site <- paste0("http://espn.go.com/nba/salaries/_/page/",i,"/seasontype/3")
+for (i in 1:10) {
+  site <- paste0("http://espn.go.com/nba/salaries/_/page/",i,"/seasontype/4")
   raw_html <- read_html(site)
   temp <- raw_html %>% html_table(fill=TRUE, header=TRUE)
   nba <- bind_rows(nba, temp)
