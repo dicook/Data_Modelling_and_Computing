@@ -1,5 +1,6 @@
 ---
 title: "ETC1010: Data Modelling and Computing"
+author: "Professor Di Cook, EBS, Monash U."
 output: 
   learnr::tutorial:
     css: "css/logo.css"
@@ -23,7 +24,7 @@ tutorial_html_dependency()
 
 ## Course web site
 
-This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.netlify.com](http://dmac.netlify.com)
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.dicook.org](http://dmac.dicook.org)
 
 ## Overview
 
@@ -32,11 +33,7 @@ This is a link to the course web site, in case you need to go back and forth bet
 - Model fit, and predictions
 - Model basics in R
 
-<!--
-- Diagnostics
-- Inference
-- Optimisation
--->
+![](images/magnifyingglass.jpg)
 
 ## Why models?
 
@@ -44,6 +41,31 @@ This is a link to the course web site, in case you need to go back and forth bet
 - **family of models** express a relationship between different variables.
 - allows us to predict outcomes of interest, given other variables!
 - **prediction** is critical in many fields
+
+### Example
+
+```{r echo=FALSE}
+library(tidyverse)
+library(nycflights13)
+library(gridExtra)
+flgt_weath <- flights %>% 
+  filter(origin == "LGA") %>%
+  left_join(weather, by=c("origin", "time_hour")) %>%
+  filter(wind_speed > 25)
+p1 <- ggplot(flgt_weath, aes(x=wind_dir, y=dep_delay)) + 
+  geom_point(alpha=0.1) + 
+  ggtitle("Data alone")
+p2 <- ggplot(flgt_weath, aes(x=wind_dir, y=dep_delay)) + 
+  geom_point(alpha=0.01) + 
+  geom_smooth(se=FALSE) + 
+  ggtitle("Data + model")
+p3 <- ggplot(flgt_weath, aes(x=wind_dir, y=dep_delay)) + 
+  geom_smooth(se=FALSE) + 
+  ggtitle("Model only")
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+![](LGA_Airport_diagram.pdf.jpg)
 
 ### Model families
 
@@ -182,9 +204,11 @@ quiz(
 ## Let's fit a model to CO2
 
 ```{r}
-CO2.spo <- read_csv("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+library(lubridate)
+CO2.spo <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
   mutate(lat = -90.0, lon = 0, stn = "spo") %>%
-  filter(flg==0)
+  filter(flg==0) %>%
+  mutate(date = ymd(date))
 ggplot(CO2.spo, aes(x=date, y=co2)) + geom_point()
 ```
 
@@ -217,16 +241,17 @@ quiz(
 co2_fit <- lm(co2~day0, data=CO2.spo)
 library(broom)
 tidy(co2_fit)
+coef <- tidy(co2_fit)$estimate
 ```
 
 Then the fitted model will be:
 
-$$\widehat{co2}=302.778+0.00421\times day0$$
+$$\widehat{co2}=302.636+0.00423\times day0$$
 
 ### Predict from the model
 
 - For day0=10000 
-- the model predicts co2 to be 302.778+0.00421*10000 = 344.878. 
+- the model predicts co2 to be `r coef[1]`+`r coef[2]`*10000 = `r coef[1]+coef[2]*10000`. 
 
 ```{r co2date, echo=FALSE}
 quiz(
@@ -318,7 +343,7 @@ ggplot(filter(co2_model2, year(date)>2002, year(date)<2005), aes(x=date, y=.std.
 
 Using your model, built using values collected the south pole sensor, see how well it fits values from Point Barrow, Alaska. 
 
-1. Download the data. You can use almost the same code as for SPO by replacing "spo" with "ptb".
+1. Download the data. You can use almost the same code as for SPO but check the file name at http://scrippsco2.ucsd.edu/data/atmospheric_co2/ptb.
 2. The code below is a way to fit new data. It needs a bit of modification.
 
 ```
@@ -334,9 +359,10 @@ ggplot(co2_model, aes(x=date, y=co2)) +
 ```
 
 ```{r eval=FALSE}
-CO2.ptb <- read_csv("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_ptb.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+CO2.ptb <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/flask_co2/daily/daily_flask_co2_ptb.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
   mutate(lat = -90.0, lon = 0, stn = "ptb") %>%
-  filter(flg==0)
+  filter(flg==0) %>%
+  mutate(date = ymd(date))
 CO2.ptb <- CO2.ptb %>% mutate(day0 = day - min(CO2.spo$day))
 co2_model_ptb <- augment(co2_fit3, newdata=CO2.ptb)
 ggplot(co2_model_ptb, aes(x=date, y=co2)) + 
