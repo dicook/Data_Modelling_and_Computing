@@ -34,6 +34,7 @@ This is a link to the course web site, in case you need to go back and forth bet
 - Model basics in R
 
 ![](images/magnifyingglass.jpg)
+Image source: Anton Croos [Art of Photography](https://art-of-photography-com.blogspot.com/)
 
 ## Why models?
 
@@ -42,9 +43,9 @@ This is a link to the course web site, in case you need to go back and forth bet
 - allows us to predict outcomes of interest, given other variables!
 - **prediction** is critical in many fields
 
-### Example
+### Example from week 4
 
-```{r echo=FALSE}
+```{r echo=FALSE, fig.height=3}
 library(tidyverse)
 library(nycflights13)
 library(gridExtra)
@@ -56,7 +57,7 @@ p1 <- ggplot(flgt_weath, aes(x=wind_dir, y=dep_delay)) +
   geom_point(alpha=0.1) + 
   ggtitle("Data alone")
 p2 <- ggplot(flgt_weath, aes(x=wind_dir, y=dep_delay)) + 
-  geom_point(alpha=0.01) + 
+  geom_point(alpha=0.1) + 
   geom_smooth(se=FALSE) + 
   ggtitle("Data + model")
 p3 <- ggplot(flgt_weath, aes(x=wind_dir, y=dep_delay)) + 
@@ -65,7 +66,7 @@ p3 <- ggplot(flgt_weath, aes(x=wind_dir, y=dep_delay)) +
 grid.arrange(p1, p2, p3, ncol=3)
 ```
 
-![](LGA_Airport_diagram.pdf.jpg)
+![](images/LGA_Airport_diagram.pdf.jpg)
 
 ### Model families
 
@@ -358,7 +359,7 @@ ggplot(co2_model, aes(x=date, y=co2)) +
   geom_line(aes(y=.fitted), colour="blue")
 ```
 
-```{r eval=FALSE}
+```{r eval=FALSE, echo=FALSE}
 CO2.ptb <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/flask_co2/daily/daily_flask_co2_ptb.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
   mutate(lat = -90.0, lon = 0, stn = "ptb") %>%
   filter(flg==0) %>%
@@ -376,53 +377,7 @@ ggplot(co2_model_ptb2, aes(x=date, y=co2)) +
   geom_line(aes(y=.fitted), colour="blue")
 ```
 
-<!--
 
-By optimisation, of $\sum_i (y_i-(b_0+b_1x_{i1}+\dots +b_px_{ip}))^2$, we found the line of best fit, and parameter estimates $(b_0, b_1, \dots, b_p, \hat{\sigma})$ for the "true" (population) model. 
-
-For a simple linear model (one explanatory variable),
-
-$$b_1 = r \frac{s_y}{s_y}$$ 
-
-is the *slope*
-
-$$b_0 = \bar{y} - b_1 \bar{x}$$
-is the *intercept*, and
-
-$$\mbox{MSE} = \frac{1}{n}\sum_{i=1}^{n} (y_i - (b_0+b_1x_{i1}+\dots +b_px_{ip}))^2$$ 
-
-is an estimate of $\sigma^2$, and also called the *mean squared error*.
-
-### Normal residuals
-
-The assumption is that $\varepsilon \sim N(0, \sigma^2)$ implies that 
-
-$$y|x_1, \dots, x_p \sim N(b_0+b_1x_{1}+\dots +b_px_{p}, \sigma^2)$$
-
-```{r}
-set.seed(5)
-b0 <- 15
-b1 <- -2
-e <- rnorm(100, 0, 0.5)
-x <- sort(runif(100))
-y <- b0 + b1*x + e
-df <- data.frame(x, y, e)
-#ggplot(df, aes(x, y)) + 
-#  geom_point() +
-#  geom_abline(intercept=b0, slope=b1)
-norm_curves <- data.frame(x=seq(-1.5,1.5,0.1),
-     e=dnorm(seq(-1.5,1.5,0.1), 0, 0.5)/10) 
-
-ggplot(df, aes(x, y)) + 
-  geom_point() +
-  geom_abline(intercept=b0, slope=b1, colour="orange") + 
-  geom_path(data=norm_curves, aes(x=0.5+e, y=x+14), colour="orange") + 
-  geom_path(data=norm_curves, aes(x=0.25+e, y=x+14.5), colour="orange") + 
-  geom_path(data=norm_curves, aes(x=0.75+e, y=x+13.5), colour="orange")
-```
-
-Regardless of the value of $x$ the distribution of points above and below the line should be the same, and symmetric. And as you get further form the line, there should be less points. 
--->
 
 ## Share and share alike
 

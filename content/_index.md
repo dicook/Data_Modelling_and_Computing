@@ -49,8 +49,9 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
 - Week 5: Handling missing values  
     - [Wed](https://ebsmonash.shinyapps.io/lecture5a_missings) [(Rmd)](http://dmac.dicook.org/lectures/lecture5a/lecture5a_missings.Rmd) [Reading exercise is a doing exercise this week - follow the instructions on this site](https://gist.github.com/cpsievert/e05da83fc4253e6d1986)
     - [Fri](https://ebsmonash.shinyapps.io/lecture5b_harvesting_data) [(Rmd)](http://dmac.dicook.org/lectures/lecture5b/lecture5b_harvesting_data.Rmd) [Reading Textbook 23.1-2](http://r4ds.had.co.nz/model-basics.html)
-- Week 6: Introduction to modeling: 
-- Week 7: Intermediate models; 
+- Week 6: Introduction to modeling
+    - [Wed](https://ebsmonash.shinyapps.io/lecture6a_models) [(Rmd)](http://dmac.dicook.org/lectures/lecture6a/lecture6a_models.Rmd)
+- Week 7: Intermediate models 
 - Week 8: Advanced modeling;
 - Week 9: Advanced data handling; 
 - Week 10: Working with text data, and networks;
