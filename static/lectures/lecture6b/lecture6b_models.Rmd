@@ -1,5 +1,6 @@
 ---
 title: "ETC1010: Data Modelling and Computing"
+author: "Professor Di Cook, EBS, Monash U."
 output: 
   learnr::tutorial:
     css: "css/logo.css"
@@ -23,7 +24,7 @@ tutorial_html_dependency()
 
 ## Course web site
 
-This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.netlify.com](http://dmac.netlify.com)
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.dicook.org](http://dmac.dicook.org)
 
 ## Overview
 
@@ -160,10 +161,12 @@ All of these statistics indicate the model 2 is substantially a better fit than 
 
 ```{r}
 library(tidyverse)
+library(lubridate)
 library(broom)
-CO2.spo <- read_csv("http://scrippsco2.ucsd.edu/sites/default/files/data/flask_co2_and_isotopic/daily_co2/fldav_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+CO2.spo <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
   mutate(lat = -90.0, lon = 0, stn = "spo") %>%
-  filter(flg==0)
+  filter(flg==0) %>%
+  mutate(date = ymd(date))
 CO2.spo <- CO2.spo %>% mutate(day0=day-min(day))
 co2_fit1 <- lm(co2~day0, data=CO2.spo)
 co2_fit2 <- lm(co2~day0+I(day0^2), data=CO2.spo)
