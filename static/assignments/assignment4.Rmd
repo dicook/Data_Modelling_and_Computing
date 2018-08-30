@@ -23,295 +23,116 @@ knitr::opts_chunk$set(
 
 # Instructions
 
-- This is a team assignment, of between 2-4 people. You can work with the same team from the previous assignments, or you can create a new team. 
-- You need to write a report that 
-    - answers the questions. Using paragraphs and full sentences, to respond to each question.
-    - provides a choice of good plots to support your answers
-    - has a good summary of what you have learned about precipitation patterns across Australia
-- Turn in `html` output file, and also the `Rmd` file, and a file documenting the team name, team members and %effort by each.
-- Use your team name on the report
-- Total points for the assignment is 20. Five points of the score from the assignment will be given by other class members, who will give you full marks if they can compile your report, and get the same answers as you, and find your summaries, explanations and justifications understandable and informative.
+- This is a team assignment. 
+- You need to write a report with answers to each of the questions. 
+- Turn in the `html` output file, and also the `Rmd` file. 
+- Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative. Five points will be for individual effort. And the remaining 10 points will be the final group report.
 
 # Exercise
 
-*I love a sunburnt country*
+*[Melbourne property prices have taken their biggest hit since 2012, falling by almost 2 per cent in the past three months](https://www.domain.com.au/news/melbourne-median-house-price-falls-to-882082-over-june-quarter-domain-group-report-20180726-h134ao-754199/)* Jim Malo, Jul 26 2018, Domain
 
-*A land of sweeping plains*
+This assignment explores the data provided on [Melbourne house prices by Anthony Pino](https://www.kaggle.com/anthonypino/melbourne-housing-market). The goal is to examine whether housing prices have cooled in Melbourne, and help Anthony decide whether it is time to buy a two bedroom apartment in Northcote. 
 
-*Of ragged mountain ranges*
+## Your tasks
 
-*Of droughts and flooding rains*
+1. Make a map of Melbourne showing the locations of the properties. 
 
-(From the poem My Country by Dorothea MxKellar)
-
-How is the climate changing across Australia, particularly rainfall?  Read the article on the [Bureau of Meteorology web site on rainfall patterns across Australia](http://www.bom.gov.au/climate/updates/articles/a010-southern-rainfall-decline.shtml). 
-
-This assignment is about examining and modeling precipitation records from 239 weather stations across Australia. The data was downloaded, cleaned and processed using the code below. **You don't need to do any more data collection yourself.**
-
-```{r eval=FALSE, echo=TRUE}
+```{r echo=FALSE}
 library(tidyverse)
-stns <- read_fwf("https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt", 
-   fwf_widths(c(11, 9, 10, 7, 3, 30, 4, 4, 6),
-   c("stn", "lat", "lon", "elev", "state", "name", "flg1", "flg2", "wmo")))
-stns_oz <- stns[grep("ASN", stns$stn),]
-keep <- stns_oz %>% 
-  filter(lat > -43, lat < -12, lon > 113.6, lon < 153.6)
-library(ggmap)
-oz <- get_map(location=c(lon=133.8807, lat=-23.6980), zoom=4)
-ggmap(oz) + 
-  geom_point(data=stns_oz, aes(x=lon, y=lat), 
-              alpha=0.5, colour="orange", size=0.5)
-
-stns_vic <- stns_oz %>% 
-  filter(lat > -38.4, lat < -34.4, lon > 141.8, lon < 150.0)
-  
-smpl <- stns_vic$stn[sample(1:nrow(stns_vic), 500)]
-# The R package rnoaa can also be used to pull the data
-vic_weather <- NULL
-#for (i in 1:length(smpl)) {
-for (i in 301:400) {
-  cat(i, "\n")
-  filenm <- paste0("https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all/",
-                   smpl[i],".dly")
-   x <- read_fwf(filenm, 
-   col_positions=fwf_widths(c(11, 4, 2, 4, 
-        rep(c(5, 1, 1, 1), 31)), 
-        col_names = c("station", "year", "month",
-              "variable", paste0("X", 5:128))))
-   vic_weather <- bind_rows(vic_weather, x)
-}
-vic_weather <- vic_weather %>% filter(year > 1950)
-vic_weather <- vic_weather %>% filter(variable == "PRCP")
-vic_weather <- vic_weather[,c(1:4, seq(5,128,4))] 
-vic_weather_long <- vic_weather %>% 
-  gather(day, value, X5:X125)
-vic_weather_long <- vic_weather_long %>% 
-  mutate(day = sub("X", "", day)) %>%
-  mutate(day = as.numeric(day)%/%4) %>%
-  mutate(day = as.integer(day)) %>% 
-  mutate(value=ifelse(value==-9999, NA, value)) %>%
-  select(-variable) %>%
-  rename(prcp = value) %>%
-  mutate(prcp=prcp/10) %>%
-  mutate(month=as.numeric(month))
-vic_prcp_longterm <- vic_weather_long %>%
-  filter(year < 2017) %>%
-  group_by(station, month, year) %>%
-  summarise(prcp = sum(prcp, na.rm=T)) %>%
-  group_by(station, month) %>%
-  summarise(prcp_av = mean(prcp))
-vic_prcp_recent <- vic_weather_long %>%
-  filter(year >= 2017) %>%
-  group_by(station, month, year) %>%
-  summarise(prcp_recent = sum(prcp, na.rm=T)) %>%
-  ungroup()
-
-
-long_enough <- oz_yr_prcp %>% count(station, sort=TRUE) %>%
-  filter(n>50)
-oz_yr_prcp <- oz_yr_prcp %>% filter(station %in% long_enough$station)
-recent <- oz_yr_prcp %>% group_by(station) %>% filter(2017 %in% year)
-oz_yr_prcp <- oz_yr_prcp %>% filter(station %in% recent$station)
-
-ggplot(oz_yr_prcp, aes(x=year, y=prcp, group=station, colour=station)) + 
-  geom_point(alpha=0.1) + theme(legend.position = "none") +
-  geom_smooth(se=FALSE)
-```
-
-```{r}
-library(rvest)
 library(lubridate)
-x <- read_html("https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all/?C=M;O=A")
-tb <- x %>% html_table()
-
-asn <- read_csv("data/asn.csv")
-asn <- asn %>%
-  select(-junk) %>%
-  mutate(datetime = dmy_hm(datetime)) %>%
-  mutate(date = date(datetime))
-asn %>% filter(date > ymd("20180228"))
-# 98 with august, july, jun, may
-# 100 for april
-# 3792 for march
-asn_aug <- asn %>% filter(date > ymd("20180731"))
-asn_aug <- asn_aug %>% mutate(station=substr(station, 1, 11))
-stns_aug <- stns_oz %>% filter(stn %in% asn_aug$station)
-ggmap(oz) + 
-  geom_point(data=stns_aug, aes(x=lon, y=lat), 
-              alpha=0.5, colour="orange")
-oz_weather <- NULL
-for (i in 1:nrow(asn_aug)) {
-  cat(i, "\n")
-  filenm <- paste0("https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all/",
-                   asn_aug$station[i],".dly")
-   x <- read_fwf(filenm, 
-   col_positions=fwf_widths(c(11, 4, 2, 4, 
-        rep(c(5, 1, 1, 1), 31)), 
-        col_names = c("station", "year", "month",
-              "variable", paste0("X", 5:128))))
-   oz_weather <- bind_rows(oz_weather, x)
-}
-oz_weather <- oz_weather %>% filter(year > 1950)
-oz_weather <- oz_weather %>% filter(variable == "PRCP")
-oz_weather <- oz_weather[,c(1:4, seq(5,128,4))] 
-oz_weather_long <- oz_weather %>% 
-  gather(day, value, X5:X125)
-oz_weather_long <- oz_weather_long %>% 
-  mutate(day = sub("X", "", day)) %>%
-  mutate(day = as.numeric(day)%/%4) %>%
-  mutate(day = as.integer(day)) %>% 
-  mutate(value=ifelse(value==-9999, NA, value)) %>%
-  select(-variable) %>%
-  rename(prcp = value) %>%
-  mutate(prcp=prcp/10) %>%
-  mutate(month=as.numeric(month))
-oz_prcp_longterm <- oz_weather_long %>%
-  filter(year <= 2017) %>%
-  group_by(station, month, year) %>%
-  summarise(prcp = sum(prcp, na.rm=T)) %>%
-  group_by(station, month) %>%
-  summarise(prcp_av = mean(prcp))
-oz_prcp_recent <- oz_weather_long %>%
-  filter(year > 2017) %>%
-  group_by(station, month, year) %>%
-  summarise(prcp_tot = sum(prcp, na.rm=T)) %>%
-  ungroup()
-oz_prcp_longterm %>% count(station, sort=TRUE)
-oz_prcp_recent %>% count(station, sort=TRUE)
-
-ggplot(oz_prcp_recent, aes(x=month, y=prcp_tot)) + 
-  geom_point() + geom_line(aes(group=station))
-
-oz_prcp_compare <- oz_prcp_recent %>% left_join(oz_prcp_longterm, by=c("station", "month"))
-oz_prcp_compare <- oz_prcp_compare %>% mutate(dry = prcp_av - prcp_tot)
-oz_prcp_compare <- oz_prcp_compare %>% left_join(stns_oz, by=c("station"="stn"))
-ggmap(oz) + 
-  geom_point(data=oz_prcp_compare, aes(x=lon, y=lat, colour=dry)) +
-  facet_wrap(~month, ncol=4) +
-  scale_colour_gradient2(low="blue", high="brown", midpoint=0, mid="white", limits=c(-50,50))
-#  scale_colour_distiller(type="div", mid=0)
-ggplot(data=oz_prcp_compare, aes(x=dry)) + geom_density()
-ggplot(data=oz_prcp_compare, aes(x=1, y=dry)) + geom_boxplot()
+mh <- read_csv("data/Melbourne_housing_FULL.csv") %>%
+  rename(lon=Longtitude, lat=Lattitude) %>%
+  mutate(Date = dmy(Date))
+library(ggmap)
+map <- get_map(location = c(145.0, -37.8), zoom=10)
+ggmap(map) + geom_point(data=mh, aes(x=lon, y=lat), colour="orange", size=0.5, alpha=0.5)
 ```
 
-1. Make a plot of precipitation by year, for each station. There is one station that recorded more than 30000mm of rain in one year. How much rain is this per day? Describe the pattern of precipitation over the years. How will the patterns affect modeling? 
-2. Make a histogram and density plot of precipitation. Describe the distribution. Would it be advisable to make a transformation on precipitation before attempting to fit a model? What transformation would you use, if so?
-3. How many years (across all stations) was there no recorded precipitation? Which station had the most zero rain years? Plot the stations that have had zero rain years on the map, coloured by the number of years they had no rain. Is this what you would have expected, given knowledge of Australia's dry interior and wet east coast? Make a plot of precipitation by year for the stations with the most missings. What is wrong in my code used to prepare the yearly total precipitation by station, that has lead to the zeros. That is, there is good evidence that the zero's are not "real" zeros but probably missing values. Fix the problem by putting missing values back in for the zeros.
-4. Fit the many models approach to the precipitation records for stations across Australia. Make a summary plot of intercept by slope. Make a plot of $R^2$ by slope. Are there locations where the models suggest that its getting drier? wetter? What is the most extreme change?
-5. Select stations that have good model fits, and plot precipitation by year, with the model overlaid. Show the precipitation by year plots, with model, for stations where its getting wetter, and also those where its getting drier.  Explain what you learn.
-6. Make a map with locations coloured by the change in precipitation (slope). How does this compare with the BOM explanation of rainflal patterns?
+2. Filter the data to focus only on the records for Northcote units. Make a plot of Price by Date, facetted by number of bedrooms. The main thing to learn from this plot is that there are many missing values for number of bedrooms. Impute the missing values, based on the regression method (covered in class). Make sure your predicted value is an integer. Re-make the plot of Price by Date, facetted by number of bedrooms. Make a description of what you learn from the plot, particularly about the trend of 2 bedroom unit prices in Northcote.
 
-# Help
-
-Here is a plot of the stations included in the data provided.
-
-```{r echo=TRUE}
-library(tidyverse)
-library(plotly)
-load("data/oz_yr_prcp_50yrs.rda")
-load("data/stns_oz.rda")
-library(eechidna)
-data(nat_map_2016)
-library(ggthemes)
-ggplot() +
-  geom_polygon(data=nat_map_2016, mapping=aes(x=long, y=lat, group=group), fill="grey90", color="white") +
-  theme_map() + 
-  geom_point(data=oz_yr_prcp_50yrs, aes(x=lon, y=lat), colour="red", size=2)
+```{r echo=FALSE}
+nc <- mh %>% filter(Suburb == "Northcote", Type == "u")
+ggplot(nc, aes(x=Date, y=Price)) + 
+  geom_point() + geom_smooth(se=F) +
+  facet_wrap(~Bedroom2, ncol=4) 
+library(naniar)
+nc_ms <- nc %>% bind_shadow()
+br2 <- lm(Bedroom2~Rooms, data=nc_ms)
+nc_ms <- nc_ms %>%
+  mutate(Bedroom2=ifelse(is.na(Bedroom2),
+    round(predict(br2, new=nc_ms), 0), Bedroom2))
+ggplot(nc_ms, aes(x=Date, y=Price)) + 
+  geom_point() + geom_smooth(se=F) +
+  facet_wrap(~Bedroom2, ncol=4) 
 ```
 
-The Rmd file for the assignment has "scaffold" code to help you work your way through the questions. You will need to fill in the "??" with the necessary pieces to make it completely work for you.
+3. Using the many models approach, fit a linear model for Price on Date, separately for every suburb, for 2 bedroom units. You will need to impute the Bedroom2 variable, in the same way done in the previous question. Collect the model estimates, and also the model fit statistics. What suburb has had the largest increase, which has had the biggest decrease in prices? Which suburbs have the worst fitting models?
 
-```{r eval=FALSE}
-# Make histograms of precip
-ggplot(oz_yr_prcp_50yrs, aes(x=??)) + geom_histogram()
-ggplot(oz_yr_prcp_50yrs, aes(x=??)) + geom_histogram() + scale_x_log10()
-oz_yr_prcp_50yrs %>% filter(??) %>% count(station, sort=TRUE)
-# Precip by year by station
-ggplot(oz_yr_prcp_50yrs, aes(x=year, y=prcp, group=??)) + 
-  geom_point(alpha=0.5) +
-  ??(se=FALSE, alpha=0.1) 
-# Map wth zero rain years
-oz_yr_prcp_50yrs %>% filter(??) %>% count(station, sort=TRUE)
-norain <- oz_yr_prcp_50yrs %>% 
-  filter(??) %>% 
-  count(station, sort=TRUE) %>% 
-  inner_join(oz_yr_prcp_50yrs, by=??)
-library(viridis)
-ggplot() +
-  geom_polygon(data=nat_map_2016, mapping=aes(x=long, y=lat, group=group), fill="grey90", color="white") +
-  theme_map() + 
-  geom_point(data=norain, aes(x=lon, y=lat, colour=??), size=3, alpha=0.3) +
-  scale_colour_viridis()
-```
+```{r echo=FALSE}
+mh_ms <- mh %>% bind_shadow()
+br2 <- lm(Bedroom2~Rooms, data=mh_ms)
+mh_ms <- mh_ms %>%
+  mutate(Bedroom2=ifelse(is.na(Bedroom2),
+    round(predict(br2, new=mh_ms), 0), Bedroom2))
 
-
-```{r eval=FALSE}
-# Transform precip, make zeros missing
-oz_yr_prcp_50yrs <- oz_yr_prcp_50yrs %>% 
-  mutate(prcp = ifelse(??, NA, prcp)) %>%
-  mutate(lprcp = log10(??+1)) 
-
-ggplot(oz_yr_prcp_50yrs, aes(x=year, y=lprcp, group=??)) + 
-  geom_point(alpha=0.5) +
-  ??(se=FALSE, alpha=0.1) 
-
-# Fit model to each station, make summary plots
+mh_ms %>% filter(Type == "u", Bedroom2 == 2) %>% count(Suburb, sort = TRUE) %>% ggplot(aes(x=n)) + geom_histogram()
+keep <- mh_ms %>% filter(Type == "u", Bedroom2 == 2) %>% 
+  count(Suburb, sort = TRUE) %>%
+  filter(n > 30)
+mh_u <- mh_ms %>% filter(Suburb %in% keep$Suburb) %>%
+  mutate(days = as.numeric(Date - ymd("2016-01-28")))
 library(purrr)
-by_stn <- oz_yr_prcp_50yrs %>% 
-  group_by(??) %>% 
+by_suburb <- mh_u %>% 
+  select(Suburb, Date, Price, days) %>%
+  group_by(Suburb) %>% 
   nest()
-by_stn <- by_stn %>% 
+by_suburb <- by_suburb %>% 
   mutate(
-    model = purrr::map(data, ~ lm(?? ~ ??, 
+    model = purrr::map(data, ~ lm(Price ~ days, 
                                   data = .))
   )
-stn_coefs <- by_stn %>% 
-  unnest(model %>% purrr::map(broom::??))
-stn_coefs <- stn_coefs %>% 
-  select(station, term, estimate) %>% 
+suburb_coefs <- by_suburb %>% 
+  unnest(model %>% purrr::map(broom::tidy))
+suburb_coefs <- suburb_coefs %>% 
+  select(Suburb, term, estimate) %>% 
   spread(term, estimate) %>%
-  rename(intercept = `(Intercept)`, slope=year)
-ggplot(stn_coefs, aes(x=intercept, y=slope)) + ??()
-stn_coefs <- left_join(stn_coefs, stns_oz, by=c("station"="stn"))
-ggplot() +
-  geom_polygon(data=nat_map_2016, mapping=aes(x=long, y=lat, group=group), fill="white", color="grey90") +
-  theme_map() + 
-  geom_point(data=stn_coefs, aes(x=??, y=??, 
-     colour=cut(slope, quantile(slope, seq(0, 1, by=.2)))), 
-     size=4, alpha=0.5) +
-  scale_colour_brewer("change", palette="RdYlBu")     
-
-# Extract goodness of fit statistics, and join with coefs
-stn_fit <- by_stn %>% 
-  unnest(model %>% 
-           purrr::map(broom::??))
-stn_fit <- left_join(stn_fit, stn_coefs, by=??)
-p <- ggplot(stn_fit, aes(x=slope, y=??, label=station)) + geom_point()
+  rename(intercept = `(Intercept)`)
+head(suburb_coefs)
+p <- ggplot(suburb_coefs, aes(x=intercept, y=days, 
+                          label=Suburb)) +
+  geom_point(alpha=0.5, size=2) 
+library(plotly)
 ggplotly(p)
-oz_yr_prcp_coefs <- left_join(oz_yr_prcp_50yrs, select(stn_fit, station, r.squared, intercept, slope), by=??)
-oz_yr_prcp_coefs <- oz_yr_prcp_coefs %>% 
-  mutate(fit = intercept + slope*year)
-bestfit <- stn_fit %>% filter(??)
-ggplot(filter(oz_yr_prcp_coefs, station %in% bestfit$station)) + 
-         geom_point(aes(x=year, y=lprcp)) +
-         geom_line(aes(x=year, y=fit), colour="red") +
-         facet_wrap(~station)
-wetter <- stn_fit %>% filter(??)
-ggplot(filter(oz_yr_prcp_coefs, station %in% wetter$station)) + 
-         geom_point(aes(x=year, y=lprcp)) +
-         geom_line(aes(x=year, y=fit), colour="red") +
-         facet_wrap(~station)
-drier <- stn_fit %>% filter(??)
-ggplot(filter(oz_yr_prcp_coefs, station %in% drier$station)) + 
-         geom_point(aes(x=year, y=lprcp)) +
-         geom_line(aes(x=year, y=fit), colour="red") +
-         facet_wrap(~station)
+suburb_fit <- by_suburb %>% 
+  unnest(model %>% 
+           purrr::map(broom::glance))
+ggplot(suburb_fit, aes(x=r.squared)) + geom_histogram()
+bestfit <- suburb_fit %>% filter(r.squared > 0.08)
+mh_u_sub <- mh_u %>% filter(Suburb %in% bestfit$Suburb)
+ggplot(data=mh_u_sub, aes(x=Date, y=Price)) + 
+         geom_point() + geom_smooth(method="lm", se=FALSE)
+worstfit <- suburb_fit %>% filter(r.squared < 0.001)
+mh_u_sub <- mh_u %>% filter(Suburb %in% worstfit$Suburb)
+ggplot(data=mh_u_sub, aes(x=Date, y=Price)) + 
+         geom_point() + geom_smooth(method="lm", se=FALSE) +
+  facet_wrap(~Suburb, ncol=3)
+mh_u_sub <- mh_u %>% filter(Suburb %in% c("Malvern", "Malvern East"))
+ggplot(data=mh_u_sub, aes(x=Date, y=Price)) + 
+         geom_point() + geom_smooth(method="lm", se=FALSE) +
+  facet_wrap(~Suburb, ncol=2)
+
 ```
 
+4. Examine the results of the auctions, with the Method variable, across suburbs. Perhaps compute proportion of PI, NB, VB, W, relative to the rest of the categories, by month over the years. The goal here is to determine if the downturn might be indicated by a higher proportion of unsold properties. 
+
+5. Fit a big model!
 
 # Grading
 
 Points for the assignment will be based on:
 
-- Whether the Rmd file, can take the data file as provided, and produce the results in the report
-- Accuracy, clarity and readability of answers 
+- Accuracy of your answers to the given questions. 
+- How well you have conducted the analysis, and written your answers. 
+- Whether the Rmd file, can take data file as provided, produce the tidy data, and plots reported in your final submission.
+- How well you have worked with your group members on completing this work. Your score for the group component will be adjusted by the amount of effort your team mates independently and anonymously report. 

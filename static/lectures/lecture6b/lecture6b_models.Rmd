@@ -32,7 +32,9 @@ This is a link to the course web site, in case you need to go back and forth bet
 - Components of variation
 - Model goodness of fit statistics
 
-## How to get a good fit?
+### Upload your group assignment.
+
+## Using optimisation to get a good fit
 
 - GOAL: Fitted model is close to all observed points
 - APPROACH: Measure the distance between the observed and fitted value, for each observation. 
@@ -57,7 +59,7 @@ ggplot(df, aes(x=x, y=y)) + geom_point()
 
 We know that $\beta_0=2, \beta_1=3, \beta_2=1, \beta_3=-2$. 
 
-From the data, assume we DO NOT KNOW these values, and we will estimate them from the data provided. We need to find values for $b_0, b_1, b_2, b_3$ that minimise the distance between the resulting fitted value ($\widehat{y}$) and the observed $y$.
+From the data, assume we DO NOT KNOW these parameter values, (*but that we do know the model family*) and we will estimate the parameters from the data provided. We need to find values for $b_0, b_1, b_2, b_3$ that minimise the distance between the resulting fitted value ($\widehat{y}$) and the observed $y$.
 
 ```{r}
 square_err <- function(par, data) {

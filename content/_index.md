@@ -51,6 +51,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - [Fri](https://ebsmonash.shinyapps.io/lecture5b_harvesting_data) [(Rmd)](http://dmac.dicook.org/lectures/lecture5b/lecture5b_harvesting_data.Rmd) [Reading Textbook 23.1-2](http://r4ds.had.co.nz/model-basics.html)
 - Week 6: Introduction to modeling
     - [Wed](https://ebsmonash.shinyapps.io/lecture6a_models) [(Rmd)](http://dmac.dicook.org/lectures/lecture6a/lecture6a_models.Rmd) [Reading Textbook 23.3-5](http://r4ds.had.co.nz/model-basics.html)
+    - [Fri](https://ebsmonash.shinyapps.io/lecture6b_models) [(Rmd)](http://dmac.dicook.org/lectures/lecture6b/lecture6b_models.Rmd)
 - Week 7: Intermediate models 
 - Week 8: Advanced modeling;
 - Week 9: Advanced data handling; 

@@ -59,9 +59,12 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <li>Components of variation</li>
 <li>Model goodness of fit statistics</li>
 </ul>
+<div id="section-upload-your-group-assignment." class="section level3">
+<h3>Upload your group assignment.</h3>
 </div>
-<div id="section-how-to-get-a-good-fit" class="section level2">
-<h2>How to get a good fit?</h2>
+</div>
+<div id="section-using-optimisation-to-get-a-good-fit" class="section level2">
+<h2>Using optimisation to get a good fit</h2>
 <ul>
 <li>GOAL: Fitted model is close to all observed points</li>
 <li>APPROACH: Measure the distance between the observed and fitted value, for each observation.</li>
@@ -78,7 +81,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <p><span class="math inline">\(\widehat{y}=2+3x+x^2-2x^3\)</span></p>
 <p><img src="lecture6b_models_files/figure-html/unnamed-chunk-1-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>We know that <span class="math inline">\(\beta_0=2, \beta_1=3, \beta_2=1, \beta_3=-2\)</span>.</p>
-<p>From the data, assume we DO NOT KNOW these values, and we will estimate them from the data provided. We need to find values for <span class="math inline">\(b_0, b_1, b_2, b_3\)</span> that minimise the distance between the resulting fitted value (<span class="math inline">\(\widehat{y}\)</span>) and the observed <span class="math inline">\(y\)</span>.</p>
+<p>From the data, assume we DO NOT KNOW these parameter values, (<em>but that we do know the model family</em>) and we will estimate the parameters from the data provided. We need to find values for <span class="math inline">\(b_0, b_1, b_2, b_3\)</span> that minimise the distance between the resulting fitted value (<span class="math inline">\(\widehat{y}\)</span>) and the observed <span class="math inline">\(y\)</span>.</p>
 <pre class="r"><code>square_err &lt;- function(par, data) {
   sq &lt;- sum((data$y-(par[1]+par[2]*data$x+par[3]*data$x^2+par[4]*data$x^3))^2)
   return(sq)
@@ -120,40 +123,40 @@ ggplot(df, aes(x=x, y=y)) + geom_point() +
 <tr>
 <td>
 
-<div id="htmlwidget-7dd8bfb97eeb09f6cb3e" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-ae9f3ab206c8c4ac0053" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-7dd8bfb97eeb09f6cb3e">{"x":{"question":"Which following is the <code>total variation<\/code>?","answers":[{"option":"The sum of squared difference between observed response and fitted values.","correct":false,"message":null},{"option":"The sum of squared difference between observed response and average response.","correct":true,"message":null},{"option":"The sum of squared difference between fitted response and average response.","correct":false,"message":null}],"label":"variance-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Which following is the <code>total variation<\/code>?","a":[{"option":"The sum of squared difference between observed response and fitted values.","correct":false,"message":null},{"option":"The sum of squared difference between observed response and average response.","correct":true,"message":null},{"option":"The sum of squared difference between fitted response and average response.","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-ae9f3ab206c8c4ac0053">{"x":{"question":"Which following is the <code>total variation<\/code>?","answers":[{"option":"The sum of squared difference between observed response and fitted values.","correct":false,"message":null},{"option":"The sum of squared difference between observed response and average response.","correct":true,"message":null},{"option":"The sum of squared difference between fitted response and average response.","correct":false,"message":null}],"label":"variance-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Which following is the <code>total variation<\/code>?","a":[{"option":"The sum of squared difference between observed response and fitted values.","correct":false,"message":null},{"option":"The sum of squared difference between observed response and average response.","correct":true,"message":null},{"option":"The sum of squared difference between fitted response and average response.","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-1cf2ad65b8664b5b5bb8" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-f2238e62540bf2b82563" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-1cf2ad65b8664b5b5bb8">{"x":{"question":"Which following is the <code>model variation<\/code>?","answers":[{"option":"The sum of squared difference between observed response and fitted values.","correct":false,"message":null},{"option":"The sum of squared difference between observed response and average response.","correct":false,"message":null},{"option":"The sum of squared difference between fitted response and average response.","correct":true,"message":null}],"label":"variance-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Which following is the <code>model variation<\/code>?","a":[{"option":"The sum of squared difference between observed response and fitted values.","correct":false,"message":null},{"option":"The sum of squared difference between observed response and average response.","correct":false,"message":null},{"option":"The sum of squared difference between fitted response and average response.","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-f2238e62540bf2b82563">{"x":{"question":"Which following is the <code>model variation<\/code>?","answers":[{"option":"The sum of squared difference between observed response and fitted values.","correct":false,"message":null},{"option":"The sum of squared difference between observed response and average response.","correct":false,"message":null},{"option":"The sum of squared difference between fitted response and average response.","correct":true,"message":null}],"label":"variance-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Which following is the <code>model variation<\/code>?","a":[{"option":"The sum of squared difference between observed response and fitted values.","correct":false,"message":null},{"option":"The sum of squared difference between observed response and average response.","correct":false,"message":null},{"option":"The sum of squared difference between fitted response and average response.","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-2bef1914151b50a1ddf3" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-74ac4f525960058bd23f" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-2bef1914151b50a1ddf3">{"x":{"question":"Which following is the <code>residual variance<\/code>?","answers":[{"option":"The sum of squared difference between observed response and fitted values.","correct":true,"message":null},{"option":"The sum of squared difference between observed response and average response.","correct":false,"message":null},{"option":"The sum of squared difference between fitted response and average response.","correct":false,"message":null}],"label":"variance-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Which following is the <code>residual variance<\/code>?","a":[{"option":"The sum of squared difference between observed response and fitted values.","correct":true,"message":null},{"option":"The sum of squared difference between observed response and average response.","correct":false,"message":null},{"option":"The sum of squared difference between fitted response and average response.","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-74ac4f525960058bd23f">{"x":{"question":"Which following is the <code>residual variance<\/code>?","answers":[{"option":"The sum of squared difference between observed response and fitted values.","correct":true,"message":null},{"option":"The sum of squared difference between observed response and average response.","correct":false,"message":null},{"option":"The sum of squared difference between fitted response and average response.","correct":false,"message":null}],"label":"variance-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Which following is the <code>residual variance<\/code>?","a":[{"option":"The sum of squared difference between observed response and fitted values.","correct":true,"message":null},{"option":"The sum of squared difference between observed response and average response.","correct":false,"message":null},{"option":"The sum of squared difference between fitted response and average response.","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 </table>
@@ -177,13 +180,13 @@ df_mod2 &lt;- lm(y~x+x2+x3, data=df)
 glance(df_mod1)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"0.9105663","2":"0.9087223","3":"0.3424099","4":"493.8013","5":"1.405405e-51","6":"3","7":"-33.19623","8":"74.39247","9":"84.81315","10":"11.37272","11":"97"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"0.8878046","2":"0.8854913","3":"0.3626962","4":"383.7815","5":"8.390531e-47","6":"3","7":"-38.95191","8":"85.90383","9":"96.32451","10":"12.76021","11":"97"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code>glance(df_mod2)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"0.9711849","2":"0.9702844","3":"0.1953692","4":"1078.529","5":"8.953304e-74","6":"4","7":"23.43368","8":"-36.86736","9":"-23.8415","10":"3.664235","11":"96"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"0.9634108","2":"0.9622674","3":"0.2082007","4":"842.5748","5":"8.500872e-69","6":"4","7":"17.07252","8":"-24.14504","9":"-11.11919","10":"4.161363","11":"96"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>The statistics are:</p>
