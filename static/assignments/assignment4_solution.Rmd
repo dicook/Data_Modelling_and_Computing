@@ -2,6 +2,8 @@
 title: "ETC 1010 Assignment 4"
 author: "Di Cook"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
@@ -19,141 +21,181 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Instructions
+
+- This is a team assignment. 
+- You need to write a report with answers to each of the questions. 
+- Turn in the `html` output file, and also the `Rmd` file. 
+- Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative. Five points will be for individual effort. And the remaining 10 points will be the final group report.
 
 # Exercise
 
-1. Make a plot of precipitation by year, for each station. There is one station that recorded more than 30000mm of rain in one year. How much rain is this per day? Describe the pattern of precipitation over the years. How will the patterns affect modeling? 
+*[Melbourne property prices have taken their biggest hit since 2012, falling by almost 2 per cent in the past three months](https://www.domain.com.au/news/melbourne-median-house-price-falls-to-882082-over-june-quarter-domain-group-report-20180726-h134ao-754199/)* Jim Malo, Jul 26 2018, Domain
 
-*30000mm is about 82mm per day. That's a lot! Its hard to believe this value. Precipitation patterns have been fairly constant at most stations over the years. There appears to be a big uptick in precipitation at a handful of stations in the last 20 years. This means that a linear model for these locations may not be ideal, because rate of change in precipitation is not constant.*
+This assignment explores the data provided on [Melbourne house prices by Anthony Pino](https://www.kaggle.com/anthonypino/melbourne-housing-market). The goal is to examine whether housing prices have cooled in Melbourne, and help Anthony decide whether it is time to buy a two bedroom apartment in Northcote. 
 
-2. Make a histogram and density plot of precipitation. Describe the distribution. Would it be advisable to make a transformation on precipitation before attempting to fit a model? What transformation would you use, if so?
+## Your tasks
 
-*Precipitation is right-skewed. It would make sense to transform it to a log scale for model fitting.*
+1. Make a map of Melbourne showing the locations of the properties. 
 
-3. How many years (across all stations) was there no recorded precipitation? Which station had the most zero rain years? Plot the stations that have had zero rain years on the map, coloured by the number of years they had no rain. Is this what you would have expected, given knowledge of Australia's dry interior and wet east coast? Make a plot of precipitation by year for the stations with the most missings. What is wrong in my code used to prepare the yearly total precipitation by station, that has lead to the zeros. That is, there is good evidence that the zero's are not "real" zeros but probably missing values. Fix the problem by putting missing values back in for the zeros.
-
-*We would expect that stations away from the coast are more likely than others to have the accasional run of dry years. These stations with zero precip are spread all around the country. The stations with a large number of zeros, have big blocks of 0s, eg ASN00007119 has about 34 years in a row of no rain. That's not feasible. The culprit line of code is*
-
-`summarise(prcp = mean(prcp, na.rm=T)*365) %>%`
-
-*If there is any day with 0 rainfall in the year, and many missing values, the average will be returned as zero.*
-
-4. Fit the many models approach to the precipitation records for stations across Australia. Make a summary plot of intercept by slope. Make a plot of $R^2$ by slope. Are there locations where the models suggest that its getting drier? wetter? What is the most extreme change?
-
-*Intercept and slope are almost perfectly related. There are both locations where its getting wetter and drier. The most extreme are wet spots.*
-
-5. Select stations that have good model fits, and plot precipitation by year, with the model overlaid. Show the precipitation by year plots, with model, for stations where its getting wetter, and also those where its getting drier.  Explain what you learn.
-
-*The increases in precipitation are mostly due to unusual amounts of rain in recent years. The decreases in precipitation are gradual declines.*
-
-6. Make a map with locations coloured by the change in precipitation (slope). How does this compare with the BOM explanation of rainflal patterns?
-
-*It pretty much matches what BOM reports. The north west of the country appears to be getting wetter over the period, and the coastlines are getting a little drier.*
-
-# Plots and calculations
-
-```{r}
+```{r echo=FALSE}
 library(tidyverse)
-library(plotly)
-load("data/oz_yr_prcp_50yrs.rda")
-load("data/stns_oz.rda")
-library(eechidna)
-data(nat_map_2016)
-library(ggthemes)
-ggplot() +
-  geom_polygon(data=nat_map_2016, mapping=aes(x=long, y=lat, group=group), fill="grey90", color="white") +
-  theme_map() + 
-  geom_point(data=oz_yr_prcp_50yrs, aes(x=lon, y=lat), colour="red", size=2)
+library(lubridate)
+mh <- read_csv("data/Melbourne_housing_FULL.csv") %>%
+  rename(lon=Longtitude, lat=Lattitude) %>%
+  mutate(Date = dmy(Date))
+library(ggmap)
+map <- get_map(location = c(145.0, -37.8), zoom=10)
+ggmap(map) + geom_point(data=mh, aes(x=lon, y=lat), colour="orange", size=0.5, alpha=0.5)
 ```
 
+2. Here we are going to examine the prices of 2 bedroom flats in Northcote. 
+    a. Filter the data to focus only on the records for Northcote units. Make a plot of Price by Date, facetted by number of bedrooms. The main thing to learn from this plot is that there are many missing values for number of bedrooms.
+    b. Impute the missing values, based on the regression method (covered in class). Make sure your predicted value is an integer. Re-make the plot of Price by Date, facetted by number of bedrooms. 
+    c. Write a description of what you learn from the plot, particularly about the trend of 2 bedroom unit prices in Northcote.
 
-```{r}
-# Make histograms of precip
-ggplot(oz_yr_prcp_50yrs, aes(x=prcp)) + geom_histogram()
-ggplot(oz_yr_prcp_50yrs, aes(x=prcp)) + geom_histogram() + scale_x_log10()
-oz_yr_prcp_50yrs %>% filter(prcp==0) %>% count(station, sort=TRUE)
-# Precip by year by station
-ggplot(oz_yr_prcp_50yrs, aes(x=year, y=prcp, group=station)) + 
-  geom_point(alpha=0.5) +
-  geom_smooth(se=FALSE, alpha=0.1) 
-# Map wth zero rain years
-oz_yr_prcp_50yrs %>% filter(prcp==0) %>% count(station, sort=TRUE)
-norain <- oz_yr_prcp_50yrs %>% 
-  filter(prcp==0) %>% 
-  count(station, sort=TRUE) %>% 
-  inner_join(oz_yr_prcp_50yrs, by="station")
-library(viridis)
-ggplot() +
-  geom_polygon(data=nat_map_2016, mapping=aes(x=long, y=lat, group=group), fill="grey90", color="white") +
-  theme_map() + 
-  geom_point(data=norain, aes(x=lon, y=lat, colour=n), size=3, alpha=0.3) +
-  scale_colour_viridis()
-ggplot(filter(oz_yr_prcp_50yrs, station=="ASN00007119"), aes(x=year, y=prcp)) +
-                geom_point()
+```{r echo=FALSE}
+nc <- mh %>% filter(Suburb == "Northcote", Type == "u")
+ggplot(nc, aes(x=Date, y=Price)) + 
+  geom_point() + geom_smooth(se=F) +
+  facet_wrap(~Bedroom2, ncol=4) 
+library(naniar)
+nc_ms <- nc %>% bind_shadow()
+br2 <- lm(Bedroom2~Rooms, data=nc_ms)
+nc_ms <- nc_ms %>%
+  mutate(Bedroom2=ifelse(is.na(Bedroom2),
+    round(predict(br2, new=nc_ms), 0), Bedroom2))
+ggplot(nc_ms, aes(x=Date, y=Price)) + 
+  geom_point() + geom_smooth(se=F) +
+  facet_wrap(~Bedroom2, ncol=4) 
 ```
 
+3. Focusing on 2 bedroom units, we are going to explore the trend in prices for each suburb.  
+    a. You will need to impute the Bedroom2 variable, in the same way done in the previous question. 
+    b. Fit a linear model to each suburb (many models approach). Collect the model estimates, and also the model fit statistics. Make a plot of intercept vs slope. Using plotly what suburb has had the largest increase, which has had the biggest decrease in prices?
+    c. Summarise the $R^2$ for the model fits for all the suburbs. Which suburbs have the worst fitting models?  Plot the Price vs Date of the best fitting model. Is the best fitting model a good fit?
+    d. Write a paragraph on what you have learned about the trend in property prices across Melbourne.
 
-```{r}
-# Transform precip, make zeros missing
-oz_yr_prcp_50yrs <- oz_yr_prcp_50yrs %>% 
-  mutate(prcp = ifelse(prcp == 0, NA, prcp)) %>%
-  mutate(lprcp = log10(prcp+1)) 
+```{r echo=FALSE}
+mh_ms <- mh %>% bind_shadow()
+br2 <- lm(Bedroom2~Rooms, data=mh_ms)
+mh_ms <- mh_ms %>%
+  mutate(Bedroom2=ifelse(is.na(Bedroom2),
+    round(predict(br2, new=mh_ms), 0), Bedroom2))
 
-ggplot(oz_yr_prcp_50yrs, aes(x=year, y=lprcp, group=station)) + 
-  geom_point(alpha=0.5) +
-  geom_smooth(se=FALSE, alpha=0.1) 
-
-# Fit model to each station, make summary plots
+mh_ms %>% filter(Type == "u", Bedroom2 == 2) %>% count(Suburb, sort = TRUE) %>% ggplot(aes(x=n)) + geom_histogram()
+keep <- mh_ms %>% filter(Type == "u", Bedroom2 == 2) %>% 
+  count(Suburb, sort = TRUE) %>%
+  filter(n > 30)
+mh_u <- mh_ms %>% filter(Suburb %in% keep$Suburb) %>%
+  mutate(days = as.numeric(Date - ymd("2016-01-28")))
 library(purrr)
-by_stn <- oz_yr_prcp_50yrs %>% 
-  group_by(station) %>% 
+by_suburb <- mh_u %>% 
+  select(Suburb, Date, Price, days) %>%
+  group_by(Suburb) %>% 
   nest()
-by_stn <- by_stn %>% 
+by_suburb <- by_suburb %>% 
   mutate(
-    model = purrr::map(data, ~ lm(lprcp ~ year, 
+    model = purrr::map(data, ~ lm(Price ~ days, 
                                   data = .))
   )
-stn_coefs <- by_stn %>% 
+suburb_coefs <- by_suburb %>% 
   unnest(model %>% purrr::map(broom::tidy))
-stn_coefs <- stn_coefs %>% 
-  select(station, term, estimate) %>% 
+suburb_coefs <- suburb_coefs %>% 
+  select(Suburb, term, estimate) %>% 
   spread(term, estimate) %>%
-  rename(intercept = `(Intercept)`, slope=year)
-ggplot(stn_coefs, aes(x=intercept, y=slope)) + geom_point()
-stn_coefs <- left_join(stn_coefs, stns_oz, by=c("station"="stn"))
-ggplot() +
-  geom_polygon(data=nat_map_2016, mapping=aes(x=long, y=lat, group=group), fill="white", color="grey90") +
-  theme_map() + 
-  geom_point(data=stn_coefs, aes(x=lon, y=lat, 
-     colour=cut(slope, quantile(slope, seq(0, 1, by=.2)))), 
-     size=4, alpha=0.5) +
-  scale_colour_brewer("change", palette="RdYlBu")     
-    #scale_colour_gradient2(midpoint=0, high="#313695", low="#A50026", mid="#FFFFBF")
-
-# Extract goodness of fit statistics, and join with coefs
-stn_fit <- by_stn %>% 
+  rename(intercept = `(Intercept)`)
+head(suburb_coefs)
+p <- ggplot(suburb_coefs, aes(x=intercept, y=days, 
+                          label=Suburb)) +
+  geom_point(alpha=0.5, size=2) 
+library(plotly)
+ggplotly(p)
+suburb_fit <- by_suburb %>% 
   unnest(model %>% 
            purrr::map(broom::glance))
-stn_fit <- left_join(stn_fit, stn_coefs, by="station")
-p <- ggplot(stn_fit, aes(x=slope, y=r.squared, label=station)) + geom_point()
-ggplotly(p)
-oz_yr_prcp_coefs <- left_join(oz_yr_prcp_50yrs, select(stn_fit, station, r.squared, intercept, slope), by="station")
-oz_yr_prcp_coefs <- oz_yr_prcp_coefs %>% 
-  mutate(fit = intercept + slope*year)
-bestfit <- stn_fit %>% filter(r.squared>0.3)
-ggplot(filter(oz_yr_prcp_coefs, station %in% bestfit$station)) + 
-         geom_point(aes(x=year, y=lprcp)) +
-         geom_line(aes(x=year, y=fit), colour="red") +
-         facet_wrap(~station)
-wetter <- stn_fit %>% filter(slope>0.008)
-ggplot(filter(oz_yr_prcp_coefs, station %in% wetter$station)) + 
-         geom_point(aes(x=year, y=lprcp)) +
-         geom_line(aes(x=year, y=fit), colour="red") +
-         facet_wrap(~station)
-drier <- stn_fit %>% filter(slope<(-0.0025))
-ggplot(filter(oz_yr_prcp_coefs, station %in% drier$station)) + 
-         geom_point(aes(x=year, y=lprcp)) +
-         geom_line(aes(x=year, y=fit), colour="red") +
-         facet_wrap(~station)
+ggplot(suburb_fit, aes(x=r.squared)) + geom_histogram()
+bestfit <- suburb_fit %>% filter(r.squared > 0.08)
+mh_u_sub <- mh_u %>% filter(Suburb %in% bestfit$Suburb)
+ggplot(data=mh_u_sub, aes(x=Date, y=Price)) + 
+         geom_point() + geom_smooth(method="lm", se=FALSE)
+worstfit <- suburb_fit %>% filter(r.squared < 0.001)
+mh_u_sub <- mh_u %>% filter(Suburb %in% worstfit$Suburb)
+ggplot(data=mh_u_sub, aes(x=Date, y=Price)) + 
+         geom_point() + geom_smooth(method="lm", se=FALSE) +
+  facet_wrap(~Suburb, ncol=3)
+mh_u_sub <- mh_u %>% filter(Suburb %in% c("Malvern", "Malvern East"))
+ggplot(data=mh_u_sub, aes(x=Date, y=Price)) + 
+         geom_point() + geom_smooth(method="lm", se=FALSE) +
+  facet_wrap(~Suburb, ncol=2)
 
 ```
+
+4. Still focusing on apartments (units) examine the results of the auctions, with the Method variable, across suburbs. This variable contains results of the auction, whether the property sold, or not. It may be that in recent months there is a higher proportion of properties that didn't sell. This would put downward pressure on prices. 
+    a. Compute the counts of the levels of Method, ignoring the suburbs. 
+    b. The categories PI (passed in) and VB (vendor bid) indicate the property did not sell. Compute the proportion of properties in these two categories for each suburb, for each month since 2016. 
+    c. Plot the proportions against year/month (make a new variable time is an integer with 1 being the first month of the data in 2016 and each month since then increments time by 1).  Add a smoother to show the trend in these proportions. Does it look like there is an increase in units that aren't selling?
+    d. Explain why the data was aggregated to month before computing the proportions. 
+
+```{r}
+mh_u %>% count(Method, sort=TRUE)
+mh_u_mth <- mh_u %>% 
+  mutate(year = year(Date), month = month(Date)) %>%
+  group_by(Suburb, year, month) %>%
+  count(Method) %>%
+  mutate(p = n/sum(n)) %>%
+  filter(Method %in% c("PI", "VB")) %>%
+  mutate(time = (year-2016)*12+month)
+ggplot(mh_u_mth, aes(x=time, y=p, label=Suburb)) + 
+  geom_smooth() +
+  geom_point() + 
+  facet_wrap(~Method)
+ggplotly()
+```
+
+5. Fit the best model for Price that you can, for houses around Monash University.
+    a. Impute the missing values for Bathroom (similarly to Bedroom2).
+    b. Subset the data to these suburbs "Notting Hill", "Glen Waverley",
+         "Clayton", "Clayton South","Oakleigh East", "Huntingdale", 
+         "Mount Waverley".
+    c. Make a scatterplot of Price vs Date by Bedroom2 and Bathroom, with a linear model overlaid. What do you notice? There are only some combinations of bedrooms and bathrooms that are common. Subset your data to houses with 3-4 bedrooms and 1-2 bathrooms. 
+    d. Using date, rooms, bedroom, bathroom, car and landsize build your best model for price. There are some missing values on Car and Landsize, which may be important to impute. Think about interactions as well as main effects. (There are too many missing values to use BuildingArea and YearBuilt. The other variables in the data don't make sense to use.)
+    
+```{r}
+ba2 <- lm(Bathroom~Rooms, data=mh_ms)
+mh_ms <- mh_ms %>%
+  mutate(Bathroom=ifelse(is.na(Bathroom),
+    round(predict(ba2, new=mh_ms), 0), Bathroom))
+monash <- mh_ms %>% filter(Suburb %in% c("Notting Hill", "Glen Waverley",
+         "Clayton", "Clayton South","Oakleigh East", "Huntingdale", 
+         "Mount Waverley"), 
+                       Type == "h") %>%
+  select(Suburb, Price, Rooms, Date, Bedroom2, Bathroom, Car, Landsize) %>%
+  mutate(day=as.numeric(Date)) %>%
+  mutate(day=day-min(day))
+monash <- monash %>% filter(Bedroom2 > 1, Bedroom2<5, Bathroom<3) 
+ggplot(monash, aes(x=Date, y=Price)) + 
+  geom_point() + 
+  geom_smooth(method="lm", se=FALSE) + 
+  facet_grid(Bathroom~Bedroom2)
+library(broom)
+monash_fit <- lm(Price~day+Rooms+Bedroom2+Bathroom+Car+Landsize, data=monash)
+tidy(monash_fit)
+glance(monash_fit)
+monash_fit2 <- lm(Price~day+Bathroom+Car+Landsize, data=monash)
+tidy(monash_fit2)
+glance(monash_fit2)
+monash_fit3 <- lm(Price~day+Bedroom2*Bathroom+Car+Landsize, data=monash)
+tidy(monash_fit3)
+glance(monash_fit3)
+
+```
+
+# Grading
+
+Points for the assignment will be based on:
+
+- Accuracy of your answers to the given questions. 
+- How well you have conducted the analysis, and written your answers. 
+- Whether the Rmd file, can take data file as provided, produce the tidy data, and plots reported in your final submission.
+- How well you have worked with your group members on completing this work. Your score for the group component will be adjusted by the amount of effort your team mates independently and anonymously report. 
