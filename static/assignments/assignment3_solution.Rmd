@@ -113,11 +113,11 @@ stn_nyrs <- oz_weather %>% count(station, month)
 
 ## Your tasks
 
-1. Use your web surfing skills and find an article on the CURRENT drought in Australia. Report the link to the article and write a few sentences summarising its main points. 
+1. (1pt) Use your web surfing skills and find an article on the CURRENT drought in Australia. Report the link to the article and write a few sentences summarising its main points. 
 
 *Various possibilities here*
 
-2. Read in the raw data and put it into tidy form. The code is provided, with a few spots where you need to fill in the functions. Where you see `???` in the code, is where you need to fill in to make it work.
+2. (1pt) Read in the raw data and put it into tidy form. The code is provided, with a few spots where you need to fill in the functions. Where you see `???` in the code, is where you need to fill in to make it work.
 
 ```{r}
 oz_weather_long <- oz_weather %>% 
@@ -134,7 +134,9 @@ oz_weather_long <- oz_weather %>%
     a. What value is used in the raw data to indicate a missing value? *-9999*
     b. Why do the precipitation values divided by something? *It was reported in tenths of mm, with the decimal point dropped.*
     
-3. Compute the monthly precipitation for each year. (You need to sum up the precipitation for each month, for each year.) When working with precipitation it is important to summarise using totals. This is different from working with temperature, where we would typically summarise using means. Why should you use totals to summarise precipitation?
+3. (1pt) Compute the monthly precipitation for each year. (You need to sum up the precipitation for each month, for each year.) When working with precipitation it is important to summarise using totals. This is different from working with temperature, where we would typically summarise using means. Why should you use totals to summarise precipitation?
+
+*It is the cumulative precipitation that matters for the environment. This leads to moist ground water for plants to drink, and for accumulation of water in rivers and dams for animals and agriculture to use.*
 
 ```{r}
 oz_prcp_mthyr <- oz_weather_long %>%
@@ -144,7 +146,7 @@ oz_prcp_mthyr <- oz_weather_long %>%
   ungroup()
 ```
 
-4. Make a line plot of monthly precipitation by month, grouping by station, for 2018. Overlay a smoother. Is there generally a decreasing trend in rainfall this year across the country?
+4. (1pt) Make a line plot of monthly precipitation by month, grouping by station, for 2018. Overlay a smoother. Is there generally a decreasing trend in rainfall this year across the country?
 
 ```{r}
 oz_prcp_mthyr %>% 
@@ -154,9 +156,11 @@ oz_prcp_mthyr %>%
   geom_smooth(se=FALSE, alpha=1)
 ```
 
-*The first few months saw a lot of rain at a few locations. There was les rain in recent months. It is not clear if this is the usual pattern across these stations for the first 7 months of the year.*
+*The first few months saw a lot of rain at a few locations. There was less rain in recent months. It is not clear if this is the usual pattern across these stations for the first 7 months of the year.*
 
-5. Compute the long term average monthly precipitation for each station. (Use your previous summary and then average the values by month.) This is going to be a baseline for comparing precipitation this year.
+5. (1pt) Compute the long term average monthly precipitation for each station. (Use your previous summary and then average the values by month.) This is going to be a baseline for comparing precipitation this year.
+
+*Need to show the code for this question.*
 
 ```{r}
 oz_prcp_longterm <- oz_prcp_mthyr %>%
@@ -190,7 +194,11 @@ ggmap(oz) +
                          mid="white", limits=c(-1,1))
 ```
 
-7. This is another way to look at how this year compares with previous years. For each month, compute the percentile of this year's rainfall. That is count the number of years since 1950 that this month had lower precipitation than this year. Find a location (or few) where this year's rainfall has been consistently low for each month (Jan-Jul), relative to other years. 
+7. (1pt) This is another way to look at how this year compares with previous years. For each month, compute the percentile of this year's rainfall. That is count the number of years since 1950 that this month had lower precipitation than this year. Find a location (or few) where this year's rainfall has been consistently low for each month (Jan-Jul), relative to other years. 
+
+*Code should be shown, also would be good to see an explanation of how it was calculated and why they chose their station.*
+
+*The code below computes the number of years that had rainfall in that month less than 2018, and then turns this into a fraction. This is the percentile. I did some rough calculations to find the location where there was low rainfall over the seven months of each year.*
 
 ```{r}
 oz_prcp_2018 <- oz_prcp_mthyr %>%
@@ -203,12 +211,12 @@ oz_prcp_2018_pctl <- oz_prcp_mthyr %>%
   summarise(nless=length(prcp_tot[prcp_tot < prcp_tot18]), n=length(prcp_tot)) %>%
   mutate(pct = nless/n) %>%
   ungroup()
-oz_prcp_2018_pctl %>% arrange(pct) %>% print(n=50)
-oz_prcp_2018_pctl %>% group_by(station) %>% summarise(s = sum(pct)) %>% filter(s < 2)
-oz_prcp_2018_pctl %>% filter(station == "ASN00044021")
-oz_prcp_2018_pctl %>% filter(station == "ASN00043109")
-oz_prcp_2018_pctl %>% filter(station == "ASN00048027")
-oz_prcp_2018_pctl %>% filter(station == "ASN00085298")
+#oz_prcp_2018_pctl %>% arrange(pct) %>% print(n=50)
+#oz_prcp_2018_pctl %>% group_by(station) %>% summarise(s = sum(pct)) %>% filter(s < 2)
+#oz_prcp_2018_pctl %>% filter(station == "ASN00044021")
+#oz_prcp_2018_pctl %>% filter(station == "ASN00043109")
+#oz_prcp_2018_pctl %>% filter(station == "ASN00048027")
+#oz_prcp_2018_pctl %>% filter(station == "ASN00085298")
 dry_stns <- oz_prcp_mthyr %>% 
   filter(station %in% c("ASN00044021", "ASN00043109", "ASN00048027", "ASN00085298")) %>%
   left_join(stns_oz, by=c("station"="stn"))
@@ -221,7 +229,11 @@ ggplot(dry_stns, aes(x=factor(month), y=prcp_tot, label=year)) +
   facet_wrap(~station)
 ```
 
-8. Find another historical long period of well below normal rainfall for the first half of the year, for this station (or another). Do a web search to see if there were any news stories about that drought period.
+8. (1pt) Find another historical long period of well below normal rainfall for the first half of the year, for this station (or another). Do a web search to see if there were any news stories about that drought period.
+
+*There will be various answers here. It would be nice to see some writing about the historical drought that was identified.*
+
+*The code below focuses on one of the stations from above, in south-west Queensland, and finds that 1965 has the lowest rainfall in the years of the data, and lower than this year. A little googling on 1965 drought brings up the wikipedia page with information about the drought.* 
 
 ```{r}
 stnASN00044021 <- oz_prcp_mthyr %>% filter(station=="ASN00044021") %>%
@@ -235,6 +247,8 @@ stnASN00044021_dryyrs %>% arrange(s)
 *The 1965 drought in Eastern Australia is described on [wikipedia](https://en.wikipedia.org/wiki/Drought_in_Australia)*
 
 # Grading
+
+**2 points for clean code, nicely organised report and well written explanations.**
 
 Points for the assignment will be based on:
 

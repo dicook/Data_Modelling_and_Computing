@@ -1,4 +1,0 @@
-1520907132191:knitr::opts_chunk$set(echo = TRUE)
-1520907132276:library(readxl)
-1520907132385:library(tidyverse)
-1520907133065:passengers <- read_xls("data/WebAirport_FY_1986-2017.xls", sheet=3, skip=6)
