@@ -1,5 +1,6 @@
 ---
 title: "ETC1010: Data Modelling and Computing"
+author: "Professor Di Cook, EBS, Monash U."
 output: 
   learnr::tutorial:
     css: "css/logo.css"
@@ -22,363 +23,259 @@ library(broom)
 library(gridExtra)
 ```
 
-# Intermediate models
+# Many models
 
 ## Course web site
 
-This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.netlify.com](http://dmac.netlify.com)
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.dicook.org](http://dmac.dicook.org)
 
-## Overview
+## Beyond a single model
 
-- Working with a mix of variable types
-- Interaction terms
-- Model equations, from tidy summaries
-- Transformations
-- Difference between treating variables as ordered or categorical
+![](images/blind-men-and-the-elephant.png)
 
-## Mix of variable types
+<br>
 
-- Categorical variables join a model differently than quantitative variables
-- Multiplying a categorical variable by a coefficient, actually makes no sense
-- The categories need to be (implicitly) converted into a set of dummy variables, e.g. 1 if category A, 0 otherwise..., in order to conduct a regression model
+- Beyond a single model
+- Fitting many models
 
-```{r echo=FALSE, eval=FALSE}
-load("data/pisa_au.rda") 
-pisa_au <- pisa_au %>% mutate(state=as.character(substr(STRATUM, 4, 5)),
-                schtype_yr=as.character(substr(STRATUM, 6, 7))) %>%
-  mutate(state=recode(state, "01"="ACT", "02"="NSW", "03"="VIC",
-       "04"="QLD", "05"="SA", "06"="WA", "07"="TAS", "08"="NT")) %>%
-  mutate(schtype_yr=recode(schtype_yr,
-            "01"="Catholic_Y10", "02"="Catholic_noY10",
-            "03"="Gov_Y10", "04"="Gov_noY10",
-            "05"="Ind_Y10", "06"="Ind_noY10",
-            "07"="Catholic_Y10", "08"="Catholic_noY10",
-            "09"="Gov_Y10", "10"="Gov_noY10",
-            "11"="Ind_Y10", "12"="Ind_noY10",
-            "13"="Catholic_Y10", "14"="Catholic_noY10",
-            "15"="Gov_Y10", "16"="Gov_noY10",
-            "17"="Ind_Y10", "18"="Ind_noY10",
-            "19"="Catholic_Y10", "20"="Catholic_noY10",
-            "21"="Gov_Y10", "22"="Gov_noY10",
-            "23"="Ind_Y10", "24"="Ind_noY10",
-            "25"="Catholic_Y10", "26"="Catholic_noY10",
-            "27"="Gov_Y10", "28"="Gov_noY10",
-            "29"="Ind_Y10", "30"="Ind_noY10",
-            "31"="Catholic_Y10", "32"="Catholic_noY10",
-            "33"="Gov_Y10", "34"="Gov_noY10",
-            "35"="Ind_Y10", "36"="Ind_noY10",
-            "37"="Catholic_Y10", "38"="Catholic_noY10",
-            "39"="Gov_Y10", "40"="Gov_noY10",
-            "41"="Ind_Y10", "42"="Ind_noY10",
-            "43"="Catholic_Y10", "44"="Catholic_noY10",
-            "45"="Gov_Y10", "46"="Gov_noY10",
-            "47"="Ind_Y10", "48"="Ind_noY10")) %>%
-  separate(schtype_yr, c("schtype","yr")) %>%
-  rename(birthmonth=ST003D02T, birthyr=ST003D03T,
-         gender=ST004D01T, desk=ST011Q01TA,
-         room=ST011Q02TA, computer=ST011Q04TA, internet=ST011Q06TA,
-         solarpanels=ST011D17TA, tvs=ST012Q01TA, cars=ST012Q02TA,
-         music_instr=ST012Q09NA, books=ST013Q01TA, birthcnt=ST019AQ01T,
-         mother_birthcnt=ST019BQ01T, father_birthcnt=ST019CQ01T,
-         test_anxiety=ST118Q01NA, ambitious=ST119Q04NA,
-         prefer_team=ST082Q01NA, make_friends_easy=ST034Q02TA,
-         tardy=ST062Q03TA, science_fun=ST094Q01NA, breakfast=ST076Q01NA,
-         work_pay=ST078Q10NA, sport=ST078Q11NA, internet_use=IC006Q01TA,
-         install_software=IC015Q02NA,
-         outhours_study=OUTHOURS, math_time=MMINS, read_time=LMINS,
-         science_time=SMINS, belong=BELONG,
-         anxtest=ANXTEST, motivat=MOTIVAT, language=LANGN,
-         home_edres=HEDRES, home_poss=HOMEPOS, wealth=WEALTH,
-         stuweight=W_FSTUWT) %>%
-    mutate(math=(PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+
-                     PV6MATH+PV7MATH+PV8MATH+PV9MATH+PV10MATH)/10,
-           science=(PV1SCIE+PV2SCIE+PV3SCIE+PV4SCIE+PV5SCIE+
-                        PV6SCIE+PV7SCIE+PV8SCIE+PV9SCIE+PV10SCIE)/10,
-           read=(PV1READ+PV2READ+PV3READ+PV4READ+PV5READ+
-                     PV6READ+PV7READ+PV8READ+PV9READ+PV10READ)/10) %>%
-   select(state, schtype, yr, birthmonth, birthyr, gender, desk, room,
-          computer, internet, solarpanels, tvs, cars, music_instr, books,
-          birthcnt, mother_birthcnt, father_birthcnt, test_anxiety,
-          ambitious, prefer_team, make_friends_easy, tardy, science_fun,
-          breakfast, work_pay, sport, internet_use, install_software,
-          outhours_study, math_time, read_time, science_time, belong,
-          anxtest, motivat, language, home_edres, home_poss, wealth,
-          stuweight, math, science, read) %>%
-  mutate(gender=factor(gender, levels=1:2, labels=c("female", "male"))) 
-save(pisa_au, file="data/pisa_au_sub.rda")
-```
+Image source: https://balajiviswanathan.quora.com/Lessons-from-the-Blind-men-and-the-elephant
 
-### OECD PISA
+## Gapminder
 
-Let's take a look at this for the OECD PISA 2015 data. We'll model science score on state.
+Hans Rosling was a Swedish doctor, academic and statistician, Professor of International Health at Karolinska Institute. He passed away in 2017. He developed a keen interest in health and wealth across the globe, and the relationship with other factors like agriculture, education, energy. His presentations on data are amazing! A starting place is https://www.youtube.com/watch?v=jbkSRLYSojo. 
+
+And you can play with the gapminder data using animations at https://www.gapminder.org/tools/. 
+
+### R package
+
+The R package, called gapminder, contains a subset of the data. It has data on five year intervals from 1952 to 2007.
 
 ```{r}
-load("data/pisa_au_sub.rda")
-ggplot(pisa_au, aes(x=reorder(state, science), y=science)) + 
-  geom_violin(draw_quantiles = c(0.25, 0.5, 0.75), alpha=0.3) 
-pisa_lm <- lm(science~state, data=pisa_au, weight=stuweight)
-tidy(pisa_lm)
+library(gapminder)
+glimpse(gapminder)
 ```
 
-We only modelled one explanatory variable, but there are 7 model coefficients. And what happened to the ACT? What does the fitted model look like?
+## Fit linear models
+
+The question is "How has life expectancy changed over years, for each country?"
+
+Plot life expectancy by year, for each country.
+
+```{r fig.height=4}
+gapminder %>% 
+  ggplot(aes(year, lifeExp, group = country)) +
+    geom_line(alpha = 1/3)
+
+```
+
+- There generally appears to be an increase in life expectancy
+- A number of countries have big dips from the 70s through 90s
+- a cluster of countries starts off with low life expectancy but ends up close to the highest by the end of the period.
+
+### Mutate year
+
+1950 is the first year, so for model fitting we are going to shift year to begin in 1950, makes interpretability easier.
 
 ```{r}
-pisa_mod <- augment(pisa_lm)
-ggplot(pisa_mod, aes(x=reorder(state, science), y=science)) + 
-  geom_hline(yintercept=mean(pisa_au$science), colour="white", size=2) + 
-  geom_violin(draw_quantiles = c(0.25, 0.5, 0.75), alpha=0.3) +
-  geom_point(aes(y=.fitted), colour="red", size=3)
+gapminder2 <- gapminder %>% mutate(year1950 = year-1950)
 ```
 
-### Dummy variables
+## Australia
 
-Implicitly, state was converted into 7 dummy variables:
+Australia was already had one of the top life expectancies in the 1950s.
 
-```{r echo=FALSE}
-x <- tibble(state=c("QLD","QLD","SA","WA","WA","WA","ACT","ACT","TAS","NSW","VIC","NT"))
-x <- x %>%
-  mutate(QLD = ifelse(state == "QLD", 1, 0),
-         SA = ifelse(state == "SA", 1, 0), 
-         WA = ifelse(state == "WA", 1, 0),
-         ACT = ifelse(state == "ACT", 1, 0),
-         TAS = ifelse(state == "TAS", 1, 0),
-         NSW = ifelse(state == "NSW", 1, 0),
-         VIC = ifelse(state == "VIC", 1, 0),
-         NT = ifelse(state == "NT", 1, 0))
-x
+```{r fig.height=3, fig.width=8}
+oz <- gapminder2 %>% filter(country=="Australia")
+head(oz)
+p1 <- ggplot(data=oz, aes(x=year, y=lifeExp)) + 
+  geom_line() 
+oz_lm <- lm(lifeExp~year1950, data=oz)
+tidy(oz_lm)
+oz_mod <- augment(oz_lm, oz)
+p2 <- ggplot(data=oz_mod, aes(x=year, y=.fitted)) + 
+  geom_line() 
+p3 <- ggplot(data=oz_mod, aes(x=year, y=.std.resid)) + 
+  geom_hline(yintercept=0, colour="white", size=2) +
+  geom_line() 
+grid.arrange(p1, p2, p3, ncol=3)
 ```
 
-### Model fit
+- Life expectancy has increased 2.3 years every decade, on average. 
+- There was a slow period from 1960 through to 1972, probably related to mortality during the Vietnam war.
 
-The first level (ACT) is the "baseline" from which all the other states are compared. The fitted model, though, is simply the mean for each state. 
+```{r life, echo=FALSE}
+quiz(
+  question("What was the average life expectancy in 1950?",
+    answer("50"),
+    answer("about 65"),
+    answer("67.9", correct=TRUE)),
+  question("What was the average life expectancy in 2000?",
+    answer("59"),
+    answer("about 69"),
+    answer("79", correct=TRUE)))
+```
 
-```{r}
-tidy(pisa_lm)[,1:2] %>%
-  mutate(fitted=ifelse(term == "(Intercept)", 
-                       estimate, estimate+estimate[1]))
+## Fit all countries
+
+```{r echo=TRUE}
+library(purrr)
+by_country <- gapminder2 %>% 
+  select(country, year1950, lifeExp, continent) %>%
+  group_by(country, continent) %>% 
+  nest()
+by_country <- by_country %>% 
+  mutate(
+    model = purrr::map(data, ~ lm(lifeExp ~ year1950, 
+                                  data = .))
+  )
+country_coefs <- by_country %>% 
+  unnest(model %>% purrr::map(broom::tidy))
+country_coefs <- country_coefs %>% 
+  select(country, continent, term, estimate) %>% 
+  spread(term, estimate) %>%
+  rename(intercept = `(Intercept)`)
+head(country_coefs)
+country_coefs %>%
+  filter(country == "Australia")
+```
+
+It is also possible to use a `for` loop to compute the slope and intercept for each country.
+
+```{r eval=FALSE}
+n <- length(table(gapminder2$country))
+country_coefs <- data.frame(country=gapminder2$country[seq(1, 1704, 12)],
+                   continent=gapminder2$continent[seq(1, 1704, 12)],
+                   intercept=rep(0,n), 
+                   year1950=rep(0,n))
+for (i in 1:n) {
+  sub <- gapminder2 %>% filter(country==country_coefs$country[i])
+  sub_lm <- lm(lifeExp~year1950, data=sub)
+  sub_lm_coefs <- coefficients(sub_lm)
+  country_coefs$intercept[i] <- sub_lm_coefs[1]
+  country_coefs$year1950[i] <- sub_lm_coefs[2]
+}
+head(country_coefs)
 ```
 
 ### Five minute challenge
 
-- Compute the weighted means for each state. Are these the same as the fitted model?
-- Fit a no-intercept model. How does this compare with the current model?
+- Fit the models to all countries
+- Pick your favourite country (not Australia), print the coefficients, and make a hand sketch of the the model fit.
+
+### Plot all the model coefficients
 
 ```{r}
-pisa_au %>% group_by(state) %>% 
-  summarise(m = weighted.mean(science, stuweight, na.rm=T))
-pisa_lm2 <-lm(science~state-1, data=pisa_au, weight=stuweight)
-tidy(pisa_lm2)
+p <- ggplot(country_coefs, aes(x=intercept, y=year1950, 
+                          colour=continent, label=country)) +
+  geom_point(alpha=0.5, size=2) +
+  scale_color_brewer(palette = "Dark2")
+library(plotly)
+ggplotly(p)
 ```
 
-## Interactions
+Let's summarise the information learned from the model coefficients.
 
-### Categorical and continuous variable
+- Generally the relationship is negative: this means that if a country started with a high intercept tends to have lower rate of increase.
+- There is a difference across the continents: Countries in Europe and Oceania tended to start with higher life expectancy and increased; countries in Asia and America tended to start lower but have high rates of improvement; Africa tends to start lower and have a huge range in rate of change.
+- Three countries had negative growth in life expectancy: Rwand, Zimbabwe, Zambia
 
-Let's take a look at modeling science scores based on enjoyment of the subject and gender. 
-
-```{r}
-library(labelled)
-pisa_au_science <- pisa_au %>% 
-  filter(science_fun < 5) %>%
-  filter(!is.na(science_time)) %>% 
-  select(science, science_fun, science_time, stuweight) %>%
-  mutate(science_fun = to_factor(science_fun, ordered=TRUE, drop_unused_labels = TRUE)) %>%
-  mutate(science_time = as.numeric(science_time)) %>%
-  filter(science_time>0)
-  
-ggplot(pisa_au_science, aes(x=science_time, y=science,
-                            colour=science_fun)) + 
-  geom_point(alpha=0.1) + 
-  scale_colour_brewer("Enjoy science", palette="Dark2") +
-  facet_wrap(~science_fun, ncol=2) + 
-  scale_x_log10() +
-  # geom_smooth(method="lm", se=FALSE) + 
-  theme(legend.position="bottom") + 
-  xlab("Time spent studying science per week (mins") + 
-  ylab("Synthetic science score")
-```
-
-#### Five minute challenge quiz
-
-```{r pipeline, echo=FALSE}
+```{r coefs, echo=FALSE}
 quiz(
-  question("How would you describe the relationship between science score and time spent studying?",
-    answer("Weak", correct = TRUE),
-    answer("Moderate"), 
-    answer("Strong")),
-  question("What do these lines of code do?   `filter(science_fun < 5) %>%
-  filter(!is.na(science_time))`", 
-    answer("Remove missing values", correct = TRUE),
-    answer("Remove extreme values, and missing values"),
-    answer("I have no idea")),
-  question("Why was `science_time` transformed to a log scale?",
-    answer("It has a right-skewed distribution.", correct = TRUE),
-    answer("It has a left-skewed distribution."),
-    answer("It is symmetric")),
-  question("Why were 0 values of `science_time` removed?",
-    answer("It could be argued that these are most likely missing values", correct = TRUE),
-    answer("They are outliers affecting the modeling"),
-    answer("No-one would be able to study science 0 minutes per week"))
+  question("Name the country that has the lowest improvement in life expectancy",
+    answer("Zimbabwe", correct=TRUE),
+    answer("Vietnam"),
+    answer("Norway"),
+    answer("Gambia")),
+  question("Name the country that has the highest improvement in life expectancy",
+    answer("Zimbabwe", correct=TRUE),
+    answer("Vietnam"),
+    answer("Norway"),
+    answer("Gambia")),
+  question("Name the country that has the lowest initial life expectancy",
+    answer("Zimbabwe"),
+    answer("Vietnam"),
+    answer("Norway"),
+    answer("Gambia", correct=TRUE)),
+  question("Name the country that has the highest initial life expectancy",
+    answer("Zimbabwe"),
+    answer("Vietnam"),
+    answer("Norway", correct=TRUE),
+    answer("Gambia"))
 )
 ```
 
-### Models
-
-There are two possible models:
-
-$y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\varepsilon_i$ (Model 1)
-
-$y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\beta_3x_{i1}*x_{i2}+\varepsilon_i$ (Model 2)
-
-where $y=$ science score, $x_1=$ science study time, $x_2=$ science enjoyment. And these would be coded as:
-
-```
-mod1 <- lm(science~science_time+science_fun, data=pisa_au_science)
-mod2 <- lm(science~science_time*science_fun, data=pisa_au_science)
-```
-
-Model 2 has an interaction term. This means that the slope will be allowed to vary for the different levels of the categorical variables, science_fun.
-
-*Note:* Ordered factors are treated as "numeric" in the default model fit, so we should convert `science_fun` to be an unordered categorical variable. Also, `science_time` is heavily skewed so should be transformed.
+## Model diagnostics by country
 
 ```{r}
-pisa_au_science <- pisa_au_science %>%
-  mutate(log_science_time = log10(science_time)) %>%
-  mutate(science_fun_c = factor(science_fun, ordered=FALSE))
-mod1 <- lm(science~log_science_time+science_fun_c, data=pisa_au_science, weights = stuweight)
-mod2 <- lm(science~log_science_time*science_fun_c, data=pisa_au_science, weights = stuweight)
-tidy(mod1)
-tidy(mod2)
+country_fit <- by_country %>% 
+  unnest(model %>% 
+           purrr::map(broom::glance))
 ```
 
-### Plot models
+Or you can use a `for` loop to compute this.
+
+```{r eval=FALSE}
+n <- length(unique(gapminder2$country))
+country_fit <- data.frame(country=gapminder2$country[seq(1, 1704, 12)],
+                   continent=gapminder2$continent[seq(1, 1704, 12)],
+                   intercept=rep(0,n), 
+                   year1950=rep(0,n),
+                   r.squared=rep(0,n))
+for (i in 1:n) {
+  sub <- gapminder2 %>% filter(country==country_fit$country[i])
+  sub_lm <- lm(lifeExp~year1950, data=sub)
+  sub_lm_fit <- coefficients(sub_lm)
+  country_fit$intercept[i] <- sub_lm_coefs[1]
+  country_fit$year1950[i] <- sub_lm_coefs[2]
+  country_fit$r.squared[i] <- summary(sub_lm)$r.squared
+}
+head(country_fit)
+```
+
+### Plot the $R^2$ values as a histogram. 
 
 ```{r}
-sci_mod1 <- augment(mod1, pisa_au_science)
-sci_mod2 <- augment(mod2, pisa_au_science)
+ggplot(country_fit, aes(x=r.squared)) + geom_histogram()
 ```
 
-```{r fig.width=12, fig.height=4}
-ggplot(pisa_au_science, aes(x=log_science_time, y=science,
-                            colour=science_fun_c)) + 
-  geom_point(alpha=0.1) + 
-  scale_colour_brewer("Enjoy science", palette="Dark2") +
-  facet_wrap(~science_fun_c, ncol=4) + 
-  theme(legend.position="bottom") + 
-  xlab("Time spent studying science per week (mins") + 
-  ylab("Synthetic science score") +
-  geom_line(data=sci_mod1, aes(y=.fitted)) + 
-  ggtitle("Model 1")
+### Countries with worst fit
+
+Examine the countries with the worst fit, countries with $R^2<0.45$, by making scatterplots of the data, with the linear model overlaid. 
+
+```{r fig.height=4}
+badfit <- country_fit %>% filter(r.squared <= 0.45)
+gapminder2_sub <- gapminder2 %>% filter(country %in% badfit$country)
+ggplot(data=gapminder2_sub, aes(x=year, y=lifeExp)) + 
+         geom_point() +
+  facet_wrap(~country) +
+  scale_x_continuous(breaks=seq(1950,2000,10), 
+                     labels=c("1950", "60","70", "80","90","2000")) +
+  geom_smooth(method="lm", se=FALSE)
 ```
 
-```{r fig.width=12, fig.height=4}
-ggplot(pisa_au_science, aes(x=log_science_time, y=science,
-                            colour=science_fun_c)) + 
-  geom_point(alpha=0.1) + 
-  scale_colour_brewer("Enjoy science", palette="Dark2") +
-  facet_wrap(~science_fun_c, ncol=4) + 
-  theme(legend.position="bottom") + 
-  xlab("Time spent studying science per week (mins") + 
-  ylab("Synthetic science score") +
-  geom_line(data=sci_mod2, aes(y=.fitted)) + 
-  ggtitle("Model 2")
-```
+Each of these countries had been moving on a nice trajectory of increasing life expectancy, and then suffered a big dip during the time period.
 
-```{r fig.width=6, fig.height=3}
-p1 <- ggplot(sci_mod1, aes(x=log_science_time, y=.fitted,
-                            colour=science_fun_c)) +
-  geom_line() +
-  scale_colour_brewer("Enjoy science", palette="Dark2") +
-  theme(legend.position="bottom") + 
-  xlab("Time spent studying science per week (mins") + 
-  ylab("Synthetic science score") + ggtitle("Model 1")
-p2 <- ggplot(sci_mod2, aes(x=log_science_time, y=.fitted,
-                            colour=science_fun_c)) +
-  geom_line() +
-  scale_colour_brewer("Enjoy science", palette="Dark2") +
-  theme(legend.position="bottom") + 
-  xlab("Time spent studying science per week (mins") + 
-  ylab("Synthetic science score") + ggtitle("Model 2")
-grid.arrange(p1, p2, ncol=2)
-```
+### Five minute challenge
 
-### Choose best model
+Use google to explain these dips using world history and current affairs information. 
 
-```{r}
-glance(mod1)
-glance(mod2)
-```
+## Lab exercise
 
-- Both are terrible models! Very little predictive power.
-- But model 2, with the interaction is the better of the two.
+- Download the children per woman (total fertility) data from the [gapminder web site](https://www.gapminder.org/data/)
+- Conduct the same analysis, as done for life expectancy.
+- Find the unusual countries
 
-### Model equations
+The code below will help you read in the data and process it.
 
-```{r}
-tidy(mod2)
-```
-
-With a categorical variable, and an interaction, the best summary is to write out the model equation for each level of the variable:
-
-- Strongly disagree: $463.33-.0040 x_1$
-- Disagree: $463.33-151.88+(-.0040+78.64)x_1$
-- Agree: $463.33-151.88+(-.0040+98.41)\times x_1$
-- Strongly agree: $463.33-122.49+(-.0040+96.9)\times x_1$
-
-### Prediction
-
-For a new observation, where `science_time`=360 and `science_fun` is Agree, what would you expect the science score to be?
-
-1. Science time needs to be logged.
-2. $311.45+98.4log10(360)=563$
-
-### Interpretation: 5 minute challenge
-
-- Compute the predicted science for a student who reports stidying science for 36 minutes per week, and who's answer for `science_fun` is Agree. 
-- What is the change in prediction relative to the sudent who reported studying for 360 minutes?
-- Without doing any calculations, what would the difference in predicted science score be for same students, if instead they reported `science_fun` is Disagree?
-
-### 15 minute challenge
-
-- Re-fit the model using the original numeric scale for `science_fun`. How does the resulting model differ?
-- Include an interaction between `science_time` and `science_fun` using the numeric scale for `science_fun`. How does the model differ from model 2 above, that uses a categorical scale, and interaction.
-
-```{r}
-mod3 <- lm(science~log_science_time+science_fun, data=pisa_au_science, weights = stuweight)
-mod4 <- lm(science~log_science_time*science_fun, data=pisa_au_science, weights = stuweight)
-tidy(mod3)
-tidy(mod4)
-```
-
-```{r}
-pisa_au_science <- pisa_au %>% 
-  filter(science_fun < 5) %>%
-  mutate(science_fun_n = as.numeric(science_fun)) %>%
-  filter(!is.na(science_time)) %>% 
-  select(science, science_fun, science_time, science_fun_n, stuweight) %>%
-  mutate(science_fun = to_factor(science_fun, ordered=TRUE, drop_unused_labels = TRUE)) %>%
-  mutate(science_time = as.numeric(science_time)) %>%
-  filter(science_time>0) %>%
-  mutate(log_science_time = log10(science_time)) %>%
-  mutate(science_fun_c = factor(science_fun, ordered=FALSE))
-mod5 <- lm(science~log_science_time+science_fun_n, data=pisa_au_science, weights = stuweight)
-mod6 <- lm(science~log_science_time*science_fun_n, data=pisa_au_science, weights = stuweight)
-tidy(mod5)
-tidy(mod6)
-```
-
-```{r lab-exercise}
-pisa_au_science <- pisa_au %>% 
-  filter(science_fun < 5) %>%
-  filter(!is.na(science_time)) %>%
-  filter(!is.na(anxtest)) %>%
-  select(science, science_fun, science_time, gender, anxtest, stuweight) %>%
-  mutate(science_fun_c = to_factor(science_fun, ordered=FALSE, drop_unused_labels = TRUE)) %>%
-  mutate(science_time = as.numeric(science_time)) %>%
-  filter(science_time>0) %>%
-  mutate(log_science_time = log10(science_time)) 
-sci_lm <- lm(science ~ science_fun_c + science_time + gender*anxtest, data=pisa_au_science, weights = stuweight)
-tidy(sci_lm)
+```{r eval=FALSE}
+library(readxl)
+fert <- read_xlsx("data/indicator undata total_fertility.xlsx") 
+colnames(fert)[1] <- "country"
+fert <- fert %>% gather(year, fert, -country) %>% 
+  mutate(year = as.numeric(year)) %>%
+  filter(year > 1950)
+ggplot(fert, aes(x=year, y=fert, group=country)) +
+  geom_line(alpha=0.1)
 ```
 
 ## Share and share alike
