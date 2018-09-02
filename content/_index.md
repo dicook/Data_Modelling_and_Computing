@@ -133,6 +133,10 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 ## Project
 
 - [Project instructions](project/project-ETC1010.pdf) 
+    - Deadline 1: *Sep 14* Team members and team name, data description
+    - Deadline 2: *Sep 21* Electronic copy of your data, and a page of data de- scription, and cleaning done, or needing to be done.
+    - Deadline 3: *Oct 12* Final version of story board uploaded
+    - Presentation in week 12
 
 ## Exam information
 
