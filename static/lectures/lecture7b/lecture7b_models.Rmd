@@ -1,5 +1,6 @@
 ---
 title: "ETC1010: Data Modelling and Computing"
+author: "Professor Di Cook, EBS, Monash U."
 output: 
   learnr::tutorial:
     css: "css/logo.css"
@@ -26,18 +27,15 @@ library(gridExtra)
 
 ## Course web site
 
-This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.netlify.com](http://dmac.netlify.com)
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.dicook.org](http://dmac.dicook.org)
 
 ## Overview
 
-- Recap: transformations, interaction between quantitative variables, missing values
-- Model visualisation
-- Inference
-- Model building
+- Transformations: building on a stable platform
+- Adding interactions to the model - what does this mean?
+- Model building - how do you decide when you've got the bets possible model?
 
-## Recap: transformations, interaction between quantitative variables, missing values
-
-### Transformations
+## Transformations
 
 - Numerical variables, whether they are explanatory or response, work better for modeling if they are reasonably spread out. If they are right- or left-skewed the model puts more weight on the extreme values. 
 - Categorical variables may need to be re-levelled to balance classes, or remove low count classes.
@@ -53,6 +51,12 @@ p2 <- ggplot(df, aes(x=x, y=y)) + geom_point() +
   ggtitle("Ideal base for model")
 grid.arrange(p1, p2, ncol=2)
 ```
+
+## Adding interactions to the model
+
+![](images/interaction.png)
+### Interaction between quantitative and categorical variables
+
 
 ### Interaction between quantitative variables
 
@@ -294,6 +298,7 @@ pisa_au_science <- pisa_au %>%
 sci_lm <- lm(science ~ science_fun_c + science_time + gender*anxtest, data=pisa_au_science, weights=stuweight)
 tidy(sci_lm)
 ```
+
 ## Share and share alike
 
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
