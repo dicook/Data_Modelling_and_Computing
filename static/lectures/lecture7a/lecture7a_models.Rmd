@@ -162,6 +162,23 @@ head(country_coefs)
 - Fit the models to all countries
 - Pick your favourite country (not Australia), print the coefficients, and make a hand sketch of the the model fit.
 
+### Plot all the models
+
+```{r fig.height=4}
+country_model <- by_country %>% 
+  unnest(model %>% 
+           purrr::map(broom::augment))
+
+p1 <- gapminder %>% 
+  ggplot(aes(year, lifeExp, group = country)) +
+    geom_line(alpha = 1/3) + ggtitle("Data")
+p2 <- ggplot(country_model) + 
+  geom_line(aes(x=year1950+1950, y=.fitted, group=country), alpha = 1/3) +
+  xlab("year") +
+  ggtitle("Fitted models")
+grid.arrange(p1, p2, ncol=2)
+```
+
 ### Plot all the model coefficients
 
 ```{r}
@@ -265,7 +282,7 @@ Use google to explain these dips using world history and current affairs informa
 - Conduct the same analysis, as done for life expectancy.
 - Find the unusual countries
 
-The code below will help you read in the data and process it.
+The code below will help you read in the data and process it, but you will need to make some changes to do the full analysis.
 
 ```{r eval=FALSE}
 library(readxl)
