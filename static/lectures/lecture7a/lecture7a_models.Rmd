@@ -286,11 +286,12 @@ The code below will help you read in the data and process it, but you will need 
 
 ```{r eval=FALSE}
 library(readxl)
-fert <- read_xlsx("data/indicator undata total_fertility.xlsx") 
-colnames(fert)[1] <- "country"
-fert <- fert %>% gather(year, fert, -country) %>% 
+fert <- read_xlsx("data/children_per_woman_total_fertility.xlsx") %>%
+  rename(country = geo)
+fert <- fert %>% gather(year, fert, -country) %>%
   mutate(year = as.numeric(year)) %>%
-  filter(year > 1950)
+  filter(year > 1950) %>%
+  mutate(year1950 = year - 1950)
 ggplot(fert, aes(x=year, y=fert, group=country)) +
   geom_line(alpha=0.1)
 ```
