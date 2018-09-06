@@ -54,6 +54,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - [Fri](https://ebsmonash.shinyapps.io/lecture6b_models) [(Rmd)](http://dmac.dicook.org/lectures/lecture6b/lecture6b_models.Rmd) [Reading Textbook 25.1, 25.2 (only the first section)](http://r4ds.had.co.nz/many-models.html)
 - Week 7: Intermediate models 
     - [Wed](https://ebsmonash.shinyapps.io/lecture7a_models) [(Rmd)](http://dmac.dicook.org/lectures/lecture7a/lecture7a_models.Rmd) [Reading Textbook 24.1-2](http://r4ds.had.co.nz/model-building.html) [OH! An amazing analysis of rents in Melbourne](http://freerangestats.info/blog/2018/08/31/melbourne-rents)
+    - [Fri](https://ebsmonash.shinyapps.io/lecture7b_models) [(Rmd)](http://dmac.dicook.org/lectures/lecture7b/lecture7b_models.Rmd) 
 - Week 8: Advanced modeling;
 - Week 9: Advanced data handling; 
 - Week 10: Working with text data, and networks;
