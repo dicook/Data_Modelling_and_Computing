@@ -265,7 +265,7 @@ grid.arrange(p1, p2, p3, p4, ncol=2)
 
 ### Five minute challenge
 
-- How does science score relate to text anxiety and gender?
+Using the PISA data: How does science score relate to text anxiety and gender?
 - Make a plot of science by anxtest, coloured by gender. Does it look like an interaction term might be necessary?
 - Fit the model with `science` score as the response and `gender` and `anxtest`. 
 - Try an interaction between gender and anxtest. 
@@ -309,12 +309,12 @@ pisa_au_science <- pisa_au %>%
   filter(science_fun < 5) %>%
   filter(!is.na(science_time)) %>%
   filter(!is.na(anxtest)) %>%
-  select(science, science_fun, science_time, gender, anxtest, stuweight) %>%
+  select(science, math, read, science_fun, science_time, breakfast, gender, anxtest, books, tvs, stuweight) %>%
   mutate(science_time = as.numeric(science_time)) %>%
   filter(science_time>0) %>%
   mutate(log_science_time = log10(science_time)) %>%
   mutate(science_fun_c = factor(science_fun, ordered=FALSE))
-sci_lm <- lm(science ~ science_fun_c + science_time + gender*anxtest, data=pisa_au_science, weights=stuweight)
+sci_lm <- lm(science ~ math + read + science_fun_c + science_time + gender*anxtest, data=pisa_au_science, weights=stuweight)
 tidy(sci_lm)
 glance(sci_lm)
 ```
