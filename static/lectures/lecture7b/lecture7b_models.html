@@ -8,6 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
+<meta name="author" content="Professor Di Cook, EBS, Monash U." />
 
 
 <meta name="progressive" content="false" />
@@ -49,35 +50,235 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <h1>Intermediate models</h1>
 <div id="section-course-web-site" class="section level2">
 <h2>Course web site</h2>
-<p>This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: <a href="http://dmac.netlify.com" class="uri">http://dmac.netlify.com</a></p>
+<p>This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: <a href="http://dmac.dicook.org" class="uri">http://dmac.dicook.org</a></p>
 </div>
 <div id="section-overview" class="section level2">
 <h2>Overview</h2>
 <ul>
-<li>Recap: transformations, interaction between quantitative variables, missing values</li>
-<li>Model visualisation</li>
-<li>Inference</li>
-<li>Model building</li>
+<li>Transformations: building on a stable platform</li>
+<li>Adding interactions to the model - what does this mean?</li>
+<li>Model building - how do you decide when you’ve got the bets possible model?</li>
 </ul>
 </div>
-<div id="section-recap-transformations-interaction-between-quantitative-variables-missing-values" class="section level2">
-<h2>Recap: transformations, interaction between quantitative variables, missing values</h2>
-<div id="section-transformations" class="section level3">
-<h3>Transformations</h3>
+<div id="section-transformations" class="section level2">
+<h2>Transformations</h2>
+<p><em>Transform your work larvae to butterfly</em> (Image source: Jan Thornhill <a href="http://sci-why.blogspot.com/2013/04/help-save-monarch-butterfly.html" class="uri">http://sci-why.blogspot.com/2013/04/help-save-monarch-butterfly.html</a>)</p>
+<p><img src="http://1.bp.blogspot.com/-uKdxzn5o2Wg/UV7I3tbENHI/AAAAAAAAAHI/qyOIUonkKLY/s1600/shutterstock_4485247monarch+%2526+caterpillar.jpg" width="50%"></p>
 <ul>
-<li>Numerical variables, whether they are explanatory or response, work better for modeling if they are reasonably spread out. If they are right- or left-skewed the model puts more weight on the extreme values.</li>
-<li>Categorical variables may need to be re-levelled to balance classes, or remove low count classes.</li>
+<li><strong>Numerical variables</strong>, whether they are explanatory or response, work better for modeling if they are reasonably spread out. If they are right- or left-skewed the model puts more weight on the extreme values.</li>
+<li><strong>Categorical variables</strong> may need to be re-levelled to balance classes, or remove low count classes.</li>
 </ul>
 <pre class="r"><code>x &lt;- runif(100)
 df &lt;- tibble(x, y=5-2*x+rnorm(100), x2=(2*x)^10)
-p1 &lt;- ggplot(df, aes(x=x2, y=y)) + geom_point() + 
-  geom_smooth(method=&quot;lm&quot;, se=FALSE) +
-  ggtitle(&quot;Less stable base for model&quot;)
-p2 &lt;- ggplot(df, aes(x=x, y=y)) + geom_point() + 
+p1 &lt;- ggplot(df, aes(x=x, y=y)) + geom_point() + 
   geom_smooth(method=&quot;lm&quot;, se=FALSE) +
   ggtitle(&quot;Ideal base for model&quot;)
-grid.arrange(p1, p2, ncol=2)</code></pre>
-<p><img src="lecture7b_models_files/figure-html4/unnamed-chunk-1-1.png" width="576" style="display: block; margin: auto;" /></p>
+p2 &lt;- ggplot(df, aes(x=x2, y=y)) + geom_point() + 
+  geom_smooth(method=&quot;lm&quot;, se=FALSE) +
+  ggtitle(&quot;Less stable base for model&quot;)
+p3 &lt;- ggplot(df, aes(x=x2, y=y)) + geom_point() + 
+  scale_x_log10() + xlab(&quot;Log x2&quot;) +
+  geom_smooth(method=&quot;lm&quot;, se=FALSE) +
+  ggtitle(&quot;Log transform x over-corrects&quot;)
+p4 &lt;- ggplot(df, aes(x=x2^(1/10), y=y)) + geom_point() + 
+  xlab(&quot;x2^(1/10)&quot;) +
+  geom_smooth(method=&quot;lm&quot;, se=FALSE) +
+  ggtitle(&quot;Power transform x fixes&quot;)
+grid.arrange(p1, p2, p3, p4, ncol=2)</code></pre>
+<p><img src="lecture7b_models_files/figure-html/unnamed-chunk-2-1.png" width="768" style="display: block; margin: auto;" /></p>
+<div id="section-power-transformation" class="section level3">
+<h3>Power transformation</h3>
+<p>This is a family of transformations you can make on quantitative data to help “symmetrise” or “normalise” (make is bell-shaped) the data. These are also called Box-Cox transformations. For <span class="math inline">\(\lambda \in (-\infty, \infty)\)</span>,</p>
+<p><span class="math display">\[x_i^{(\lambda)} = \frac{x_i^\lambda -1}{\lambda}  ~~~ \mbox{if} ~\lambda \neq 0\]</span></p>
+<p>but if <span class="math inline">\(\lambda=0, x_i^{(\lambda)} =\ln{x_i}\)</span></p>
+<pre class="r"><code>df &lt;- tibble(x1=rexp(500), x2=runif(500)^5, x3=abs(6-rexp(500)))
+p1 &lt;- ggplot(df, aes(x=x1)) + geom_density(fill=&quot;black&quot;, alpha=0.7)
+p2 &lt;- ggplot(df, aes(x=x2)) + geom_density(fill=&quot;black&quot;, alpha=0.7)
+p3 &lt;- ggplot(df, aes(x=x3)) + geom_density(fill=&quot;black&quot;, alpha=0.7)
+p4 &lt;- ggplot(df, aes(x=log(x1+0.1))) + geom_density(fill=&quot;black&quot;, alpha=0.7) + ggtitle(&quot;lambda=0&quot;)
+p5 &lt;- ggplot(df, aes(x=((x2)^(1/5)-1)/(1/5))) + geom_density(fill=&quot;black&quot;, alpha=0.7) + ggtitle(&quot;lambda=1/5&quot;)
+p6 &lt;- ggplot(df, aes(x=(x3^5-1)/5)) + geom_density(fill=&quot;black&quot;, alpha=0.7) + ggtitle(&quot;lambda=5&quot;)
+grid.arrange(p1, p2, p3, p4, p5, p6, ncol=3)</code></pre>
+<p><img src="lecture7b_models_files/figure-html/unnamed-chunk-3-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>It may be necessary to <em>shift</em> the values into the domain suitable for the function. For example, to take a log, all values must be bigger than 1.</p>
+</div>
+<div id="section-transforming-categorical-variables" class="section level3">
+<h3>Transforming categorical variables</h3>
+<ul>
+<li>Categories with small numbers of counts may need ot be combined.</li>
+<li>Ordered categories might be re-coded to reflect “real” difference between classes</li>
+</ul>
+<div id="section-example-flying-etiquette" class="section level4">
+<h4>Example: flying etiquette</h4>
+<pre class="r"><code>fly &lt;- read_csv(&quot;data/flying-etiquette.csv&quot;) %&gt;% 
+  select(`How often do you travel by plane?`, `Do you ever recline your seat when you fly?`, `Is itrude to recline your seat on a plane?`) %&gt;%
+  rename(travel_freq=`How often do you travel by plane?`,
+         recline=`Do you ever recline your seat when you fly?`,
+         rude=`Is itrude to recline your seat on a plane?`)
+fly %&gt;% count(travel_freq, sort=TRUE)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["travel_freq"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Once a year or less","2":"633"},{"1":"Once a month or less","2":"205"},{"1":"Never","2":"166"},{"1":"A few times per month","2":"29"},{"1":"A few times per week","2":"4"},{"1":"Every day","2":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>How often a person flies, is a pretty important context variable for understanding people’s responses in the survey. There are two issues here:</p>
+<ul>
+<li>Categories <code>Every day</code>, <code>A few times per week</code> and even <code>A few times per month</code> have small counts. You may not have enough subjects from which to infer to the larger population of flyers in these categories.</li>
+<li>Category <code>Never</code>!!! If they have never flown how can they provide useful information on flying etiquette?</li>
+</ul>
+<pre class="r"><code>library(forcats)
+fly %&gt;% count(recline, sort=TRUE)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["recline"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Once in a while","2":"257"},{"1":"NA","2":"182"},{"1":"Usually","2":"175"},{"1":"Never","2":"171"},{"1":"Always","2":"137"},{"1":"About half the time","2":"118"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>fly %&gt;% count(rude, sort=TRUE)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["rude"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"No, not rude at all","2":"502"},{"1":"Yes, somewhat rude","2":"281"},{"1":"NA","2":"186"},{"1":"Yes, very rude","2":"71"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>fly %&gt;%   filter(!is.na(recline)) %&gt;%
+  filter(!is.na(rude)) %&gt;%
+  count(recline, rude, sort=TRUE)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["recline"],"name":[1],"type":["chr"],"align":["left"]},{"label":["rude"],"name":[2],"type":["chr"],"align":["left"]},{"label":["n"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"Usually","2":"No, not rude at all","3":"145"},{"1":"Once in a while","2":"Yes, somewhat rude","3":"129"},{"1":"Always","2":"No, not rude at all","3":"124"},{"1":"Once in a while","2":"No, not rude at all","3":"116"},{"1":"About half the time","2":"No, not rude at all","3":"82"},{"1":"Never","2":"Yes, somewhat rude","3":"81"},{"1":"Never","2":"Yes, very rude","3":"54"},{"1":"About half the time","2":"Yes, somewhat rude","3":"35"},{"1":"Never","2":"No, not rude at all","3":"35"},{"1":"Usually","2":"Yes, somewhat rude","3":"27"},{"1":"Once in a while","2":"Yes, very rude","3":"11"},{"1":"Always","2":"Yes, somewhat rude","3":"9"},{"1":"Always","2":"Yes, very rude","3":"3"},{"1":"Usually","2":"Yes, very rude","3":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>fly %&gt;% 
+  filter(!is.na(recline)) %&gt;%
+  filter(!is.na(rude)) %&gt;%
+  mutate(recline = fct_recode(recline, Always = &quot;Usually&quot;)) %&gt;%
+  count(recline, rude, sort=TRUE)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["recline"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["rude"],"name":[2],"type":["chr"],"align":["left"]},{"label":["n"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"Always","2":"No, not rude at all","3":"269"},{"1":"Once in a while","2":"Yes, somewhat rude","3":"129"},{"1":"Once in a while","2":"No, not rude at all","3":"116"},{"1":"About half the time","2":"No, not rude at all","3":"82"},{"1":"Never","2":"Yes, somewhat rude","3":"81"},{"1":"Never","2":"Yes, very rude","3":"54"},{"1":"Always","2":"Yes, somewhat rude","3":"36"},{"1":"About half the time","2":"Yes, somewhat rude","3":"35"},{"1":"Never","2":"No, not rude at all","3":"35"},{"1":"Once in a while","2":"Yes, very rude","3":"11"},{"1":"Always","2":"Yes, very rude","3":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<ul>
+<li>Single variables have healthy counts</li>
+<li>But pairs of variables, some combinations of levels have low counts</li>
+<li>Collapsing two or more categories into one, might build better support</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="section-adding-interactions-to-the-model" class="section level2">
+<h2>Adding interactions to the model</h2>
+<div class="figure">
+<img src="images/interaction.png" />
+
+</div>
+<div id="section-interaction-between-quantitative-and-categorical-variables" class="section level3">
+<h3>Interaction between quantitative and categorical variables</h3>
+<p>An interaction term is needed in a model if the linear relationship is different for the response vs quantitative variable for different levels of the categorical variable. That is, a different <em>slope</em> needs to be used/estimated for each level.</p>
+<p>Let’s take a look at how this works for the <a href="http://www.oecd.org/pisa/data/2015database/">2015 OECD PISA data</a>. The question to be answered is whether more time spent studying science is associated with higher science scores, and how this varies with enjoyment of science.</p>
+<p><img src="lecture7b_models_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /></p>
+<div class="panel panel-default">
+<div class="panel-heading tutorial-panel-heading">Quiz</div>
+<table class="table quiz-table">
+<tr>
+<td>
+
+<div id="htmlwidget-f223d15ecd4706278128" style="width:100%;height:auto;", class = "quiz html-widget">
+<div class="panel panel-default">
+<div class="panel-body quizArea">
+</div>
+</div>
+</div>
+
+<script type="application/json" data-for="htmlwidget-f223d15ecd4706278128">{"x":{"question":"How would you describe the relationship between science score and time spent studying?","answers":[{"option":"Weak","correct":true,"message":null},{"option":"Moderate","correct":false,"message":null},{"option":"Strong","correct":false,"message":null}],"label":"pipeline-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"How would you describe the relationship between science score and time spent studying?","a":[{"option":"Weak","correct":true,"message":null},{"option":"Moderate","correct":false,"message":null},{"option":"Strong","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+</td>
+</tr>
+<tr>
+<td>
+
+<div id="htmlwidget-38e774992cdef75a14ea" style="width:100%;height:auto;", class = "quiz html-widget">
+<div class="panel panel-default">
+<div class="panel-body quizArea">
+</div>
+</div>
+</div>
+
+<script type="application/json" data-for="htmlwidget-38e774992cdef75a14ea">{"x":{"question":"What do these lines of code do?   <code>filter(science_fun &lt; 5) %&gt;%\n  filter(!is.na(science_time))<\/code>","answers":[{"option":"Remove missing values","correct":true,"message":null},{"option":"Remove extreme values, and missing values","correct":false,"message":null},{"option":"I have no idea","correct":false,"message":null}],"label":"pipeline-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What do these lines of code do?   <code>filter(science_fun &lt; 5) %&gt;%\n  filter(!is.na(science_time))<\/code>","a":[{"option":"Remove missing values","correct":true,"message":null},{"option":"Remove extreme values, and missing values","correct":false,"message":null},{"option":"I have no idea","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+</td>
+</tr>
+<tr>
+<td>
+
+<div id="htmlwidget-1436a7289289f1adaf9d" style="width:100%;height:auto;", class = "quiz html-widget">
+<div class="panel panel-default">
+<div class="panel-body quizArea">
+</div>
+</div>
+</div>
+
+<script type="application/json" data-for="htmlwidget-1436a7289289f1adaf9d">{"x":{"question":"Why was <code>science_time<\/code> transformed to a log scale?","answers":[{"option":"It has a right-skewed distribution.","correct":true,"message":null},{"option":"It has a left-skewed distribution.","correct":false,"message":null},{"option":"It is symmetric","correct":false,"message":null}],"label":"pipeline-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Why was <code>science_time<\/code> transformed to a log scale?","a":[{"option":"It has a right-skewed distribution.","correct":true,"message":null},{"option":"It has a left-skewed distribution.","correct":false,"message":null},{"option":"It is symmetric","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+</td>
+</tr>
+<tr>
+<td>
+
+<div id="htmlwidget-10c45002cb3e52540f74" style="width:100%;height:auto;", class = "quiz html-widget">
+<div class="panel panel-default">
+<div class="panel-body quizArea">
+</div>
+</div>
+</div>
+
+<script type="application/json" data-for="htmlwidget-10c45002cb3e52540f74">{"x":{"question":"Why were 0 values of <code>science_time<\/code> removed?","answers":[{"option":"It could be argued that these are most likely missing values","correct":true,"message":null},{"option":"They are outliers affecting the modeling","correct":false,"message":null},{"option":"No-one would be able to study science 0 minutes per week","correct":false,"message":null}],"label":"pipeline-4","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Why were 0 values of <code>science_time<\/code> removed?","a":[{"option":"It could be argued that these are most likely missing values","correct":true,"message":null},{"option":"They are outliers affecting the modeling","correct":false,"message":null},{"option":"No-one would be able to study science 0 minutes per week","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+</td>
+</tr>
+</table>
+</div>
+<p>There are two possible models:</p>
+<p><span class="math inline">\(y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\varepsilon_i\)</span> (Model 1)</p>
+<p><span class="math inline">\(y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\beta_3x_{i1}*x_{i2}+\varepsilon_i\)</span> (Model 2)</p>
+<p>where <span class="math inline">\(y=\)</span> science score, <span class="math inline">\(x_1=\)</span> science study time, <span class="math inline">\(x_2=\)</span> science enjoyment.</p>
+<p>Model 2 has an interaction term. This means that the slope will be allowed to vary for the different levels of the categorical variables, science_fun.</p>
+<p><em>Note:</em> Ordered factors are treated as “numeric” in the default model fit, so we should convert <code>science_fun</code> to be an unordered categorical variable. Also, <code>science_time</code> is heavily skewed so should be transformed.</p>
+<pre class="r"><code>pisa_au_science &lt;- pisa_au_science %&gt;%
+  mutate(log_science_time = log10(science_time)) %&gt;%
+  mutate(science_fun_c = factor(science_fun, ordered=FALSE))
+mod1 &lt;- lm(science~log_science_time+science_fun_c, data=pisa_au_science, weights = stuweight)
+mod2 &lt;- lm(science~log_science_time*science_fun_c, data=pisa_au_science, weights = stuweight)
+tidy(mod1)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"267.67909","3":"14.636287","4":"18.28873","5":"1.259015e-73"},{"1":"log_science_time","2":"83.80455","3":"6.175756","4":"13.56993","5":"1.308060e-41"},{"1":"science_fun_cDisagree","2":"31.75873","3":"3.153024","4":"10.07247","5":"9.275505e-24"},{"1":"science_fun_cAgree","2":"63.11582","3":"2.802022","4":"22.52510","5":"7.170303e-110"},{"1":"science_fun_cStrongly agree","2":"104.35334","3":"3.250201","4":"32.10674","5":"3.001395e-216"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>tidy(mod2)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"4.633345e+02","3":"43.50881","4":"10.649211503","5":"2.365354e-26"},{"1":"log_science_time","2":"-3.995844e-03","3":"18.60566","4":"-0.000214765","5":"9.998286e-01"},{"1":"science_fun_cDisagree","2":"-1.518829e+02","3":"55.46131","4":"-2.738538689","5":"6.181258e-03"},{"1":"science_fun_cAgree","2":"-1.667660e+02","3":"48.13726","4":"-3.464385383","5":"5.334771e-04"},{"1":"science_fun_cStrongly agree","2":"-1.224884e+02","3":"53.60320","4":"-2.285094215","5":"2.232632e-02"},{"1":"log_science_time:science_fun_cDisagree","2":"7.864348e+01","3":"23.75214","4":"3.311006323","5":"9.326154e-04"},{"1":"log_science_time:science_fun_cAgree","2":"9.840520e+01","3":"20.56815","4":"4.784348761","5":"1.737805e-06"},{"1":"log_science_time:science_fun_cStrongly agree","2":"9.693076e+01","3":"22.78145","4":"4.254811516","5":"2.109641e-05"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="section-five-minute-challenge" class="section level3">
+<h3>Five minute challenge</h3>
+<ul>
+<li>Write out the equations for both models. (Ignore the log transformation.)</li>
+<li>Make a <strong>hand</strong> sketch of both models.</li>
+</ul>
+</div>
+<div id="section-which-is-the-better-model" class="section level3">
+<h3>Which is the better model?</h3>
+<pre class="r"><code>glance(mod1)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"0.1232009","2":"0.122881","3":"387.1382","4":"385.1085","5":"6.872522e-311","6":"5","7":"-66705.89","8":"133423.8","9":"133467.6","10":"1643090595","11":"10963"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>glance(mod2)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"0.125131","2":"0.1245723","3":"386.7648","4":"223.9415","5":"2.61948e-312","6":"8","7":"-66693.8","8":"133405.6","9":"133471.3","10":"1639473527","11":"10960"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>😱 they are both pretty bad! The interaction model (mod2) is slightly better but its really not.</p>
 </div>
 <div id="section-interaction-between-quantitative-variables" class="section level3">
 <h3>Interaction between quantitative variables</h3>
@@ -99,198 +300,45 @@ p2 &lt;- ggplot(df, aes(x=x1, y=x2, colour=y2)) +
   scale_colour_viridis() + 
   theme_bw() + theme(aspect.ratio=1, legend.position=&quot;none&quot;) +
   ggtitle(&quot;Curled sheet: needs an interaction term&quot;)
-grid.arrange(p1, p2, ncol=2)</code></pre>
-<p><img src="lecture7b_models_files/figure-html4/unnamed-chunk-2-1.png" width="576" style="display: block; margin: auto;" /></p>
-</div>
-<div id="section-missing-values" class="section level3">
-<h3>Missing values</h3>
-<pre class="r"><code>load(&quot;data/pisa_au_sub.rda&quot;)
-library(visdat)
-pisa_au_science2 &lt;- pisa_au %&gt;% 
-  select(science, science_fun, science_time) 
-vis_dat(pisa_au_science2)</code></pre>
-<p><img src="lecture7b_models_files/figure-html4/unnamed-chunk-3-1.png" width="576" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>library(naniar)
-miss_summary(pisa_au_science2)</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["miss_df_prop"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["miss_var_prop"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["miss_case_prop"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["miss_case_table"],"name":[4],"type":["list"],"align":["right"]},{"label":["miss_var_table"],"name":[5],"type":["list"],"align":["right"]},{"label":["miss_var_summary"],"name":[6],"type":["list"],"align":["right"]},{"label":["miss_case_summary"],"name":[7],"type":["list"],"align":["right"]}],"data":[{"1":"0.07345721","2":"0.6666667","3":"0.1584308","4":"<tibble>","5":"<tibble>","6":"<tibble>","7":"<tibble>"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-<div class="panel panel-default">
-<div class="panel-heading tutorial-panel-heading">Quiz</div>
-<table class="table quiz-table">
-<tr>
-<td>
-
-<div id="htmlwidget-e690215ae0f8811c88b0" style="width:100%;height:auto;", class = "quiz html-widget">
-<div class="panel panel-default">
-<div class="panel-body quizArea">
-</div>
-</div>
-</div>
-
-<script type="application/json" data-for="htmlwidget-e690215ae0f8811c88b0">{"x":{"question":"How many cases were dropped when missings were removed in the model?","answers":[{"option":"1067","correct":false,"message":null},{"option":"2302","correct":true,"message":null},{"option":"9687","correct":false,"message":null}],"label":"miss-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"How many cases were dropped when missings were removed in the model?","a":[{"option":"1067","correct":false,"message":null},{"option":"2302","correct":true,"message":null},{"option":"9687","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
-</td>
-</tr>
-</table>
-</div>
-<ul>
-<li>A missing value anywhere, means that row of values can’t be used for the model fitting</li>
-<li>Strategies:
-<ul>
-<li>Variables with many missings are better not to be used</li>
-<li>Observations (rows) with many missings are better to be dropped</li>
-<li>Cases with missing reponse values can’t be used</li>
-<li>If there are a few sporadic missings then maybe imputation should be done so that the rest of the row of data can be used in the model</li>
-</ul></li>
-</ul>
-</div>
-</div>
-<div id="section-model-visualisation" class="section level2">
-<h2>Model visualisation</h2>
-<ul>
-<li>Plot the model with the data, where possible</li>
-<li>Observed vs fitted values: to examine the model goodness of fit</li>
-<li>Fitted vs explanatory variables: to examine variable importance</li>
-<li>Residuals vs fitted: to examine what the model hasn’t captured, and an assumptions behind the model</li>
-</ul>
-<div id="section-two-quantitative-explanatory-variables" class="section level3">
-<h3>Two quantitative explanatory variables</h3>
-<ul>
-<li>Two models are fitted to the data generated in the last section <code>df &lt;- tibble(x1, x2,  y2=5-2*x1+4*x2+10*(-x1)*x2+rnorm(500)*0.5)</code>, that data that exhibits some interatction. - What happens when we fit a model, with and without an interaction term.</li>
-</ul>
-<pre class="r"><code>mod1 &lt;- lm(y2 ~ x1+x2, data=df)
-mod2 &lt;- lm(y2 ~ x1*x2, data=df)
-
-tidy(mod1)</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"7.766626","3":"0.1140571","4":"68.094190","5":"3.764016e-254"},{"1":"x1","2":"-7.271217","3":"0.1464169","4":"-49.661049","5":"8.025594e-195"},{"1":"x2","2":"-1.193952","3":"0.1499507","4":"-7.962297","5":"1.156937e-14"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-<pre class="r"><code>tidy(mod2)</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"5.066112","3":"0.09594086","4":"52.80453","5":"9.781602e-206"},{"1":"x1","2":"-2.093030","3":"0.16291953","4":"-12.84702","5":"8.217395e-33"},{"1":"x2","2":"4.005163","3":"0.16431501","4":"24.37491","5":"7.400934e-87"},{"1":"x1:x2","2":"-10.010103","3":"0.27754388","4":"-36.06674","5":"9.699117e-141"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-<pre class="r"><code>
-glance(mod1)</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"0.8351447","2":"0.8344813","3":"0.9624941","4":"1258.882","5":"2.818932e-195","6":"3","7":"-688.8511","8":"1385.702","9":"1402.561","10":"460.4182","11":"497"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-<pre class="r"><code>glance(mod2)</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"0.9544925","2":"0.9542173","3":"0.5062036","4":"3467.771","5":"0","6":"4","7":"-367.053","8":"744.1061","9":"765.1791","10":"127.0961","11":"496"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-<ul>
-<li>The model fitting the interaction is much better.</li>
-<li>A couple of ways to plot the model, as a surface (tile plot) or holding one variable fixed, and showing the other.</li>
-</ul>
-<div id="section-method-1" class="section level4">
-<h4>Method 1</h4>
-<p>Using the tile approach. A grid of the explanatory variable is displayed, with fitted value mapped to the colour filling the cell.</p>
-<pre class="r"><code>grid &lt;- expand.grid(x1=seq(0,1,0.1), x2=seq(0,1,0.1))
-mod1_a &lt;- augment(mod1, newdata=grid)
-mod2_a &lt;- augment(mod2, newdata=grid)
-
-p1 &lt;- ggplot(mod1_a, aes(x=x1, y=x2, fill=.fitted)) +
-  geom_tile() +  scale_fill_viridis() + 
-  theme_bw() + theme(aspect.ratio=1, legend.position=&quot;none&quot;) 
-p2 &lt;- ggplot(mod2_a, aes(x=x1, y=x2, fill=.fitted)) +
-  geom_tile() +  scale_fill_viridis() + 
-  theme_bw() + theme(aspect.ratio=1, legend.position=&quot;none&quot;) 
-grid.arrange(p1, p2, ncol=2)</code></pre>
-<p><img src="lecture7b_models_files/figure-html4/unnamed-chunk-5-1.png" width="576" style="display: block; margin: auto;" /></p>
-<p>Same data, quite different fits.</p>
-</div>
-<div id="section-method-2" class="section level4">
-<h4>Method 2</h4>
-<p>Fix the level of variable 1, plot the response vs the other variable. Re-do for each of the levels of variable 1.</p>
-<pre class="r"><code>p1 &lt;- ggplot(mod1_a, aes(x=x1, y=.fitted, colour=x2, group=x2)) +
-  geom_line() +  scale_colour_viridis() + 
-  theme(legend.position=&quot;none&quot;) + ggtitle(&quot;Model 1: no interaction&quot;)
-p2 &lt;- ggplot(mod2_a, aes(x=x1, y=.fitted, colour=x2, group=x2)) +
-  geom_line() +  scale_colour_viridis() + 
-  theme(legend.position=&quot;none&quot;) + ggtitle(&quot;Model 2: with an interaction&quot;) 
-p3 &lt;- ggplot(mod1_a, aes(x=x2, y=.fitted, colour=x1, group=x1)) +
-  geom_line() +  scale_colour_viridis() + 
-  theme(legend.position=&quot;none&quot;) + ggtitle(&quot;Model 1: no interaction&quot;)
-p4 &lt;- ggplot(mod2_a, aes(x=x2, y=.fitted, colour=x1, group=x1)) +
-  geom_line() +  scale_colour_viridis() + 
-  theme(legend.position=&quot;none&quot;) + ggtitle(&quot;Model 2: with an interaction&quot;) 
+df_loess1 &lt;- loess(y1~x1+x2, data=df)
+df_loess2 &lt;- loess(y2~x1+x2, data=df)
+df_grid &lt;- expand.grid(x1=seq(0, 1, 0.1), x2=seq(0, 1, 0.1))
+df_grid &lt;- df_grid %&gt;%
+  mutate(y1 = as.vector(predict(df_loess1, newdata=df_grid)),
+         y2 = as.vector(predict(df_loess2, newdata=df_grid)))
+p3 &lt;- ggplot(df_grid, aes(x=x1, y=x2, z=y1, colour=y1)) + 
+  geom_contour(aes(colour = stat(level))) + 
+  scale_colour_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position=&quot;none&quot;) +
+  ggtitle(&quot;Flat sheet: no interaction&quot;) + 
+  geom_point(data=df, aes(x=x1, y=x2, colour=y1), size=0.5, alpha=0.5)
+p4 &lt;- ggplot(df_grid, aes(x=x1, y=x2, z=y2)) + 
+  geom_contour(aes(colour = stat(level))) + 
+  scale_colour_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position=&quot;none&quot;) +
+  ggtitle(&quot;Curled sheet: needs an interaction term&quot;) + 
+  geom_point(data=df, aes(x=x1, y=x2, colour=y2), size=0.5, alpha=0.5)
 grid.arrange(p1, p2, p3, p4, ncol=2)</code></pre>
-<p><img src="lecture7b_models_files/figure-html4/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /></p>
-<p>The models are clearly quite different. And the interaction term makes it a much better fit.</p>
+<p><img src="lecture7b_models_files/figure-html/unnamed-chunk-9-1.png" width="768" style="display: block; margin: auto;" /></p>
 </div>
-</div>
-<div id="section-observed-vs-fitted" class="section level3">
-<h3>Observed vs fitted</h3>
-<pre class="r"><code>mod1_a2 &lt;- augment(mod1, df)
-mod2_a2 &lt;- augment(mod2, df)
-p1 &lt;- ggplot(mod1_a2, aes(x=.fitted, y=y2)) +
-  geom_point() + ggtitle(&quot;Model 1&quot;)
-p2 &lt;- ggplot(mod2_a2, aes(x=.fitted, y=y2)) +
-  geom_point() + ggtitle(&quot;Model 2&quot;)
-grid.arrange(p1, p2, ncol=2)</code></pre>
-<p><img src="lecture7b_models_files/figure-html4/unnamed-chunk-7-1.png" width="576" style="display: block; margin: auto;" /></p>
-<p>What do we learn? <em>Model 2 has a much closer, stronger relationship between observed and fitted values. Its the better fit.</em></p>
-</div>
-<div id="section-residuals-vs-fitted" class="section level3">
-<h3>Residuals vs fitted</h3>
-<pre class="r"><code>p1 &lt;- ggplot(mod1_a2, aes(x=.fitted, y=.std.resid)) +
-  geom_point() + ggtitle(&quot;Model 1&quot;)
-p2 &lt;- ggplot(mod2_a2, aes(x=.fitted, y=.std.resid)) +
-  geom_point() + ggtitle(&quot;Model 2&quot;)
-grid.arrange(p1, p2, ncol=2)</code></pre>
-<p><img src="lecture7b_models_files/figure-html4/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;" /></p>
-<p>What do we learn? <em>There is some nonlinear structure and heteroskedasticity, that has been missed by model 1.</em></p>
-</div>
-</div>
-<div id="section-inference" class="section level2">
-<h2>Inference</h2>
-<p>Predictive model means that you want to apply what you’ve learned to new data. To do this well, you need an understanding of how the model might change if you had different sample. Ideally, you want to know how it would behave if you could see it fitted to all possible samples.</p>
-<p>There are a couple of ways to approach this:</p>
-<ol style="list-style-type: decimal">
-<li>Make some parametric assumptions, <span class="math inline">\(\varepsilon \sim N(0, \sigma^2)\)</span>. These can be used to produce confidence intervals for the model’s parameter estimates. Then we can determine if we believe the population parameter is different from 0, statistically significant, and hence the variable is an important predictor of the response.</li>
-<li>Use resampling methods. Take a bootstrap sample, sampling observations with replacement, re-fit the model. Repeat this many times. The variation in parameter estimates can be used to compute confidence intervals, and hence determine if the population parameter is significantly different from 0.</li>
-</ol>
-<p>Compute confidence intervals using the <code>confint_tidy</code> function in the <code>broom</code> package:</p>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"449.55190492","3":"5.139644952","4":"87.467502","5":"0.000000e+00"},{"1":"science_fun_c2","2":"31.55312829","3":"3.211437858","4":"9.825234","5":"1.093224e-22"},{"1":"science_fun_c3","2":"62.78076742","3":"2.855439947","4":"21.986373","5":"7.934776e-105"},{"1":"science_fun_c4","2":"104.80841432","3":"3.309521531","4":"31.668751","5":"1.752943e-210"},{"1":"science_time","2":"0.08899573","3":"0.009288221","4":"9.581569","5":"1.167308e-21"},{"1":"cars","2":"-1.68896456","3":"1.199530572","4":"-1.408021","5":"1.591538e-01"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-<pre class="r"><code>confint_tidy(sci_lm)</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["conf.low"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"439.47724726","2":"459.6265626"},{"1":"25.25811427","2":"37.8481423"},{"1":"57.18357535","2":"68.3779595"},{"1":"98.32113810","2":"111.2956905"},{"1":"0.07078909","2":"0.1072024"},{"1":"-4.04026703","2":"0.6623379"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-<pre class="r"><code>sci_coefs &lt;- bind_cols(tidy(sci_lm), confint_tidy(sci_lm))
-ggplot(filter(sci_coefs, term != &quot;(Intercept)&quot;), aes(x=term, y=estimate)) + 
-  #geom_vline(xintercept=0, colour=&quot;white&quot;, size=3) +
-  geom_point() + 
-  geom_errorbar(aes(ymin=conf.low, ymax=conf.high))</code></pre>
-<p><img src="lecture7b_models_files/figure-html4/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;" /></p>
-<p><em>One assumption that cannot be avoided is that the observations are independent draws from a population distribution.</em> Generally, the model predictions can be used, but the confidence intervals will not accurately reflect the variation of the model for new samples. An approach that takes the dependence between observations into account for confidence intervals is needed, e.g. autoregressive error model for data like the CO2.</p>
-<div id="section-five-minute-challenge" class="section level3">
+<div id="section-five-minute-challenge-1" class="section level3">
 <h3>Five minute challenge</h3>
 <ul>
-<li>Fit the model with <code>science</code> score as the response and <code>science_fun</code> (categorical), <code>science_time</code> (numeric), <code>gender</code> and <code>anxtest</code>. Use an interaction for gender and anxtest, but not for the other variables.</li>
-<li>Print out the model coefficients table, and 95% confidence intervals.</li>
-<li>Based on the parametric approach, which terms in the model are important for predicting science score.</li>
+<li>How does science score relate to text anxiety and gender?</li>
+<li>Make a plot of science by anxtest, coloured by gender. Does it look like an interaction term might be necessary?</li>
+<li>Fit the model with <code>science</code> score as the response and <code>gender</code> and <code>anxtest</code>.</li>
+<li>Try an interaction between gender and anxtest.</li>
+<li>Which is the better model?</li>
 </ul>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"445.7840449","3":"3.426531422","4":"130.0977549","5":"0.000000e+00"},{"1":"science_fun_c2","2":"30.9719662","3":"3.148226970","4":"9.8379076","5":"9.606288e-23"},{"1":"science_fun_c3","2":"62.4466533","3":"2.801373464","4":"22.2914417","5":"1.096754e-107"},{"1":"science_fun_c4","2":"103.0793402","3":"3.257537790","4":"31.6433291","5":"2.380574e-210"},{"1":"science_time","2":"0.0912101","3":"0.009154287","4":"9.9636484","5":"2.762698e-23"},{"1":"gendermale","2":"-1.7292482","3":"1.814268218","4":"-0.9531381","5":"3.405411e-01"},{"1":"anxtest","2":"-7.6386611","3":"1.272616882","4":"-6.0023258","5":"2.006827e-09"},{"1":"gendermale:anxtest","2":"-6.5725638","3":"1.846525130","4":"-3.5594229","5":"3.732469e-04"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
+<p>The code below has <code>???</code> where you need to replace with something sensible.</p>
+<pre class="r"><code>pisa_au_science &lt;- pisa_au %&gt;% 
+  filter(!is.na(???)) %&gt;%
+  select(science, gender, anxtest, stuweight) 
+ggplot(pisa_au_science, aes(x=anxtest, y=science, colour=gender)) + geom_smooth(method=&quot;lm&quot;)
+sci_lm1 &lt;- lm(science ~ ??? + ???, data=pisa_au_science, weights=stuweight)
+sci_lm2 &lt;- lm(science ~ ??? * ???, data=pisa_au_science, weights=stuweight)
+tidy(???)
+glance(???)</code></pre>
 </div>
 </div>
 <div id="section-model-building" class="section level2">
@@ -299,16 +347,16 @@ ggplot(filter(sci_coefs, term != &quot;(Intercept)&quot;), aes(x=term, y=estimat
 <p>Approach:</p>
 <ul>
 <li>Start simply, fit main effects models (single best variable, adding several more variables independently) and try to understand the effect that each has in the model.</li>
-<li>Explore transformations.</li>
-<li>Check model diagnostics, residual plots</li>
-<li>Explore two variable interactions, and understand effect on model</li>
-<li>Explore three variable interactions</li>
+<li>Explore transformations with the aim to build a stable foundation of explanatory variables for the model.</li>
+<li>Check model diagnostics, residual plots.</li>
+<li>Explore two variable interactions, and understand effect on model.</li>
+<li>Explore three variable interactions.</li>
 <li>Use model goodness of fit to help decide on final. There may be more than one model that are almost equally as good.</li>
 </ul>
 <p><em>Aside:</em> Ideally, values of explanatory variables cover all possible combinations in their domain. There should <em>not be any association between explanatory variables</em>. If there is, then the there is more uncertainty in the parameter estimates. Its like building a table with only two legs, that table would be a bit wobbly, and unstable. A work around is to first regress one explanatory variable on the other, and add the residuals from this fit to the model, instead of the original variable. That is, suppose <span class="math inline">\(X_1, X_2\)</span> are strongly linearly associated, then model <span class="math inline">\(X_2\sim b_0+b_1X_1+e\)</span>, and use <span class="math inline">\(e\)</span> (call it <span class="math inline">\(X^*_2\)</span>) in the model instead of <span class="math inline">\(X_2\)</span>. You would then only be using the part of <span class="math inline">\(X_2\)</span> that is not related to <span class="math inline">\(X_1\)</span> to expand the model. This approach can be used for multiple explanatory variables that are associated.</p>
-<div id="section-minute-challenge" class="section level3">
-<h3>15 minute challenge</h3>
-<p>Explore adding these variables to the model: tvs, books, breakfast (actually feel free to choose others), to examine effects on science scores.</p>
+<div id="section-lab-exercise" class="section level3">
+<h3>Lab exercise</h3>
+<p>Build the best model you can for science score, by exploring these variables: math score, reading score, tvs, books, breakfast, feel free to choose others. (Code provided in Rmd is just a sample, and needs to be modified.)</p>
 </div>
 </div>
 <div id="section-share-and-share-alike" class="section level2">
@@ -320,14 +368,11 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE,
                       warning = FALSE,
                       collapse = TRUE,
-                      fig.height = 6,
-                      fig.width = 6,
+                      fig.height = 8,
+                      fig.width = 8,
                       fig.align = "center",
                       cache = FALSE)
 tutorial_html_dependency()
-library(tidyverse)
-library(broom)
-library(gridExtra)
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -335,7 +380,7 @@ learnr:::register_http_handlers(session, metadata = NULL)
 </script>
  <!--html_preserve-->
 <script type="application/shiny-prerendered" data-context="dependencies">
-{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap-3.3.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cerulean.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["pagedtable"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pagedtable-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/pagedtable.js"]},{"type":"character","attributes":{},"value":["css/pagedtable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["href"]}},"value":[{"type":"character","attributes":{},"value":["lecture7b_models_files/highlightjs-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["textmate.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-format"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmarkdown/templates/tutorial/resources"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-format.js"]},{"type":"character","attributes":{},"value":["tutorial-format.css","rstudio-theme.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["4.5.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/font-awesome-4.5.0"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["css/font-awesome.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["4.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["localforage"]},{"type":"character","attributes":{},"value":["1.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/localforage"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["localforage.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets"]},{"type":"character","attributes":{},"value":["1.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["htmlwidgets.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["htmlwidgets"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["quiz-binding"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["quiz.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[false]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap-3.3.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/bootstrap.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["4.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["localforage"]},{"type":"character","attributes":{},"value":["1.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/localforage"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["localforage.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["slickquiz"]},{"type":"character","attributes":{},"value":["1.5.20"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets/lib/slickquiz"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/slickQuiz.js"]},{"type":"character","attributes":{},"value":["css/slickQuiz.css","css/slickQuizTutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]}]}
+{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap-3.3.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cerulean.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["pagedtable"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pagedtable-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/pagedtable.js"]},{"type":"character","attributes":{},"value":["css/pagedtable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["textmate.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-format"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmarkdown/templates/tutorial/resources"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-format.js"]},{"type":"character","attributes":{},"value":["tutorial-format.css","rstudio-theme.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["5.0.13"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/fontawesome"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/fontawesome-all.min.js","js/fa-v4-shims.min.js"]},{"type":"character","attributes":{},"value":["css/fa-svg-with-js.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["4.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["localforage"]},{"type":"character","attributes":{},"value":["1.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/localforage"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["localforage.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets"]},{"type":"character","attributes":{},"value":["1.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["htmlwidgets.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["htmlwidgets"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["quiz-binding"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["quiz.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap-3.3.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/bootstrap.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["4.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["localforage"]},{"type":"character","attributes":{},"value":["1.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/localforage"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["localforage.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["slickquiz"]},{"type":"character","attributes":{},"value":["1.5.20"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["htmlwidgets/lib/slickquiz"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/slickQuiz.js"]},{"type":"character","attributes":{},"value":["css/slickQuiz.css","css/slickQuizTutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]}]}
 </script>
 <!--/html_preserve-->
 </div>
@@ -351,6 +396,7 @@ learnr:::register_http_handlers(session, metadata = NULL)
 <!-- begin doc-metadata -->
 <div id="doc-metadata">
 <h2 class="title toc-ignore" style="display:none;">ETC1010: Data Modelling and Computing</h2>
+<h4 class="author"><em>Professor Di Cook, EBS, Monash U.</em></h4>
 </div>
 <!-- end doc-metadata -->
 
