@@ -113,7 +113,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - [statistics2.wav](http://dmac.dicook.org/lectures/data/statistics2.wav)
 - [statistics3.wav](http://dmac.dicook.org/lectures/data/statistics3.wav)
 - [pisa_au.rda](http://dmac.dicook.org/lectures/data/pisa_au.rda) Programme for International student assessment
-- [pisa_au_sub.rda](http://dmac.dicook.org/lectures/lecture7a/data/pisa_au_sub.rda) PISA Australia subset
+- [pisa_au_sub.rda](http://dmac.dicook.org/lectures/data/pisa_au_sub.rda) PISA Australia subset
 - [PISA_Codebook_CMB.xlsx](http://dmac.dicook.org/lectures/data/PISA_Codebook_CMB.xlsx) Codebook for Programme for International student assessment
 - [plane_N4YRAA.rda](http://dmac.dicook.org/lectures/data/plane_N4YRAA.rda)
 - [airports.csv](http://dmac.dicook.org/lectures/data/airports.csv)
