@@ -120,6 +120,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - [tb.csv](http://dmac.dicook.org/lectures/data/tb.csv) Tuberculosis incidence
 - [TB_notifications_2018-03-18.csv](http://dmac.dicook.org/lectures/data/TB_notifications_2018-03-18.csv) Up-to-date tuberculosis incidence
 - [fly_tbl.csv](http://dmac.dicook.org/lectures/data/fly_tbl.csv) Etiquette of flying
+- [flying-etiquette.csv](http://dmac.dicook.org/lectures/data/flying-etiquette.csv) Etiquette of flying (raw)
 - [graduate-programs.csv](http://dmac.dicook.org/lectures/data/graduate-programs.csv) US Graduate programs 
 - [ASN00086282.dly](http://dmac.dicook.org/lectures/data/ASN00086282.dly) Melbourne weather
 - [french_fries.rda](http://dmac.dicook.org/lectures/data/french_fries.rda) Hot chips data
