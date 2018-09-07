@@ -114,7 +114,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - [statistics3.wav](http://dmac.dicook.org/lectures/data/statistics3.wav)
 - [pisa_au.rda](http://dmac.dicook.org/lectures/data/pisa_au.rda) Programme for International student assessment
 - [pisa_au_sub.rda](http://dmac.dicook.org/lectures/data/pisa_au_sub.rda) PISA Australia subset
-- [PISA_Codebook_CMB.xlsx](http://dmac.dicook.org/lectures/data/PISA_Codebook_CMB.xlsx) Codebook for Programme for International student assessment
+- [PISA_Codebook_CMB.xlsx](http://dmac.dicook.org/lectures/lecture7b/data/PISA_Codebook_CMB.xlsx) Codebook for Programme for International student assessment
 - [plane_N4YRAA.rda](http://dmac.dicook.org/lectures/data/plane_N4YRAA.rda)
 - [airports.csv](http://dmac.dicook.org/lectures/data/airports.csv)
 - [tb.csv](http://dmac.dicook.org/lectures/data/tb.csv) Tuberculosis incidence
