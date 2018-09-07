@@ -1,0 +1,106 @@
+---
+title: "The Natalia Household Electricity Use"
+author: "ETC1010"
+date: "`r Sys.Date()`"
+output:
+  tufte::tufte_html: default
+  tufte::tufte_handout:
+    citation_package: natbib
+    latex_engine: xelatex
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+library(tufte)
+# invalidate cache when the tufte version changes
+knitr::opts_chunk$set(tidy = FALSE, 
+                      cache.extra = packageVersion('tufte'),
+                      message = FALSE,
+                      warning = FALSE)
+options(htmltools.dir.version = FALSE)
+```
+
+```{r readdata, echo=FALSE}
+library(tidyverse)
+library(lubridate)
+library(glue)
+library(tsibble)
+library(sugrrants)
+library(emo)
+elec <- read_csv("data/smart_meter/natalia1.csv", skip=1,
+                 col_names = c("id", "date", paste0("d", 1:48), paste0("stuff", 1:5)),
+                 col_types = "ccddddddddddddddddddddddddddddddddddddddddddddddddccccc")
+elec <- elec %>% filter(id == 300)
+elec <- elec %>%
+  mutate(date = ymd(date)) %>%
+  select(id:d48) %>%
+  gather(halfhour, kwh, d1:d48) %>%
+  mutate(halfhour = as.numeric(sub("d", "", halfhour))/2) %>%
+  arrange(date, halfhour) %>%
+  mutate(wday = wday(date, label = TRUE, abbr = TRUE,
+                     week_start = 1),
+         month = month(date, label = TRUE, abbr = TRUE),
+         year = year(date)) %>%
+  mutate(dt = ymd_hm(glue("{date} 12:00"),
+                     tz = "Australia/Melbourne") +
+           minutes(60*halfhour))
+```
+
+# Across days
+
+```{marginfigure}
+Typically more energy use over the weekends, and Monday/Wednesday during the week. 
+```
+
+```{r day, echo=FALSE}
+elec %>%
+  group_by(date) %>%
+  summarise(dkwh = sum(kwh, na.rm=TRUE)) %>%
+  mutate(wday = wday(date, label = TRUE, abbr = TRUE,
+                     week_start = 1)) %>%
+  ggplot(aes(x=wday, y=dkwh)) + geom_boxplot() +
+  ylab("Total daily kwh") +
+  xlab("")
+```
+
+
+
+# Across hours, by work day vs holiday
+
+```{marginfigure}
+There is more of a work day pattern of use on work days, with small amount of energy peak in the morning and much more so in the evenings. You tend to burn the midnight oil! On holidays it is more consistent use throughout the day, peaking in the evening around 8pm. 
+```
+
+```{r time, echo=FALSE, fig.width = 10, fig.height = 4, fig.fullwidth = TRUE}
+vic_holidays <- holiday_aus(2017:2018, state = "VIC")
+elec <- elec %>% mutate(work = ifelse(wday %in% c("Mon", "Tue", "Wed", "Thu", "Fri"), 1, 0)) %>%
+  mutate(work = ifelse(date %in% vic_holidays$date, 0, work))
+
+elec %>%
+  ggplot(aes(x=halfhour, y=kwh, group=halfhour)) +
+  geom_boxplot() +
+  facet_wrap(~work, labeller = "label_both")
+```
+
+# On the calendar
+
+```{marginfigure}
+The weekend vs week day pattern is visible, and the evening peak usage most days. Looks like you were travelling in December, April and June. Some air conditioning use in November and January, and heating in June and July.
+```
+
+```{r calendar, echo=FALSE, fig.width = 10, fig.height = 6, fig.fullwidth = TRUE}
+p1 <- elec %>%
+  frame_calendar(x = halfhour, y = kwh, date = date, ncol = 5) %>%
+  ggplot(aes(x = .halfhour, y = .kwh, group = date, colour=factor(work))) +
+  geom_line() +
+  scale_colour_brewer("work", palette = "Dark2") +
+  theme(legend.position="none")
+prettify(p1)
+```
+
+# Thanks for letting us use your data!
+
+`r ji("smile")`
