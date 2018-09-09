@@ -98,6 +98,16 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Titanic{float=False} [zip](assignments/assignment3_2018/Titanic{float=False}.zip)
 -->
 
+## Project
+
+- [Project instructions](project/project-ETC1010.pdf) 
+    - Deadline 1: *Sep 14* Team members and team name, data description. Below are some links to data stories that might stimulate your creative thinking
+        - [Blue Bikes Sharing in Boston](https://www.r-bloggers.com/blue-bikes-sharing-in-boston/)
+        - 	[What birds are observed near Radolfzell? Bird occurrence data in R](https://ropensci.org/blog/2018/08/21/birds-radolfzell/)
+    - Deadline 2: *Sep 21* Electronic copy of your data, and a page of data de- scription, and cleaning done, or needing to be done.
+    - Deadline 3: *Oct 12* Final version of story board uploaded
+    - Presentation in week 12
+
 ## Data
 
 - [music-sub.csv](http://dmac.dicook.org/lectures/data/music-sub.csv)
@@ -132,16 +142,6 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Newcastle Jets: [facebook posts](http://dmac.dicook.org/lectures/data/ncj_posts.rda), [scores](http://dmac.dicook.org/lectures/data/ncj.csv)
 - Melbourne housing data: [Melbourne_housing_FULL.csv](http://dmac.dicook.org/lectures/data/Melbourne_housing_FULL.csv)
 
-
-## Project
-
-- [Project instructions](project/project-ETC1010.pdf) 
-    - Deadline 1: *Sep 14* Team members and team name, data description. Below are some links to data stories that might stimulate your creative thinking
-        - [Blue Bikes Sharing in Boston](https://www.r-bloggers.com/blue-bikes-sharing-in-boston/)
-        - 	[What birds are observed near Radolfzell? Bird occurrence data in R](https://ropensci.org/blog/2018/08/21/birds-radolfzell/)
-    - Deadline 2: *Sep 21* Electronic copy of your data, and a page of data de- scription, and cleaning done, or needing to be done.
-    - Deadline 3: *Oct 12* Final version of story board uploaded
-    - Presentation in week 12
 
 ## Exam information
 
