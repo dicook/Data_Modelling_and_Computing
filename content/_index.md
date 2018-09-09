@@ -104,6 +104,17 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
     - Deadline 1: *Sep 14* Team members and team name, data description. Below are some links to data stories that might stimulate your creative thinking
         - [Blue Bikes Sharing in Boston](https://www.r-bloggers.com/blue-bikes-sharing-in-boston/)
         - 	[What birds are observed near Radolfzell? Bird occurrence data in R](https://ropensci.org/blog/2018/08/21/birds-radolfzell/)
+		- [Who wrote the anti-Trump New York Times op-ed? Using tidytext to find document similarity](https://www.r-bloggers.com/who-wrote-the-anti-trump-new-york-times-op-ed-using-tidytext-to-find-document-similarity/)
+		- [Hotels vs Airbnb - Barcelona case study (proof of concept)](https://nycdatascience.com/blog/student-works/web-scraping/hotels-vs-airbnb-barcelona-case-study-proof-of-concept/)
+		- [Don't Worry: Google Only Checks Your Location Every 10 Minutes](http://www.sastibe.de/2018/04/don-t-worry-google-location/)
+		- [World Income, Inequality and Murder](http://staff.math.su.se/hoehle/blog/2018/07/09/gini.html)
+		- [Text analysis of Trump's tweets confirms he writes only the (angrier) Android half](http://varianceexplained.org/r/trump-tweets/)
+		- [What digits should you bet on in Super Bowl squares?](http://varianceexplained.org/r/super-bowl-squares/)
+		- [Exploring handwritten digit classification: a tidy analysis of the MNIST dataset](http://varianceexplained.org/r/digit-eda/)
+		- [Facebook advertising case-study: dog food and manhood](https://rickpackblog.wordpress.com/2018/08/20/facebook-advertising-case-study-dog-food-and-manhood/)
+		- [Analysis of Los Angeles Crime with R](https://datascienceplus.com/analysis-of-los-angeles-crime-with-r/)
+		- [Looking at Seinfeld dialogues using #tidytext](https://pradeepadhokshaja.wordpress.com/2018/08/06/looking-at-seinfeld-dialogues-using-tidytext/)
+		- [Twitter Coverage of the useR Conference 2018](https://github.com/neilfws/Twitter/blob/master/user2018/code/R/user2018.md)
     - Deadline 2: *Sep 21* Electronic copy of your data, and a page of data de- scription, and cleaning done, or needing to be done.
     - Deadline 3: *Oct 12* Final version of story board uploaded
     - Presentation in week 12
