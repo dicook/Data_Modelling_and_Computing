@@ -136,7 +136,9 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 ## Project
 
 - [Project instructions](project/project-ETC1010.pdf) 
-    - Deadline 1: *Sep 14* Team members and team name, data description
+    - Deadline 1: *Sep 14* Team members and team name, data description. Below are some links to data stories that might stimulate your creative thinking
+        - [Blue Bikes Sharing in Boston](https://www.r-bloggers.com/blue-bikes-sharing-in-boston/)
+        - 	[What birds are observed near Radolfzell? Bird occurrence data in R](https://ropensci.org/blog/2018/08/21/birds-radolfzell/)
     - Deadline 2: *Sep 21* Electronic copy of your data, and a page of data de- scription, and cleaning done, or needing to be done.
     - Deadline 3: *Oct 12* Final version of story board uploaded
     - Presentation in week 12
