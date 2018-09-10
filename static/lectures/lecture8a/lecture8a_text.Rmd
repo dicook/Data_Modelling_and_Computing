@@ -1,0 +1,195 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+author: "Professor Di Cook, EBS, Monash U."
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 6,
+                      fig.width = 6,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+library(tidyverse)
+library(plotly)
+```
+
+# Text analysis
+
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.dicook.org](http://dmac.dicook.org)
+
+## Overview
+
+<img src="images/text_analysis.png" height=300>
+
+### Why?
+
+- To use the realtors text description to improve the Melbourne housing price model
+- Determine the extent of public discontent with train stoppages in Melbourne
+- The differences between Darwin's first edition of the Origin of the Species and the 6th edition
+- Does the sentiment of posts on Newcastle Jets public facebook page reflect their win/los record?
+
+### Process
+
+1. read in text
+2. pre-processing: remove punctuation signs, remove numbers, stop words, stem words
+3. tokenise: words, sentences, ngrams, chapters
+4. summarise, model
+
+### Resource
+
+[Text Mining with R by Julia Silge and David Robinson](https://www.tidytextmining.com)
+
+## Getting some books to study
+
+The [Gutenberg project](http://www.gutenberg.org/wiki/Main_Page) provides the text of over 57000 books free online. 
+
+Navigate to The Origin of the Species by Charles Darwin. There are two versions available. 
+
+You can either download the text directly or use the `gutenbergr` package. To use the package you need to know the `id` of the book, which means looking this up online anyway. (The first edition is `1228`, and the 6th edition is `2009`)
+
+```{r}
+# install.packages("tidytext")
+library(tidytext)
+# The tm package is needed because the book has numbers 
+# in the text, that need to be removed, and the
+# tidytext package doesn't have a function to do that
+# install.packages("tm")
+library(tm)
+# install.packages("gutenbergr")
+library(gutenbergr)
+darwin1 <- gutenberg_download(1228)
+darwin1
+```
+
+## Tokenize
+
+```{r}
+darwin1$text <- removeNumbers(darwin1$text)
+darwin1_words <- darwin1 %>% 
+  unnest_tokens(word, text) %>%
+  anti_join(stop_words) %>%
+  count(word, sort=TRUE) %>%
+  mutate(len = str_length(word)) 
+quantile(darwin1_words$n, probs = seq(0.9, 1, 0.01))
+darwin1_words %>% filter(n > 90) %>%
+  ggplot(aes(x=n, y=fct_reorder(word, n))) + geom_point() +
+  ylab("")
+```
+
+## Your turn
+
+Download and tokenize the 6th edition.
+
+```{r results='hide', fig.show='hide'}
+darwin6 <- gutenberg_download(2009)
+darwin6$text <- removeNumbers(darwin6$text)
+darwin6_words <- darwin6 %>% 
+  unnest_tokens(word, text) %>%
+  anti_join(stop_words) %>%
+  count(word, sort=TRUE) %>%
+  mutate(len = str_length(word)) 
+quantile(darwin6_words$n, probs = seq(0.9, 1, 0.01))
+darwin6_words %>% filter(n > 90) %>%
+  ggplot(aes(x=n, y=fct_reorder(word, n))) + geom_point() +
+  ylab("")
+```
+
+## Compare the word frequency
+
+```{r}
+library(plotly)
+darwin <- full_join(darwin1_words, darwin6_words, by = "word") %>%
+  rename(n_ed1 = n.x, len_ed1 = len.x, n_ed6 = n.y, len_ed6 = len.y)
+p <- ggplot(darwin, aes(x=n_ed1, y=n_ed6, label=word)) + 
+  geom_abline(intercept=0, slope = 1) +
+  geom_point(alpha=0.5) +
+  xlab("First edition") + ylab("6th edition") +
+  scale_x_log10() + scale_y_log10() + theme(aspect.ratio=1)
+ggplotly(p)
+```
+
+### Your turn
+
+- Does it look like the 6th edition was an expanded version of the first?
+- What word is most frequent in both editions?
+- Find some words that are not in the first edition but appear in the 6th.
+- Find some words that are used the first edition but not in the 6th.
+- Using a linear regression model find the top few words that appear more often than expected, based on the frequency in the first edition. Find the top few words that appear less often than expected. 
+
+```{r eval=FALSE, echo=FALSE}
+# This code is a guide, but you need to think about transformations
+# and perhaps relative increase, or filtering outliers
+library(broom)
+mod <- lm(n_ed6~n_ed1, data=darwin)
+tidy(mod)
+fit <- augment(mod, darwin)
+ggplot(fit, aes(x=n_ed1, y=.resid, label=word)) + geom_point(alpha=0.5)
+ggplotly()
+fit %>% arrange(desc(.resid)) %>% top_n(10)
+```
+
+## Book comparison
+
+The idea is to find the important words for the content of each document by decreasing the weight of commonly used words and increasing the weight for words that are not used very much in a collection or corpus of documents.
+
+The statistic *term frequency, inverse document frequency*, `tf-idf`, is intended to measure how important a word is to a document in a collection (or corpus) of documents, for example, to one novel in a collection of novels or to one website in a collection of websites.
+
+$tf_{word} = \frac{Number~of~times~word~t~appears~in~a~document}{Total~number~of~words~in~the~document}$
+
+$idf_{word} = log \frac{number~of~documents}{number~of~documents~word~appears~in}$
+
+$td-idf = tf\times idf$
+
+```{r}
+darwin1_words <- darwin1_words %>%
+  mutate(edition = "1")
+darwin6_words <- darwin6_words %>%
+  mutate(edition = "6")
+darwin <- bind_rows(darwin1_words, darwin6_words)
+darwin <- darwin %>% bind_tf_idf(word, edition, n)
+darwin %>% arrange(desc(tf_idf))
+darwin %>%
+  arrange(desc(tf_idf)) %>%
+  mutate(word = factor(word, levels = rev(unique(word)))) %>% 
+  group_by(edition) %>% 
+  top_n(15) %>% 
+  ungroup %>%
+  ggplot(aes(word, tf_idf, fill = edition)) +
+  geom_col(show.legend = FALSE) +
+  labs(x = NULL, y = "tf-idf") +
+  facet_wrap(~edition, ncol = 2, scales = "free") +
+  coord_flip() + scale_fill_brewer(palette="Dark2")
+```
+
+What do we learn?
+
+- Mr Mivart appears in the 6th edition, multiple times
+```{r}
+grep("Mivart", darwin6$text)
+darwin6[5435,]
+```
+- Prof title is used more often in the 6th edition
+- There is a tendency for latin names 
+- Mistletoe was mispelled in the 1st edition
+
+## Lab exercise
+
+Text Mining with R has an example comparing historical physics textbooks:  *Discourse on Floating Bodies* by Galileo Galilei, *Treatise on Light* by Christiaan Huygens, *Experiments with Alternate Currents of High Potential and High Frequency* by Nikola Tesla, and *Relativity: The Special and General Theory* by Albert Einstein. All are available on the Gutenberg project. 
+
+Work your way through the [comparison of physics books](https://www.tidytextmining.com/tfidf.html#a-corpus-of-physics-texts). It is section 3.4.
+
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
