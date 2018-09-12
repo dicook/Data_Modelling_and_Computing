@@ -149,7 +149,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - [platypus.rda](http://dmac.dicook.org/lectures/data/platypus.rda) Platypus data from the Living Atlas of Australia
 - [WebAirport_FY_1986-2017.xls](http://dmac.dicook.org/lectures/data/WebAirport_FY_1986-2017.xls) Airport Traffic Data 1985–86 to 2016–17.
 - [foragers.csv](http://dmac.dicook.org/lectures/data/foragers.csv) Howell's foragers data
-- Simpsons: [scripts](http://dmac.dicook.org/lectures/data/simpsons_script_lines.csv), [characters](http://dmac.dicook.org/lectures/data/simpsons_characters.csv)
+- Simpsons: [scripts](http://dmac.dicook.org/lectures/data/simpsons_script_lines.csv), [characters](http://dmac.dicook.org/lectures/data/simpsons_characters.csv), [episodes](http://dmac.dicook.org/lectures/data/simpsons_episodes.csv), [locations](http://dmac.dicook.org/lectures/data/simpsons_locations.csv)
 - Harry Potter: [hpchars](http://dmac.dicook.org/lectures/lecture10b/data/hpchars.rda), [hpedges](http://dmac.dicook.org/lectures/lecture10b/data/hpedges.rda)
 - Newcastle Jets: [facebook posts](http://dmac.dicook.org/lectures/data/ncj_posts.rda), [scores](http://dmac.dicook.org/lectures/data/ncj.csv)
 - Melbourne housing data: [Melbourne_housing_FULL.csv](http://dmac.dicook.org/lectures/data/Melbourne_housing_FULL.csv)
