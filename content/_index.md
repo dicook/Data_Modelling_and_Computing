@@ -23,7 +23,7 @@ Unless your question is a personal issue or an administrative matter, please do 
 - Zina: Tues 10:30-11:30 (Menzies W1105)
 - Mitch: Tues 12:30-1:30 (Menzies W1105)
 - Di: Thur 10:30-11:30 (Menzies E762A)
-- Steph: Thur 12:30-1:30 (Menzies W1105)
+- Steph: Thur 12:30-1:30 (Menzies W1105/W1106)
 
 ## MoVE
 
