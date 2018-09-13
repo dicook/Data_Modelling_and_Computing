@@ -1,0 +1,326 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+author: "Professor Di Cook, EBS, Monash U."
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 6,
+                      fig.width = 6,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+library(tidyverse)
+library(plotly)
+library(tidytext)
+library(lubridate)
+```
+
+# Sentiment analysis
+
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.dicook.org](http://dmac.dicook.org)
+
+## Overview
+
+Sentiment analysis tags words or phrases with an emotion, and summarises these, often as the positive or negative state, over a body of text. 
+
+Examples of use are:
+
+- Examining effect of emotional state in twitter posts
+- Determining public reactions to government policy, or new product releases
+- Trying to make money in the stock market by modeling social media posts on listed companies
+- Evaluating product reviews on Amazon, restaurants on zomato, or travel options on TripAdvisor
+
+## Lexicons
+
+The `tidytext` package has a lexicon of sentiments, based on four major sources: [AFINN](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010), [bing](https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html), [Loughran](https://sraf.nd.edu/textual-analysis/resources/#LM%20Sentiment%20Word%20Lists), [nrc](http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm)
+
+```{r}
+sentiments %>% count(lexicon, sort=TRUE)
+```
+
+```{r}
+sentiments
+```
+
+What emotion do these words elicit in you?
+
+- summer
+- hot chips
+- hug
+- lose
+- stolen
+- smile
+
+### Different sources
+
+- The `nrc` lexicon categorizes words in a binary fashion (“yes”/“no”) into categories of positive, negative, anger, anticipation, disgust, fear, joy, sadness, surprise, and trust. 
+- The `bing` lexicon categorizes words in a binary fashion into positive and negative categories. 
+- The `AFINN` lexicon assigns words with a score that runs between -5 and 5, with negative scores indicating negative sentiment and positive scores indicating positive sentiment.
+
+```{r}
+get_sentiments("afinn")
+```
+
+```{r words, echo=FALSE}
+quiz(
+  question("What score does the word `hug` get in the AFINN lexicon",
+    answer("-2"),
+    answer("-1"),
+    answer("0"),
+    answer("1"),
+    answer("2", correct=TRUE)),
+  question("Hug is considered a positive word accoridng to the bing lexicon",
+    answer("True", correct=TRUE),
+    answer("False")),
+  question("According to the `nrc` lexicon what emotion does the word `hug` induce?",
+    answer("fun"),
+    answer("nice"),
+    answer("fear"),
+    answer("trust", correct=TRUE))
+  )
+```
+
+## Sentiment analysis
+
+Once you have a bag of words, you need to join the sentiments dictionary to the words data. Particularly the lexicon `nrc` has multiple tags per word, so you may need ot use an "inner_join". `inner_join()` returns all rows from x where there are matching values in y, and all columns from x and y. If there are multiple matches between x and y, all combination of the matches are returned.
+
+The `janeaustenr` package cntains the full texts for Jane Austen's 6 completed novels, Sense and Sensibility", "Pride and Prejudice", "Mansfield Park", "Emma", "Northanger Abbey", and "Persuasion", ready for text analysis. 
+
+```{r}
+library(janeaustenr)
+library(dplyr)
+library(stringr)
+
+tidy_books <- austen_books() %>%
+  group_by(book) %>%
+  mutate(linenumber = row_number(),
+         chapter = cumsum(str_detect(text, regex("^chapter [\\divxlc]", 
+                                                 ignore_case = TRUE)))) %>%
+  ungroup() %>%
+  unnest_tokens(word, text)
+```
+
+Let's look at the most frequent joyful words in "Emma". 
+
+```{r}
+nrc_joy <- get_sentiments("nrc") %>% 
+  filter(sentiment == "joy")
+
+tidy_books %>%
+  filter(book == "Emma") %>%
+  inner_join(nrc_joy) %>%
+  count(word, sort = TRUE)
+```
+
+"Good" is the most common joyful word, followed by "young", "friend", "hope". All make sense until you see "found". Is found a joyful word?
+
+### Your turn
+
+- What are the most common "anger" words used in Emma?
+- What are the most common "surprise" words used in Emma?
+
+### Comparing lexicons
+
+All of the lexicons have a measure of positive or negative. We can tag the words in Emma by each lexicon, and see if they agree. 
+
+```{r}
+nrc_pn <- get_sentiments("nrc") %>% 
+  filter(sentiment %in% c("positive", "negative"))
+
+emma_nrc <- tidy_books %>%
+  filter(book == "Emma") %>%
+  inner_join(nrc_pn)
+emma_bing <- tidy_books %>%
+  filter(book == "Emma") %>%
+  inner_join(get_sentiments("bing")) 
+emma_afinn <- tidy_books %>%
+  filter(book == "Emma") %>%
+  inner_join(get_sentiments("afinn")) 
+emma_nrc %>% count(sentiment) %>% mutate(n/sum(n))
+emma_bing %>% count(sentiment) %>% mutate(n/sum(n))
+emma_afinn %>% mutate(sentiment = ifelse(score>0, "positive", "negative")) %>% count(sentiment) %>% mutate(n/sum(n))
+```
+
+### Your turn
+
+- Using your choice of lexicon (nrc, bing, or afinn) compute the proportion of postive words in each of Austen's books.
+- Which book is the most positive? negative?
+
+## Example: Simpsons
+
+Data from the popular animated TV series, The Simpsons, has been made available on [kaggle](https://www.kaggle.com/wcukierski/the-simpsons-by-the-data/data). 
+
+- `simpsons_script_lines.csv`: Contains the text spoken during each episode (including details about which character said it and where)
+- `simpsons_characters.csv`: Contains character names and a character id
+
+```{r}
+scripts <- read_csv("data/simpsons_script_lines.csv")
+chs <- read_csv("data/simpsons_characters.csv")
+sc <- left_join(scripts, chs, by = c("character_id" = "id") )
+sc %>% count(name, sort=TRUE)
+```
+
+#### Pre-process the text
+
+```{r}
+sc %>%
+  unnest_tokens(word, normalized_text) %>%
+  filter(!word %in% stop_words$word) %>%
+  count(word, sort = TRUE) %>%
+  ungroup() %>%
+  filter(!is.na(word)) %>%
+  mutate(word = factor(word, levels = rev(unique(word)))) %>%
+  head(20) %>%
+  ggplot(aes(x = word, y = n)) +
+  geom_bar(stat='identity', colour="white") +
+  labs(x = '', y = 'count', 
+       title = 'Top 20 words') +
+  coord_flip() + 
+  theme_bw()
+```
+
+#### Tag the words with sentiments
+
+Using AFINN words will be tagged on a negative to positive scale of -1 to 5.
+
+```{r}
+sc_word <- sc %>%
+  unnest_tokens(word, normalized_text) %>%
+  filter(!word %in% stop_words$word) %>%
+  count(name, word) %>%
+  ungroup() %>%
+  filter(!is.na(word))
+sc_s <- sc_word %>% 
+  inner_join(get_sentiments("afinn"), by = "word")
+```
+
+#### Examine characters
+
+```{r}
+sc_s %>% group_by(name) %>% 
+  summarise(m=mean(score)) %>% 
+  arrange(desc(m))
+```
+
+Oh, maybe we want to only focus on the main characters.
+
+```{r}
+keep <- sc %>% count(name, sort=TRUE) %>%
+  filter(!is.na(name)) %>%
+  filter(n > 999)
+sc_s %>% filter(name %in% keep$name) %>% 
+  group_by(name) %>% 
+  summarise(m=mean(score)) %>% 
+  arrange(m)
+```
+
+#### Your turn
+
+1. Bart Simpson is featured at various ages. How has the sentiment of his words changed over his life?
+
+```{r eval=FALSE}
+sc %>% count(name, sort=TRUE) %>%
+  filter(grepl("Bart", name)) %>% print(n=50)
+bart_names <- c("Bart Simpson", "Baby Bart", 
+                "1-Year-Old Bart", "2-Year-Old Bart", 
+                "5-Year-Old Bart", "80-Year-Old Bart")
+bart <- sc %>% filter(name %in% bart_names)
+bart_word <- bart %>%
+  unnest_tokens(word, normalized_text) %>%
+  filter(!word %in% stop_words$word) %>%
+  count(name, word) %>%
+  ungroup() %>%
+  filter(!is.na(word))
+bart_s <- bart_word %>% 
+  inner_join(get_sentiments("afinn"), by = "word")
+bart_s %>% group_by(name) %>% 
+  summarise(m=mean(score)) %>% 
+  arrange(desc(m))
+```
+
+2. Repeat the sentiment analysis with the NRC lexicon. What character is the most "angry"? "joyful"?
+
+```{r eval=FALSE}
+sc_s <- sc_word %>% 
+  inner_join(get_sentiments("nrc"), by = "word")
+statmode = function(x){ 
+    ta = table(x)
+    tam = max(ta)
+    if (all(ta == tam))
+         mod = NA
+    else
+         if(is.numeric(x))
+    mod = as.numeric(names(ta)[ta == tam])
+    else
+         mod = names(ta)[ta == tam]
+    return(mod)
+}
+sc_s %>% filter(name %in% keep$name) %>% 
+  group_by(name) %>% 
+  summarise(angry = sum(n[sentiment=="anger"]/sum(n))) %>%
+  arrange(desc(angry))
+```
+
+## Example: AFL Finals tweets
+
+The `rtweet` package allows you to pull tweets from the archive. It gives only the last 6-9 days worth of data. Youneed ot have a twitter account, and you need to create an app (its really basic) in order to pull twitter data. The instructions that come from this package (https://rtweet.info) are pretty simple to follow.
+
+Given that it is AFL final week, I thought it might be interesting to look at tweets that use the hashtag "#AFLFinals". Once you have a developer account, this is as simple as 
+
+```
+afl <- search_tweets(
+  "#AFLFinals", n = 20000, include_rts = FALSE
+)
+```
+
+I have provide the data collected in the last week. You can load it with 
+
+```{r}
+load("data/afl_twitter.rda")
+afl
+```
+
+### Your turn
+
+- What is the range of dates of this data?
+- Who is the most frequent tweeter using this hashtag?
+- Are there some days that have more tweets than others?
+- Are there some hours f the day that are more common tweet times?
+
+### Sentiment analysis
+
+We need to break the text of each tweet into words, tag the words with sentiments, and make a cumulative score for each tweet.
+
+```{r}
+afl_sentiment <- afl %>% group_by(status_id) %>%
+  unnest_tokens(word, text) %>%
+  inner_join(get_sentiments("afinn")) %>%
+  summarise(sentiment = mean(score, na.rm=T)) 
+afl_sentiment <- afl %>% select(status_id, screen_name, created_at, text) %>% 
+  left_join(afl_sentiment, by="status_id")
+afl_sentiment %>% group_by(screen_name) %>%
+  summarise(s = mean(sentiment, na.rm=TRUE)) %>% arrange(desc(s))
+afl_sentiment %>% mutate(day = ymd(as.Date(created_at))) %>% ggplot(aes(x=day, y=sentiment)) + geom_point() + geom_smooth(se=FALSE)
+afl_sentiment %>% filter(screen_name == "aflratings") %>% 
+  mutate(day = ymd(as.Date(created_at))) %>%
+  ggplot(aes(x=day, y=sentiment)) + geom_point() + geom_smooth()
+```
+
+- Which tweeter is the most positive? negative?
+- Is there a day that spirits were higher in the tweets? Or when tweets were more negative?
+- Does the tweeter `aflratings` have a trend in positivity or negativity?
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
