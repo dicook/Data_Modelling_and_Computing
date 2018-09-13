@@ -1,6 +1,6 @@
 ---
 title: "ETC 1010 Assignment 4"
-author: "Di Cook"
+author: "SOLUTION"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -8,7 +8,7 @@ editor_options:
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
 knitr::opts_chunk$set(
-  echo = FALSE,
+  echo = TRUE,
   message = FALSE,
   warning = FALSE,
   error = FALSE, 
@@ -36,7 +36,7 @@ This assignment explores the data provided on [Melbourne house prices by Anthony
 
 ## Your tasks
 
-1. Make a map of Melbourne showing the locations of the properties. 
+1. (1pt) Make a map of Melbourne showing the locations of the properties. 
 
 ```{r echo=FALSE}
 library(tidyverse)
@@ -49,12 +49,15 @@ map <- get_map(location = c(145.0, -37.8), zoom=10)
 ggmap(map) + geom_point(data=mh, aes(x=lon, y=lat), colour="orange", size=0.5, alpha=0.5)
 ```
 
-2. Here we are going to examine the prices of 2 bedroom flats in Northcote. 
+*The code pulls a google map centered on Melbourne, and overlays the points corresponding to the lat/long of the properties. There is a larger than Melbourne collection region, and the zoom accommodates the greater Melbourne region.*
+
+2. (2pts) Here we are going to examine the prices of 2 bedroom flats in Northcote. 
     a. Filter the data to focus only on the records for Northcote units. Make a plot of Price by Date, facetted by number of bedrooms. The main thing to learn from this plot is that there are many missing values for number of bedrooms.
     b. Impute the missing values, based on the regression method (covered in class). Make sure your predicted value is an integer. Re-make the plot of Price by Date, facetted by number of bedrooms. 
     c. Write a description of what you learn from the plot, particularly about the trend of 2 bedroom unit prices in Northcote.
 
-```{r echo=FALSE}
+*The code filters on the suburb and units. The trick in the imputation is to use the round function to generate integer imputed values.* 
+```{r fig.height=3, fig.width=8}
 nc <- mh %>% filter(Suburb == "Northcote", Type == "u")
 ggplot(nc, aes(x=Date, y=Price)) + 
   geom_point() + geom_smooth(se=F) +
@@ -69,14 +72,16 @@ ggplot(nc_ms, aes(x=Date, y=Price)) +
   geom_point() + geom_smooth(se=F) +
   facet_wrap(~Bedroom2, ncol=4) 
 ```
+*We learn that there are not many 3 bedroom units in Northcote. For 1 and 2 bedroom units price has been pretty steady, with 2 bedroom units perhaps gradually increasing in price. You would need to be prepared to pay about $600,000 to buy a two bedroom unit. A price of around $500k could be a bargain. One bedroom units are worth around $350k.*
 
-3. Focusing on 2 bedroom units, we are going to explore the trend in prices for each suburb.  
+3. (2pts) Focusing on 2 bedroom units, we are going to explore the trend in prices for each suburb.  
     a. You will need to impute the Bedroom2 variable, in the same way done in the previous question. 
     b. Fit a linear model to each suburb (many models approach). Collect the model estimates, and also the model fit statistics. Make a plot of intercept vs slope. Using plotly what suburb has had the largest increase, which has had the biggest decrease in prices?
     c. Summarise the $R^2$ for the model fits for all the suburbs. Which suburbs have the worst fitting models?  Plot the Price vs Date of the best fitting model. Is the best fitting model a good fit?
     d. Write a paragraph on what you have learned about the trend in property prices across Melbourne.
 
-```{r echo=FALSE}
+*The code imputes the missing bedroom values using a linear model on rooms. It then focuses only on two bedroom units, for suburbs with at least 30 records. (30 might be too high, so a lower choice could be reasonable too.)* 
+```{r fig.height=3, fig.width=3}
 mh_ms <- mh %>% bind_shadow()
 br2 <- lm(Bedroom2~Rooms, data=mh_ms)
 mh_ms <- mh_ms %>%
@@ -84,6 +89,9 @@ mh_ms <- mh_ms %>%
     round(predict(br2, new=mh_ms), 0), Bedroom2))
 
 mh_ms %>% filter(Type == "u", Bedroom2 == 2) %>% count(Suburb, sort = TRUE) %>% ggplot(aes(x=n)) + geom_histogram()
+```
+
+```{r fig.height=4, fig.width=4}
 keep <- mh_ms %>% filter(Type == "u", Bedroom2 == 2) %>% 
   count(Suburb, sort = TRUE) %>%
   filter(n > 30)
@@ -105,20 +113,36 @@ suburb_coefs <- suburb_coefs %>%
   select(Suburb, term, estimate) %>% 
   spread(term, estimate) %>%
   rename(intercept = `(Intercept)`)
-head(suburb_coefs)
+#head(suburb_coefs)
 p <- ggplot(suburb_coefs, aes(x=intercept, y=days, 
                           label=Suburb)) +
   geom_point(alpha=0.5, size=2) 
 library(plotly)
 ggplotly(p)
+```
+
+*Across all of these suburbs the price of two bedroom units has been increasing. The price increases are pretty staggering. For example, in Malvern, starting from an average price of about $1.6mil in January 2016, prices have been increasing by $1200 PER DAY!!! Windsor started off with an average price around $670k and has increased by about $800 per day! On the other hand, there are three suburbs that have seen a decrease in price. Caulield North started at an average price about $1mil and it has been dropping by about $200 per day.*
+
+```{r fig.height=3, fig.width=8}
 suburb_fit <- by_suburb %>% 
   unnest(model %>% 
            purrr::map(broom::glance))
-ggplot(suburb_fit, aes(x=r.squared)) + geom_histogram()
+p1 <- ggplot(suburb_fit, aes(x=r.squared)) + geom_histogram()
 bestfit <- suburb_fit %>% filter(r.squared > 0.08)
 mh_u_sub <- mh_u %>% filter(Suburb %in% bestfit$Suburb)
-ggplot(data=mh_u_sub, aes(x=Date, y=Price)) + 
-         geom_point() + geom_smooth(method="lm", se=FALSE)
+p2 <- ggplot(data=mh_u_sub, aes(x=Date, y=Price)) + 
+         geom_point() + geom_smooth(method="lm", se=FALSE) +
+  ggtitle(mh_u_sub$Suburb)
+library(gridExtra)
+grid.arrange(p1, p2, ncol=2)
+```
+
+*All of the models are very weak! R2 ranges from 0.0-0.1, so at most 10% of the variation is explained. The best model corresponds to Windsor. Prices of 2 bedroom units in Windsor range from about $250k-$2.5mil! Prices have gone from $750k to $1.25mil on average in this two year period. However, there are still apartments sold for $500k this year.*
+
+```{r eval=FALSE, echo=FALSE}
+# This code investigates the worst fit, but all models are bad!
+# It also investigates Malvern which shows up as being a suburb with
+# the biggest increase in price.
 worstfit <- suburb_fit %>% filter(r.squared < 0.001)
 mh_u_sub <- mh_u %>% filter(Suburb %in% worstfit$Suburb)
 ggplot(data=mh_u_sub, aes(x=Date, y=Price)) + 
@@ -128,17 +152,18 @@ mh_u_sub <- mh_u %>% filter(Suburb %in% c("Malvern", "Malvern East"))
 ggplot(data=mh_u_sub, aes(x=Date, y=Price)) + 
          geom_point() + geom_smooth(method="lm", se=FALSE) +
   facet_wrap(~Suburb, ncol=2)
-
 ```
 
-4. Still focusing on apartments (units) examine the results of the auctions, with the Method variable, across suburbs. This variable contains results of the auction, whether the property sold, or not. It may be that in recent months there is a higher proportion of properties that didn't sell. This would put downward pressure on prices. 
+4. (2pts) Still focusing on apartments (units) examine the results of the auctions, with the Method variable, across suburbs. This variable contains results of the auction, whether the property sold, or not. It may be that in recent months there is a higher proportion of properties that didn't sell. This would put downward pressure on prices. 
     a. Compute the counts of the levels of Method, ignoring the suburbs. 
     b. The categories PI (passed in) and VB (vendor bid) indicate the property did not sell. Compute the proportion of properties in these two categories for each suburb, for each month since 2016. 
     c. Plot the proportions against year/month (make a new variable time is an integer with 1 being the first month of the data in 2016 and each month since then increments time by 1).  Add a smoother to show the trend in these proportions. Does it look like there is an increase in units that aren't selling?
     d. Explain why the data was aggregated to month before computing the proportions. 
 
-```{r}
-mh_u %>% count(Method, sort=TRUE)
+*The code computes the proportion of properties in the PI or VB categories for each month. This is the proportion of properties that did not sell.*
+
+```{r fig.width=8, fig.height=3}
+#mh_u %>% count(Method, sort=TRUE)
 mh_u_mth <- mh_u %>% 
   mutate(year = year(Date), month = month(Date)) %>%
   group_by(Suburb, year, month) %>%
@@ -146,14 +171,16 @@ mh_u_mth <- mh_u %>%
   mutate(p = n/sum(n)) %>%
   filter(Method %in% c("PI", "VB")) %>%
   mutate(time = (year-2016)*12+month)
-ggplot(mh_u_mth, aes(x=time, y=p, label=Suburb)) + 
+p <- ggplot(mh_u_mth, aes(x=time, y=p, label=Suburb)) + 
   geom_smooth() +
   geom_point() + 
   facet_wrap(~Method)
-ggplotly()
+ggplotly(p)
 ```
 
-5. Fit the best model for Price that you can, for houses around Monash University.
+*The properties were aggregated to month, to group enough properties together to make examining proportions reasonable. The proportion of properties that were passed in at auction has been fairly stable over this time period. The properties with vendor bids appears to have been increasing a little over the recent months. There are some suburbs with relly high rates of no sales. *
+
+5. (2pts) Fit the best model for Price that you can, for houses around Monash University.
     a. Impute the missing values for Bathroom (similarly to Bedroom2).
     b. Subset the data to these suburbs "Notting Hill", "Glen Waverley",
          "Clayton", "Clayton South","Oakleigh East", "Huntingdale", 
@@ -161,7 +188,8 @@ ggplotly()
     c. Make a scatterplot of Price vs Date by Bedroom2 and Bathroom, with a linear model overlaid. What do you notice? There are only some combinations of bedrooms and bathrooms that are common. Subset your data to houses with 3-4 bedrooms and 1-2 bathrooms. 
     d. Using date, rooms, bedroom, bathroom, car and landsize build your best model for price. There are some missing values on Car and Landsize, which may be important to impute. Think about interactions as well as main effects. (There are too many missing values to use BuildingArea and YearBuilt. The other variables in the data don't make sense to use.)
     
-```{r}
+*This code imputes the missings for bathroom, filters to the suburbs of interest, subsets to a set of bedrooms and bathrooms where there is enough data, and then fits some models.*    
+```{r }
 ba2 <- lm(Bathroom~Rooms, data=mh_ms)
 mh_ms <- mh_ms %>%
   mutate(Bathroom=ifelse(is.na(Bathroom),
@@ -173,7 +201,7 @@ monash <- mh_ms %>% filter(Suburb %in% c("Notting Hill", "Glen Waverley",
   select(Suburb, Price, Rooms, Date, Bedroom2, Bathroom, Car, Landsize) %>%
   mutate(day=as.numeric(Date)) %>%
   mutate(day=day-min(day))
-monash <- monash %>% filter(Bedroom2 > 1, Bedroom2<5, Bathroom<3) 
+monash <- monash %>% filter(Bedroom2 > 2, Bedroom2<5, Bathroom<3) 
 ggplot(monash, aes(x=Date, y=Price)) + 
   geom_point() + 
   geom_smooth(method="lm", se=FALSE) + 
@@ -188,14 +216,16 @@ glance(monash_fit2)
 monash_fit3 <- lm(Price~day+Bedroom2*Bathroom+Car+Landsize, data=monash)
 tidy(monash_fit3)
 glance(monash_fit3)
-
 ```
+
+*This is a selection of models above. The best R2 I get is about 0.41. I am curious about the best values obtained by the students. The deviance is very high for all. Interactions don't help too much.* 
+
+*Based on the plot, we would expect the properties with one bathroom to have negative trends, and properties with 2 bathrooms have generally increasing prices for 3 bedroom but not for 4 bedrooms. This suggests an interaction term should help.*
+
+*There should be some interpretation of the final model reported. For example, in the models above it would suggest the negative relationship for some levels of bedroom/bathroom. Surprisingly having a car space decrease the price, perhaps having an interaction term here could be useful to understand if it is contingent on the bedrooms or bathrooms. Generally the higher the land size the higher the price.*
+
+*It would be good to see in the report that they break down the model, by substituting some values for the explanatory variables and predicting the price. This helps understand the interplay of the different variables.*
 
 # Grading
 
-Points for the assignment will be based on:
-
-- Accuracy of your answers to the given questions. 
-- How well you have conducted the analysis, and written your answers. 
-- Whether the Rmd file, can take data file as provided, produce the tidy data, and plots reported in your final submission.
-- How well you have worked with your group members on completing this work. Your score for the group component will be adjusted by the amount of effort your team mates independently and anonymously report. 
+**One point for overall report organisation and readability.**
