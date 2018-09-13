@@ -57,6 +57,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - [Fri](https://ebsmonash.shinyapps.io/lecture7b_models) [(Rmd)](http://dmac.dicook.org/lectures/lecture7b/lecture7b_models.Rmd) Reading for this week is to browse through some of the data stories linked to the project instructions below.
 - Week 8: Advanced modeling
     - [Wed](https://ebsmonash.shinyapps.io/lecture8a_text) [(Rmd)](http://dmac.dicook.org/lectures/lecture8a/lecture8a_text.Rmd)
+    - [Fri](https://ebsmonash.shinyapps.io/lecture8b_text) [(Rmd)](http://dmac.dicook.org/lectures/lecture8b/lecture8b_text.Rmd)
 - Week 9: Advanced data handling; 
 - Week 10: Working with text data, and networks;
 - Week 11: TBD
@@ -153,6 +154,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Harry Potter: [hpchars](http://dmac.dicook.org/lectures/lecture10b/data/hpchars.rda), [hpedges](http://dmac.dicook.org/lectures/lecture10b/data/hpedges.rda)
 - Newcastle Jets: [facebook posts](http://dmac.dicook.org/lectures/data/ncj_posts.rda), [scores](http://dmac.dicook.org/lectures/data/ncj.csv)
 - Melbourne housing data: [Melbourne_housing_FULL.csv](http://dmac.dicook.org/lectures/data/Melbourne_housing_FULL.csv)
+- AFL tweets: [afl_twitter.rda](http://dmac.dicook.org/lectures/lecture8b/data/afl_twitter.rda)
 
 
 ## Exam information
