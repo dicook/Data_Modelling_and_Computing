@@ -1,0 +1,93 @@
+s1.name,s2.name,team,Q2
+Mubin,Ryan,Titanic{float=False},J
+Yat,Mitch,nine-nine,J
+Emily,Mitch,Agridat,D
+Cameron,Mitch,Titanic{float=False},A
+Colm,Mitch,nine-nine,A
+Tarushi,Zina,R studio artists,G
+Jia,Barry,nine-nine,A
+Oliver,Mitch,Thor,A
+Samuel,Mitch,Titanic{float=False},H
+Naufal,Christopher,The Standard Deviations,C
+Ezray,Zina,Data Confusion,H
+Hongrui,Zina,Infinite,A
+James,Mitch,1_PUORG_0101_CTE,A
+Victor,Naomi,RnR,I
+James,Di,Team Rocket,I
+Son,Mitch,R44,A
+Xiangmei,Mitch,1_PUORG_0101_CTE,A
+Patrick,Mitch,Data Confusion,A
+Christopher,Zina,The Standard Deviations,G
+Yijia,Mitch,Infinite,A
+William,Steph,Blueberries,I
+Tram,Ryan,Thor,D
+Gia,Xiangmei,1_PUORG_0101_CTE,E
+Junfu,Di,R44,F
+Ryan,Mubin,Thor,J
+Arunabh,Victor,RnR,F
+Kuan,Shidie,Paperclip,G
+David,Emily,Agridat,G
+Barry,Jia,Bomrang,G
+Joachim,Steph,Team Rocket,G
+Trang,Di,Bomrang,A
+Naomi,Victor,RnR,J
+Cassandra,Mitch,Paperclip,G
+Benjamin,Mitch,Data Confusion,A
+Jake,Zina,Paperclip,D
+Yuening,Ryan,Thor,G
+Mingzhao,Geoffrey,Bomrang,A
+Joshua,Mitch,Titanic{float=False},G
+Liem,Mitch,Eagles,G
+Ho,Steph,Paperclip,A
+Stephany,Steph,R Rated,G
+Cindy,Steph,R Rated,I
+Ziyue,Zina,GeoZoo,A
+Shidie,Kuan,R studio artists,G
+Jingwen,James,Team Rocket,A
+Rowina,Steph,R Rated,G
+Yasmin,Steph,Agridat,F
+Geoffrey,Barry,Bomrang,H
+Xuan,Bernard,Blueberries,C
+Wilbert,Junfu,R44,D
+Bernard,Mitch,Blueberries,I
+Mubin,Cameron,Titanic{float=False},J
+Emily,Steph,Agridat,D
+Tarushi,Mitch,R studio artists,G
+Samuel,Mubin,Titanic{float=False},H
+Victor,Arunabh,RnR,I
+Christopher,Mitch,The Standard Deviations,G
+Junfu,Mitch,R44,F
+Ryan,Tram,Thor,J
+Arunabh,Naomi,RnR,F
+Kuan,Jake,Paperclip,G
+David,Yasmin,Agridat,G
+Naomi,Arunabh,RnR,J
+Yuening,Tram,Thor,G
+Mingzhao,Barry,Bomrang,A
+Joshua,Mubin,Titanic{float=False},G
+Ho,Emily,Paperclip,A
+Stephany,Di,R Rated,G
+Cindy,Di,R Rated,I
+Ziyue,Mitch,GeoZoo,A
+Rowina,Di,R Rated,G
+Xuan,William,Blueberries,C
+Mubin,Joshua,Titanic{float=False},J
+Samuel,Joshua,Titanic{float=False},H
+Junfu,Wilbert,R44,F
+Naomi,Zina,RnR,J
+Mingzhao,Trang,Bomrang,A
+Ho,Di,Paperclip,A
+Rowina,Stephany,R Rated,G
+Xuan,Wen,Blueberries,C
+Mubin,Samuel,Titanic{float=False},J
+Samuel,Cameron,Titanic{float=False},H
+Rowina,Cindy,R Rated,G
+Xuan,Zina,Blueberries,C
+Xuan Lin,Mitch,Blueberries,C
+Mitch,NA,Kowari,NA
+Zina,NA,Kowari,NA
+Barry,NA,Bomrang,NA
+Di,NA,Kowari,NA
+Steph,NA,Kowari,NA
+James,NA,Team Rocket,NA
+Wen,Wen,Blueberries,NA

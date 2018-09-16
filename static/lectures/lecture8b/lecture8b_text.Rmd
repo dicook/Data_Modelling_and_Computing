@@ -130,6 +130,24 @@ tidy_books %>%
 - What are the most common "anger" words used in Emma?
 - What are the most common "surprise" words used in Emma?
 
+```{r eval=FALSE, echo=FALSE}
+nrc_anger <- get_sentiments("nrc") %>% 
+  filter(sentiment == "anger")
+
+tidy_books %>%
+  filter(book == "Emma") %>%
+  inner_join(nrc_anger) %>%
+  count(word, sort = TRUE)
+
+nrc_surprise <- get_sentiments("nrc") %>% 
+  filter(sentiment == "surprise")
+
+tidy_books %>%
+  filter(book == "Emma") %>%
+  inner_join(nrc_surprise) %>%
+  count(word, sort = TRUE)
+```
+
 ### Comparing lexicons
 
 All of the lexicons have a measure of positive or negative. We can tag the words in Emma by each lexicon, and see if they agree. 
@@ -156,6 +174,17 @@ emma_afinn %>% mutate(sentiment = ifelse(score>0, "positive", "negative")) %>% c
 
 - Using your choice of lexicon (nrc, bing, or afinn) compute the proportion of postive words in each of Austen's books.
 - Which book is the most positive? negative?
+
+```{r}
+pos_nrc <- tidy_books %>%
+  #filter(book == "Emma") %>%
+  group_by(book) %>%
+  inner_join(nrc_pn) %>% 
+  count(sentiment) %>% 
+  mutate(pos = n/sum(n)) %>%
+  filter(sentiment == "positive")
+pos_nrc %>% arrange(desc(pos))
+```
 
 ## Example: Simpsons
 
@@ -303,7 +332,8 @@ afl
 We need to break the text of each tweet into words, tag the words with sentiments, and make a cumulative score for each tweet.
 
 ```{r}
-afl_sentiment <- afl %>% group_by(status_id) %>%
+afl_sentiment <- afl %>% 
+  group_by(status_id) %>%
   unnest_tokens(word, text) %>%
   inner_join(get_sentiments("afinn")) %>%
   summarise(sentiment = mean(score, na.rm=T)) 
