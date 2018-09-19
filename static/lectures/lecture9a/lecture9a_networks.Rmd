@@ -81,7 +81,7 @@ glimpse(madmen)
 # data step: join the edge and node data with a fortify call
 MMnet <- fortify(as.edgedf(madmen$edges), madmen$vertices)
 # create plot
-set.seed(10052016)
+set.seed(5556677)
 ggplot(data = MMnet, aes(from_id = from_id, to_id = to_id)) +
   geom_net(aes(colour = Gender), layout.alg = "kamadakawai",
     size = 2, labelon = TRUE, vjust = -0.6, ecolour = "grey60",

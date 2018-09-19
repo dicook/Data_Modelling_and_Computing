@@ -76,7 +76,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Assignment 2: [Instructions](assignments/assignment2.html) [(Rmd)](assignments/assignment2.Rmd) [SOLUTION](assignments/assignment2_solution.html) [(Rmd)](assignments/assignment2_solution.Rmd); [Example data](assignments/data/meter1.csv); Stories of the household electricity use: [Diana](assignments/di.html)[(Rmd)](assignments/di.Rmd) [George](assignments/george.html)[(Rmd)](assignments/george.Rmd) [Clare](assignments/clare.html)[(Rmd)](assignments/clare.Rmd) [Natalia](assignments/natalia.html)[(Rmd)](assignments/natalia.Rmd) **DUE: Week 4, individual on Wed, group Fri, during class**
 - Assignment 3: [Instructions](assignments/assignment3.html) [(Rmd)](assignments/assignment3.Rmd) [SOLUTION](assignments/assignment3_solution.html) [(Rmd)](assignments/assignment3_solution.Rmd) [oz_weather.csv](assignments/data/oz_weather.csv) [stns_oz.csv](assignments/data/stns_oz.csv) **DUE: Week 6, individual on Wed, group Fri, at the start of class**
 - Assignment 4: [Instructions](assignments/assignment4.html) [(Rmd)](assignments/assignment4.Rmd) **DUE: Week 8, individual on Wed, group Fri, at the start of class**
-- Assignment 5: **This will be completed individually during the lectorial on Wed Oct 10.**
+- Assignment 5: **This will be completed individually during the lectorial on Wed Oct 10.** [Semester 1 example](assignments/assignment5_S1.html) [(Rmd)](assignments/assignment5_S1.Rmd) [Solution](assignments/assignment5_S1_solution.html) [(Rmd)](assignments/assignment5_S1_solution.Rmd)
 
 <!--
 ## Assignment 4 peer evaluation
