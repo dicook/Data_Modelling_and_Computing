@@ -8,6 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
+<meta name="author" content="Professor Di Cook, EBS, Monash U." />
 
 
 <meta name="progressive" content="false" />
@@ -45,313 +46,383 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 <div class="topics">
 
-<div id="section-advanced-data-handling" class="section level1">
-<h1>Advanced data handling</h1>
+<div id="section-advanced-data-modeling" class="section level1">
+<h1>Advanced data modeling</h1>
 <div id="section-course-web-site" class="section level2">
 <h2>Course web site</h2>
-<p>This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: <a href="http://dmac.netlify.com" class="uri">http://dmac.netlify.com</a></p>
+<p>This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: <a href="http://dmac.dicook.org" class="uri">http://dmac.dicook.org</a></p>
 </div>
-<div id="section-databases" class="section level2">
-<h2>Databases</h2>
-<div id="section-what-is-a-database" class="section level3">
-<h3>What is a database?</h3>
+<div id="section-recap" class="section level2">
+<h2>Recap</h2>
+<p>To make a network analysis, you need</p>
 <ul>
-<li>A collection of data</li>
-<li>A set of rules to manipulate data</li>
+<li>an association matrix, that describes how nodes (vertices) are connected to each other</li>
+<li>a layout algorithm to place the nodes optimally so that the fewest edges cross, or that the nodes that are most closely associated are near to each other.</li>
 </ul>
 </div>
-<div id="section-why-are-they-important" class="section level3">
-<h3>Why are they important?</h3>
-<ul>
-<li>Efficient manipulation of large data sets</li>
-<li>Convenient processing of data</li>
-<li>Integration of multiple sources of data</li>
-<li>Access to a shared resource</li>
-</ul>
-</div>
-<div id="section-relational-databases" class="section level3">
-<h3>Relational Databases</h3>
-<ul>
-<li>Database is collection of tables and links</li>
-<li>SQL (Structured Query Language) for querying</li>
-<li>DBMS (Database Management System) and managing data</li>
-</ul>
-</div>
-<div id="section-access-from-r" class="section level3">
-<h3>Access from R</h3>
-<p><code>dplyr</code> works with remote on-disk data stored in databases. This is particularly useful in two scenarios:</p>
-<ol style="list-style-type: decimal">
-<li><p>Your data is already in a database. (If you are using R to do data analysis inside a company, most of the data you need probably already lives in a database.)</p></li>
-<li><p>You have so much data that it does not all fit into memory simultaneously and you need to use some external storage engine.</p></li>
-</ol>
-</div>
-</div>
-<div id="section-lets-make-a-database-to-play-with" class="section level2">
-<h2>Let’s make a database to play with</h2>
-<p>(If your data fits in memory, there is no advantage to putting it in a database; it will only be slower and more frustrating.)</p>
-<p>We have worked with subsets of the PISA 2015 data. Now we are going to work with the entire data set.</p>
-<ol style="list-style-type: decimal">
-<li><p>Find the data on the OECD PISA web site, <a href="http://www.oecd.org/pisa/data/2015database/" class="uri">http://www.oecd.org/pisa/data/2015database/</a>. Download the SPSS format “Student questionnaire data file (419MB)”. (The downloaded file name should be <code>CY6_MS_CMB_STU_QQQ.sav</code>.) It is quite large, so if you have trouble we have the file on a USB stick, that you can copy.)</p></li>
-<li><p>Read the data into R using this code:</p></li>
-</ol>
-<pre class="r"><code># devtools::install_github(&quot;tidyverse/haven&quot;)
-library(haven)
-pisa_2015 &lt;- read_sav(&quot;data/CY6_MS_CMB_STU_QQQ.sav&quot;)</code></pre>
-<p><em>NOTE: If you get this <code>Error in df_parse_sav_file(spec, user_na) : Failed to parse CY6_MS_CMB_STU_QQQ.sav: Unable to allocate memory.</code> you should install the ost recent version of <code>haven</code> from github, and try again.</em></p>
-<p>How many students are in the data set?</p>
-<ol start="3" style="list-style-type: decimal">
-<li>This code creates the database, in your project data folder. <em>You only need to create the database once!</em></li>
-</ol>
-<pre class="r"><code>library(sqldf)
-library(DBI)
-db &lt;- dbConnect(SQLite(), dbname=&quot;data/PISA.sqlite&quot;)
-dbWriteTable(conn=db, name=&quot;student&quot;, value=pisa_2015)</code></pre>
-<ol start="4" style="list-style-type: decimal">
-<li>Let’s test the speed</li>
-</ol>
-<p>From the R object:</p>
-<pre class="r"><code>start_time &lt;- Sys.time()
-score_gap &lt;- pisa_2015 %&gt;% 
-  group_by(CNT) %&gt;%
-  summarise(math=mean(PV1MATH),
-            read=mean(PV1READ),
-            scie=mean(PV1SCIE))
-end_time &lt;-Sys.time()
-end_time-start_time</code></pre>
-<p>Using sqlite database:</p>
-<pre class="r"><code>tb &lt;- tbl(db, &quot;student&quot;)
-start_time &lt;- Sys.time()
-score_gap &lt;- tb %&gt;% group_by(CNT) %&gt;%
-  summarise(math=mean(PV1MATH),
-            read=mean(PV1READ),
-            scie=mean(PV1SCIE)) %&gt;%
-  collect()
-end_time &lt;-Sys.time()
-end_time-start_time</code></pre>
-<p>(I get 0.09001613 secs directly in R, and 12.21206 secs using the database.)</p>
-</div>
-<div id="section-using-the-database." class="section level2">
-<h2>Using the database.</h2>
-<p>The code below lists the “fields” (variables) in the table.</p>
-<pre class="r"><code>library(sqldf)
-library(DBI)
-db &lt;- dbConnect(SQLite(), dbname=&quot;data/PISA.sqlite&quot;)</code></pre>
-<pre class="r"><code>dbListFields(db, &quot;student&quot;)</code></pre>
-<div id="section-calculating-statistics" class="section level3">
-<h3>Calculating statistics</h3>
-<p>Set up the link to the actual table that you want to use, using the <code>tbl</code> function. It <strong>doesn’t</strong> create a copy of the data in your R session. It simply sets up a connection to the table in the external database.</p>
-<pre class="r"><code>tb &lt;- tbl(db, &quot;student&quot;)</code></pre>
-</div>
-<div id="section-using-dplyr-almost" class="section level3">
-<h3>Using dplyr, almost</h3>
-<p>For the most part you can use the same tidyverse verbs to operate on the data. It tells the database what operations to perform.</p>
-<p>Adding the <code>collect()</code> function at the end of the set of instructions says “send the result to R”.</p>
-<ol style="list-style-type: decimal">
-<li>Compute the averages across the multiple math scores, and save in an R object.</li>
-<li>Make a dotplot against country, ordered from top score to lowest.</li>
-<li>What are the top three countries?</li>
-<li>What is Australia’s rank?</li>
-</ol>
-<pre class="r"><code>scores &lt;- tb %&gt;% 
-  mutate(math=(PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+PV6MATH+
-                 PV7MATH+PV8MATH+PV9MATH+PV10MATH)/10) %&gt;%
-  group_by(CNT) %&gt;%
-  summarise(mathmean=mean(math)) %&gt;%
-  collect()
-scores &lt;- scores %&gt;% mutate(CNT=fct_reorder(CNT, mathmean))
-ggplot(scores, aes(x=mathmean, y=CNT)) + geom_point()</code></pre>
-<p><img src="lecture9b_adv_data_files/figure-html/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;" /></p>
-</div>
-</div>
-<div id="section-differences" class="section level2">
-<h2>Differences</h2>
-<p>Database operations typically only operate on a column by column basis, so calculating statistics such as standard deviation can be a challenge.</p>
-<p>Try it, and see what happens if you ask for the database to compute the standard deviation of the math scores instead of the mean, using the <code>sd</code> function.</p>
-<p>You can do this with a direct SQL QUERY (the ugly code is below), instead. Do it!</p>
-<p>And then make a plot which shows the mean and a segment indicating one standard deviation below and above the mean, by country, sorted from highest to lowest average.</p>
-<pre class="r"><code>library(RSQLite)
-mathmean &lt;- dbGetQuery(db, &quot;SELECT Avg((PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+PV6MATH+
-                 PV7MATH+PV8MATH+PV9MATH+PV10MATH)/10) as m FROM student GROUP BY CNT&quot;)
-mathsq &lt;- dbGetQuery(db, &quot;SELECT Sum((PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+PV6MATH+
-        PV7MATH+PV8MATH+PV9MATH+PV10MATH)*(PV1MATH+PV2MATH+PV3MATH+PV4MATH+PV5MATH+PV6MATH+
-        PV7MATH+PV8MATH+PV9MATH+PV10MATH)/100) as s FROM student GROUP BY CNT&quot;)
-n &lt;- dbGetQuery(db, &quot;SELECT count(*) as n FROM student GROUP BY CNT&quot;)
-CNT &lt;- dbGetQuery(db, &quot;SELECT distinct CNT as CNT FROM student&quot;)
+<div id="section-quantitative-association-matrices" class="section level2">
+<h2>Quantitative association matrices</h2>
+<p>The previous association matrices were black and white:</p>
+<div class="figure">
+<img src="images/network_data.png" />
 
-scores_sql &lt;- data.frame(m=mathmean, s=mathsq, n, CNT)
-scores_sql &lt;- scores_sql %&gt;%
-  mutate(msd=sqrt((s - n*m^2)/(n-1))) %&gt;%
-  mutate(CNT=fct_reorder(CNT, m))
-
-ggplot(scores_sql, aes(x=CNT, y=m)) + 
-  geom_point() + 
-  geom_errorbar(aes(ymin=m-msd, ymax=m+msd)) +
-  coord_flip()</code></pre>
 </div>
-<div id="section-structured-query-language" class="section level2">
-<h2>Structured Query Language</h2>
-<p>The RSQLite package allows SQL queries to be constructed and passed to the database for computing quantities.</p>
-<ul>
-<li>Structured Query Language (1970, E Codds)</li>
-<li>Programming language used for accessing data in a database</li>
-<li>ANSI standard since 1986, ISO standard since 1987</li>
-<li>Still some portability issues between software systems!</li>
-<li>We’ll mainly focus on SQL queries to access data</li>
-</ul>
-<div id="section-syntax" class="section level3">
-<h3>Syntax</h3>
-<ul>
-<li>SQL is not case sensitive.</li>
-<li>Some systems require <code>;</code> at the end of each line. The semi-colon can be used to separate each SQL statement in a system that allows multiple command to be executed in a call to the server.</li>
-</ul>
-</div>
-<div id="section-example" class="section level3">
-<h3>Example</h3>
-<p>Here is a small database example, that has two tables</p>
-<p><strong>person</strong></p>
+<p>but you could have the association between nodes described as real numbers also. For example, these are the number of times that these people called each other in the last week:</p>
 <table>
 <thead>
 <tr class="header">
-<th><strong><em>ID</em></strong></th>
-<th align="center">Name</th>
-<th align="right">Major</th>
+<th></th>
+<th align="right">Meg</th>
+<th align="right">Tay</th>
+<th align="right">Yat</th>
+<th align="right">Zili</th>
+<th align="right">Jess</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>1234</td>
-<td align="center">Never Ever</td>
-<td align="right">Math</td>
-</tr>
-<tr class="even">
-<td>4321</td>
-<td align="center">Some Times</td>
-<td align="right">CS</td>
-</tr>
-</tbody>
-</table>
-<p><strong>attendance</strong></p>
-<table>
-<thead>
-<tr class="header">
-<th><strong><em>ID</em></strong></th>
-<th align="center"><strong><em>Date</em></strong></th>
-<th align="right">Status</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1234</td>
-<td align="center">02-Feb</td>
-<td align="right">absent</td>
-</tr>
-<tr class="even">
-<td>1234</td>
-<td align="center">09-Feb</td>
-<td align="right">absent</td>
-</tr>
-<tr class="odd">
-<td>4321</td>
-<td align="center">02-Feb</td>
-<td align="right">present</td>
-</tr>
-<tr class="even">
-<td>4321</td>
-<td align="center">09-Feb</td>
-<td align="right">absent</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="section-select" class="section level3">
-<h3>SELECT</h3>
-<p><code>Select * from person</code> leads to</p>
-<table>
-<thead>
-<tr class="header">
-<th><strong><em>ID</em></strong></th>
-<th align="center">Name</th>
-<th align="right">Major</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1234</td>
-<td align="center">Never Ever</td>
-<td align="right">Math</td>
-</tr>
-<tr class="even">
-<td>4321</td>
-<td align="center">Some Times</td>
-<td align="right">CS</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="section-where" class="section level3">
-<h3>WHERE</h3>
-<p><code>Select Name from person where Major='Math'</code> would result in</p>
-<table>
-<thead>
-<tr class="header">
-<th>Name</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Never Ever</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="section-aggregations" class="section level3">
-<h3>Aggregations</h3>
-<p><code>Select ID, count(ID) from attendance where Status='absent'</code> results in</p>
-<table>
-<thead>
-<tr class="header">
-<th><strong><em>ID</em></strong></th>
-<th align="right">Frequency</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>1234</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td>4321</td>
+<td>Meg</td>
+<td align="right">0</td>
+<td align="right">5</td>
+<td align="right">4</td>
+<td align="right">1</td>
 <td align="right">1</td>
 </tr>
+<tr class="even">
+<td>Tay</td>
+<td align="right">5</td>
+<td align="right">0</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>Yat</td>
+<td align="right">4</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>Zili</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td>Jess</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">0</td>
+</tr>
 </tbody>
 </table>
+<p>We would need to turn this into an edge data set:</p>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["from"],"name":[1],"type":["chr"],"align":["left"]},{"label":["to"],"name":[2],"type":["chr"],"align":["left"]},{"label":["count"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Meg","2":"Meg","3":"0"},{"1":"Tay","2":"Meg","3":"5"},{"1":"Yat","2":"Meg","3":"4"},{"1":"Zili","2":"Meg","3":"1"},{"1":"Jess","2":"Meg","3":"1"},{"1":"Meg","2":"Tay","3":"5"},{"1":"Tay","2":"Tay","3":"0"},{"1":"Yat","2":"Tay","3":"4"},{"1":"Zili","2":"Tay","3":"2"},{"1":"Jess","2":"Tay","3":"1"},{"1":"Meg","2":"Yat","3":"4"},{"1":"Tay","2":"Yat","3":"4"},{"1":"Yat","2":"Yat","3":"0"},{"1":"Zili","2":"Yat","3":"0"},{"1":"Jess","2":"Yat","3":"0"},{"1":"Meg","2":"Zili","3":"1"},{"1":"Tay","2":"Zili","3":"2"},{"1":"Yat","2":"Zili","3":"0"},{"1":"Zili","2":"Zili","3":"0"},{"1":"Jess","2":"Zili","3":"6"},{"1":"Meg","2":"Jess","3":"1"},{"1":"Tay","2":"Jess","3":"1"},{"1":"Yat","2":"Jess","3":"0"},{"1":"Zili","2":"Jess","3":"6"},{"1":"Jess","2":"Jess","3":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
+<p>and then decide what corresponds to a “connection”. Let’s say, they need to have called each other at least 4 times, to be considered connected.</p>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["from"],"name":[1],"type":["chr"],"align":["left"]},{"label":["to"],"name":[2],"type":["chr"],"align":["left"]},{"label":["count"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Tay","2":"Meg","3":"5"},{"1":"Yat","2":"Meg","3":"4"},{"1":"Meg","2":"Tay","3":"5"},{"1":"Yat","2":"Tay","3":"4"},{"1":"Meg","2":"Yat","3":"4"},{"1":"Tay","2":"Yat","3":"4"},{"1":"Jess","2":"Zili","3":"6"},{"1":"Zili","2":"Jess","3":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>and then we can make the network diagram.</p>
+<pre class="r"><code>library(geomnet)
+set.seed(1110100)
+ggplot(data = d_edges, aes(from_id = from, to_id = to)) +
+  geom_net(layout.alg = &quot;kamadakawai&quot;,
+    size = 2, labelon = TRUE, vjust = -0.6, ecolour = &quot;grey60&quot;,
+    directed =FALSE, fontsize = 3, ealpha = 0.5) +
+    theme_net() </code></pre>
+<p><img src="lecture9b_adv_data_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="section-data-last-4-months-of-currency-usd-cross-rates" class="section level2">
+<h2>Data: Last 4 months of currency USD cross-rates</h2>
+<p>😨 SO let’s try this with cross-currency rates across the globe!</p>
+<ul>
+<li>Data extracted from <a href="http://openexchangerates.org/api/historical" class="uri">http://openexchangerates.org/api/historical</a></li>
+<li>R packages <code>jsonlite</code>, processed with <code>tidyverse</code>, <code>lubridate</code></li>
+</ul>
+<pre><code>## Observations: 117
+## Variables: 171
+## $ date &lt;date&gt; 2018-05-14, 2018-05-15, 2018-05-16, 2018-05-17, 2018-05-...
+## $ AED  &lt;dbl&gt; 3.673014, 3.673097, 3.673181, 3.673181, 3.673175, 3.67317...
+## $ AFN  &lt;dbl&gt; 71.22388, 71.19617, 70.97950, 70.96700, 70.95600, 70.8960...
+## $ ALL  &lt;dbl&gt; 106.2047, 107.0336, 107.9700, 107.7775, 108.0700, 107.790...
+## $ AMD  &lt;dbl&gt; 485.3959, 484.5824, 484.3732, 483.1400, 482.6063, 482.225...
+## $ ANG  &lt;dbl&gt; 1.794197, 1.795750, 1.795703, 1.795416, 1.795163, 1.79364...
+## $ AOA  &lt;dbl&gt; 230.0525, 229.7065, 232.1595, 232.9660, 233.0350, 233.035...
+## $ ARS  &lt;dbl&gt; 24.9990, 24.0590, 24.2680, 24.3090, 24.3620, 24.3620, 24....
+## $ AUD  &lt;dbl&gt; 1.328744, 1.339056, 1.330436, 1.332636, 1.331400, 1.33120...
+## $ AWG  &lt;dbl&gt; 1.792495, 1.787082, 1.787082, 1.787082, 1.786250, 1.78625...
+## $ AZN  &lt;dbl&gt; 1.7025, 1.7025, 1.7025, 1.7025, 1.7025, 1.7025, 1.7025, 1...
+## $ BAM  &lt;dbl&gt; 1.631559, 1.641728, 1.659388, 1.658900, 1.660281, 1.65880...
+## $ BBD  &lt;int&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, ...
+## $ BDT  &lt;dbl&gt; 84.73739, 84.83877, 84.83974, 84.81570, 84.80595, 84.8059...
+## $ BGN  &lt;dbl&gt; 1.637605, 1.653967, 1.655625, 1.656230, 1.660310, 1.65917...
+## $ BHD  &lt;dbl&gt; 0.377163, 0.377146, 0.377640, 0.377484, 0.377419, 0.37741...
+## $ BIF  &lt;dbl&gt; 1766.580, 1772.550, 1758.788, 1758.638, 1762.050, 1760.55...
+## $ BMD  &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+## $ BND  &lt;dbl&gt; 1.331700, 1.331700, 1.331700, 1.328500, 1.329400, 1.32940...
+## $ BOB  &lt;dbl&gt; 6.903024, 6.912789, 6.912871, 6.911707, 6.910671, 6.90458...
+## $ BRL  &lt;dbl&gt; 3.621850, 3.653050, 3.675900, 3.696600, 3.737984, 3.73749...
+## $ BSD  &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+## $ BTC  &lt;dbl&gt; 0.0001153454, 0.0001178723, 0.0001198732, 0.0001239274, 0...
+## $ BTN  &lt;dbl&gt; 67.55530, 67.99115, 67.83028, 67.69251, 68.01484, 68.0148...
+## $ BWP  &lt;dbl&gt; 9.799540, 9.895531, 9.930313, 9.923327, 9.933274, 9.97738...
+## $ BYN  &lt;dbl&gt; 1.996288, 2.004820, 2.003332, 1.999495, 1.994692, 1.99295...
+## $ BZD  &lt;dbl&gt; 2.009100, 2.010792, 2.010946, 2.010510, 2.010235, 2.00849...
+## $ CAD  &lt;dbl&gt; 1.280082, 1.287268, 1.278407, 1.283554, 1.289324, 1.28952...
+## $ CDF  &lt;dbl&gt; 1614.161, 1614.161, 1613.323, 1613.323, 1613.323, 1613.32...
+## $ CHF  &lt;dbl&gt; 1.000525, 1.001419, 1.000623, 1.001760, 0.998440, 0.99862...
+## $ CLF  &lt;dbl&gt; 0.02288, 0.02314, 0.02309, 0.02315, 0.02326, 0.02326, 0.0...
+## $ CLP  &lt;dbl&gt; 625.4000, 632.0284, 630.9211, 631.8106, 637.5000, 637.500...
+## $ CNH  &lt;dbl&gt; 6.338600, 6.369413, 6.351900, 6.358647, 6.360356, 6.36034...
+## $ CNY  &lt;dbl&gt; 6.339800, 6.379000, 6.371300, 6.367800, 6.378100, 6.37890...
+## $ COP  &lt;dbl&gt; 2817.460, 2853.770, 2899.160, 2899.160, 2904.900, 2902.70...
+## $ CRC  &lt;dbl&gt; 566.4526, 566.6901, 566.4026, 566.4701, 565.3177, 564.885...
+## $ CUC  &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+## $ CUP  &lt;dbl&gt; 25.5, 25.5, 25.5, 25.5, 25.5, 25.5, 25.5, 25.5, 25.5, 25....
+## $ CVE  &lt;dbl&gt; 92.31925, 93.57575, 93.55850, 93.52850, 93.60450, 93.6045...
+## $ CZK  &lt;dbl&gt; 21.37390, 21.62605, 21.59725, 21.69480, 21.78110, 21.7814...
+## $ DJF  &lt;dbl&gt; 177.8750, 178.0500, 178.0500, 178.0500, 177.5850, 177.585...
+## $ DKK  &lt;dbl&gt; 6.243440, 6.301609, 6.303450, 6.316990, 6.326800, 6.32680...
+## $ DOP  &lt;dbl&gt; 49.54957, 49.53114, 49.59955, 49.59942, 49.58500, 49.5512...
+## $ DZD  &lt;dbl&gt; 115.4540, 115.8954, 116.0230, 116.0342, 116.1645, 115.945...
+## $ EGP  &lt;dbl&gt; 17.8315, 17.8270, 17.8780, 17.8090, 17.7770, 17.7770, 17....
+## $ ERN  &lt;dbl&gt; 14.99677, 15.09583, 14.99773, 14.99647, 15.09660, 15.0966...
+## $ ETB  &lt;dbl&gt; 27.50757, 27.51843, 27.53334, 27.52655, 27.52076, 27.5207...
+## $ EUR  &lt;dbl&gt; 0.838135, 0.846005, 0.846395, 0.848212, 0.848210, 0.84814...
+## $ FJD  &lt;dbl&gt; 2.081247, 2.090797, 2.085545, 2.087302, 2.086848, 2.08730...
+## $ FKP  &lt;dbl&gt; 0.737377, 0.740658, 0.738158, 0.740078, 0.742395, 0.74247...
+## $ GBP  &lt;dbl&gt; 0.737377, 0.740658, 0.738158, 0.740078, 0.742395, 0.74247...
+## $ GEL  &lt;dbl&gt; 2.439517, 2.432695, 2.432934, 2.440583, 2.444915, 2.44666...
+## $ GGP  &lt;dbl&gt; 0.737377, 0.740658, 0.738158, 0.740078, 0.742395, 0.74247...
+## $ GHS  &lt;dbl&gt; 4.540006, 4.558111, 4.587044, 4.533803, 4.533600, 4.53360...
+## $ GIP  &lt;dbl&gt; 0.737377, 0.740658, 0.738158, 0.740078, 0.742395, 0.74247...
+## $ GMD  &lt;dbl&gt; 47.18333, 47.18250, 47.19500, 47.19500, 47.19500, 47.1950...
+## $ GNF  &lt;dbl&gt; 9017.450, 9021.950, 9026.150, 9028.200, 9025.900, 9025.90...
+## $ GTQ  &lt;dbl&gt; 7.424057, 7.430525, 7.430813, 7.431884, 7.435719, 7.42917...
+## $ GYD  &lt;dbl&gt; 208.6376, 209.1236, 208.9830, 208.8430, 209.1161, 208.925...
+## $ HKD  &lt;dbl&gt; 7.849750, 7.850250, 7.849640, 7.849800, 7.850250, 7.85025...
+## $ HNL  &lt;dbl&gt; 23.74836, 23.78574, 23.78281, 23.78989, 23.80130, 23.7825...
+## $ HRK  &lt;dbl&gt; 6.188000, 6.246300, 6.248700, 6.259231, 6.273400, 6.27340...
+## $ HTG  &lt;dbl&gt; 64.88263, 64.70194, 64.54583, 64.34553, 64.41674, 64.3477...
+## $ HUF  &lt;dbl&gt; 264.4650, 267.8107, 267.4030, 269.1100, 270.3200, 270.320...
+## $ IDR  &lt;dbl&gt; 13969.63, 14021.94, 14084.06, 14055.29, 14127.53, 14140.7...
+## $ ILS  &lt;dbl&gt; 3.593975, 3.598795, 3.584210, 3.589575, 3.592160, 3.59216...
+## $ IMP  &lt;dbl&gt; 0.737377, 0.740658, 0.738158, 0.740078, 0.742395, 0.74247...
+## $ INR  &lt;dbl&gt; 67.68800, 68.48000, 67.77500, 67.76932, 67.98500, 67.9850...
+## $ IQD  &lt;dbl&gt; 1189.991, 1190.601, 1192.451, 1192.351, 1193.300, 1192.25...
+## $ IRR  &lt;dbl&gt; 42021.67, 42019.22, 42024.16, 42020.92, 42021.42, 42021.4...
+## $ ISK  &lt;dbl&gt; 102.7800, 103.8300, 104.2900, 104.3202, 104.8637, 104.863...
+## $ JEP  &lt;dbl&gt; 0.737377, 0.740658, 0.738158, 0.740078, 0.742395, 0.74247...
+## $ JMD  &lt;dbl&gt; 125.5475, 125.3898, 125.5039, 125.6561, 125.9169, 125.805...
+## $ JOD  &lt;dbl&gt; 0.709503, 0.709804, 0.709503, 0.709503, 0.709503, 0.70950...
+## $ JPY  &lt;dbl&gt; 109.7330, 110.2983, 110.3701, 110.8485, 110.8034, 110.760...
+## $ KES  &lt;dbl&gt; 100.4035, 100.3970, 100.3955, 100.4045, 100.4485, 100.256...
+## $ KGS  &lt;dbl&gt; 68.52530, 68.45955, 68.37915, 68.43667, 68.43443, 68.4500...
+## $ KHR  &lt;dbl&gt; 4070.363, 4074.103, 4074.492, 4072.217, 4072.267, 4056.80...
+## $ KMF  &lt;dbl&gt; 412.0434, 411.4500, 411.4500, 411.4500, 415.4550, 415.591...
+## $ KPW  &lt;int&gt; 900, 900, 900, 900, 900, 900, 900, 900, 900, 900, 900, 90...
+## $ KRW  &lt;dbl&gt; 1070.17, 1079.81, 1077.49, 1081.92, 1081.37, 1081.37, 108...
+## $ KWD  &lt;dbl&gt; 0.301511, 0.301803, 0.301926, 0.302017, 0.302017, 0.30201...
+## $ KYD  &lt;dbl&gt; 0.832947, 0.833703, 0.833755, 0.833599, 0.833423, 0.83270...
+## $ KZT  &lt;dbl&gt; 328.3212, 328.4329, 329.1875, 327.8702, 328.8200, 328.820...
+## $ LAK  &lt;dbl&gt; 8336.883, 8340.583, 8334.450, 8334.150, 8332.600, 8325.55...
+## $ LBP  &lt;dbl&gt; 1511.150, 1519.883, 1513.575, 1508.950, 1513.150, 1511.80...
+## $ LKR  &lt;dbl&gt; 157.8351, 158.1100, 158.2433, 157.9411, 157.7600, 157.782...
+## $ LRD  &lt;dbl&gt; 132.3821, 132.4503, 132.4503, 132.4503, 133.2158, 133.434...
+## $ LSL  &lt;dbl&gt; 12.28312, 12.50220, 12.53831, 12.52888, 12.68613, 12.6748...
+## $ LYD  &lt;dbl&gt; 1.351821, 1.350568, 1.353384, 1.357532, 1.358136, 1.35694...
+## $ MAD  &lt;dbl&gt; 9.365554, 9.416814, 9.422141, 9.434500, 9.447083, 9.43066...
+## $ MDL  &lt;dbl&gt; 16.50311, 16.53039, 16.57422, 16.64596, 16.67093, 16.6709...
+## $ MGA  &lt;dbl&gt; 3249.028, 3248.598, 3279.570, 3262.685, 3245.300, 3245.30...
+## $ MKD  &lt;dbl&gt; 51.60514, 52.04505, 52.11550, 52.22550, 52.31500, 52.3150...
+## $ MMK  &lt;dbl&gt; 1347.974, 1349.324, 1351.598, 1351.724, 1351.724, 1351.95...
+## $ MNT  &lt;dbl&gt; 2397.583, 2397.831, 2398.089, 2398.430, 2400.033, 2401.06...
+## $ MOP  &lt;dbl&gt; 8.081332, 8.088592, 8.088800, 8.087353, 8.085717, 8.07900...
+## $ MRO  &lt;dbl&gt; 356.50, 356.00, 356.00, 356.00, 355.65, 355.65, 355.65, 3...
+## $ MRU  &lt;dbl&gt; 35.7100, 35.7100, 35.7100, 35.7100, 35.5650, 35.5650, 35....
+## $ MUR  &lt;dbl&gt; 34.44400, 34.50300, 34.24750, 34.39850, 34.60050, 34.5743...
+## $ MVR  &lt;dbl&gt; 15.50004, 15.50004, 15.50004, 15.50004, 15.57750, 15.5773...
+## $ MWK  &lt;dbl&gt; 719.8750, 721.6059, 719.9450, 719.7658, 720.1200, 720.120...
+## $ MXN  &lt;dbl&gt; 19.59100, 19.69456, 19.58010, 19.75838, 19.95280, 19.9528...
+## $ MYR  &lt;dbl&gt; 3.954000, 3.956011, 3.967500, 3.972038, 3.972038, 3.97203...
+## $ MZN  &lt;dbl&gt; 60.26900, 60.33469, 60.13000, 60.12500, 60.10000, 60.1000...
+## $ NAD  &lt;dbl&gt; 12.27665, 12.27357, 12.27215, 12.52888, 12.27215, 12.2721...
+## $ NGN  &lt;dbl&gt; 360.2593, 360.1223, 360.1650, 359.8489, 360.0350, 360.035...
+## $ NIO  &lt;dbl&gt; 31.32244, 31.36394, 31.37334, 31.37292, 31.38309, 31.3548...
+## $ NOK  &lt;dbl&gt; 8.034550, 8.128940, 8.068640, 8.132417, 8.114579, 8.11500...
+## $ NPR  &lt;dbl&gt; 108.0747, 108.8212, 108.5550, 108.3168, 108.3118, 108.727...
+## $ NZD  &lt;dbl&gt; 1.445736, 1.457014, 1.448635, 1.452855, 1.446150, 1.44615...
+## $ OMR  &lt;dbl&gt; 0.385007, 0.384980, 0.384948, 0.384945, 0.384945, 0.38494...
+## $ PAB  &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+## $ PEN  &lt;dbl&gt; 3.258294, 3.270040, 3.271760, 3.274889, 3.289550, 3.28955...
+## $ PGK  &lt;dbl&gt; 3.289488, 3.271870, 3.265933, 3.265394, 3.265350, 3.26263...
+## $ PHP  &lt;dbl&gt; 52.39717, 52.56242, 52.19000, 52.25800, 52.20569, 52.4010...
+## $ PKR  &lt;dbl&gt; 115.6775, 115.7702, 115.7280, 115.8174, 115.7800, 115.690...
+## $ PLN  &lt;dbl&gt; 3.580075, 3.637400, 3.616525, 3.644750, 3.655505, 3.65550...
+## $ PYG  &lt;dbl&gt; 5602.900, 5659.152, 5661.877, 5670.427, 5622.450, 5617.65...
+## $ QAR  &lt;dbl&gt; 3.641124, 3.640999, 3.641361, 3.641900, 3.640999, 3.63820...
+## $ RON  &lt;dbl&gt; 3.875087, 3.923068, 3.922891, 3.930989, 3.935610, 3.93561...
+## $ RSD  &lt;dbl&gt; 98.99400, 99.91600, 99.98124, 100.18017, 100.37968, 100.3...
+## $ RUB  &lt;dbl&gt; 61.8579, 62.2706, 61.6845, 62.1670, 62.3224, 62.3224, 62....
+## $ RWF  &lt;dbl&gt; 867.6533, 866.2163, 869.6717, 870.3367, 869.3350, 868.580...
+## $ SAR  &lt;dbl&gt; 3.749900, 3.750400, 3.750350, 3.749750, 3.749750, 3.74960...
+## $ SBD  &lt;dbl&gt; 7.817640, 7.827891, 7.818435, 7.826400, 7.826400, 7.82640...
+## $ SCR  &lt;dbl&gt; 14.03455, 13.74933, 13.45350, 13.45500, 13.45568, 13.4298...
+## $ SDG  &lt;dbl&gt; 18.05263, 18.07374, 18.07350, 18.07036, 18.06722, 18.0672...
+## $ SEK  &lt;dbl&gt; 8.639641, 8.697723, 8.694556, 8.742580, 8.752800, 8.75270...
+## $ SGD  &lt;dbl&gt; 1.335899, 1.345451, 1.339847, 1.342370, 1.342823, 1.34290...
+## $ SHP  &lt;dbl&gt; 0.737377, 0.740658, 0.738158, 0.740078, 0.742395, 0.74247...
+## $ SLL  &lt;dbl&gt; 7787.651, 7779.268, 7702.756, 7779.820, 7775.560, 7788.75...
+## $ SOS  &lt;dbl&gt; 575.8490, 576.9440, 578.6138, 578.5351, 578.5950, 578.095...
+## $ SRD  &lt;dbl&gt; 7.468, 7.468, 7.468, 7.468, 7.468, 7.468, 7.468, 7.468, 7...
+## $ SSP  &lt;dbl&gt; 130.2634, 130.2634, 130.2634, 130.2634, 130.2634, 130.263...
+## $ STD  &lt;dbl&gt; 20531.67, 20613.60, 20659.14, 20743.32, 20759.06, 20767.4...
+## $ STN  &lt;dbl&gt; 20.52000, 20.69000, 20.69000, 20.69000, 20.71141, 20.7282...
+## $ SVC  &lt;dbl&gt; 8.745823, 8.753445, 8.754432, 8.752232, 8.751041, 8.74338...
+## $ SYP  &lt;dbl&gt; 514.995, 514.945, 515.045, 514.980, 514.985, 514.985, 515...
+## $ SZL  &lt;dbl&gt; 12.28601, 12.50303, 12.53800, 12.52282, 12.68855, 12.6774...
+## $ THB  &lt;dbl&gt; 31.91000, 32.14300, 32.00000, 32.07000, 32.13250, 32.1835...
+## $ TJS  &lt;dbl&gt; 8.950909, 8.963829, 8.979121, 8.980792, 8.979914, 8.97196...
+## $ TMT  &lt;dbl&gt; 3.499986, 3.499986, 3.499986, 3.499986, 3.466667, 3.46666...
+## $ TND  &lt;dbl&gt; 2.512602, 2.512505, 2.515100, 2.520706, 2.525998, 2.52599...
+## $ TOP  &lt;dbl&gt; 2.271154, 2.297424, 2.295033, 2.295997, 2.283458, 2.28958...
+## $ TRY  &lt;dbl&gt; 4.355076, 4.454745, 4.429838, 4.462446, 4.490953, 4.48935...
+## $ TTD  &lt;dbl&gt; 6.735544, 6.742743, 6.742800, 6.741727, 6.740950, 6.73478...
+## $ TWD  &lt;dbl&gt; 29.79500, 29.90092, 29.84192, 29.91100, 29.94557, 29.9454...
+## $ TZS  &lt;dbl&gt; 2282.600, 2281.300, 2281.800, 2282.250, 2280.400, 2280.40...
+## $ UAH  &lt;dbl&gt; 26.15671, 26.21708, 26.24140, 26.18691, 26.18650, 26.1251...
+## $ UGX  &lt;dbl&gt; 3712.300, 3715.550, 3746.064, 3720.850, 3717.300, 3714.10...
+## $ USD  &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+## $ UYU  &lt;dbl&gt; 30.23338, 30.55651, 30.56719, 30.76794, 31.37566, 30.7404...
+## $ UZS  &lt;dbl&gt; 8027.100, 8029.250, 8029.100, 8020.310, 8020.135, 8019.60...
+## $ VEF  &lt;dbl&gt; 69912.50, 69912.50, 69912.50, 69912.50, 69883.34, 69883.3...
+## $ VND  &lt;dbl&gt; 22767.36, 22766.77, 22770.23, 22780.51, 22778.15, 22782.5...
+## $ VUV  &lt;dbl&gt; 107.0735, 108.4802, 107.3500, 108.2952, 108.0551, 108.766...
+## $ WST  &lt;dbl&gt; 2.565650, 2.574691, 2.581428, 2.578285, 2.575346, 2.58203...
+## $ XAF  &lt;dbl&gt; 549.7806, 554.9431, 555.1987, 556.3909, 556.3893, 556.343...
+## $ XAG  &lt;dbl&gt; 0.06048884, 0.06142704, 0.06106884, 0.06087900, 0.0607945...
+## $ XAU  &lt;dbl&gt; 0.00076114, 0.00077354, 0.00077413, 0.00077542, 0.0007732...
+## $ XCD  &lt;dbl&gt; 2.70255, 2.70255, 2.70255, 2.70255, 2.70255, 2.70255, 2.7...
+## $ XDR  &lt;dbl&gt; 0.698285, 0.699230, 0.700721, 0.700729, 0.701027, 0.70102...
+## $ XOF  &lt;dbl&gt; 549.7806, 554.9431, 555.1987, 556.3909, 556.3893, 556.343...
+## $ XPD  &lt;dbl&gt; 0.00100107, 0.00101691, 0.00101383, 0.00101951, 0.0010332...
+## $ XPF  &lt;dbl&gt; 100.0161, 100.9553, 101.0018, 101.2187, 101.2184, 101.210...
+## $ XPT  &lt;dbl&gt; 0.00109773, 0.00111002, 0.00111120, 0.00112297, 0.0011267...
+## $ YER  &lt;dbl&gt; 250.3566, 250.3616, 250.3616, 250.3616, 250.0591, 250.052...
+## $ ZAR  &lt;dbl&gt; 12.33263, 12.57958, 12.43350, 12.60476, 12.77130, 12.7712...
+## $ ZMW  &lt;dbl&gt; 9.900584, 9.969154, 10.054833, 10.117714, 10.151000, 10.1...
+## $ ZWL  &lt;dbl&gt; 322.355, 322.355, 322.355, 322.355, 322.355, 322.355, 322...</code></pre>
+<p><img src="lecture9b_adv_data_files/figure-html/unnamed-chunk-5-1.png" width="288" style="display: block; margin: auto;" /></p>
 <div id="section-your-turn" class="section level3">
 <h3>Your turn</h3>
-<ol style="list-style-type: decimal">
-<li>Set up and execute an SQL query to compute the average science score (using PV1SCIE only)</li>
-<li>Do the same calculation using dplyr functions, followed by the <code>collect()</code> function.</li>
-<li>Are the answers the same?</li>
-<li>Set up and execute an SQL query to compute the average science score, by country</li>
-<li>Plot the average science scores by country as a dot plot. Which country has the lowest average? Highest?</li>
-<li>Compute the average of the plausible science scores for each student, and then select this variable, plus the BELONG (how much the student feels like they belong at school) and country.</li>
-<li>Fit a linear model, across all the countries. Do students score better in science if they report feeling like they belong at school?</li>
-<li>Using the multiple models approach fit a separate linear model for each country. Plot the slope vs intercept for the models. Is the relationship similar for all countries?</li>
-</ol>
+<p>Make some plots (or google) to answer these questions - Is the NZD more similar to AUD, EUR, or JPY? (What currency is NZD?) - Is SGD more similar to AUD, EUR, or JPY? (What currency is SGD?) - How many currencies are there in the British Isles.</p>
 </div>
 </div>
-<div id="section-resources" class="section level2">
-<h2>Resources</h2>
-<ul>
-<li><a href="https://db.rstudio.com/dplyr/">Databases using dplyr</a></li>
-<li><a href="http://www.hafro.is/~einarhj/education/tcrenv2016/posthoc/databases.html">Rams Legacy Stock Assessment Database</a></li>
-</ul>
+<div id="section-pre-processing-data" class="section level2">
+<h2>Pre-processing data</h2>
+<div id="section-keep-only-currencies-that-change-over-the-period" class="section level3">
+<h3>Keep only currencies that change over the period</h3>
+<p>Some currencies don’t change very much. These should be filtered from the analysis, because in a study of currency movement, if it doesn’t move then there is nothing more to be said.</p>
+<p>To filter out these currencies we use a statistic called <a href="https://en.wikipedia.org/wiki/Coefficient_of_variation">coefficient of variation</a>. This measures the standard deviation of a currency relative to its mean. If a mean is high, we would expect a currency to change more, that is, relatively the standard deviation would be larger to consider it to be changing.</p>
+<pre class="r"><code># Compute coefficient of variation. We will only analyse 
+# currencies that have changes substantially over this time.
+# Dates dropped
+cv &lt;- function(x) sd(x)/mean(x)
+s &lt;- ru %&gt;% select(-date) %&gt;%
+  summarise_all(funs(cv)) %&gt;%
+  gather(curr, cv) %&gt;%
+  filter(cv &gt; 0.0027)
+ru_sub &lt;- ru %&gt;% select(s$curr)</code></pre>
+</div>
+<div id="section-remove-currencies-that-are-not-currencies" class="section level3">
+<h3>Remove currencies that are not currencies</h3>
+<p>Some of the currencies, are not really currencies. Google these ones: ALL, XAG, XDR, XPT - what are they?</p>
+<pre class="r"><code># Remove non-currencies
+ru_sub &lt;- ru_sub %&gt;% select(-ALL, -XAG, -XDR, -XPT)</code></pre>
+</div>
+<div id="section-standardize-the-currencies" class="section level3">
+<h3>Standardize the currencies</h3>
+<p>To examine overall trend regardless of actual USD cross rate, standardise the values to have mean 0 and standard deviation 1.</p>
+<pre class="r"><code>scale01 &lt;- function(x) (x-mean(x))/sd(x)
+ru_sub &lt;-  ru_sub %&gt;%
+  mutate_all(funs(scale01)) 
+
+ru_sub_dt &lt;- ru_sub %&gt;% mutate(date=ru$date)
+p1 &lt;- ggplot(ru_sub_dt, aes(x=date, y=AUD)) + geom_line()
+p2 &lt;- ggplot(ru_sub_dt, aes(x=date, y=EUR)) + geom_line()
+p3 &lt;- ggplot(ru_sub_dt, aes(x=date, y=JPY)) + geom_line()
+p4 &lt;- ru_sub_dt %&gt;% select(date, AUD, EUR, JPY) %&gt;%
+  gather(curr, value, -date) %&gt;%
+  ggplot(aes(x=date, y=value, colour=curr, group=curr)) + 
+    geom_line() + theme(legend.position=&quot;none&quot;) +
+  scale_colour_brewer(palette=&quot;Dark2&quot;)
+grid.arrange(p1, p2, p3, p4, ncol=2)</code></pre>
+<p><img src="lecture9b_adv_data_files/figure-html/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="section-compute-distances-between-all-pairs-of-currencies" class="section level3">
+<h3>Compute distances between all pairs of currencies</h3>
+<p>Euclidean distance is used to compute similarity between all pairs of currencies.</p>
+<p><span class="math inline">\(d_{ij} = \sqrt{\sum_{i=1}{t}{(C_{1i}-C_{2i})^2}}\)</span></p>
+<pre class="r"><code># Compute distance between currencies
+# Need to transpose! Turn matrix around, rows &lt;--&gt; columns
+ru_sub_t &lt;- t(ru_sub)
+ru_sub_t &lt;- data.frame(ru_sub_t)
+d &lt;- as.matrix(dist(ru_sub_t, diag=TRUE, upper=TRUE))
+colnames(d) &lt;- as.factor(colnames(ru_sub))
+rownames(d) &lt;- as.factor(colnames(ru_sub))
+quantile(d, probs=c(0, 0.25, 0.5, 0.75, 1))
+##        0%       25%       50%       75%      100% 
+##  0.000000  8.207479 11.046398 14.391574 21.223676</code></pre>
+</div>
+</div>
+<div id="section-make-the-network" class="section level2">
+<h2>Make the network</h2>
+<div id="section-gather-the-data-into-long-form-and-filter-based-on-similarity" class="section level3">
+<h3>Gather the data into long form, and filter based on similarity</h3>
+<p>Here only the pairs of currencies who are closer than “4” to each other are kept.</p>
+<pre class="r"><code>d_zero &lt;- d
+d_zero_tbl &lt;- d_zero %&gt;% 
+  as_tibble() %&gt;%
+  mutate(curr1=rownames(d_zero)) %&gt;%
+  gather(curr2, dst, -curr1) %&gt;%
+  filter(dst&lt;4) %&gt;%
+  filter(curr1 != curr2)</code></pre>
+</div>
+<div id="section-network-laid-out" class="section level3">
+<h3>Network laid out</h3>
+<pre class="r"><code># Make network
+library(geomnet)
+set.seed(10052016)
+ggplot(data = d_zero_tbl, aes(from_id = curr1, to_id = curr2)) +
+  geom_net(layout.alg = &quot;kamadakawai&quot;,
+    size = 2, labelon = TRUE, vjust = -0.6, ecolour = &quot;grey60&quot;,
+    directed =FALSE, fontsize = 3, ealpha = 0.5) +
+    #xlim(c(-0.05, 1.05)) +
+    theme_net() +
+    theme(legend.position = &quot;bottom&quot;)</code></pre>
+<p><img src="lecture9b_adv_data_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#library(plotly)
+#ggplotly()</code></pre>
+</div>
 </div>
 <div id="section-share-and-share-alike" class="section level2">
 <h2>Share and share alike</h2>
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. 
 <script type="application/shiny-prerendered" data-context="server-start">
 library(learnr)
+library(knitr)
 knitr::opts_chunk$set(echo = TRUE,   
                       message = FALSE,
                       warning = FALSE,
@@ -369,7 +440,7 @@ learnr:::register_http_handlers(session, metadata = NULL)
 </script>
  <!--html_preserve-->
 <script type="application/shiny-prerendered" data-context="dependencies">
-{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap-3.3.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cerulean.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["pagedtable"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pagedtable-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/pagedtable.js"]},{"type":"character","attributes":{},"value":["css/pagedtable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["textmate.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-format"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmarkdown/templates/tutorial/resources"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-format.js"]},{"type":"character","attributes":{},"value":["tutorial-format.css","rstudio-theme.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["4.5.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/font-awesome-4.5.0"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["css/font-awesome.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["4.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["localforage"]},{"type":"character","attributes":{},"value":["1.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/localforage"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["localforage.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]}]}
+{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap-3.3.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cerulean.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["pagedtable"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pagedtable-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/pagedtable.js"]},{"type":"character","attributes":{},"value":["css/pagedtable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["textmate.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-format"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmarkdown/templates/tutorial/resources"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-format.js"]},{"type":"character","attributes":{},"value":["tutorial-format.css","rstudio-theme.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["5.0.13"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/fontawesome"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/fontawesome-all.min.js","js/fa-v4-shims.min.js"]},{"type":"character","attributes":{},"value":["css/fa-svg-with-js.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["4.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["localforage"]},{"type":"character","attributes":{},"value":["1.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/localforage"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["localforage.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]}]}
 </script>
 <!--/html_preserve-->
 </div>
@@ -385,6 +456,7 @@ learnr:::register_http_handlers(session, metadata = NULL)
 <!-- begin doc-metadata -->
 <div id="doc-metadata">
 <h2 class="title toc-ignore" style="display:none;">ETC1010: Data Modelling and Computing</h2>
+<h4 class="author"><em>Professor Di Cook, EBS, Monash U.</em></h4>
 </div>
 <!-- end doc-metadata -->
 

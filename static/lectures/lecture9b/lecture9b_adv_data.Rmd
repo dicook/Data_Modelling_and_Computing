@@ -9,6 +9,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(learnr)
+library(knitr)
 knitr::opts_chunk$set(echo = TRUE,   
                       message = FALSE,
                       warning = FALSE,
@@ -27,9 +28,64 @@ library(tidyverse)
 
 This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.dicook.org](http://dmac.dicook.org)
 
+## Recap
+
+To make a network analysis, you need
+
+- an association matrix, that describes how nodes (vertices) are connected to each other
+- a layout algorithm to place the nodes optimally so that the fewest edges cross, or that the nodes that are most closely associated are near to each other.
+
 ## Quantitative association matrices
 
-### Data:  Example: Last 4 months of currency USD cross-rates
+The previous association matrices were black and white: 
+
+![](images/network_data.png)
+
+but you could have the association between nodes described  as real numbers also. For example, these are the number of times that these people called each other in the last week:
+
+```{r echo=FALSE}
+d <- matrix(c(0, 5, 4, 1, 1, 
+              5, 0, 4, 2, 1,
+              4, 4, 0, 0, 0,
+              1, 2, 0, 0, 6,
+              1, 1, 0, 6, 0), ncol=5, byrow=T)
+colnames(d) <- c("Meg", "Tay", "Yat", "Zili", "Jess")
+rownames(d) <- colnames(d)
+kable(d)
+```
+
+We would need to turn this into an edge data set:
+
+```{r echo=FALSE}
+d_edges <- d %>% as_tibble() %>%
+  mutate(from = rownames(d)) %>%
+  gather(to, count, -from)
+d_edges
+```
+
+and then decide what corresponds to a "connection". Let's say, they need to have called each other at least 4 times, to be considered connected.
+
+```{r echo=FALSE}
+d_edges <- d_edges %>% 
+  filter(count>3)
+d_edges
+```
+
+and then we can make the network diagram.
+
+```{r}
+library(geomnet)
+set.seed(1110100)
+ggplot(data = d_edges, aes(from_id = from, to_id = to)) +
+  geom_net(layout.alg = "kamadakawai",
+    size = 2, labelon = TRUE, vjust = -0.6, ecolour = "grey60",
+    directed =FALSE, fontsize = 3, ealpha = 0.5) +
+    theme_net() 
+```
+
+## Data:  Last 4 months of currency USD cross-rates
+
+`r emo::ji("shocked")` SO let's try this with cross-currency rates across the globe!
 
 - Data extracted from http://openexchangerates.org/api/historical
 - R packages `jsonlite`, processed with `tidyverse`, `lubridate`
@@ -37,42 +93,112 @@ This is a link to the course web site, in case you need to go back and forth bet
 ```{r echo=FALSE, fig.width=3, fig.height=2}
 library(tidyverse)
 library(lubridate)
+library(gridExtra)
 ru <- read_csv("data/rates_new.csv")
 ru <- ru %>% arrange(date)
 glimpse(ru)
-ggplot(ru, aes(x=date, y=AUD)) + geom_line()
+p1 <- ggplot(ru, aes(x=date, y=AUD)) + geom_line()
+p2 <- ggplot(ru, aes(x=date, y=EUR)) + geom_line()
+p3 <- ggplot(ru, aes(x=date, y=JPY)) + geom_line()
+p4 <- ru %>% select(date, AUD, EUR, JPY) %>%
+  gather(curr, value, -date) %>%
+  ggplot(aes(x=date, y=value, colour=curr, group=curr)) + 
+    geom_line() + theme(legend.position="none") +
+  scale_colour_brewer(palette="Dark2")
+grid.arrange(p1, p2, p3, p4, ncol=2)
 ```
 
-```{r echo=FALSE, fig.width=3, fig.height=2}
+### Your turn
+
+Make some plots (or google) to answer these questions
+- Is the NZD more similar to AUD, EUR, or JPY? (What currency is NZD?)
+- Is SGD more similar to AUD, EUR, or JPY? (What currency is SGD?)
+- How many currencies are there in the British Isles. 
+
+## Pre-processing data
+
+### Keep only currencies that change over the period
+
+Some currencies don't change very much. These should be filtered from the analysis, because in a study of currency movement, if it doesn't move then there is nothing more to be said. 
+
+To filter out these currencies we use a statistic called [coefficient of variation](https://en.wikipedia.org/wiki/Coefficient_of_variation). This measures the standard deviation of a currency relative to its mean. If a mean is high, we would expect a currency to change more, that is, relatively the standard deviation would be larger to consider it to be changing.  
+
+```{r fig.width=3, fig.height=2}
 # Compute coefficient of variation. We will only analyse 
 # currencies that have changes substantially over this time.
 # Dates dropped
-s <- apply(ru[,-1], 2, function(x) sd(x)/mean(x))
-ru_sub <- ru[,which(s>0.005)+1]
+cv <- function(x) sd(x)/mean(x)
+s <- ru %>% select(-date) %>%
+  summarise_all(funs(cv)) %>%
+  gather(curr, cv) %>%
+  filter(cv > 0.0027)
+ru_sub <- ru %>% select(s$curr)
+```
 
+### Remove currencies that are not currencies
+
+Some of the currencies, are not really currencies. Google these ones: ALL, XAG, XDR, XPT - what are they?
+
+```{r}
 # Remove non-currencies
 ru_sub <- ru_sub %>% select(-ALL, -XAG, -XDR, -XPT)
-ru_sub <- apply(ru_sub, 2, function(x) (x-mean(x))/sd(x))
-ru_sub_t <- t(ru_sub)
-ru_sub_t <- data.frame(ru_sub_t)
-#ru_sub_t$curr <- as.factor(colnames(ru_sub)) # Add currency names
 ```
+
+### Standardize the currencies
+
+To examine overall trend regardless of actual USD cross rate, standardise the values to have mean 0 and standard deviation 1.
+
+```{r}
+scale01 <- function(x) (x-mean(x))/sd(x)
+ru_sub <-  ru_sub %>%
+  mutate_all(funs(scale01)) 
+
+ru_sub_dt <- ru_sub %>% mutate(date=ru$date)
+p1 <- ggplot(ru_sub_dt, aes(x=date, y=AUD)) + geom_line()
+p2 <- ggplot(ru_sub_dt, aes(x=date, y=EUR)) + geom_line()
+p3 <- ggplot(ru_sub_dt, aes(x=date, y=JPY)) + geom_line()
+p4 <- ru_sub_dt %>% select(date, AUD, EUR, JPY) %>%
+  gather(curr, value, -date) %>%
+  ggplot(aes(x=date, y=value, colour=curr, group=curr)) + 
+    geom_line() + theme(legend.position="none") +
+  scale_colour_brewer(palette="Dark2")
+grid.arrange(p1, p2, p3, p4, ncol=2)
+```
+
+### Compute distances between all pairs of currencies
+
+Euclidean distance is used to compute similarity between all pairs of currencies. 
+
+$d_{ij} = \sqrt{\sum_{i=1}{t}{(C_{1i}-C_{2i})^2}}$
 
 ```{r}
 # Compute distance between currencies
+# Need to transpose! Turn matrix around, rows <--> columns
+ru_sub_t <- t(ru_sub)
+ru_sub_t <- data.frame(ru_sub_t)
 d <- as.matrix(dist(ru_sub_t, diag=TRUE, upper=TRUE))
 colnames(d) <- as.factor(colnames(ru_sub))
 rownames(d) <- as.factor(colnames(ru_sub))
 quantile(d, probs=c(0, 0.25, 0.5, 0.75, 1))
+```
+
+## Make the network
+
+### Gather the data into long form, and filter based on similarity
+
+Here only the pairs of currencies who are closer than "4" to each other are kept. 
+
+```{r}
 d_zero <- d
-#d_zero[d>7] <- 0
 d_zero_tbl <- d_zero %>% 
   as_tibble() %>%
   mutate(curr1=rownames(d_zero)) %>%
   gather(curr2, dst, -curr1) %>%
-  filter(dst<3) %>%
+  filter(dst<4) %>%
   filter(curr1 != curr2)
 ```
+
+### Network laid out
 
 ```{r}
 # Make network
@@ -85,7 +211,10 @@ ggplot(data = d_zero_tbl, aes(from_id = curr1, to_id = curr2)) +
     #xlim(c(-0.05, 1.05)) +
     theme_net() +
     theme(legend.position = "bottom")
+#library(plotly)
+#ggplotly()
 ```
+
 
 ## Share and share alike
 
