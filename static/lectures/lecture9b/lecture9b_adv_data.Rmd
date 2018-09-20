@@ -114,7 +114,7 @@ Make some plots (or google) to answer these questions
 
 - Is the NZD more similar to AUD, EUR, or JPY? (What currency is NZD?)
 - Is SGD more similar to AUD, EUR, or JPY? (What currency is SGD?)
-- How many currencies are there in the British Isles. 
+- How many currencies are there in the British Isles? 
 
 ## Pre-processing data
 
@@ -307,6 +307,7 @@ ggplot(twss_df, aes(x=k, y=twss)) + geom_line()
 
 - Fit the $k=6$ cluster $k$-means model
 - Plot the solution, the time series of the currencies that belong to each of the 6 clusters.
+
 
 ## Share and share alike
 
