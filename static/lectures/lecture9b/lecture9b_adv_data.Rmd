@@ -85,18 +85,18 @@ ggplot(data = d_edges, aes(from_id = from, to_id = to)) +
 
 ## Data:  Last 4 months of currency USD cross-rates
 
-`r emo::ji("shocked")` SO let's try this with cross-currency rates across the globe!
+`r set.seed(7);emo::ji("shocked")` SO let's try this with cross-currency rates across the globe!
 
 - Data extracted from http://openexchangerates.org/api/historical
 - R packages `jsonlite`, processed with `tidyverse`, `lubridate`
 
-```{r echo=FALSE, fig.width=3, fig.height=2}
+```{r echo=FALSE, fig.width=5, fig.height=5}
 library(tidyverse)
 library(lubridate)
 library(gridExtra)
 ru <- read_csv("data/rates_new.csv")
 ru <- ru %>% arrange(date)
-glimpse(ru)
+ru %>% head()
 p1 <- ggplot(ru, aes(x=date, y=AUD)) + geom_line()
 p2 <- ggplot(ru, aes(x=date, y=EUR)) + geom_line()
 p3 <- ggplot(ru, aes(x=date, y=JPY)) + geom_line()
@@ -111,6 +111,7 @@ grid.arrange(p1, p2, p3, p4, ncol=2)
 ### Your turn
 
 Make some plots (or google) to answer these questions
+
 - Is the NZD more similar to AUD, EUR, or JPY? (What currency is NZD?)
 - Is SGD more similar to AUD, EUR, or JPY? (What currency is SGD?)
 - How many currencies are there in the British Isles. 
@@ -123,7 +124,7 @@ Some currencies don't change very much. These should be filtered from the analys
 
 To filter out these currencies we use a statistic called [coefficient of variation](https://en.wikipedia.org/wiki/Coefficient_of_variation). This measures the standard deviation of a currency relative to its mean. If a mean is high, we would expect a currency to change more, that is, relatively the standard deviation would be larger to consider it to be changing.  
 
-```{r fig.width=3, fig.height=2}
+```{r fig.width=5, fig.height=5}
 # Compute coefficient of variation. We will only analyse 
 # currencies that have changes substantially over this time.
 # Dates dropped
@@ -169,7 +170,7 @@ grid.arrange(p1, p2, p3, p4, ncol=2)
 
 Euclidean distance is used to compute similarity between all pairs of currencies. 
 
-$d_{ij} = \sqrt{\sum_{i=1}{t}{(C_{1i}-C_{2i})^2}}$
+$d_{ij} = \sqrt{\sum_{i=1}^{t}{(C_{1i}-C_{2i})^2}}$
 
 ```{r}
 # Compute distance between currencies
@@ -211,10 +212,11 @@ ggplot(data = d_zero_tbl, aes(from_id = curr1, to_id = curr2)) +
     #xlim(c(-0.05, 1.05)) +
     theme_net() +
     theme(legend.position = "bottom")
-#library(plotly)
-#ggplotly()
 ```
 
+### Your turn
+
+Make a plot of the AUD vs the SGD (using the standardised units). Do they look like they are trending together as suggested by the network?
 
 ## Share and share alike
 
