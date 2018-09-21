@@ -116,6 +116,14 @@ Make some plots (or google) to answer these questions
 - Is SGD more similar to AUD, EUR, or JPY? (What currency is SGD?)
 - How many currencies are there in the British Isles? 
 
+```{r}
+p1 <- ggplot(ru, aes(x=date, y=AUD)) + geom_line()
+p2 <- ggplot(ru, aes(x=date, y=EUR)) + geom_line()
+p3 <- ggplot(ru, aes(x=date, y=JPY)) + geom_line()
+p4 <- ggplot(ru, aes(x=date, y=SGD)) + geom_line()
+grid.arrange(p1, p2, p3, p4, ncol=2)
+```
+
 ## Pre-processing data
 
 ### Keep only currencies that change over the period
@@ -197,7 +205,7 @@ d_zero_tbl <- d_zero %>%
   as_tibble() %>%
   mutate(curr1=rownames(d_zero)) %>%
   gather(curr2, dst, -curr1) %>%
-  filter(dst<4) %>%
+  filter(dst<3) %>%
   filter(curr1 != curr2)
 ```
 
@@ -219,6 +227,18 @@ ggplot(data = d_zero_tbl, aes(from_id = curr1, to_id = curr2)) +
 ### Your turn
 
 Make a plot of the AUD vs the SGD (using the standardised units). Do they look like they are trending together as suggested by the network?
+
+```{r eval=FALSE}
+p1 <- ggplot(ru_sub_dt, aes(x=date, y=AUD)) + geom_line()
+p2 <- ggplot(ru_sub_dt, aes(x=date, y=SGD)) + geom_line()
+p3 <- ggplot(ru_sub_dt, aes(x=date, y=NZD)) + geom_line()
+p4 <- ru_sub_dt %>% select(date, AUD, SGD, NZD) %>%
+  gather(curr, value, -date) %>%
+  ggplot(aes(x=date, y=value, colour=curr, group=curr)) + 
+    geom_line() + #theme(legend.position="none") +
+  scale_colour_brewer(palette="Dark2")
+grid.arrange(p1, p2, p3, p4, ncol=2)
+```
 
 ## Cluster analysis
 
@@ -258,8 +278,8 @@ kmeans.ani(x = cbind(X1 = runif(100), X2 = runif(100)), centers = 5,
 We will choose to divide the currencies into four groups. 
 
 ```{r}
-k <- 4
-cntrs <- ru_sub_t[1:4,]
+k <- 6
+cntrs <- ru_sub_t[1:6,]
 ru_km <- kmeans(ru_sub_t, cntrs, iter.max=50, nstart=5)
 sort(ru_km$cluster)
 ```
