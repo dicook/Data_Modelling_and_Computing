@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<meta name="progressive" content="false" />
+<meta name="allow-skip" content="false" />
+
+<title>ETC1010: Data Modelling and Computing</title>
+
+
+<!-- highlightjs -->
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+<link rel="stylesheet" href="css/logo.css" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+<div class="pageContent band">
+<div class="bandContent page">
+
+<div class="topics">
+
+<div id="section-regression-and-decision-trees" class="section level1">
+<h1>Regression (and decision) trees</h1>
+<div id="section-course-web-site" class="section level2">
+<h2>Course web site</h2>
+<p>This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: <a href="http://dmac.dicook.org" class="uri">http://dmac.dicook.org</a></p>
+</div>
+<div id="section-overview" class="section level2">
+<h2>Overview</h2>
+<ul>
+<li>What is a regression tree?</li>
+<li>How is it computed?</li>
+<li>Deciding when its a good fit</li>
+<li>Comparison with linear models</li>
+<li>How a classification tree differs from a regression tree?</li>
+</ul>
+</div>
+<div id="section-regression-trees" class="section level2">
+<h2>Regression trees</h2>
+<ul>
+<li>Regression trees recursively partition the data, and use the average response value of each partition as the model estimate</li>
+<li>It is a computationally intensive technique, involves examining ALL POSSIBLE partitions.</li>
+<li>The BEST partition by optimizing some criteria</li>
+<li>For regression, with a quantitative response variable, the criteria is called ANOVA:</li>
+</ul>
+<p><span class="math display">\[SS_T-(SS_L+SS_R)\]</span> where <span class="math inline">\(SS_T = \sum (y_i-\bar{y})^2\)</span>, and <span class="math inline">\(SS_L, SS_R\)</span> are the equivalent values for the two subsets created by partitioning.</p>
+</div>
+<div id="section-example" class="section level2">
+<h2>Example</h2>
+<p>Here’s a synthetic data set for illustration. Just making up a function to simulate some data to play with.</p>
+<pre class="r"><code>set.seed(900)
+x=sort(runif(100)-0.5)
+df &lt;- data.frame(x, y=10*c(x[1:50]^2, x[51:75]*2, -x[76:100]^2)+rnorm(100)*0.5)
+ggplot(df, aes(x=x, y=y)) + geom_point()</code></pre>
+<p><img src="lecture10a_trees_files/figure-html/unnamed-chunk-1-1.png" width="576" style="display: block; margin: auto;" /></p>
+<div id="section-model-fit" class="section level3">
+<h3>Model fit</h3>
+<pre class="r"><code>library(rpart)
+df_rp &lt;- rpart(y~x, data=df)
+df_rp
+## n= 100 
+## 
+## node), split, n, deviance, yval
+##       * denotes terminal node
+## 
+##  1) root 100 178.702600  0.44663870  
+##    2) x&gt;=0.1938643 24  11.570180 -1.18844700  
+##      4) x&gt;=0.3936632 8   1.198382 -1.91068800 *
+##      5) x&lt; 0.3936632 16   4.112218 -0.82732700 *
+##    3) x&lt; 0.1938643 76  82.705890  0.96298160  
+##      6) x&gt;=-0.3618574 58  53.543780  0.65985860  
+##       12) x&lt; 0.05045892 47  25.184950  0.37691520  
+##         24) x&gt;=-0.2610339 32  13.289350  0.06655512  
+##           48) x&gt;=-0.07853794 15  10.253730 -0.19625610 *
+##           49) x&lt; -0.07853794 17   1.085414  0.29844730 *
+##         25) x&lt; -0.2610339 15   2.237574  1.03901700 *
+##       13) x&gt;=0.05045892 11   8.519258  1.86879900 *
+##      7) x&lt; -0.3618574 18   6.660848  1.93971100 *</code></pre>
+<p>😱 Aagh, that’s horrible!</p>
+<p>🤷 Nah, its really simple!</p>
+</div>
+<div id="section-plot-the-model" class="section level3">
+<h3>Plot the model</h3>
+<pre class="r"><code>library(rpart.plot)
+rpart.plot(df_rp)</code></pre>
+<p><img src="lecture10a_trees_files/figure-html/unnamed-chunk-3-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="section-plot-the-model-on-the-data" class="section level3">
+<h3>Plot the model on the data</h3>
+<p>This is how the data is split:</p>
+<pre class="r"><code>library(viridis)
+splt &lt;- as_tibble(df_rp$splits)
+splt &lt;- splt %&gt;% mutate(order=1:nrow(splt)) %&gt;%
+   select(index, order)
+ggplot(df, aes(x=x, y=y)) + geom_point() +
+  geom_vline(data=splt, aes(xintercept = index, colour=factor(order)), 
+             linetype=2) + 
+  geom_text(data=splt, aes(x=index, y=max(df$y), label=order), nudge_x=0.02) +
+  scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1)) +
+  scale_colour_viridis_d() +
+  theme_bw() +
+  theme(legend.position=&quot;none&quot;)</code></pre>
+<p><img src="lecture10a_trees_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>This is how the model looks:</p>
+<pre class="r"><code>df &lt;- df %&gt;% 
+  mutate(bucket = cut(x, breaks=c(min(x)-0.1, splt$index, max(x)))) 
+df_pred &lt;- df %&gt;% 
+  group_by(bucket) %&gt;%
+  mutate(pred = mean(y)) %&gt;%
+  arrange(x)
+ggplot(df_pred) + 
+  geom_point(aes(x=x, y=y)) +
+  geom_line(aes(x=x, y=pred), colour=&quot;hotpink&quot;, size=1.5) +
+    geom_vline(data=splt, aes(xintercept = index, colour=factor(order)), 
+             linetype=2) + 
+  scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1)) +
+  scale_colour_viridis_d() +
+  theme_bw() +
+  theme(legend.position=&quot;none&quot;)</code></pre>
+<p><img src="lecture10a_trees_files/figure-html/unnamed-chunk-5-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="section-stopping-rules" class="section level2">
+<h2>Stopping rules</h2>
+<ul>
+<li>Its an algorithm. Why did it stop at 7 groups?</li>
+<li>Stopping rules ar needed, else the algorithm will keep fitting until every observartion is in its own group.</li>
+<li>Control parameters set stopping points:</li>
+<li>minsplit: minimum number of points in a node that algorithm is allowed to split</li>
+<li>minbucket: minimum number of points in a terminal node</li>
+<li>In addition, we can also look at the change in value of <span class="math inline">\(SS_T-(SS_L+SS_R)\)</span> at each split, and if the change is too <em>small</em>, stop. To decide on a suitable value for <em>small</em> a cross-validation procedure is used.</li>
+</ul>
+<p>Below are the controls for the fit on the example data:</p>
+<pre class="r"><code>str(df_rp$control)
+## List of 9
+##  $ minsplit      : int 20
+##  $ minbucket     : num 7
+##  $ cp            : num 0.01
+##  $ maxcompete    : int 4
+##  $ maxsurrogate  : int 5
+##  $ usesurrogate  : int 2
+##  $ surrogatestyle: int 0
+##  $ maxdepth      : int 30
+##  $ xval          : int 10</code></pre>
+<p>If you change these options and re-fit, the model will change. Here we reduce the <code>minbucket</code> parameter.</p>
+<pre class="r"><code>df_rp &lt;- rpart(y~x, data=df, 
+  control = rpart.control(minsplit=10))
+df_rp
+## n= 100 
+## 
+## node), split, n, deviance, yval
+##       * denotes terminal node
+## 
+##  1) root 100 178.7026000  0.44663870  
+##    2) x&gt;=0.1938643 24  11.5701800 -1.18844700  
+##      4) x&gt;=0.3936632 8   1.1983820 -1.91068800 *
+##      5) x&lt; 0.3936632 16   4.1122180 -0.82732700 *
+##    3) x&lt; 0.1938643 76  82.7058900  0.96298160  
+##      6) x&gt;=-0.3618574 58  53.5437800  0.65985860  
+##       12) x&lt; 0.05045892 47  25.1849500  0.37691520  
+##         24) x&gt;=-0.2610339 32  13.2893500  0.06655512  
+##           48) x&gt;=-0.07853794 15  10.2537300 -0.19625610  
+##             96) x&lt; -0.008211745 7   2.5846810 -0.86324340 *
+##             97) x&gt;=-0.008211745 8   1.8301040  0.38735790 *
+##           49) x&lt; -0.07853794 17   1.0854140  0.29844730 *
+##         25) x&lt; -0.2610339 15   2.2375740  1.03901700 *
+##       13) x&gt;=0.05045892 11   8.5192580  1.86879900  
+##         26) x&lt; 0.09397898 4   0.4662844  1.22369400 *
+##         27) x&gt;=0.09397898 7   5.4371120  2.23743000 *
+##      7) x&lt; -0.3618574 18   6.6608480  1.93971100  
+##       14) x&gt;=-0.456696 11   0.8822070  1.56037400 *
+##       15) x&lt; -0.456696 7   1.7084100  2.53581300 *</code></pre>
+<p>which yields a more complex model.</p>
+<pre class="r"><code>df_pred2 &lt;- df %&gt;% 
+  mutate(pred = predict(df_rp, df))
+p1 &lt;- ggplot(df_pred) + 
+  geom_point(aes(x=x, y=y)) +
+  geom_line(aes(x=x, y=pred), colour=&quot;hotpink&quot;, size=1.5) +
+  scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1)) +
+  theme_bw() + ggtitle(&quot;Old model&quot;)
+p2 &lt;- ggplot(df_pred2) + 
+  geom_point(aes(x=x, y=y)) +
+  geom_line(aes(x=x, y=pred), colour=&quot;orange&quot;, size=1.5) +
+  scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1)) +
+  theme_bw() + ggtitle(&quot;New model&quot;)
+grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="lecture10a_trees_files/figure-html/unnamed-chunk-8-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<div id="section-whats-computed" class="section level2">
+<h2>What’s computed?</h2>
+<p>Illustration showing the calculations made to decide on the first partition.</p>
+<pre class="r"><code>sst &lt;- var(df$y)*(nrow(df)-1)
+compute_anova &lt;- function(left, right) {
+  ssl &lt;- var(left$y)*(nrow(left)-1)
+  if (nrow(left) == 1)
+    ssl &lt;- 1
+  ssr &lt;- var(right$y)*(nrow(right)-1)
+  if (nrow(right) == 1)
+    ssr &lt;- 1
+  av &lt;- sst - (ssl+ssr)
+  return(av)
+}
+aov_f &lt;- data.frame(x=df$x[-1], f=df$y[-1])
+for (i in 2:nrow(df)) {
+  left &lt;- df[1:(i-1),]
+  right &lt;- df[i:nrow(df),]
+  aov_f$x[i-1] &lt;- mean(df$x[c(i-1, i)])
+  aov_f$f[i-1] &lt;- compute_anova(left, right)
+}
+p1 &lt;- ggplot(df, aes(x=x, y=y)) + geom_point(alpha=0.5) + scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1))
+p2 &lt;- ggplot(data=aov_f) +
+  geom_line(aes(x=x, y=f), colour=&quot;hotpink&quot;) +
+    geom_vline(xintercept = df_rp$splits[1,4], colour=&quot;hotpink&quot;, linetype=2)
+grid.arrange(p1, p2, ncol=1)</code></pre>
+<p><img src="lecture10a_trees_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="section-residuals" class="section level2">
+<h2>Residuals</h2>
+<pre class="r"><code>df_rp &lt;- rpart(y~x, data=df)
+df_rp_aug &lt;- cbind(df, e=residuals(df_rp))
+ggplot(df_rp_aug, aes(x=x, y=e)) + geom_point() +
+  ylab(&quot;residuals&quot;) + scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1))</code></pre>
+<p><img src="lecture10a_trees_files/figure-html/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="section-goodness-of-fit" class="section level2">
+<h2>Goodness of fit</h2>
+<pre class="r"><code>gof &lt;- printcp(df_rp, digits=3)
+## 
+## Regression tree:
+## rpart(formula = y ~ x, data = df)
+## 
+## Variables actually used in tree construction:
+## [1] x
+## 
+## Root node error: 179/100 = 1.79
+## 
+## n= 100 
+## 
+##       CP nsplit rel error xerror   xstd
+## 1 0.4724      0     1.000  1.023 0.1239
+## 2 0.1259      1     0.528  0.566 0.0840
+## 3 0.1110      2     0.402  0.525 0.0795
+## 4 0.0540      3     0.291  0.431 0.0641
+## 5 0.0350      4     0.237  0.359 0.0605
+## 6 0.0109      5     0.202  0.307 0.0553
+## 7 0.0100      6     0.191  0.303 0.0553</code></pre>
+<p>The relative error is <span class="math inline">\(1-R^2\)</span>. For this example, after 6 splits it is 0.2015507. So <span class="math inline">\(R^2=\)</span> 0.7984493.</p>
+<pre class="r"><code>1-sum(df_rp_aug$e^2)/sum((df$y-mean(df$y))^2)</code></pre>
+</div>
+<div id="section-strengths-and-weaknesses" class="section level2">
+<h2>Strengths and weaknesses</h2>
+<ul>
+<li>There are no parametric assumptions underlying partitioning methods</li>
+<li>Also means that there is not a nice formula for the model as a result, or inference about populations available</li>
+<li>By minimizing sum of squares (ANOVA) we are forcing the partitions to have relatively equal variance. The method could be influenced by outliers, but it would be isolating the effect to one partition.</li>
+<li>Because it operates on single variables, it can efficiently handle missing values.</li>
+</ul>
+</div>
+<div id="section-your-turn" class="section level2">
+<h2>Your turn</h2>
+<p>Here is a small data set. Manually compute a regression tree model for the data. Sketch the model.</p>
+<pre class="r"><code>d &lt;- tibble(x=c(1, 2, 3, 4, 5), y=c(10, 12, 5, 4, 3))
+d</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["x"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["y"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"10"},{"1":"2","2":"12"},{"1":"3","2":"5"},{"1":"4","2":"4"},{"1":"5","2":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="section-lab-exercise" class="section level2">
+<h2>Lab exercise</h2>
+<ul>
+<li>OECD PISA, what factors affect reading scores?</li>
+<li>15 year old standardised test scores, Australia, 2015</li>
+<li>Response: math</li>
+<li><p>Predictors: gender, ANXTEST, PARED, JOYSCIE, WEALTH, nbooks, ntvs</p></li>
+<li><p>Make a plot of all the variables</p></li>
+</ul>
+<pre class="r"><code>p1 &lt;- ggplot(pisa_au_nomiss, aes(x=gender, y=math)) +
+  geom_boxplot() 
+p2 &lt;- ggplot(pisa_au_nomiss, aes(x=ANXTEST, y=math)) +
+  geom_point()
+p3 &lt;- ggplot(pisa_au_nomiss, aes(x=WEALTH, y=math)) +
+  geom_point()
+p4 &lt;- ggplot(pisa_au_nomiss, aes(x=factor(PARED), y=math)) +
+  geom_boxplot() 
+p5 &lt;- ggplot(pisa_au_nomiss, aes(x=factor(nbooks), y=math)) +
+  geom_boxplot() 
+p6 &lt;- ggplot(pisa_au_nomiss, aes(x=factor(ntvs), y=math)) +
+  geom_boxplot() 
+grid.arrange(p1, p2, p3, p4, p5, p6, ncol=3)</code></pre>
+<ul>
+<li>Fit a linear model</li>
+</ul>
+<pre class="r"><code>load(&quot;pisa_au_nomiss.rda&quot;)
+pisa_lm &lt;- lm(math~gender+ANXTEST+PARED+JOYSCIE+WEALTH+nbooks+ntvs, data=pisa_au_nomiss, weights=W_FSTUWT)
+summary(pisa_lm)</code></pre>
+<ul>
+<li>Fit a regression tree</li>
+</ul>
+<pre class="r"><code>pisa_rp &lt;- rpart(math~gender+ANXTEST+PARED+JOYSCIE+WEALTH+nbooks+ntvs, data=pisa_au_nomiss, weights=W_FSTUWT)
+pisa_rp</code></pre>
+<pre class="r"><code>rpart.plot(pisa_rp)</code></pre>
+<ul>
+<li>What is the most important variable</li>
+</ul>
+<pre class="r"><code>ggplot(pisa_au_nomiss, aes(x=JOYSCIE, y=math)) +
+  geom_point() + geom_vline(xintercept=-0.1626, colour=&quot;hotpink&quot;)</code></pre>
+</div>
+<div id="section-share-and-share-alike" class="section level2">
+<h2>Share and share alike</h2>
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. 
+<script type="application/shiny-prerendered" data-context="server-start">
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 6,
+                      fig.width = 6,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+library(tidyverse)
+library(gridExtra)
+library(plotly)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::register_http_handlers(session, metadata = NULL)
+</script>
+ <!--html_preserve-->
+<script type="application/shiny-prerendered" data-context="dependencies">
+{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap-3.3.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cerulean.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["pagedtable"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pagedtable-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/pagedtable.js"]},{"type":"character","attributes":{},"value":["css/pagedtable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["textmate.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-format"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmarkdown/templates/tutorial/resources"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-format.js"]},{"type":"character","attributes":{},"value":["tutorial-format.css","rstudio-theme.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery-1.11.3"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["5.0.13"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/fontawesome"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/fontawesome-all.min.js","js/fa-v4-shims.min.js"]},{"type":"character","attributes":{},"value":["css/fa-svg-with-js.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["4.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["localforage"]},{"type":"character","attributes":{},"value":["1.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/localforage"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["localforage.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.9.2.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]}]}]}
+</script>
+<!--/html_preserve-->
+</div>
+</div>
+
+</div> <!-- topics -->
+
+<div class="topicsContainer">
+<div class="topicsPositioner">
+<div class="band">
+<div class="bandContent topicsListContainer">
+
+<!-- begin doc-metadata -->
+<div id="doc-metadata">
+<h2 class="title toc-ignore" style="display:none;">ETC1010: Data Modelling and Computing</h2>
+</div>
+<!-- end doc-metadata -->
+
+</div> <!-- bandContent.topicsListContainer -->
+</div> <!-- band -->
+</div> <!-- topicsPositioner -->
+</div> <!-- topicsContainer -->
+
+
+</div> <!-- bandContent page -->
+</div> <!-- pageContent band -->
+
+
+
+
+<script>
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+
+</html>

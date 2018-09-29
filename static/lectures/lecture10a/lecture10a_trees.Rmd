@@ -1,0 +1,281 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 6,
+                      fig.width = 6,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+library(tidyverse)
+library(gridExtra)
+library(plotly)
+```
+
+# Regression (and decision) trees
+
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.dicook.org](http://dmac.dicook.org)
+
+## Overview
+
+- What is a regression tree?
+- How is it computed?
+- Deciding when its a good fit
+- Comparison with linear models
+- How a classification tree differs from a regression tree?
+
+## Regression trees
+
+- Regression trees recursively partition the data, and use the average response value of each partition as the model estimate
+- It is a computationally intensive technique, involves examining ALL POSSIBLE partitions. 
+- The BEST partition by optimizing some criteria
+- For regression, with a quantitative response variable, the criteria is called ANOVA:
+
+$$SS_T-(SS_L+SS_R)$$
+where $SS_T = \sum (y_i-\bar{y})^2$, and $SS_L, SS_R$ are the equivalent values for the two subsets created by partitioning.
+
+## Example
+
+Here's a synthetic data set for illustration. Just making up a function to simulate some data to play with.
+
+```{r}
+set.seed(900)
+x=sort(runif(100)-0.5)
+df <- data.frame(x, y=10*c(x[1:50]^2, x[51:75]*2, -x[76:100]^2)+rnorm(100)*0.5)
+ggplot(df, aes(x=x, y=y)) + geom_point()
+```
+
+### Model fit
+
+```{r echo=TRUE}
+library(rpart)
+df_rp <- rpart(y~x, data=df)
+df_rp
+```
+
+`r emo::ji("scream")` Aagh, that's horrible!
+
+`r emo::ji("shrug")` Nah, its really simple!
+
+### Plot the model
+
+```{r}
+library(rpart.plot)
+rpart.plot(df_rp)
+```
+
+### Plot the model on the data
+
+This is how the data is split:
+
+```{r}
+library(viridis)
+splt <- as_tibble(df_rp$splits)
+splt <- splt %>% mutate(order=1:nrow(splt)) %>%
+   select(index, order)
+ggplot(df, aes(x=x, y=y)) + geom_point() +
+  geom_vline(data=splt, aes(xintercept = index, colour=factor(order)), 
+             linetype=2) + 
+  geom_text(data=splt, aes(x=index, y=max(df$y), label=order), nudge_x=0.02) +
+  scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1)) +
+  scale_colour_viridis_d() +
+  theme_bw() +
+  theme(legend.position="none")
+```
+
+This is how the model looks:
+
+```{r}
+df <- df %>% 
+  mutate(bucket = cut(x, breaks=c(min(x)-0.1, splt$index, max(x)))) 
+df_pred <- df %>% 
+  group_by(bucket) %>%
+  mutate(pred = mean(y)) %>%
+  arrange(x)
+ggplot(df_pred) + 
+  geom_point(aes(x=x, y=y)) +
+  geom_line(aes(x=x, y=pred), colour="hotpink", size=1.5) +
+    geom_vline(data=splt, aes(xintercept = index, colour=factor(order)), 
+             linetype=2) + 
+  scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1)) +
+  scale_colour_viridis_d() +
+  theme_bw() +
+  theme(legend.position="none")
+```
+
+## Stopping rules
+
+- Its an algorithm. Why did it stop at 7 groups?
+- Stopping rules ar needed, else the algorithm will keep fitting until every observartion is in its own group.
+- Control parameters set stopping points:
+   + minsplit: minimum number of points in a node that algorithm is allowed to split
+   + minbucket: minimum number of points in a terminal node
+- In addition, we can also look at the change in value of $SS_T-(SS_L+SS_R)$ at each split, and if the change is too *small*, stop. To decide on a suitable value for *small* a cross-validation procedure is used.
+
+Below are the controls for the fit on the example data:
+
+```{r}
+str(df_rp$control)
+```
+
+If you change these options and re-fit, the model will change. Here we reduce the `minbucket` parameter. 
+
+```{r echo=TRUE}
+df_rp <- rpart(y~x, data=df, 
+  control = rpart.control(minsplit=10))
+df_rp
+```
+
+which yields a more complex model.
+
+```{r fig.width=8}
+df_pred2 <- df %>% 
+  mutate(pred = predict(df_rp, df))
+p1 <- ggplot(df_pred) + 
+  geom_point(aes(x=x, y=y)) +
+  geom_line(aes(x=x, y=pred), colour="hotpink", size=1.5) +
+  scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1)) +
+  theme_bw() + ggtitle("Old model")
+p2 <- ggplot(df_pred2) + 
+  geom_point(aes(x=x, y=y)) +
+  geom_line(aes(x=x, y=pred), colour="orange", size=1.5) +
+  scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1)) +
+  theme_bw() + ggtitle("New model")
+grid.arrange(p1, p2, ncol=2)
+```
+
+## What's computed?
+
+Illustration showing the calculations made to decide on the first partition.
+
+```{r}
+sst <- var(df$y)*(nrow(df)-1)
+compute_anova <- function(left, right) {
+  ssl <- var(left$y)*(nrow(left)-1)
+  if (nrow(left) == 1)
+    ssl <- 1
+  ssr <- var(right$y)*(nrow(right)-1)
+  if (nrow(right) == 1)
+    ssr <- 1
+  av <- sst - (ssl+ssr)
+  return(av)
+}
+aov_f <- data.frame(x=df$x[-1], f=df$y[-1])
+for (i in 2:nrow(df)) {
+  left <- df[1:(i-1),]
+  right <- df[i:nrow(df),]
+  aov_f$x[i-1] <- mean(df$x[c(i-1, i)])
+  aov_f$f[i-1] <- compute_anova(left, right)
+}
+p1 <- ggplot(df, aes(x=x, y=y)) + geom_point(alpha=0.5) + scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1))
+p2 <- ggplot(data=aov_f) +
+  geom_line(aes(x=x, y=f), colour="hotpink") +
+    geom_vline(xintercept = df_rp$splits[1,4], colour="hotpink", linetype=2)
+grid.arrange(p1, p2, ncol=1)
+```
+
+## Residuals
+
+```{r}
+df_rp <- rpart(y~x, data=df)
+df_rp_aug <- cbind(df, e=residuals(df_rp))
+ggplot(df_rp_aug, aes(x=x, y=e)) + geom_point() +
+  ylab("residuals") + scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1))
+```
+
+## Goodness of fit
+
+```{r echo=TRUE}
+gof <- printcp(df_rp, digits=3)
+```
+
+The relative error is $1-R^2$. For this example, after 6 splits it is `r gof[6,3]`. So $R^2=$ `r 1-gof[6,3]`. 
+
+```{r eval=FALSE}
+1-sum(df_rp_aug$e^2)/sum((df$y-mean(df$y))^2)
+```
+
+## Strengths and weaknesses
+
+- There are no parametric assumptions underlying partitioning methods
+- Also means that there is not a nice formula for the model as a result, or inference about populations available
+- By minimizing sum of squares (ANOVA) we are forcing the partitions to have relatively equal variance. The method could be influenced by outliers, but it would be isolating the effect to one partition.
+- Because it operates on single variables, it can efficiently handle missing values. 
+
+## Your turn
+
+Here is a small data set. Manually compute a regression tree model for the data. Sketch the model.
+
+```{r}
+d <- tibble(x=c(1, 2, 3, 4, 5), y=c(10, 12, 5, 4, 3))
+d
+```
+
+## Lab exercise
+
+- OECD PISA, what factors affect reading scores?
+- 15 year old standardised test scores, Australia, 2015
+- Response: math
+- Predictors: gender, ANXTEST, PARED, JOYSCIE, WEALTH, nbooks, ntvs
+
+- Make a plot of all the variables
+
+```{r fig.width=12, fig.height=6, eval=FALSE}
+p1 <- ggplot(pisa_au_nomiss, aes(x=gender, y=math)) +
+  geom_boxplot() 
+p2 <- ggplot(pisa_au_nomiss, aes(x=ANXTEST, y=math)) +
+  geom_point()
+p3 <- ggplot(pisa_au_nomiss, aes(x=WEALTH, y=math)) +
+  geom_point()
+p4 <- ggplot(pisa_au_nomiss, aes(x=factor(PARED), y=math)) +
+  geom_boxplot() 
+p5 <- ggplot(pisa_au_nomiss, aes(x=factor(nbooks), y=math)) +
+  geom_boxplot() 
+p6 <- ggplot(pisa_au_nomiss, aes(x=factor(ntvs), y=math)) +
+  geom_boxplot() 
+grid.arrange(p1, p2, p3, p4, p5, p6, ncol=3)
+```
+
+- Fit a linear model
+
+```{r eval=FALSE}
+load("pisa_au_nomiss.rda")
+pisa_lm <- lm(math~gender+ANXTEST+PARED+JOYSCIE+WEALTH+nbooks+ntvs, data=pisa_au_nomiss, weights=W_FSTUWT)
+summary(pisa_lm)
+```
+
+- Fit a regression tree
+
+```{r eval=FALSE}
+pisa_rp <- rpart(math~gender+ANXTEST+PARED+JOYSCIE+WEALTH+nbooks+ntvs, data=pisa_au_nomiss, weights=W_FSTUWT)
+pisa_rp
+```
+
+```{r eval=FALSE}
+rpart.plot(pisa_rp)
+```
+
+- What is the most important variable
+
+```{r eval=FALSE}
+ggplot(pisa_au_nomiss, aes(x=JOYSCIE, y=math)) +
+  geom_point() + geom_vline(xintercept=-0.1626, colour="hotpink")
+```
+
+
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
