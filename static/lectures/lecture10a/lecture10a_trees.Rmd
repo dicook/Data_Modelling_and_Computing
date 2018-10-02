@@ -223,58 +223,91 @@ d <- tibble(x=c(1, 2, 3, 4, 5), y=c(10, 12, 5, 4, 3))
 d
 ```
 
+## Classification trees
+
+When the response is categorical, the model is called a classification tree. The criteria for making the splits changes also. There are a number of split criteria commonly used. If we consider a binary response ($y=0, 1$), and $p$ is the proportion of observations in class $1$.
+
+- Gini: $2p(1-p)$
+- Entropy: $-p(\log_e p)-(1-p)\log_e(1-p)$
+
+Which rewards splits where the observations are all one class.
+
 ## Lab exercise
 
 - OECD PISA, what factors affect reading scores?
 - 15 year old standardised test scores, Australia, 2015
 - Response: math
-- Predictors: gender, ANXTEST, PARED, JOYSCIE, WEALTH, nbooks, ntvs
+- Predictors: gender, anxtest, wealth, math_time, books, tvs
 
 - Make a plot of all the variables
 
-```{r fig.width=12, fig.height=6, eval=FALSE}
-p1 <- ggplot(pisa_au_nomiss, aes(x=gender, y=math)) +
+```{r fig.width=12, fig.height=6, eval=FALSE, echo=FALSE}
+load("data/pisa_au_sub.rda")
+pisa_au <- pisa_au %>% 
+  filter(!is.na(gender)) %>%
+  filter(!is.na(anxtest)) %>%
+  filter(!is.na(wealth)) %>%
+  filter(!is.na(math_time)) %>%
+  filter(!is.na(books)) %>%
+  filter(!is.na(tvs))
+p1 <- ggplot(pisa_au, aes(x=gender, y=math)) +
   geom_boxplot() 
-p2 <- ggplot(pisa_au_nomiss, aes(x=ANXTEST, y=math)) +
-  geom_point()
-p3 <- ggplot(pisa_au_nomiss, aes(x=WEALTH, y=math)) +
-  geom_point()
-p4 <- ggplot(pisa_au_nomiss, aes(x=factor(PARED), y=math)) +
+p2 <- ggplot(pisa_au, aes(x=anxtest, y=math)) +
+  geom_point() + geom_smooth(se=FALSE)
+p3 <- ggplot(pisa_au, aes(x=wealth, y=math)) +
+  geom_point() + geom_smooth(se=FALSE)
+p4 <- ggplot(pisa_au, aes(x=math_time, y=math)) +
+  geom_point() + geom_smooth(se=FALSE)
+p5 <- ggplot(pisa_au, aes(x=factor(books), y=math)) +
   geom_boxplot() 
-p5 <- ggplot(pisa_au_nomiss, aes(x=factor(nbooks), y=math)) +
-  geom_boxplot() 
-p6 <- ggplot(pisa_au_nomiss, aes(x=factor(ntvs), y=math)) +
+p6 <- ggplot(pisa_au, aes(x=factor(tvs), y=math)) +
   geom_boxplot() 
 grid.arrange(p1, p2, p3, p4, p5, p6, ncol=3)
 ```
 
 - Fit a linear model
 
-```{r eval=FALSE}
-load("pisa_au_nomiss.rda")
-pisa_lm <- lm(math~gender+ANXTEST+PARED+JOYSCIE+WEALTH+nbooks+ntvs, data=pisa_au_nomiss, weights=W_FSTUWT)
+```{r eval=FALSE, echo=FALSE}
+pisa_lm <- lm(math~gender+anxtest+wealth+math_time+books+tvs,
+              data=pisa_au, weights=stuweight)
 summary(pisa_lm)
 ```
 
 - Fit a regression tree
 
-```{r eval=FALSE}
-pisa_rp <- rpart(math~gender+ANXTEST+PARED+JOYSCIE+WEALTH+nbooks+ntvs, data=pisa_au_nomiss, weights=W_FSTUWT)
+```{r eval=FALSE, echo=FALSE}
+pisa_rp <- rpart(math~gender+anxtest+wealth+math_time+books+tvs, data=pisa_au, weights=stuweight)
 pisa_rp
 ```
 
-```{r eval=FALSE}
+```{r eval=FALSE, echo=FALSE}
 rpart.plot(pisa_rp)
 ```
 
 - What is the most important variable
 
-```{r eval=FALSE}
-ggplot(pisa_au_nomiss, aes(x=JOYSCIE, y=math)) +
-  geom_point() + geom_vline(xintercept=-0.1626, colour="hotpink")
+```{r eval=FALSE, echo=FALSE}
+ggplot(pisa_au, aes(x=???, y=math)) +
+  geom_point() + geom_vline(xintercept=???, colour="hotpink")
 ```
 
+- How good is the model? Compute the $R^2$ for the tree.
 
+```{r eval=FALSE, echo=FALSE}
+pisa_rp_aug <- cbind(pisa_au, e=???(pisa_rp))
+1-sum(pisa_rp_aug$e^2)/sum((pisa_au$math-???(pisa_au$math))^2)
+```
+
+- Which model fits better? The tree or the linear regression model?
+
+- Change the control parameters to reduce the $R^2$ of the tree below that of the regression model.
+
+```{r eval=FALSE, echo=FALSE}
+pisa_rp <- rpart(math~gender+anxtest+wealth+math_time+books+tvs, data=pisa_au, weights=stuweight, control = rpart.control(???))
+pisa_rp
+pisa_rp_aug <- cbind(pisa_au, e=???(pisa_rp))
+1-sum(pisa_rp_aug$e^2)/sum((pisa_au$math-???(pisa_au$math))^2)
+```
 
 ## Share and share alike
 

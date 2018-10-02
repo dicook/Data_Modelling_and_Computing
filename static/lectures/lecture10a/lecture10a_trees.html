@@ -293,45 +293,30 @@ d</code></pre>
   </script>
 </div>
 </div>
+<div id="section-classification-trees" class="section level2">
+<h2>Classification trees</h2>
+<p>When the response is categorical, the model is called a classification tree. The criteria for making the splits changes also. There are a number of split criteria commonly used. If we consider a binary response (<span class="math inline">\(y=0, 1\)</span>), and <span class="math inline">\(p\)</span> is the proportion of observations in class <span class="math inline">\(1\)</span>.</p>
+<ul>
+<li>Gini: <span class="math inline">\(2p(1-p)\)</span></li>
+<li>Entropy: <span class="math inline">\(-p(\log_e p)-(1-p)\log_e(1-p)\)</span></li>
+</ul>
+<p>Which rewards splits where the observations are all one class.</p>
+</div>
 <div id="section-lab-exercise" class="section level2">
 <h2>Lab exercise</h2>
 <ul>
 <li>OECD PISA, what factors affect reading scores?</li>
 <li>15 year old standardised test scores, Australia, 2015</li>
 <li>Response: math</li>
-<li><p>Predictors: gender, ANXTEST, PARED, JOYSCIE, WEALTH, nbooks, ntvs</p></li>
+<li><p>Predictors: gender, anxtest, wealth, math_time, books, tvs</p></li>
 <li><p>Make a plot of all the variables</p></li>
+<li><p>Fit a linear model</p></li>
+<li><p>Fit a regression tree</p></li>
+<li><p>What is the most important variable</p></li>
+<li><p>How good is the model? Compute the <span class="math inline">\(R^2\)</span> for the tree.</p></li>
+<li><p>Which model fits better? The tree or the linear regression model?</p></li>
+<li><p>Change the control parameters to reduce the <span class="math inline">\(R^2\)</span> of the tree below that of the regression model.</p></li>
 </ul>
-<pre class="r"><code>p1 &lt;- ggplot(pisa_au_nomiss, aes(x=gender, y=math)) +
-  geom_boxplot() 
-p2 &lt;- ggplot(pisa_au_nomiss, aes(x=ANXTEST, y=math)) +
-  geom_point()
-p3 &lt;- ggplot(pisa_au_nomiss, aes(x=WEALTH, y=math)) +
-  geom_point()
-p4 &lt;- ggplot(pisa_au_nomiss, aes(x=factor(PARED), y=math)) +
-  geom_boxplot() 
-p5 &lt;- ggplot(pisa_au_nomiss, aes(x=factor(nbooks), y=math)) +
-  geom_boxplot() 
-p6 &lt;- ggplot(pisa_au_nomiss, aes(x=factor(ntvs), y=math)) +
-  geom_boxplot() 
-grid.arrange(p1, p2, p3, p4, p5, p6, ncol=3)</code></pre>
-<ul>
-<li>Fit a linear model</li>
-</ul>
-<pre class="r"><code>load(&quot;pisa_au_nomiss.rda&quot;)
-pisa_lm &lt;- lm(math~gender+ANXTEST+PARED+JOYSCIE+WEALTH+nbooks+ntvs, data=pisa_au_nomiss, weights=W_FSTUWT)
-summary(pisa_lm)</code></pre>
-<ul>
-<li>Fit a regression tree</li>
-</ul>
-<pre class="r"><code>pisa_rp &lt;- rpart(math~gender+ANXTEST+PARED+JOYSCIE+WEALTH+nbooks+ntvs, data=pisa_au_nomiss, weights=W_FSTUWT)
-pisa_rp</code></pre>
-<pre class="r"><code>rpart.plot(pisa_rp)</code></pre>
-<ul>
-<li>What is the most important variable</li>
-</ul>
-<pre class="r"><code>ggplot(pisa_au_nomiss, aes(x=JOYSCIE, y=math)) +
-  geom_point() + geom_vline(xintercept=-0.1626, colour=&quot;hotpink&quot;)</code></pre>
 </div>
 <div id="section-share-and-share-alike" class="section level2">
 <h2>Share and share alike</h2>
