@@ -1,0 +1,89 @@
+---
+title: "Explore our PISA standardised scores"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    social: menu
+    source_code: embed
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(forcats)
+library(plotly)
+library(ggthemes)
+load("pisa_au.rda")
+catvars <- c("state", "schtype", "yr", "birthmonth", "gender")
+realvars <- c("math", "science", "read")
+```
+
+
+Outputs {.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+### Boxplots
+
+In this panel we encourage you to explore the relationship between test scores and a choice of categorical variables, state, type of school, gender, birth month and year. Can you see that Queensland has no gender gap in math scores? What else can you find?
+
+```{r}
+fillRow(height = 600, flex = c(2, 4),
+  sidebarPanel(
+      selectInput('x', 'X', catvars),
+      selectInput('y', 'Y', realvars),
+      width = 10
+  ),
+  plotlyOutput("boxplots", height = "100%")
+)
+
+output$boxplots <- renderPlotly({
+  p1 <- ggplot(pisa_au, aes_string(x = input$x, y = input$y)) +
+    geom_boxplot()
+  
+  ggplotly(p1) %>% 
+    layout(boxmode = "group", legend = list(x = 0, y = 0, orientation = 'h'))
+})
+```
+
+### Scatterplot
+
+In this panel we encourage you to explore the relationship between the test scores. Here you can recognise the data is synthetic because it is very elliptical and regular is shape. There are no outliers or clustering/clumping or skewness. 
+
+```{r}
+fillRow(height = 600, flex = c(2, 4),
+  sidebarPanel(
+      selectInput('x2', 'X', realvars, "read"),
+      selectInput('y2', 'Y', realvars, "math"),
+      sliderInput('alpha', 'Alpha', 0, 1, 1, 0.05),
+      width = 10
+  ),
+  plotlyOutput("scatterplot", height = "100%")
+)
+
+output$scatterplot <- renderPlotly({
+  p2 <- ggplot(pisa_au, aes_string(x = input$x2, y = input$y2)) +
+    geom_point(alpha = input$alpha) +
+    theme(aspect.ratio = 1)
+  
+  ggplotly(p2) %>% 
+    layout(legend = list(x = 0, y = 0, orientation = 'h'))
+})
+```
+
+### Info
+
+The data is collected from [OECD's Programme for International Student Assessment](http://www.oecd.org/pisa/), triennial standardised testing of workforce ready skills of 15 year olds. The test scores are what we would call "synthetic", because the scores are simulated after fitting a model to the data. For privacy reasons that actual score of the student is not returned. 
+
+The data processing included these steps:
+
+1. Subset to Australia
+2. Selecting variables
+3. Removing missing values
+4. Computed difference between boys and girls average score
+
+R packages used in this work are
+
+- [ggplot2](https://ggplot2.tidyverse.org)
+- [dplyr](https://dplyr.tidyverse.org)
+- [flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/)
