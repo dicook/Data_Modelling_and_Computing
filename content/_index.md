@@ -63,6 +63,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
    - [Fri](https://ebsmonash.shinyapps.io/lecture9b_networks) [(Rmd)](http://dmac.dicook.org/lectures/lecture9b/lecture9b_networks.Rmd) NO READING THIS WEEK!
 - Week 10: Advanced modeling and data
    - [Wed](https://ebsmonash.shinyapps.io/lecture10a_trees) [(Rmd)](http://dmac.dicook.org/lectures/lecture10a/lecture10a_trees.Rmd) NO READING THIS WEEK!
+   - [Fri](https://ebsmonash.shinyapps.io/lecture10b_sampling) [(Rmd)](http://dmac.dicook.org/lectures/lecture10b/lecture10b_sampling.Rmd) NO READING THIS WEEK!
 - Week 11: 
    - Wed: Assignment 5 completed individually during the lectorial. Final polishing of project story boards. 
    - Fri: Turn in project. Guest lecture: Prashant Natarajan, Principal - AI and Analytics, Deloitte Australia,  "Demystifying: best practices in applying big data & machine learning"
