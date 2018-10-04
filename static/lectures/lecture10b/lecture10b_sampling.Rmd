@@ -1,0 +1,200 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+output: 
+  learnr::tutorial:
+    css: "css/logo.css"
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 6,
+                      fig.width = 6,
+                      fig.align = "center",
+                      cache = FALSE)
+tutorial_html_dependency()
+library(tidyverse)
+library(plotly)
+```
+
+# Data collection methods
+
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.dicook.org](http://dmac.dicook.org)
+
+## Overview
+
+The way that data is collected may make it useful - possible to make statements about a larger group - or completely useless. The main ways to collect data well are: 
+
+- Random samples from a population
+- Observational studies vs experiments
+- Surveys
+
+## Your turn
+
+Take the survey in ED
+
+## The world's most recognisable brand name
+]
+
+In 2008, IBM, the most venerable computer (now data analysis) company declared this to be ["VEGEMITE"](https://www.beingaustralian.com.au/script/news_pop-up.php?n=69). 
+
+![](images/vegemite.jpg)
+
+Seriously? This is a bit surprising. How was this conclusion reached?
+
+- "Research conducted by IBM showed that Vegemite outranked other giants like Coca Cola, Nike, Toyota, Sony and Starbucks when it came to people searching and commenting on their favourite product online."
+- "The study, which examined more than 1.5b posts in 38 different languages, showed 479,206 mentions of Vegemite - more than any other brand globally."
+
+They collected data from what people were mentioning products in chat rooms. Possibly, people were talking about vegemite when they collected the data, and they were collecting primarily from US sites, because of this story:
+
+- "In October 2006, an Australian news company reported that Vegemite had been banned in the United States, and that the United States Customs Service had gone so far as to search Australians entering the country for Vegemite because it naturally contains folate, a B vitamin approved as an additive in the United States for just a few foods, including breakfast cereals." [wikipedia](https://en.wikipedia.org/wiki/Vegemite)
+
+The way data is collected can have a big impact on results. Here, a possible influence on the conclusions could have been the timing of the chat room monitoring, coinciding with a specific event, and maybe there were more chat rooms in the USA being monitored, which could have been affected more by this event. 
+
+Vegemite is surprising as the most recognised product in the world. One would expect that Coca-cola, Nike, Apple, ... would have more global recognition. 
+
+## Simple random sampling
+
+Suppose we have a population of size $N$, and we plan to sample $n$ members of the population. In *simple random sampling*, every choice of $n$ out of $N$ has an equal chance of being selected. 
+
+The first step is to define your population. Its often not as easy as it sounds. 
+
+Let's look at the world's most recognisable product again. What's the population here? You could think about it as every person in the world. Maybe it should be all adults. Maybe we want to exclude remote tribes, people from countries where freedom on information is restricted. To know what is the most recognisable product in the world we would need to ask every member of the population. That's impractical. The approach is to take a sample from the population and ask them. Every member of the population gets a number, and we use a random number generator to select $n$ numbers (without replacement) and we go find these people and ask them what is the most well-known product. Its still infeasible, but for many problems its achievable. 
+
+Steps for drawing a simple random sample:
+
+1. Assign every member of the population a number, $1, ..., N$
+2. Use a random number generator to a sample of $n$ numbers from $1, ..., N$
+3. Measure these individuals, to make an estimate for the population 
+
+
+Let's do it!
+
+### Your turn
+
+Fill in the ED survey, "Simple random sample". (Make a note of what choice you made. We'll need this.)
+
+## Observational study
+
+- Observing data "in the wild".  
+- Researcher makes no attempt to assign values of the variable to certain people.
+    - Retrospective study
+    - Prospective study
+- Result shows association between variables, but does not show causation.
+
+### Examples
+
+- [Living Atlas of Australia](https://www.ala.org.au): Researchers, citizen scientists, observe occurrence and location of wildlife
+- [Flying etiquette](https://fivethirtyeight.com/features/airplane-etiquette-recline-seat/): "To find out what people actually consider rude, we ran a SurveyMonkey Audience poll Aug. 29 and 30, and asked air passengers what's cool and what isn't. We had 1040 respondents, 874 of whom had flown."
+- [Melbourne pedestrian sensor](http://www.pedestrian.melbourne.vic.gov.au): Observing number of people walking at different locations in the city.
+- [Cross-currency rates](https://openexchangerates.org/): observing the daily average rates at which currency is exchanged each day. 
+- [Tuberculosis incidence](http://www.who.int/tb/data/en/): Medical records from different countries indicating tuberculosis cases. 
+
+## Experiment
+
+- A way to prove a cause-and-effect relationship between two or more variables.
+- *Manipulate* an explanatory variable
+- To *Observe* a response variable.
+
+### Terminology
+
+- Experimental units - who or what the experiment is performed on.
+    - People - Subjects.
+- Factors – Explanatory variables
+    - Need at least one factor for every experiment.  
+- Levels (different values of a Factor)
+    - Need at least two levels for each factor
+- Treatment – The combination of factors and levels given to experimental units.
+    - Each experimental unit receives 1 treatment.
+- Response Variable – experimental units’ response to the treatment.
+    - Could measure more than one response variable.
+
+### Four principles of design 
+
+- Control
+    - Only aspect that affects response is treatment.
+    - Make everything as equal as possible for experimental units.
+    - Only difference in treatment of units is the TREATMENT.
+- Randomization
+    - Treatments are applied to units randomly.
+    - Controls for unseen factors.
+    - Units do not pick the treatment they receive.
+- Replication
+    - Within the experiment, each treatment is given to more than one unit.
+    - Entire experiment should be repeated on a different group of units.
+- Blocking (and sometimes y)
+    - Variable of interest in experimental units.
+        - Age
+        - Gender
+    - Divide units into blocks.
+    - Perform entire experiment on each block separately.
+    - Controls for blocking variable in experiment.
+
+### Results
+
+Compare the means (or appropriate statistic) between treatments, relative to the standard deviation of each treatment.
+
+### Examples
+
+- French fries: Tasters rated chips fried in three different oils, at several different time points. The tasters rated multiple batches (2 replicates). Although not stated in the data descriptions, it is expected that they controlled frying conditions, randomised order that the tasting was done, temperature at tasting. 
+
+```{r}
+data(french_fries, package="reshape2")
+?french_fries
+```
+
+- Genes: Two different soybean genotypes were grown in iron sufficient and insufficient conditions. Interested to learn which genes in the plants respond differently to the iron treatments, and if the two types of plants behave differently. Researchers chose the plants, to grow in multiple pots. All other growing conditions were kept the same, with iron level being the only difference between the pots. 
+
+```{r}
+genes <- read_csv("data/genes.csv")
+genes
+```
+
+### Your turn
+
+Read these articles and decide:
+
+- Is this an experimental study or an observational study?
+- For an experiment, identify the factors (and treatments), response variable(s), and how randomisation was used. 
+
+1. [Lack of sleep puts you at higher risk for colds](https://www.sciencemag.org/news/2015/09/lack-sleep-puts-you-higher-risk-colds-first-experimental-study-finds)
+2. [Using roller coaster rides to try to hasten the passage of kidney stones](http://broomedocs.com/wp-content/uploads/2016/10/roller-stone.pdf)
+3. [A Doctor Cracked His Knuckles for 50 Years to See If It Was Harmful](https://curiosity.com/topics/a-doctor-cracked-his-knuckles-for-50-years-to-see-if-it-was-harmful-curiosity/)
+
+### More terminology
+
+- [Placebo effect](https://en.wikipedia.org/wiki/Placebo): Any treatment results in some response. *When you feel really really sick, and finally buckle and make a doctor's appointment, do you generally feel better straight away?* To measure the effect of response to no real treatment, experiments often have one treatment which is a placebo - inert tablets (like sugar pills), inert injections (like saline), sham surgery - the response of people in this group is measured, and used as a baseline upon which to measure the response to the real medicine, or surgery. 
+- [Blinded](https://en.wikipedia.org/wiki/Blinded_experiment):       - When the subject doesn't know what treatment group they are in (e.g. placebo or medicine) the experiment is called *single blind*. 
+    - When both the subject, and the person administering the treatment, don't know what treatment is being provided, the expierment is called *double blind*. The purpose is to avoid the researcher inadvertently giving the subject clues about how they are expected to respond. 
+- [Confounding](https://en.wikipedia.org/wiki/Confounding): The presence of a third variable that explains the response and explanatory variables. The classic example is:
+    - "Murders and ice cream purchase are strongly correlated" suggesting that 
+        a. purchasing ice cream might result in more murder
+        b. committing a murder might cause people to go buy ice cream
+        c. both are more common in hot weather, which means weather is a confounding variable.
+
+## Designing surveys
+
+Survey sampling builds from simple random sampling. To make a survey, you need to 
+
+- map out a sampling frame, that means, giving every member of the population a number. 
+- identify strata in the population (e.g. gender, country, school...) that you may want to ensure are all represented, then you would do *stratified random sampling*, which is simple random sampling in each of the strata. 
+
+### Example: PISA 
+
+The [OECD PISA]() student tests are an example of stratified random sampling. 
+
+- Country is the strata
+- Schools are randomly sampled within country. Depending on the country schools might be sampled using strata, too - public, private, religious; or within states 
+- Students are randomly sampled within schools
+
+The very extensive details on how it is accomplished are [published](http://www.oecd.org/pisa/pisaproducts/PISA-NATIONAL-PROJECT-MANAGER-MANUAL.pdf).
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.

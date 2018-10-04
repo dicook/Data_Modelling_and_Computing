@@ -45,281 +45,223 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 <div class="topics">
 
-<div id="section-regression-and-decision-trees" class="section level1">
-<h1>Regression (and decision) trees</h1>
+<div id="section-data-collection-methods" class="section level1">
+<h1>Data collection methods</h1>
 <div id="section-course-web-site" class="section level2">
 <h2>Course web site</h2>
 <p>This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: <a href="http://dmac.dicook.org" class="uri">http://dmac.dicook.org</a></p>
 </div>
 <div id="section-overview" class="section level2">
 <h2>Overview</h2>
+<p>The way that data is collected may make it useful - possible to make statements about a larger group - or completely useless. The main ways to collect data well are:</p>
 <ul>
-<li>What is a regression tree?</li>
-<li>How is it computed?</li>
-<li>Deciding when its a good fit</li>
-<li>Comparison with linear models</li>
-<li>How a classification tree differs from a regression tree?</li>
-</ul>
-</div>
-<div id="section-regression-trees" class="section level2">
-<h2>Regression trees</h2>
-<ul>
-<li>Regression trees recursively partition the data, and use the average response value of each partition as the model estimate</li>
-<li>It is a computationally intensive technique, involves examining ALL POSSIBLE partitions.</li>
-<li>The BEST partition by optimizing some criteria</li>
-<li>For regression, with a quantitative response variable, the criteria is called ANOVA:</li>
-</ul>
-<p><span class="math display">\[SS_T-(SS_L+SS_R)\]</span> where <span class="math inline">\(SS_T = \sum (y_i-\bar{y})^2\)</span>, and <span class="math inline">\(SS_L, SS_R\)</span> are the equivalent values for the two subsets created by partitioning.</p>
-</div>
-<div id="section-example" class="section level2">
-<h2>Example</h2>
-<p>Here’s a synthetic data set for illustration. Just making up a function to simulate some data to play with.</p>
-<pre class="r"><code>set.seed(900)
-x=sort(runif(100)-0.5)
-df &lt;- data.frame(x, y=10*c(x[1:50]^2, x[51:75]*2, -x[76:100]^2)+rnorm(100)*0.5)
-ggplot(df, aes(x=x, y=y)) + geom_point()</code></pre>
-<p><img src="lecture10a_trees_files/figure-html/unnamed-chunk-1-1.png" width="576" style="display: block; margin: auto;" /></p>
-<div id="section-model-fit" class="section level3">
-<h3>Model fit</h3>
-<pre class="r"><code>library(rpart)
-df_rp &lt;- rpart(y~x, data=df)
-df_rp
-## n= 100 
-## 
-## node), split, n, deviance, yval
-##       * denotes terminal node
-## 
-##  1) root 100 178.702600  0.44663870  
-##    2) x&gt;=0.1938643 24  11.570180 -1.18844700  
-##      4) x&gt;=0.3936632 8   1.198382 -1.91068800 *
-##      5) x&lt; 0.3936632 16   4.112218 -0.82732700 *
-##    3) x&lt; 0.1938643 76  82.705890  0.96298160  
-##      6) x&gt;=-0.3618574 58  53.543780  0.65985860  
-##       12) x&lt; 0.05045892 47  25.184950  0.37691520  
-##         24) x&gt;=-0.2610339 32  13.289350  0.06655512  
-##           48) x&gt;=-0.07853794 15  10.253730 -0.19625610 *
-##           49) x&lt; -0.07853794 17   1.085414  0.29844730 *
-##         25) x&lt; -0.2610339 15   2.237574  1.03901700 *
-##       13) x&gt;=0.05045892 11   8.519258  1.86879900 *
-##      7) x&lt; -0.3618574 18   6.660848  1.93971100 *</code></pre>
-<p>😱 Aagh, that’s horrible!</p>
-<p>🤷 Nah, its really simple!</p>
-</div>
-<div id="section-plot-the-model" class="section level3">
-<h3>Plot the model</h3>
-<pre class="r"><code>library(rpart.plot)
-rpart.plot(df_rp)</code></pre>
-<p><img src="lecture10a_trees_files/figure-html/unnamed-chunk-3-1.png" width="576" style="display: block; margin: auto;" /></p>
-</div>
-<div id="section-plot-the-model-on-the-data" class="section level3">
-<h3>Plot the model on the data</h3>
-<p>This is how the data is split:</p>
-<pre class="r"><code>library(viridis)
-splt &lt;- as_tibble(df_rp$splits)
-splt &lt;- splt %&gt;% mutate(order=1:nrow(splt)) %&gt;%
-   select(index, order)
-ggplot(df, aes(x=x, y=y)) + geom_point() +
-  geom_vline(data=splt, aes(xintercept = index, colour=factor(order)), 
-             linetype=2) + 
-  geom_text(data=splt, aes(x=index, y=max(df$y), label=order), nudge_x=0.02) +
-  scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1)) +
-  scale_colour_viridis_d() +
-  theme_bw() +
-  theme(legend.position=&quot;none&quot;)</code></pre>
-<p><img src="lecture10a_trees_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;" /></p>
-<p>This is how the model looks:</p>
-<pre class="r"><code>df &lt;- df %&gt;% 
-  mutate(bucket = cut(x, breaks=c(min(x)-0.1, splt$index, max(x)))) 
-df_pred &lt;- df %&gt;% 
-  group_by(bucket) %&gt;%
-  mutate(pred = mean(y)) %&gt;%
-  arrange(x)
-ggplot(df_pred) + 
-  geom_point(aes(x=x, y=y)) +
-  geom_line(aes(x=x, y=pred), colour=&quot;hotpink&quot;, size=1.5) +
-    geom_vline(data=splt, aes(xintercept = index, colour=factor(order)), 
-             linetype=2) + 
-  scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1)) +
-  scale_colour_viridis_d() +
-  theme_bw() +
-  theme(legend.position=&quot;none&quot;)</code></pre>
-<p><img src="lecture10a_trees_files/figure-html/unnamed-chunk-5-1.png" width="576" style="display: block; margin: auto;" /></p>
-</div>
-</div>
-<div id="section-stopping-rules" class="section level2">
-<h2>Stopping rules</h2>
-<ul>
-<li>Its an algorithm. Why did it stop at 7 groups?</li>
-<li>Stopping rules ar needed, else the algorithm will keep fitting until every observartion is in its own group.</li>
-<li>Control parameters set stopping points:</li>
-<li>minsplit: minimum number of points in a node that algorithm is allowed to split</li>
-<li>minbucket: minimum number of points in a terminal node</li>
-<li>In addition, we can also look at the change in value of <span class="math inline">\(SS_T-(SS_L+SS_R)\)</span> at each split, and if the change is too <em>small</em>, stop. To decide on a suitable value for <em>small</em> a cross-validation procedure is used.</li>
-</ul>
-<p>Below are the controls for the fit on the example data:</p>
-<pre class="r"><code>str(df_rp$control)
-## List of 9
-##  $ minsplit      : int 20
-##  $ minbucket     : num 7
-##  $ cp            : num 0.01
-##  $ maxcompete    : int 4
-##  $ maxsurrogate  : int 5
-##  $ usesurrogate  : int 2
-##  $ surrogatestyle: int 0
-##  $ maxdepth      : int 30
-##  $ xval          : int 10</code></pre>
-<p>If you change these options and re-fit, the model will change. Here we reduce the <code>minbucket</code> parameter.</p>
-<pre class="r"><code>df_rp &lt;- rpart(y~x, data=df, 
-  control = rpart.control(minsplit=10))
-df_rp
-## n= 100 
-## 
-## node), split, n, deviance, yval
-##       * denotes terminal node
-## 
-##  1) root 100 178.7026000  0.44663870  
-##    2) x&gt;=0.1938643 24  11.5701800 -1.18844700  
-##      4) x&gt;=0.3936632 8   1.1983820 -1.91068800 *
-##      5) x&lt; 0.3936632 16   4.1122180 -0.82732700 *
-##    3) x&lt; 0.1938643 76  82.7058900  0.96298160  
-##      6) x&gt;=-0.3618574 58  53.5437800  0.65985860  
-##       12) x&lt; 0.05045892 47  25.1849500  0.37691520  
-##         24) x&gt;=-0.2610339 32  13.2893500  0.06655512  
-##           48) x&gt;=-0.07853794 15  10.2537300 -0.19625610  
-##             96) x&lt; -0.008211745 7   2.5846810 -0.86324340 *
-##             97) x&gt;=-0.008211745 8   1.8301040  0.38735790 *
-##           49) x&lt; -0.07853794 17   1.0854140  0.29844730 *
-##         25) x&lt; -0.2610339 15   2.2375740  1.03901700 *
-##       13) x&gt;=0.05045892 11   8.5192580  1.86879900  
-##         26) x&lt; 0.09397898 4   0.4662844  1.22369400 *
-##         27) x&gt;=0.09397898 7   5.4371120  2.23743000 *
-##      7) x&lt; -0.3618574 18   6.6608480  1.93971100  
-##       14) x&gt;=-0.456696 11   0.8822070  1.56037400 *
-##       15) x&lt; -0.456696 7   1.7084100  2.53581300 *</code></pre>
-<p>which yields a more complex model.</p>
-<pre class="r"><code>df_pred2 &lt;- df %&gt;% 
-  mutate(pred = predict(df_rp, df))
-p1 &lt;- ggplot(df_pred) + 
-  geom_point(aes(x=x, y=y)) +
-  geom_line(aes(x=x, y=pred), colour=&quot;hotpink&quot;, size=1.5) +
-  scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1)) +
-  theme_bw() + ggtitle(&quot;Old model&quot;)
-p2 &lt;- ggplot(df_pred2) + 
-  geom_point(aes(x=x, y=y)) +
-  geom_line(aes(x=x, y=pred), colour=&quot;orange&quot;, size=1.5) +
-  scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1)) +
-  theme_bw() + ggtitle(&quot;New model&quot;)
-grid.arrange(p1, p2, ncol=2)</code></pre>
-<p><img src="lecture10a_trees_files/figure-html/unnamed-chunk-8-1.png" width="768" style="display: block; margin: auto;" /></p>
-</div>
-<div id="section-whats-computed" class="section level2">
-<h2>What’s computed?</h2>
-<p>Illustration showing the calculations made to decide on the first partition.</p>
-<pre class="r"><code>sst &lt;- var(df$y)*(nrow(df)-1)
-compute_anova &lt;- function(left, right) {
-  ssl &lt;- var(left$y)*(nrow(left)-1)
-  if (nrow(left) == 1)
-    ssl &lt;- 1
-  ssr &lt;- var(right$y)*(nrow(right)-1)
-  if (nrow(right) == 1)
-    ssr &lt;- 1
-  av &lt;- sst - (ssl+ssr)
-  return(av)
-}
-aov_f &lt;- data.frame(x=df$x[-1], f=df$y[-1])
-for (i in 2:nrow(df)) {
-  left &lt;- df[1:(i-1),]
-  right &lt;- df[i:nrow(df),]
-  aov_f$x[i-1] &lt;- mean(df$x[c(i-1, i)])
-  aov_f$f[i-1] &lt;- compute_anova(left, right)
-}
-p1 &lt;- ggplot(df, aes(x=x, y=y)) + geom_point(alpha=0.5) + scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1))
-p2 &lt;- ggplot(data=aov_f) +
-  geom_line(aes(x=x, y=f), colour=&quot;hotpink&quot;) +
-    geom_vline(xintercept = df_rp$splits[1,4], colour=&quot;hotpink&quot;, linetype=2)
-grid.arrange(p1, p2, ncol=1)</code></pre>
-<p><img src="lecture10a_trees_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;" /></p>
-</div>
-<div id="section-residuals" class="section level2">
-<h2>Residuals</h2>
-<pre class="r"><code>df_rp &lt;- rpart(y~x, data=df)
-df_rp_aug &lt;- cbind(df, e=residuals(df_rp))
-ggplot(df_rp_aug, aes(x=x, y=e)) + geom_point() +
-  ylab(&quot;residuals&quot;) + scale_x_continuous(breaks=seq(-0.5, 0.5, 0.1))</code></pre>
-<p><img src="lecture10a_trees_files/figure-html/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;" /></p>
-</div>
-<div id="section-goodness-of-fit" class="section level2">
-<h2>Goodness of fit</h2>
-<pre class="r"><code>gof &lt;- printcp(df_rp, digits=3)
-## 
-## Regression tree:
-## rpart(formula = y ~ x, data = df)
-## 
-## Variables actually used in tree construction:
-## [1] x
-## 
-## Root node error: 179/100 = 1.79
-## 
-## n= 100 
-## 
-##       CP nsplit rel error xerror   xstd
-## 1 0.4724      0     1.000  1.023 0.1239
-## 2 0.1259      1     0.528  0.566 0.0840
-## 3 0.1110      2     0.402  0.525 0.0795
-## 4 0.0540      3     0.291  0.431 0.0641
-## 5 0.0350      4     0.237  0.359 0.0605
-## 6 0.0109      5     0.202  0.307 0.0553
-## 7 0.0100      6     0.191  0.303 0.0553</code></pre>
-<p>The relative error is <span class="math inline">\(1-R^2\)</span>. For this example, after 6 splits it is 0.2015507. So <span class="math inline">\(R^2=\)</span> 0.7984493.</p>
-<pre class="r"><code>1-sum(df_rp_aug$e^2)/sum((df$y-mean(df$y))^2)</code></pre>
-</div>
-<div id="section-strengths-and-weaknesses" class="section level2">
-<h2>Strengths and weaknesses</h2>
-<ul>
-<li>There are no parametric assumptions underlying partitioning methods</li>
-<li>Also means that there is not a nice formula for the model as a result, or inference about populations available</li>
-<li>By minimizing sum of squares (ANOVA) we are forcing the partitions to have relatively equal variance. The method could be influenced by outliers, but it would be isolating the effect to one partition.</li>
-<li>Because it operates on single variables, it can efficiently handle missing values.</li>
+<li>Random samples from a population</li>
+<li>Observational studies vs experiments</li>
+<li>Surveys</li>
 </ul>
 </div>
 <div id="section-your-turn" class="section level2">
 <h2>Your turn</h2>
-<p>Here is a small data set. Manually compute a regression tree model for the data. Sketch the model.</p>
-<pre class="r"><code>d &lt;- tibble(x=c(1, 2, 3, 4, 5), y=c(10, 12, 5, 4, 3))
-d</code></pre>
+<p>Take the survey in ED</p>
+</div>
+<div id="section-the-worlds-most-recognisable-brand-name" class="section level2">
+<h2>The world’s most recognisable brand name</h2>
+<p>]</p>
+<p>In 2008, IBM, the most venerable computer (now data analysis) company declared this to be <a href="https://www.beingaustralian.com.au/script/news_pop-up.php?n=69">“VEGEMITE”</a>.</p>
+<div class="figure">
+<img src="images/vegemite.jpg" />
+
+</div>
+<p>Seriously? This is a bit surprising. How was this conclusion reached?</p>
+<ul>
+<li>“Research conducted by IBM showed that Vegemite outranked other giants like Coca Cola, Nike, Toyota, Sony and Starbucks when it came to people searching and commenting on their favourite product online.”</li>
+<li>“The study, which examined more than 1.5b posts in 38 different languages, showed 479,206 mentions of Vegemite - more than any other brand globally.”</li>
+</ul>
+<p>They collected data from what people were mentioning products in chat rooms. Possibly, people were talking about vegemite when they collected the data, and they were collecting primarily from US sites, because of this story:</p>
+<ul>
+<li>“In October 2006, an Australian news company reported that Vegemite had been banned in the United States, and that the United States Customs Service had gone so far as to search Australians entering the country for Vegemite because it naturally contains folate, a B vitamin approved as an additive in the United States for just a few foods, including breakfast cereals.” <a href="https://en.wikipedia.org/wiki/Vegemite">wikipedia</a></li>
+</ul>
+<p>The way data is collected can have a big impact on results. Here, a possible influence on the conclusions could have been the timing of the chat room monitoring, coinciding with a specific event, and maybe there were more chat rooms in the USA being monitored, which could have been affected more by this event.</p>
+<p>Vegemite is surprising as the most recognised product in the world. One would expect that Coca-cola, Nike, Apple, … would have more global recognition.</p>
+</div>
+<div id="section-simple-random-sampling" class="section level2">
+<h2>Simple random sampling</h2>
+<p>Suppose we have a population of size <span class="math inline">\(N\)</span>, and we plan to sample <span class="math inline">\(n\)</span> members of the population. In <em>simple random sampling</em>, every choice of <span class="math inline">\(n\)</span> out of <span class="math inline">\(N\)</span> has an equal chance of being selected.</p>
+<p>The first step is to define your population. Its often not as easy as it sounds.</p>
+<p>Let’s look at the world’s most recognisable product again. What’s the population here? You could think about it as every person in the world. Maybe it should be all adults. Maybe we want to exclude remote tribes, people from countries where freedom on information is restricted. To know what is the most recognisable product in the world we would need to ask every member of the population. That’s impractical. The approach is to take a sample from the population and ask them. Every member of the population gets a number, and we use a random number generator to select <span class="math inline">\(n\)</span> numbers (without replacement) and we go find these people and ask them what is the most well-known product. Its still infeasible, but for many problems its achievable.</p>
+<p>Steps for drawing a simple random sample:</p>
+<ol style="list-style-type: decimal">
+<li>Assign every member of the population a number, <span class="math inline">\(1, ..., N\)</span></li>
+<li>Use a random number generator to a sample of <span class="math inline">\(n\)</span> numbers from <span class="math inline">\(1, ..., N\)</span></li>
+<li>Measure these individuals, to make an estimate for the population</li>
+</ol>
+<p>Let’s do it!</p>
+<div id="section-your-turn-1" class="section level3">
+<h3>Your turn</h3>
+<p>Fill in the ED survey, “Simple random sample”. (Make a note of what choice you made. We’ll need this.)</p>
+</div>
+</div>
+<div id="section-observational-study" class="section level2">
+<h2>Observational study</h2>
+<ul>
+<li>Observing data “in the wild”.<br />
+</li>
+<li>Researcher makes no attempt to assign values of the variable to certain people.
+<ul>
+<li>Retrospective study</li>
+<li>Prospective study</li>
+</ul></li>
+<li>Result shows association between variables, but does not show causation.</li>
+</ul>
+<div id="section-examples" class="section level3">
+<h3>Examples</h3>
+<ul>
+<li><a href="https://www.ala.org.au">Living Atlas of Australia</a>: Researchers, citizen scientists, observe occurrence and location of wildlife</li>
+<li><a href="https://fivethirtyeight.com/features/airplane-etiquette-recline-seat/">Flying etiquette</a>: “To find out what people actually consider rude, we ran a SurveyMonkey Audience poll Aug. 29 and 30, and asked air passengers what’s cool and what isn’t. We had 1040 respondents, 874 of whom had flown.”</li>
+<li><a href="http://www.pedestrian.melbourne.vic.gov.au">Melbourne pedestrian sensor</a>: Observing number of people walking at different locations in the city.</li>
+<li><a href="https://openexchangerates.org/">Cross-currency rates</a>: observing the daily average rates at which currency is exchanged each day.</li>
+<li><a href="http://www.who.int/tb/data/en/">Tuberculosis incidence</a>: Medical records from different countries indicating tuberculosis cases.</li>
+</ul>
+</div>
+</div>
+<div id="section-experiment" class="section level2">
+<h2>Experiment</h2>
+<ul>
+<li>A way to prove a cause-and-effect relationship between two or more variables.</li>
+<li><em>Manipulate</em> an explanatory variable</li>
+<li>To <em>Observe</em> a response variable.</li>
+</ul>
+<div id="section-terminology" class="section level3">
+<h3>Terminology</h3>
+<ul>
+<li>Experimental units - who or what the experiment is performed on.
+<ul>
+<li>People - Subjects.</li>
+</ul></li>
+<li>Factors – Explanatory variables
+<ul>
+<li>Need at least one factor for every experiment.<br />
+</li>
+</ul></li>
+<li>Levels (different values of a Factor)
+<ul>
+<li>Need at least two levels for each factor</li>
+</ul></li>
+<li>Treatment – The combination of factors and levels given to experimental units.
+<ul>
+<li>Each experimental unit receives 1 treatment.</li>
+</ul></li>
+<li>Response Variable – experimental units’ response to the treatment.
+<ul>
+<li>Could measure more than one response variable.</li>
+</ul></li>
+</ul>
+</div>
+<div id="section-four-principles-of-design" class="section level3">
+<h3>Four principles of design</h3>
+<ul>
+<li>Control
+<ul>
+<li>Only aspect that affects response is treatment.</li>
+<li>Make everything as equal as possible for experimental units.</li>
+<li>Only difference in treatment of units is the TREATMENT.</li>
+</ul></li>
+<li>Randomization
+<ul>
+<li>Treatments are applied to units randomly.</li>
+<li>Controls for unseen factors.</li>
+<li>Units do not pick the treatment they receive.</li>
+</ul></li>
+<li>Replication
+<ul>
+<li>Within the experiment, each treatment is given to more than one unit.</li>
+<li>Entire experiment should be repeated on a different group of units.</li>
+</ul></li>
+<li>Blocking (and sometimes y)
+<ul>
+<li>Variable of interest in experimental units.
+<ul>
+<li>Age</li>
+<li>Gender</li>
+</ul></li>
+<li>Divide units into blocks.</li>
+<li>Perform entire experiment on each block separately.</li>
+<li>Controls for blocking variable in experiment.</li>
+</ul></li>
+</ul>
+</div>
+<div id="section-results" class="section level3">
+<h3>Results</h3>
+<p>Compare the means (or appropriate statistic) between treatments, relative to the standard deviation of each treatment.</p>
+</div>
+<div id="section-examples-1" class="section level3">
+<h3>Examples</h3>
+<ul>
+<li>French fries: Tasters rated chips fried in three different oils, at several different time points. The tasters rated multiple batches (2 replicates). Although not stated in the data descriptions, it is expected that they controlled frying conditions, randomised order that the tasting was done, temperature at tasting.</li>
+</ul>
+<pre class="r"><code>data(french_fries, package=&quot;reshape2&quot;)
+?french_fries</code></pre>
+<ul>
+<li>Genes: Two different soybean genotypes were grown in iron sufficient and insufficient conditions. Interested to learn which genes in the plants respond differently to the iron treatments, and if the two types of plants behave differently. Researchers chose the plants, to grow in multiple pots. All other growing conditions were kept the same, with iron level being the only difference between the pots.</li>
+</ul>
+<pre class="r"><code>genes &lt;- read_csv(&quot;data/genes.csv&quot;)
+genes</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["x"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["y"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"10"},{"1":"2","2":"12"},{"1":"3","2":"5"},{"1":"4","2":"4"},{"1":"5","2":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["WI-6.R1"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["WI-6.R2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["WI-6.R4"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["WM-6.R1"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["WM-6.R2"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["WI-12.R1"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["WI-12.R2"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["WI-12.R4"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["WM-12.R1"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["WM-12.R2"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["WM-12.R4"],"name":[12],"type":["dbl"],"align":["right"]}],"data":[{"1":"Gene 1","2":"2.182424","3":"2.2042219","4":"4.195636","5":"2.6273345","6":"5.063641","7":"4.540002","8":"5.534677","9":"4.411520","10":"3.846151","11":"4.175877","12":"3.7255782"},{"1":"Gene 2","2":"1.464224","3":"0.5854472","4":"1.859238","5":"0.5152242","6":"2.882808","7":"1.364037","8":"2.960069","9":"1.309185","10":"1.182724","11":"1.187236","12":"0.8897749"},{"1":"Gene 3","2":"2.031792","3":"0.8701078","4":"3.281983","5":"0.5330452","6":"4.627315","7":"2.182192","8":"5.556209","9":"2.539065","10":"2.539960","11":"3.041293","12":"1.3507193"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<pre class="r"><code>ggplot(d, aes(x=x, y=y)) + 
-  geom_point()</code></pre>
-<p><img src="lecture10a_trees_files/figure-html/unnamed-chunk-13-1.png" width="576" style="display: block; margin: auto;" /></p>
 </div>
-<div id="section-classification-trees" class="section level2">
-<h2>Classification trees</h2>
-<p>When the response is categorical, the model is called a classification tree. The criteria for making the splits changes also. There are a number of split criteria commonly used. If we consider a binary response (<span class="math inline">\(y=0, 1\)</span>), and <span class="math inline">\(p\)</span> is the proportion of observations in class <span class="math inline">\(1\)</span>.</p>
+<div id="section-your-turn-2" class="section level3">
+<h3>Your turn</h3>
+<p>Read these articles and decide:</p>
 <ul>
-<li>Gini: <span class="math inline">\(2p(1-p)\)</span></li>
-<li>Entropy: <span class="math inline">\(-p(\log_e p)-(1-p)\log_e(1-p)\)</span></li>
+<li>Is this an experimental study or an observational study?</li>
+<li>For an experiment, identify the factors (and treatments), response variable(s), and how randomisation was used.</li>
 </ul>
-<p>Which rewards splits where the observations are all one class.</p>
+<ol style="list-style-type: decimal">
+<li><a href="https://www.sciencemag.org/news/2015/09/lack-sleep-puts-you-higher-risk-colds-first-experimental-study-finds">Lack of sleep puts you at higher risk for colds</a></li>
+<li><a href="http://broomedocs.com/wp-content/uploads/2016/10/roller-stone.pdf">Using roller coaster rides to try to hasten the passage of kidney stones</a></li>
+<li><a href="https://curiosity.com/topics/a-doctor-cracked-his-knuckles-for-50-years-to-see-if-it-was-harmful-curiosity/">A Doctor Cracked His Knuckles for 50 Years to See If It Was Harmful</a></li>
+</ol>
 </div>
-<div id="section-lab-exercise" class="section level2">
-<h2>Lab exercise</h2>
+<div id="section-more-terminology" class="section level3">
+<h3>More terminology</h3>
 <ul>
-<li>OECD PISA, what factors affect reading scores?</li>
-<li>15 year old standardised test scores, Australia, 2015</li>
-<li>Response: math</li>
-<li><p>Predictors: gender, anxtest, wealth, math_time, books, tvs</p></li>
-<li><p>Make a plot of all the variables</p></li>
-<li><p>Fit a linear model</p></li>
-<li><p>Fit a regression tree</p></li>
-<li><p>What is the most important variable</p></li>
-<li><p>How good is the model? Compute the <span class="math inline">\(R^2\)</span> for the tree.</p></li>
-<li><p>Which model fits better? The tree or the linear regression model?</p></li>
-<li><p>Change the control parameters to reduce the <span class="math inline">\(R^2\)</span> of the tree below that of the regression model.</p></li>
+<li><a href="https://en.wikipedia.org/wiki/Placebo">Placebo effect</a>: Any treatment results in some response. <em>When you feel really really sick, and finally buckle and make a doctor’s appointment, do you generally feel better straight away?</em> To measure the effect of response to no real treatment, experiments often have one treatment which is a placebo - inert tablets (like sugar pills), inert injections (like saline), sham surgery - the response of people in this group is measured, and used as a baseline upon which to measure the response to the real medicine, or surgery.</li>
+<li><a href="https://en.wikipedia.org/wiki/Blinded_experiment">Blinded</a>: - When the subject doesn’t know what treatment group they are in (e.g. placebo or medicine) the experiment is called <em>single blind</em>.
+<ul>
+<li>When both the subject, and the person administering the treatment, don’t know what treatment is being provided, the expierment is called <em>double blind</em>. The purpose is to avoid the researcher inadvertently giving the subject clues about how they are expected to respond.</li>
+</ul></li>
+<li><a href="https://en.wikipedia.org/wiki/Confounding">Confounding</a>: The presence of a third variable that explains the response and explanatory variables. The classic example is:
+<ul>
+<li>“Murders and ice cream purchase are strongly correlated” suggesting that
+<ol style="list-style-type: lower-alpha">
+<li>purchasing ice cream might result in more murder</li>
+<li>committing a murder might cause people to go buy ice cream</li>
+<li>both are more common in hot weather, which means weather is a confounding variable.</li>
+</ol></li>
+</ul></li>
 </ul>
+</div>
+</div>
+<div id="section-designing-surveys" class="section level2">
+<h2>Designing surveys</h2>
+<p>Survey sampling builds from simple random sampling. To make a survey, you need to</p>
+<ul>
+<li>map out a sampling frame, that means, giving every member of the population a number.</li>
+<li>identify strata in the population (e.g. gender, country, school…) that you may want to ensure are all represented, then you would do <em>stratified random sampling</em>, which is simple random sampling in each of the strata.</li>
+</ul>
+<div id="section-example-pisa" class="section level3">
+<h3>Example: PISA</h3>
+<p>The <a href="">OECD PISA</a> student tests are an example of stratified random sampling.</p>
+<ul>
+<li>Country is the strata</li>
+<li>Schools are randomly sampled within country. Depending on the country schools might be sampled using strata, too - public, private, religious; or within states</li>
+<li>Students are randomly sampled within schools</li>
+</ul>
+<p>The very extensive details on how it is accomplished are <a href="http://www.oecd.org/pisa/pisaproducts/PISA-NATIONAL-PROJECT-MANAGER-MANUAL.pdf">published</a>.</p>
+</div>
 </div>
 <div id="section-share-and-share-alike" class="section level2">
 <h2>Share and share alike</h2>
@@ -336,7 +278,6 @@ knitr::opts_chunk$set(echo = TRUE,
                       cache = FALSE)
 tutorial_html_dependency()
 library(tidyverse)
-library(gridExtra)
 library(plotly)
 </script>
  
