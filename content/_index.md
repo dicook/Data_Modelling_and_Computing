@@ -166,8 +166,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - AFL tweets: [afl_twitter.rda](http://dmac.dicook.org/lectures/lecture8b/data/afl_twitter.rda)
 - Go-to class network: [class_names.csv](http://dmac.dicook.org/lectures/lecture9a/data/class_names.csv)
 - Cross-currency rates May-Sep 2018 [rates_new.csv](http://dmac.dicook.org/lectures/lecture9b/data/rates_new.csv)
-
-
+- Clothes random sample: [clothes.csv](http://dmac.dicook.org/lectures/lecture10b/data/clothes.csv)
 
 ## Exam information
 
