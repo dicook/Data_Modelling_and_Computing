@@ -40,7 +40,7 @@ The way that data is collected may make it useful - possible to make statements 
 Take the survey in ED, "World's most recognisable brand". 
 
 ## The world's most recognisable brand name
-]
+
 
 In 2008, IBM, the most venerable computer (now data analysis) company declared this to be ["VEGEMITE"](https://www.beingaustralian.com.au/script/news_pop-up.php?n=69). 
 
@@ -83,6 +83,14 @@ Let's do it!
 - Compute the proportion of the class who see the dress as "blue and black" (from the survey results)
 
 - Use simple random sampling to select samples size 10, and compute the proportions of people who see one colour dress over another. How closely does this match the proportions for the full data?
+
+```{r}
+library(tidyverse)
+clothes <- read_csv("data/clothes.csv")
+clothes %>% count(Q2) %>% mutate(prop = n/sum(n))
+
+clothes %>% sample_n(10) %>% count(Q2) %>% mutate(prop = n/sum(n))
+```
 
 ## Observational study
 
@@ -210,6 +218,18 @@ For the "simple random sampling" survey data.
 - Compute the proportion of people who see the dress as "blue and black" for each clothing colour group, and then average these proportions. 
 - Take a stratified sample, by selecting two members from each clothing colour group, using simple random sampling
 - Compute the proportion seeing the dress as "blue and black" in each strata sample, and average these proportions to get an overall estimate.
+
+```{r}
+clothes %>% count(Q2) %>% mutate(prop = n/sum(n))
+clothes %>% 
+  group_by(Q1) %>%
+  count(Q2) %>% mutate(prop = n/sum(n))
+
+
+clothes %>% 
+  group_by(Q1) %>%
+  sample_n(2) %>% count(Q2) %>% mutate(prop = n/sum(n))
+```
 
 ## Final notes
 
