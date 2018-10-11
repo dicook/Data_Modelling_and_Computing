@@ -126,7 +126,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 		- [Twitter Coverage of the useR Conference 2018](https://github.com/neilfws/Twitter/blob/master/user2018/code/R/user2018.md)
     - Deadline 2: *Sep 21* Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
     - Deadline 3: *Oct 12* Final version of story board uploaded. There are two ways to do the storyboard:
-        - `learnr` package that the lecture notes are written in
+        - `learnr` package that the lecture notes are written in. [Example files with css](project/lecture10b.zip)
         - [flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) package, and there is an [example here](project/pisa_au_app.zip)
     - Presentation in week 12
 
