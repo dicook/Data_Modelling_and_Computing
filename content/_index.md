@@ -79,7 +79,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
         - 8 RnR                         3     8
         - 9 Hotel People                4    10
         - 10 Weather_prophet             3     8
-    - Fri:
+    - Fri: *Order Group Size Time*
         - 11 Eagles                      4    10
         - 12 Team Rocket                 4    10
         - 13 Data Confusion              4    10
