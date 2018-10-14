@@ -71,8 +71,8 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - Wed: *Order Group Size Time*
         - 1 [Bomrang](https://ebsmonash.shinyapps.io/projectBomrang)                     4    10
         - 2 Infinite                    3     8
-        - 3 Diversity                   4    10
-        - 4 Immi-emi                    2     6
+        - 3 [Diversity](https://ebsmonash.shinyapps.io/Diversity/)                   4    10
+        - 4 Intended mover                    2     6
         - 5 Thor                        4    10
         - 6 Blueberries                 3     8
         - 7 [Triple H](https://ebsmonash.shinyapps.io/weather_app/)                    3     8
@@ -80,12 +80,12 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
         - 9 Hotel People                4    10
         - 10 Weather_prophet             3     8
     - Fri: *Order Group Size Time*
-        - 11 Eagles                      4    10
+        - 11 Eagles                      3    8
         - 12 [Team Rocket](https://ebsmonash.shinyapps.io/Team_Rocket/)                 4    10
         - 13 Data Confusion              4    10
         - 14 R studio artists            3     8
         - 15 nine-nine                   3     8
-        - 16 GeoZoo                      2     6
+        - 16 GeoZoo                      3     8
         - 17 [The Standard Deviations](https://ebsmonash.shinyapps.io/Standard_Deviations/)     3     8
         - 18 R Rated                     3     8
         - 19 SonMin                      2     6
