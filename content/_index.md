@@ -80,7 +80,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
         - 9 Hotel People                4    10
         - 10 Weather_prophet             3     8
     - Fri: *Order Group Size Time*
-        - 11 Eagles                      3    8
+        - 11 [Eagles](https://ebsmonash.shinyapps.io/Eagles)                      2    6
         - 12 [Team Rocket](https://ebsmonash.shinyapps.io/Team_Rocket/)                 4    10
         - 13 Data Confusion              4    10
         - 14 R studio artists            3     8
