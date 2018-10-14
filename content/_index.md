@@ -82,12 +82,12 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - Fri: *Order Group Size Time*
         - 11 [Eagles](https://ebsmonash.shinyapps.io/Eagles)                      2    6
         - 12 [Team Rocket](https://ebsmonash.shinyapps.io/Team_Rocket/)                 4    10
-        - 13 Data Confusion              4    10
+        - 13 [Data Confusion](https://ebsmonash.shinyapps.io/DataConfusion/)              4    10
         - 14 R studio artists            3     8
         - 15 nine-nine                   3     8
         - 16 GeoZoo                      3     8
         - 17 [The Standard Deviations](https://ebsmonash.shinyapps.io/Standard_Deviations/)     3     8
-        - 18 R Rated                     3     8
+        - 18 [R Rated](https://ebsmonash.shinyapps.io/R_rated/)                     3     8
         - 19 SonMin                      2     6
         - 20 Titanic{float=False}        4    10  
 
