@@ -77,7 +77,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
         - 6 [Blueberries](https://ebsmonash.shinyapps.io/storyboardv3/)                 3     8
         - 7 [Triple H](https://ebsmonash.shinyapps.io/weather_app/)                    3     8
         - 8 [RnR](https://ebsmonash.shinyapps.io/RnR_climate/)                         3     8
-        - 9 Hotel People                4    10
+        - 9 [Hotel People](https://ebsmonash.shinyapps.io/The_Hotel_People/)                4    10
         - 10 [Weather_prophet](https://ebsmonash.shinyapps.io/weather/)             3     8
     - Fri: *Order Group Size Time*
         - 11 [Eagles](https://ebsmonash.shinyapps.io/Eagles)                      2    6
