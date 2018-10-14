@@ -70,7 +70,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
 - Week 12: Project presentations
     - Wed: *Order Group Size Time*
         - 1 [Bomrang](https://ebsmonash.shinyapps.io/projectBomrang)                     4    10
-        - 2 Infinite                    3     8
+        - 2 [Infinite](https://ebsmonash.shinyapps.io/webview/)                    3     8
         - 3 [Diversity](https://ebsmonash.shinyapps.io/Diversity/)                   4    10
         - 4 [Intended mover](https://ebsmonash.shinyapps.io/Intended_mover/)                    2     6
         - 5 [Thor](https://ebsmonash.shinyapps.io/Thor/)                        4    10
