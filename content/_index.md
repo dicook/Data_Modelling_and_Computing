@@ -72,19 +72,19 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
         - 1 [Bomrang](https://ebsmonash.shinyapps.io/projectBomrang)                     4    10
         - 2 Infinite                    3     8
         - 3 [Diversity](https://ebsmonash.shinyapps.io/Diversity/)                   4    10
-        - 4 Intended mover                    2     6
-        - 5 Thor                        4    10
-        - 6 Blueberries                 3     8
+        - 4 [Intended mover](https://ebsmonash.shinyapps.io/Intended_mover/)                    2     6
+        - 5 [Thor](https://ebsmonash.shinyapps.io/Thor/)                        4    10
+        - 6 [Blueberries](https://ebsmonash.shinyapps.io/storyboardv3/)                 3     8
         - 7 [Triple H](https://ebsmonash.shinyapps.io/weather_app/)                    3     8
-        - 8 RnR                         3     8
+        - 8 [RnR](https://ebsmonash.shinyapps.io/RnR_climate/)                         3     8
         - 9 Hotel People                4    10
-        - 10 Weather_prophet             3     8
+        - 10 [Weather_prophet](https://ebsmonash.shinyapps.io/weather/)             3     8
     - Fri: *Order Group Size Time*
         - 11 [Eagles](https://ebsmonash.shinyapps.io/Eagles)                      2    6
         - 12 [Team Rocket](https://ebsmonash.shinyapps.io/Team_Rocket/)                 4    10
         - 13 [Data Confusion](https://ebsmonash.shinyapps.io/DataConfusion/)              4    10
         - 14 R studio artists            3     8
-        - 15 nine-nine                   3     8
+        - 15 [nine-nine](https://ebsmonash.shinyapps.io/nine-nine)                   3     8
         - 16 GeoZoo                      3     8
         - 17 [The Standard Deviations](https://ebsmonash.shinyapps.io/Standard_Deviations/)     3     8
         - 18 [R Rated](https://ebsmonash.shinyapps.io/R_rated/)                     3     8
