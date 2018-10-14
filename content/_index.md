@@ -89,7 +89,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
         - 17 [The Standard Deviations](https://ebsmonash.shinyapps.io/Standard_Deviations/)     3     8
         - 18 [R Rated](https://ebsmonash.shinyapps.io/R_rated/)                     3     8
         - 19 SonMin                      2     6
-        - 20 Titanic{float=False}        4    10  
+        - 20 [Titanic{float=False}](https://ebsmonash.shinyapps.io/titanic_project)        4    10  
 
 <!--
 https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
