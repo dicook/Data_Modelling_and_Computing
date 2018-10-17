@@ -69,16 +69,16 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
    - Fri: Turn in project. [Guest lecture: Prashant Natarajan, Principal - AI and Analytics, Deloitte Australia,  "Demystifying: best practices in applying big data & machine learning"](http://dmac.dicook.org/lectures/lecture11b/Monash-PrashantN-DiCook-12.10.2018-v1.0.pdf)
 - Week 12: Project presentations
     - Wed: *Order Group Size Time*
-        - 1 [Bomrang](https://ebsmonash.shinyapps.io/bomrangProject/)                     4    10
-        - 2 [Infinite](https://ebsmonash.shinyapps.io/infinite/)                    3     8
-        - 3 [Diversity](https://ebsmonash.shinyapps.io/Diversity/)                   4    10
-        - 4 [Intended mover](https://ebsmonash.shinyapps.io/Intended_mover/)                    2     6
-        - 5 [Thor](https://ebsmonash.shinyapps.io/Thor/)                        4    10
-        - 6 [Blueberries](https://ebsmonash.shinyapps.io/storyboardv3/)                 3     8
-        - 7 [Triple H](https://ebsmonash.shinyapps.io/weather_app/)                    3     8
-        - 8 [RnR](https://ebsmonash.shinyapps.io/RnR_climate/)                         3     8
-        - 9 [Hotel People](https://ebsmonash.shinyapps.io/The_Hotel_People/)                4    10
-        - 10 [Weather_prophet](https://ebsmonash.shinyapps.io/weather/)             3     8
+        - 1 [Bomrang](https://ebsmonash.shinyapps.io/bomrangProject/)                     4    10  Analysing Family Violence in Victoria
+        - 2 [Infinite](https://ebsmonash.shinyapps.io/infinite/)                    3     8 Rental prices in Victoria
+        - 3 [Diversity](https://ebsmonash.shinyapps.io/Diversity/)                   4    10  Airplane traffic
+        - 4 [Intended mover](https://ebsmonash.shinyapps.io/Intended_mover/)                    2     6  Movement in Australia
+        - 5 [Thor](https://ebsmonash.shinyapps.io/Thor/)                        4    10 Analysing Movie Data 
+        - 6 [Blueberries](https://ebsmonash.shinyapps.io/storyboardv3/)                 3     8 Crash Statistics
+        - 7 [Triple H](https://ebsmonash.shinyapps.io/weather_app/)                    3     8  Weather in Australian Capital Cities
+        - 8 [RnR](https://ebsmonash.shinyapps.io/RnR_climate/)                         3     8 Global Climate
+        - 9 [Hotel People](https://ebsmonash.shinyapps.io/The_Hotel_People/)                4    10 Finding a good Parisian airbnb
+        - 10 [Weather_prophet](https://ebsmonash.shinyapps.io/weather/)             3     8 Weather_prophet
     - Fri: *Order Group Size Time*
         - 11 [Eagles](https://ebsmonash.shinyapps.io/Eagles)                      2    6
         - 12 [Team Rocket](https://ebsmonash.shinyapps.io/Team_Rocket/)                 4    10
@@ -88,7 +88,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
         - 16 [GeoZoo](https://ebsmonash.shinyapps.io/GeoZoo/)                      3     8
         - 17 [The Standard Deviations](https://ebsmonash.shinyapps.io/Standard_Deviations/)     3     8
         - 18 [R Rated](https://ebsmonash.shinyapps.io/R_rated/)                     3     8
-        - 19 [SonMin](https://ebsmonash.shinyapps.io/SonMin/)                      2     6
+        - 19 [SonMin](https://ebsmonash.shinyapps.io/SonMin/)                      2     5
         - 20 [Titanic{float=False}](https://ebsmonash.shinyapps.io/titanic_project/)        4    10  
 
 <!--
