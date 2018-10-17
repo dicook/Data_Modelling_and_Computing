@@ -78,18 +78,18 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
         - 7 [Triple H](https://ebsmonash.shinyapps.io/weather_app/)                    3     8  Weather in Australian Capital Cities
         - 8 [RnR](https://ebsmonash.shinyapps.io/RnR_climate/)                         3     8 Global Climate
         - 9 [Hotel People](https://ebsmonash.shinyapps.io/The_Hotel_People/)                4    10 Finding a good Parisian airbnb
-        - 10 [Weather_prophet](https://ebsmonash.shinyapps.io/weather/)             3     8 Weather_prophet
+        - 10 [Weather_prophet](https://ebsmonash.shinyapps.io/weather/)             3     8 Climate change in Sydney and Melbourne
     - Fri: *Order Group Size Time*
-        - 11 [Eagles](https://ebsmonash.shinyapps.io/Eagles)                      2    6
-        - 12 [Team Rocket](https://ebsmonash.shinyapps.io/Team_Rocket/)                 4    10
-        - 13 [Data Confusion](https://ebsmonash.shinyapps.io/DataConfusion/)              4    10
-        - 14 R studio artists            3     8
-        - 15 [nine-nine](https://ebsmonash.shinyapps.io/nine-nine)                   3     8
-        - 16 [GeoZoo](https://ebsmonash.shinyapps.io/GeoZoo/)                      3     8
-        - 17 [The Standard Deviations](https://ebsmonash.shinyapps.io/Standard_Deviations/)     3     8
-        - 18 [R Rated](https://ebsmonash.shinyapps.io/R_rated/)                     3     8
-        - 19 [SonMin](https://ebsmonash.shinyapps.io/SonMin/)                      2     5
-        - 20 [Titanic{float=False}](https://ebsmonash.shinyapps.io/titanic_project/)        4    10  
+        - 11 [Eagles](https://ebsmonash.shinyapps.io/Eagles)                      2    6  Income inequality
+        - 12 [Team Rocket](https://ebsmonash.shinyapps.io/Team_Rocket/)                 4    10  Analysing MLB data
+        - 13 [Data Confusion](https://ebsmonash.shinyapps.io/DataConfusion/)              4    10  Crime and Demographics
+        - 14 [R studio artists](https://ebsmonash.shinyapps.io/Masterpiece/)            3     8 Child labour
+        - 15 [nine-nine](https://ebsmonash.shinyapps.io/nine-nine)                   3     8 Australian Fatal Crashes
+        - 16 [GeoZoo](https://ebsmonash.shinyapps.io/GeoZoo/)                      3     8  Traffic flow around Melbourne
+        - 17 [The Standard Deviations](https://ebsmonash.shinyapps.io/Standard_Deviations/)     3     8  Aussie Rules Football
+        - 18 [R Rated](https://ebsmonash.shinyapps.io/R_rated/)                     3     8   How Much Dirt Does Facebook Have On You?
+        - 19 [SonMin](https://ebsmonash.shinyapps.io/SonMin/)                      2     5  Quality of Life in Melbourne
+        - 20 [Titanic{float=False}](https://ebsmonash.shinyapps.io/titanic_project/)        4    10  Can Money Buy Teams Wins in the NBA?
 
 <!--
 https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
