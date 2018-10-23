@@ -1,0 +1,278 @@
+---
+title: "ETC 1010 Assignment 5"
+author: "Di Cook"
+output: html_document
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE, 
+  collapse = TRUE,
+  comment = "",
+  fig.height = 8,
+  fig.width = 12,
+  fig.align = "center",
+  cache = FALSE
+)
+```
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(ggmap)
+```
+
+# Exercise
+
+The Atlas of Living Australia data for the area around Monash's Clayton campus, Melbourne has been downloaded for you. 
+
+```{r echo=TRUE}
+monash <- read_csv("data/monash_species.csv")
+```
+
+
+1. (1pt) What was the earliest and latest dates of wildlife being sighted in the data provided?
+
+```{r}
+monash %>% select(`Event Date - parsed`) %>% summary()
+```
+
+2.  (1pt) How many different species have been sighted? `316`
+
+```{r}
+monash %>% count(`Scientific Name`, sort=TRUE)
+```
+
+3.  (1pt) What species is the most commonly sighted around Monash?
+
+*`Cracticus tibicen` which is the `Australian magpie`.*
+
+4. It's a bit surprising to see sightings dated in the 1800s. Let's look at these in more detail.
+
+    a.  (1pt) Count the number of sightings by day, and make a plot of count by date. What year do you think Monash University was established (based on this data)? Why? Check your guess using google. *Around 1960, because this is when sightings begin to be recorded.*
+    b.  (1pt) Subset the measurements recorded prior to 1950. Who was the collector? *RAOU VIC historical observer*
+    c.  (1pt) Of these historically observed species, are any not seen around campus any more? *There are 10 specis that are not commonly seen any more, including the budgerigar.*
+
+```{r}
+monash %>% count(`Event Date - parsed`) %>% 
+  ggplot(aes(x=`Event Date - parsed`, y=n)) + geom_point()
+old <- monash %>% filter(year(`Event Date - parsed`) < 1950) %>% 
+  select(`Scientific Name`, `Vernacular name`, Collector, `Basis Of Record`)
+new <- monash %>% filter(year(`Event Date - parsed`) >= 1950) %>% 
+  select(`Scientific Name`, `Vernacular name`, Collector, `Basis Of Record`)
+old %>% filter(!(`Scientific Name` %in% new$`Scientific Name`)) %>% count(`Vernacular name`)
+```
+
+5.  (1pt) We are going to create a subset, especially for you to analyse, of a random sample of 4 of the species commonly seen in recent years. Using the code provided do the following:
+
+*Subset the data to species seen after 1950. Count the number of sightings of each species. Randomly sample 4 from the ones that have been sighted at least 100 times. List the Scientific names of your four species.* 
+
+```{r echo=TRUE, eval=FALSE}
+myspecies <- monash %>%
+  filter(year(`Event Date - parsed`) >= 1950) %>%
+  count(`Scientific Name`, sort=TRUE) %>% 
+  filter(n > 100) %>%
+  sample_n(4) 
+mysample <- monash %>%
+  filter(year(`Event Date - parsed`) >= 1950) %>%
+  filter(`Scientific Name` %in% myspecies$`Scientific Name`)
+```
+
+```
+# My four
+> myspecies
+# A tibble: 4 x 2
+  `Scientific Name`                       n
+  <chr>                               <int>
+1 Anser                                 175
+2 Cracticus torquatus                   307
+3 Cracticus tibicen                     861
+4 Streptopelia (Spilopelia) chinensis   302
+```
+
+```{r}
+mysample <- monash %>%
+  filter(year(`Event Date - parsed`) >= 1950) %>%
+  filter(`Scientific Name` %in% c("Anser", "Cracticus torquatus", "Cracticus tibicen", "Streptopelia (Spilopelia) chinensis"))
+```
+
+4.  (2 pts) Make a map of campus, and plot the locations of species sightings, coloured and faceted by the different species. Write a few sentences describing the distribution of the species - use Vernacular name for any that have one. 
+
+```{r eval=FALSE}
+map <- get_map(location=c(145.13357, -37.90933), zoom=15)
+ggmap(map)
+save(map, file="data/monash_map.rda")
+```
+
+```{r}
+load("data/monash_map.rda")
+ggmap(map) + 
+  geom_point(data=mysample, aes(x=Longitude, y=Latitude,
+                                colour=`Scientific Name`)) +
+  facet_wrap(~`Scientific Name`, ncol=2)
+```
+
+6.  (2 pts)  Aggregate the sightings for each species, by month. Make a plot of number of sightings by month. Write a sentence or two discussing the relative frequency of sightings by month of the year.
+
+```{r}
+mysample_month <- mysample %>% 
+  group_by(`Scientific Name`) %>%
+  count(`Event Date - parsed`) %>%
+  mutate(month = month(`Event Date - parsed`, label=TRUE)) 
+ggplot(data=mysample_month, 
+       aes(x=month, y=n, colour=`Scientific Name`)) + 
+  geom_jitter(alpha=0.2) +
+  geom_smooth(aes(x=as.numeric(month))) +
+  facet_wrap(~`Scientific Name`) + 
+  ylim(c(0, 9)) +
+  theme(legend.position="bottom")
+```
+
+*The magpie is spotted more in nesting season, Aug-Nov, but the other three of mine are seen routinely throughout the year.*
+
+7.  (2 pts) Aggregate by hour of the day. Make a line plot of frequency of sighting by hour. What are the most common times of day to see these species?
+
+```{r}
+mysample_hour <- mysample %>%
+  separate(`Event Time`, c("hour", "mins", "secs")) %>%
+  group_by(`Scientific Name`) %>%
+  count(hour) %>%
+  mutate(hour = as.numeric(hour)) %>%
+  filter(!is.na(hour)) 
+ggplot(mysample_hour, aes(x=hour, y=n, colour=`Scientific Name`)) + geom_line() +
+  facet_wrap(~`Scientific Name`)
+```
+
+*During the day, starting around 9-10, tapering off in the afternoon. This is most likely following human patterns, that the species are reported during the work day.*
+
+8.  (3 pts) Find the species description on wikipedia. Read in the text descriptions for each of your species, using web scraping (example code is below). Conduct a text analysis to determine which words most distinguish the different between the four species. 
+
+```{r}
+library(rvest)
+library(glue)
+library(tidytext)
+library(tm)
+dove <- read_html("https://en.wikipedia.org/wiki/Spotted_dove") %>%
+  html_nodes("p") %>%
+  html_text() %>% glue_collapse(sep=" ")
+dove <- removeNumbers(dove)
+dove <- as_tibble(dove)
+dove_words <- dove %>%   
+  unnest_tokens(word, value) %>%
+  anti_join(stop_words) %>%
+  count(word, sort=TRUE)
+magpie <- read_html("https://en.wikipedia.org/wiki/Australian_magpie") %>%
+  html_nodes("p") %>%
+  html_text() %>% glue_collapse(sep=" ")
+magpie <- removeNumbers(magpie)
+magpie <- as_tibble(magpie)
+magpie_words <- magpie %>%   
+  unnest_tokens(word, value) %>%
+  anti_join(stop_words) %>%
+  count(word, sort=TRUE)
+butchbird <- read_html("https://en.wikipedia.org/wiki/Grey_butcherbird") %>%
+  html_nodes("p") %>%
+  html_text() %>% glue_collapse(sep=" ")
+butchbird <- removeNumbers(butchbird)
+butchbird <- as_tibble(butchbird)
+butchbird_words <- butchbird %>%   
+  unnest_tokens(word, value) %>%
+  anti_join(stop_words) %>%
+  count(word, sort=TRUE)
+anser <- read_html("https://en.wikipedia.org/wiki/Anser_(bird)") %>%
+  html_nodes("p") %>%
+  html_text() %>% glue_collapse(sep=" ")
+anser <- removeNumbers(anser)
+anser <- as_tibble(anser)
+anser_words <- anser %>%   
+  unnest_tokens(word, value) %>%
+  anti_join(stop_words) %>%
+  count(word, sort=TRUE)
+```
+
+```{r}
+# Now compare words
+dove_words <- dove_words %>%
+  mutate(species = "Streptopelia (Spilopelia) chinensis")
+magpie_words <- magpie_words %>%
+  mutate(species = "Cracticus tibicen")
+butchbird_words <- butchbird_words %>%
+  mutate(species = "Cracticus torquatus")
+anser_words <- anser_words %>%
+  mutate(species = "Anser")
+species_all <- bind_rows(dove_words, magpie_words, butchbird_words, anser_words)
+species_all <- species_all %>% bind_tf_idf(word, species, n)
+#species_all %>% arrange(desc(tf_idf))
+species_all %>%
+  arrange(desc(tf_idf)) %>%
+  mutate(word = factor(word, levels = rev(unique(word)))) %>% 
+  group_by(species) %>% 
+  top_n(15) %>% 
+  ungroup() %>%
+  ggplot(aes(word, tf_idf, fill = species)) +
+  geom_col(show.legend = FALSE) +
+  labs(x = NULL, y = "tf-idf") +
+  facet_wrap(~species, ncol = 2, scales = "free") +
+  coord_flip() + scale_fill_brewer(palette="Dark2")
+```
+
+*We can learn a lot about the species based on the differentiated keywords. For example, "Anser" are geese, and are likely an introduced species because "America" pops up. Similarly, the spotted dove is an introduced species because India and Hawaii pop up. Magpies could be dangerous (as we know) because the words "attack" and "aggressive" pop out. And the bucherbird is known for its "singing".*
+
+9. (2 pts) Now expand your subset again, to include the 25 most common species. 
+    a. Compute the frequency of sighting by hour of the day. 
+    b. Standardize the hourly counts for each species by dividing by the maximum counts. (This will put the counts for each species in the range 0 to 1, that is, it converts them to proportion of sightings occurring each hour.)
+    c. Spread the data to have hour in the columns, and species in the rows, and the proportion in the cells.
+    d. Compute the Euclidean distance between species, that is the distance between proportions in each hour. 
+    e. Convert distances to a binary matrix, and use this to produce a network map of the species. This indicates which species are more commonly seen at similar times of the day. 
+
+```{r}
+library(geomnet)
+top25 <- monash %>%
+  filter(year(`Event Date - parsed`) >= 1950) %>%
+  count(`Scientific Name`, sort=TRUE) %>% 
+  top_n(25) 
+topspecies <- monash %>%
+  filter(year(`Event Date - parsed`) >= 1950) %>%
+  filter(`Scientific Name` %in% top25$`Scientific Name`)
+topspecies_hour <- topspecies %>%
+  separate(`Event Time`, c("hour", "mins", "secs")) %>%
+  group_by(`Scientific Name`) %>%
+  count(hour) %>%
+  mutate(hour = as.numeric(hour)) %>%
+  filter(!is.na(hour)) %>%
+  mutate(p = n/sum(n)) %>%
+  select(`Scientific Name`, hour, p) %>%
+  spread(hour, p, fill = 0)
+topspecies_d <- as.matrix(dist(topspecies_hour, diag=TRUE, upper=TRUE))
+colnames(topspecies_d) <- top25$`Scientific Name`
+topspecies_d_tbl <- topspecies_d %>% 
+  as_tibble() %>%
+  mutate(species1=top25$`Scientific Name`) %>%
+  gather(species2, dst, -species1) %>%
+  filter(dst<0.05) %>%
+  filter(species1 != species2)
+set.seed(1000)
+ggplot(data = topspecies_d_tbl, aes(from_id = species1, to_id = species2)) +
+  geom_net(layout.alg = "kamadakawai",
+    size = 2, labelon = TRUE, vjust = -0.6, ecolour = "grey60",
+    directed =FALSE, fontsize = 3, ealpha = 0.5) +
+    theme_net() +
+    theme(legend.position = "bottom")
+topspecies %>% filter(`Scientific Name` %in% 
+    c("Turdus merula merula", "Hirundo neoxena", "Cracticus tibicen", "Cracticus torquatus")) %>%
+  separate(`Event Time`, c("hour", "mins", "secs")) %>%
+  group_by(`Scientific Name`) %>%
+    count(hour) %>%
+    filter(!is.na(hour)) %>%
+  mutate(p = n/sum(n)) %>%
+  mutate(hour=as.numeric(hour)) %>%
+  ggplot(aes(x=hour, y=p, colour=`Scientific Name`,
+             group=`Scientific Name`)) + geom_line() 
+```
+
+# Grading
+
+Two points reserved for easy to compile, spell-checked, nicely turned in work.
