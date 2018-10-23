@@ -81,9 +81,9 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
         - 10 [Weather_prophet](https://ebsmonash.shinyapps.io/weather/)             3     8 Climate change in Sydney and Melbourne
     - Fri: *Order Group Size Time Topic*
         - 11 [Eagles](https://ebsmonash.shinyapps.io/Eagles)                      2    6  Income inequality
-        - 12 [Team Rocket](https://ebsmonash.shinyapps.io/Team_Rocket/)                 4    10  Analysing MLB data
-        - 13 [Data Confusion](https://ebsmonash.shinyapps.io/DataConfusion/)              4    10  Crime and Demographics
-        - 14 [R studio artists](https://ebsmonash.shinyapps.io/Masterpiece/)            3     8 Child labour
+        - 12 [R studio artists](https://ebsmonash.shinyapps.io/Masterpiece/)            3     8 Child labour
+        - 13 [Team Rocket](https://ebsmonash.shinyapps.io/Team_Rocket/)                 4    10  Analysing MLB data
+        - 14 [Data Confusion](https://ebsmonash.shinyapps.io/DataConfusion/)              4    10  Crime and Demographics
         - 15 [nine-nine](https://ebsmonash.shinyapps.io/nine-nine)                   3     8 Australian Fatal Crashes
         - 16 [GeoZoo](https://ebsmonash.shinyapps.io/GeoZoo/)                      3     8  Traffic flow around Melbourne
         - 17 [The Standard Deviations](https://ebsmonash.shinyapps.io/Standard_Deviations/)     3     8  Aussie Rules Football
