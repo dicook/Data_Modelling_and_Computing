@@ -286,9 +286,16 @@ ggplot(data=platydata) +
 
 The locations would be even more recognisable if we added a real map underneath. One way this can be done is to use a google map. The `ggmap` package has an interface to extracting google maps. Install it and then grab a map of Australia with this code.
 
+```{r echo=TRUE, eval=FALSE}
+library(ggmap)
+#register_google(XXX) You need to register with google to get maps now
+oz <- get_map(location=c(lon=133.8807, lat=-23.6980), zoom=4)
+save(oz, file="data/oz.rda")
+```
+
 ```{r echo=TRUE}
 library(ggmap)
-oz <- get_map(location=c(lon=133.8807, lat=-23.6980), zoom=4)
+load("data/oz.rda")
 ggmap(oz) + 
   geom_point(data=platydata, aes(x=longitude, y=latitude), 
               alpha=0.1, colour="orange")

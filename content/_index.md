@@ -6,6 +6,20 @@ title: Home
 
 # ETC1010: Data Modelling and Computing
 
+## Final grade distribution
+
+- Class median: 74
+- IQR: 62-86
+
+Grade distribution:
+
+- HD 25
+- D 13
+- C 13
+- P 13
+
+Final marks were curved to meet Business School distribution guidelines.
+
 ## Semester 2 2018
 
 - Lecturers: Professor Di Cook (dicook@monash.edu)
