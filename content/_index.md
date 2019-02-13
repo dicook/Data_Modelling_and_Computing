@@ -48,34 +48,34 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
 
 ## Lecture notes
 
-- Week 1: Getting started: 
+- Week 1: Getting yourself setup to do reproducible analyses, and introduction to the language of data analysis (R)
     - [Wed](https://ebsmonash.shinyapps.io/lecture1a_intro/) [(Rmd)](http://dmac.dicook.org/lectures/lecture1a/lecture1a_intro.Rmd); [Reading Textbook 27.1-5](http://r4ds.had.co.nz/r-markdown.html) Go to ED and complete the reading quiz before Friday's class
     - [Fri](https://ebsmonash.shinyapps.io/lecture1b_intro/) [(Rmd)](http://dmac.dicook.org/lectures/lecture1b/lecture1b_intro.Rmd)); [Reading Textbook 12.1-4](http://r4ds.had.co.nz/tidy-data.html) Go to ED and complete the reading quiz before Wednesday's class
-- Week 2: Tidy data principles
+- Week 2: Tidy data principles, reshaping your data into tidy form, and basic data wrangling
     - [Wed](https://ebsmonash.shinyapps.io/lecture2a_tidydata) [(Rmd)](http://dmac.dicook.org/lectures/lecture2a/lecture2a_tidydata.Rmd);  [Reading Textbook 5.1, 5.2, 5.3, 5.4, 5.5, 5.6 *only the first paragraph of each section!*](http://r4ds.had.co.nz/transform.html)
     - [Fri](https://ebsmonash.shinyapps.io/lecture2b_tidydata) [(Rmd)](http://dmac.dicook.org/lectures/lecture2b/lecture2b_tidydata.Rmd) [Reading Text book 3.1-3.3](http://r4ds.had.co.nz/data-visualisation.html)
-- Week 3: Data cleaning, rearranging and transformation
+- Week 3: Plotting your data, and wrangling temporal data
     - [Wed](https://ebsmonash.shinyapps.io/lecture3a_basicvis) [(Rmd)](http://dmac.dicook.org/lectures/lecture3a/lecture3a_basicvis.Rmd) [Reading Textbook 16.1, 16.2, 16.3.1](http://r4ds.had.co.nz/dates-and-times.html)
     - [Fri](https://ebsmonash.shinyapps.io/lecture3b_time) [(Rmd)](http://dmac.dicook.org/lectures/lecture3b/lecture3b_time.Rmd) [Reading Textbook 13.1, 13.2](http://r4ds.had.co.nz/relational-data.html)
-- Week 4: Data visualisation
+- Week 4: Advanced wrangling, joining tables, and advanced data visualisation
    - [Wed](https://ebsmonash.shinyapps.io/lecture4a_relational) [(Rmd)](http://dmac.dicook.org/lectures/lecture4a/lecture4a_relational.Rmd) [Reading Textbook 3.5-3.7](http://r4ds.had.co.nz/data-visualisation.html)
    - [Fri](https://ebsmonash.shinyapps.io/lecture4b_visualisation) [(Rmd)](http://dmac.dicook.org/lectures/lecture4b/lecture4b_visualisation.Rmd) [Reading on handling missing values](https://cran.r-project.org/web/packages/naniar/vignettes/getting-started-w-naniar.html)
-- Week 5: Handling missing values  
+- Week 5: Handling missing values and scraping data  
     - [Wed](https://ebsmonash.shinyapps.io/lecture5a_missings) [(Rmd)](http://dmac.dicook.org/lectures/lecture5a/lecture5a_missings.Rmd) [Reading exercise is a doing exercise this week - follow the instructions on this site](https://gist.github.com/cpsievert/e05da83fc4253e6d1986)
     - [Fri](https://ebsmonash.shinyapps.io/lecture5b_harvesting_data) [(Rmd)](http://dmac.dicook.org/lectures/lecture5b/lecture5b_harvesting_data.Rmd) [Reading Textbook 23.1-2](http://r4ds.had.co.nz/model-basics.html)
-- Week 6: Introduction to modeling
+- Week 6: Introduction to modeling, and building many models
     - [Wed](https://ebsmonash.shinyapps.io/lecture6a_models) [(Rmd)](http://dmac.dicook.org/lectures/lecture6a/lecture6a_models.Rmd) [Reading Textbook 23.3-5](http://r4ds.had.co.nz/model-basics.html)
     - [Fri](https://ebsmonash.shinyapps.io/lecture6b_models) [(Rmd)](http://dmac.dicook.org/lectures/lecture6b/lecture6b_models.Rmd) [Reading Textbook 25.1, 25.2 (only the first section)](http://r4ds.had.co.nz/many-models.html)
 - Week 7: Intermediate models 
     - [Wed](https://ebsmonash.shinyapps.io/lecture7a_models) [(Rmd)](http://dmac.dicook.org/lectures/lecture7a/lecture7a_models.Rmd) [Reading Textbook 24.1-2](http://r4ds.had.co.nz/model-building.html) [OH! An amazing analysis of rents in Melbourne](http://freerangestats.info/blog/2018/08/31/melbourne-rents)
     - [Fri](https://ebsmonash.shinyapps.io/lecture7b_models) [(Rmd)](http://dmac.dicook.org/lectures/lecture7b/lecture7b_models.Rmd) Reading for this week is to browse through some of the data stories linked to the project instructions below.
-- Week 8: Advanced modeling
+- Week 8: Analysing text data
     - [Wed](https://ebsmonash.shinyapps.io/lecture8a_text) [(Rmd)](http://dmac.dicook.org/lectures/lecture8a/lecture8a_text.Rmd) Complete the "class network" survey!
     - [Fri](https://ebsmonash.shinyapps.io/lecture8b_text) [(Rmd)](http://dmac.dicook.org/lectures/lecture8b/lecture8b_text.Rmd) NO READING THIS WEEK!
-- Week 9: Advanced modeling; 
+- Week 9: Wrangling, plotting and modeling network data
    - [Wed](https://ebsmonash.shinyapps.io/lecture9a_networks) [(Rmd)](http://dmac.dicook.org/lectures/lecture9a/lecture9a_networks.Rmd) NO READING THIS WEEK!
    - [Fri](https://ebsmonash.shinyapps.io/lecture9b_networks) [(Rmd)](http://dmac.dicook.org/lectures/lecture9b/lecture9b_networks.Rmd) NO READING THIS WEEK!
-- Week 10: Advanced modeling and data
+- Week 10: Computational modeling, and good data collection practices
    - [Wed](https://ebsmonash.shinyapps.io/lecture10a_trees) [(Rmd)](http://dmac.dicook.org/lectures/lecture10a/lecture10a_trees.Rmd) NO READING THIS WEEK!
    - [Fri](https://ebsmonash.shinyapps.io/lecture10b_sampling) [(Rmd)](http://dmac.dicook.org/lectures/lecture10b/lecture10b_sampling.Rmd) NO READING THIS WEEK!
 - Week 11: 

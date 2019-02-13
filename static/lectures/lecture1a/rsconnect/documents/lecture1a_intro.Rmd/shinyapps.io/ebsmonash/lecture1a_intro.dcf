@@ -4,9 +4,9 @@ username:
 account: ebsmonash
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
-appId: 288325
-bundleId: 1493463
+appId: 715125
+bundleId: 1875018
 url: https://ebsmonash.shinyapps.io/lecture1a_intro/
-when: 1532251383.12172
+when: 1550100926.80924
 asMultiple: FALSE
 asStatic: FALSE
