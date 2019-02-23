@@ -21,7 +21,7 @@ footnotereturnlinkcontents = "↩"
     url = "http://r4ds.had.co.nz"
     weight = 2
 [[menu.main]]
-    name = "ED (Assignments & quizzes)"
+    name = "ED (Discuss, Ass'ts & quizzes)"
     url = "https://edstem.com.au"
     weight = 3
 [[menu.main]]
@@ -30,9 +30,9 @@ footnotereturnlinkcontents = "↩"
     weight = 4
 [[menu.main]]
     name = "Unit guide"
-    url = "https://unitguidemanager.monash.edu/view?unitCode=ETC1010&tpCode=S2-01&tpYear=2018"
+    url = ""
     weight = 5
 
 [params]
     description = "A website built through Hugo and blogdown."
-    footer = "&copy; [Di Cook](https://dicook.org) 2017-8 | [Github](https://github.com/dicook) | [Twitter](https://twitter.com/dicook)"
+    footer = "&copy; [Di Cook](https://dicook.org) 2017-9 | [Github](https://github.com/dicook) | [Twitter](https://twitter.com/dicook)"
