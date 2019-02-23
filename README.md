@@ -1,4 +1,4 @@
 # Data_Modelling_and_Computing
-Materials for ETC1010, semester 1, 2018
+Materials for ETC1010, semester 1, 2019
 
-# Instructors: Prof. Di Cook
+# Instructor: Prof. Di Cook
