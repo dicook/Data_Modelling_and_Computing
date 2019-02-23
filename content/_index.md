@@ -75,11 +75,11 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 		 
 ## Assignments
 
-- Assignment 1: [Instructions](assignments/assignment1.html) [(Rmd)](assignments/assignment1.Rmd) [SOLUTION](assignments/assignment1_solution.html) [(Rmd)](assignments/assignment1_solution.Rmd); Data: [2006](assignments/data/ABS_ed_age_sex_2006.xlsx), [2011](assignments/data/ABS_ed_age_sex_2011.xlsx), [2016](assignments/data/ABS_ed_age_sex_2016.xlsx) **DUE: Week 3, individual on Tue, group Thu, during class**
-- Assignment 2: [Instructions](assignments/assignment2.html) [(Rmd)](assignments/assignment2.Rmd) [SOLUTION](assignments/assignment2_solution.html) [(Rmd)](assignments/assignment2_solution.Rmd); [di1.csv](assignments/data/smart_meter/di1.csv); Stories of the household electricity use: [Diana](assignments/di.html)[(Rmd)](assignments/di.Rmd) [George](assignments/george.html)[(Rmd)](assignments/george.Rmd) [Clare](assignments/clare.html)[(Rmd)](assignments/clare.Rmd) [Natalia](assignments/natalia.html)[(Rmd)](assignments/natalia.Rmd) **DUE: Week 4, individual on Tue, group Thu, during class**
-- Assignment 3: [Instructions](assignments/assignment3.html) [(Rmd)](assignments/assignment3.Rmd) [SOLUTION](assignments/assignment3_solution.html) [(Rmd)](assignments/assignment3_solution.Rmd) [oz_weather.csv](assignments/data/oz_weather.csv) [stns_oz.csv](assignments/data/stns_oz.csv) **DUE: Week 6, individual on Tue, group Thu, at the start of class**
-- Assignment 4: [Instructions](assignments/assignment4.html) [(Rmd)](assignments/assignment4.Rmd) [SOLUTION](assignments/assignment4_solution.html) [(Rmd)](assignments/assignment4_solution.Rmd) **DUE: Week 8, individual on Tue, group Thu, at the start of class**
-- Assignment 5: [instructions](assignments/assignment5.html) [(Rmd)](assignments/assignment5.Rmd) [SOLUTION](assignments/assignment5_solution.html) [(Rmd)](assignments/assignment5_solution.Rmd)  [monash_species.csv](assignments/data/monash_species.csv) [map (only use if ggmap misbehaves)](assignments/data/monash_map.rda) **This will be completed individually during the lectorial on XXX.** [Semester 1 example](assignments/assignment5_S1.html) [(Rmd)](assignments/assignment5_S1.Rmd) [Solution](assignments/assignment5_S1_solution.html) [(Rmd)](assignments/assignment5_S1_solution.Rmd)
+- Assignment 1: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)](assignments/assignment1_solution.Rmd); Data:  **DUE: Week 3, individual on Tue, group Thu, during class**
+- Assignment 2: [Instructions]() [SOLUTION]() [(Rmd)](); **DUE: Week 5, individual on Tue, group Thu, during class**
+- Assignment 3: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]()  **DUE: Week 7, individual on Tue, group Thu, at the start of class**
+- Assignment 4: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]() **DUE: Week 9, individual on Tue, group Thu, at the start of class**
+- Practical exam: [instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]()  **This will be completed individually during the lectorial on XXX.**
 
 <!--
 ## Assignment 4 peer evaluation
@@ -109,7 +109,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 ## Project
 
 - [Project instructions](project/project-ETC1010.pdf) 
-    - Deadline 1: *Sep 14* Team members and team name, data description. Below are some links to data stories that might stimulate your creative thinking
+    - Deadline 1:  Team members and team name, data description. Below are some links to data stories that might stimulate your creative thinking
         - [Blue Bikes Sharing in Boston](https://www.r-bloggers.com/blue-bikes-sharing-in-boston/)
         - 	[What birds are observed near Radolfzell? Bird occurrence data in R](https://ropensci.org/blog/2018/08/21/birds-radolfzell/)
 		- [Who wrote the anti-Trump New York Times op-ed? Using tidytext to find document similarity](https://www.r-bloggers.com/who-wrote-the-anti-trump-new-york-times-op-ed-using-tidytext-to-find-document-similarity/)
@@ -123,8 +123,8 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 		- [Analysis of Los Angeles Crime with R](https://datascienceplus.com/analysis-of-los-angeles-crime-with-r/)
 		- [Looking at Seinfeld dialogues using #tidytext](https://pradeepadhokshaja.wordpress.com/2018/08/06/looking-at-seinfeld-dialogues-using-tidytext/)
 		- [Twitter Coverage of the useR Conference 2018](https://github.com/neilfws/Twitter/blob/master/user2018/code/R/user2018.md)
-    - Deadline 2: *Sep 21* Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
-    - Deadline 3: *Oct 12* Final version of story board uploaded. There are two ways to do the storyboard:
+    - Deadline 2:  Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
+    - Deadline 3:  Final version of story board uploaded. There are two ways to do the storyboard:
         - `learnr` package that the lecture notes are written in. [Example files with css](project/lecture10b.zip)
         - [flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) package, and there is an [example here](project/pisa_au_app.zip)
     - Presentation in week 12
