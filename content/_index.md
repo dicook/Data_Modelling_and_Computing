@@ -11,7 +11,7 @@ title: Home
 - Lecturers: Professor Di Cook (dicook@monash.edu)
 - Tutors: Stuart Lee, Steph Kobakian, Mitch O'Hara-Wild
 
-Unless your question is a personal issue or an administrative matter, please do not send us direct email. The [ED site](https://edstem.org/courses/2714/) is appropriate for questions related to the course material.
+Unless your question is a personal issue or an administrative matter, please do not send us direct email. The [ED site](https://edstem.org/courses/3443/) is appropriate for questions related to the course material.
 
 ## Schedule
 
