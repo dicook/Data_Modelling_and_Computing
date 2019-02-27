@@ -43,14 +43,17 @@ Grover image sourced from https://en.wikipedia.org/wiki/Grover.
 
 *R is a language for data analysis. If R seems a bit confusing, disorganized, and perhaps incoherent at times, in some ways that's because so is data analysis.* Roger Peng, 12/07/2018
 
+
+
 ### Why R?
 
 * [Most commonly used data science software](http://www.kdnuggets.com/2017/05/poll-analytics-data-science-machine-learning-software-leaders.html) - helps YOU the job market
+* [Sharon Machlis from ComputerWorld says "R is hot"](https://www.computerworld.com/article/2497143/business-intelligence/business-intelligence-beginner-s-guide-to-r-introduction.html)
 
 ![](images/kdd_software.png)
 
 * __Free__
-* __Powerful__: Over 14000 contributed packages from top researchers globally
+* __Powerful__: Almost 15000 contributed packages on the main repository (CRAN), as of Feb 2019, provided by top international researchers and programmers. 
 * __Flexible__: It is a language, and thus allows you to create your own solutions
 * __Community__: Large global community friendly and helpful, lots of resources
 

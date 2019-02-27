@@ -30,8 +30,12 @@ footnotereturnlinkcontents = "↩"
     weight = 4
 [[menu.main]]
     name = "Unit guide"
-    url = ""
+    url = "https://unitguidemanager.monash.edu/view?unitCode=ETC1010&tpCode=S1-01&tpYear=2019"
     weight = 5
+[[menu.main]]
+    name = "Moodle (marks)"
+    url = "https://lms.monash.edu/course/view.php?id=49067"
+    weight = 6
 
 [params]
     description = "A website built through Hugo and blogdown."
