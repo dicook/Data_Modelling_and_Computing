@@ -166,6 +166,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Go-to class network: [class_names.csv](http://dmac.dicook.org/lectures/lecture9a/data/class_names.csv)
 - Cross-currency rates May-Sep 2018 [rates_new.csv](http://dmac.dicook.org/lectures/lecture9b/data/rates_new.csv)
 - Clothes random sample: [clothes.csv](http://dmac.dicook.org/lectures/lecture10b/data/clothes.csv)
+- Google map of Australia: [oz.rda](http://dmac.dicook.org/lectures/lecture1b/data/oz.rda)
 
 ## Exam information
 

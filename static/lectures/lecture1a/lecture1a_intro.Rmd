@@ -27,9 +27,9 @@ tutorial_html_dependency()
 Welcome to ETC1010: Data Modelling and Computing, semester 2, 2018.
 
 - Di: a professor at Monash University in Melbourne Australia, doing research in statistics, data science, visualisation, and statistical computing. I like to play all sorts of sports, tennis, soccer, hockey, cricket, and go boogie boarding.
-- Steph: graduated with a Bachelor of Economics and Bachelor of Commerce from Monash, and just started a Masters of Statistics at QUT, based at Monash.  Steph loves to read, any and all recommendations are welcome.
-- Mitch: a data science exploreR, graduated from Monash University studying Econometrics, Math Statistics & Computational Science. Compulsively collects and uses data to automate gardening, lighting and chickens `r emo::ji("chick")`.
-- Zina: a double major in mathematics and operations research, and Masters in Analytics. I like to play badminton!
+- Steph: graduated with a Bachelor of Economics and Bachelor of Commerce from Monash, and just started a Masters of Statistics at QUT, based at Monash.  Steph loves to read, any and all recommendations are welcome. Has an R package called taipan, and another called sugarbag soon to appear. 
+- Stuart: third year PhD student, with an interest in information visualisation. Has a paper and an R package called plyranges. 
+- Mitch: a data science exploreR, graduated from Monash University studying Econometrics, Math Statistics & Computational Science. Compulsively collects and uses data to automate gardening, lighting and chickens `r emo::ji("chick")`. Lots of R packages: taipan, tidyverts suite, fasster, ...
 
 ## Language of data analysis
 
@@ -98,7 +98,7 @@ If you need help on these the [DataCamp installation page can help](https://www.
 
 ### Cheatsheets
 
-RStudio started a trend by writing really concise summaries, and others have added to the collection. You can find the RStudio collection at https://www.rstudio.com/resources/cheatsheets/. 
+RStudio started a trend by writing really concise summaries, and others have added to the collection. You can find the RStudio collection in the "Help" menu on the IDE, and at https://www.rstudio.com/resources/cheatsheets/. 
 
 Start with the [RStudio IDE cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/rstudio-ide.pdf). 
 
@@ -193,12 +193,19 @@ sd(x)
 range(x)
 ```
 
+### More exercises?
+
+If you are done setting up your computer, and trying these small exercises, you can either:
+
+- Complete the exercises in section 4.4 or textbook
+- Read through and complete the exercises in Chapters 26 and 27 on creating RMarkdown documents
+- Login to your DataCamp account and start on the Introduction to R course
+
 ### There are many ways...
 
 There can be many ways to achieve the same result. I don't know everything. You might find a better solution than I have give you. Your tutors might give you different ways to do it than I told you. 
 
 ![](http://compeap.com/wp-content/uploads/you-dont-know-everything.jpg)
-
 
 ## Packages
 
@@ -256,14 +263,17 @@ Links to
 - Lecture notes for each class
 - Assignment and project instructions
 - ED system for doing online quizzes, conduct discussions, ask questions about the course material and exercises, and turn in assignments and project. *Only your name and email address are recorded in the ED systems.*
+- DataCamp
+- Unit guide
+- Moodle
 
 ### Learning objectives
 
 The learning goals associated with this unit are to:
 
-1. apply principles and techniques of data management with computers and spreadsheet modelling to business and economic decision-making
-2. interpret and evaluate relationships between variables using simple and multiple linear regression
-3. apply statistical techniques for making decisions with quantitative and categorical data in business and economics.
+1. learn to read different data formats, learn about tidy data and wrangling techniques
+2. apply effective visualisation and modelling to understand relationships between variables, and make decisions with data
+3. develop communication skills using reproducible reporting.
 
 __Data preparation accounts for about 80% of the work of data scientists__
 
@@ -279,11 +289,21 @@ Whatever I do in the data analysis that is shown to you during the class, you ca
 
 ### Grading
 
-- Reading quizzes: 5% - Prior to each class, check the web site. Quiz needs to be completed by class time. 
-- Lab exercise: 10% - Each class period will have a quiz to be completed individually.
-- Assignment: 10% - Every two weeks, completed as a group
+- Reading quizzes: 5% - Prior to each class, for the first 8 weeks, check the web site. Quiz needs to be completed by class time. No mulligans. One can be missed without penalty. 
+- Lab exercise: 5% - Each class period will have a quiz to be completed individually. Two can be missed without penalty. 
+- Assignment: 10% - Teamwork, data analysis challenge, due weeks 3, 5, 9.
+- Mid-semester theory and concept exam, 7.5% week 6
+- Data analysis practice exam, 7.5% week 11
 - Project: 15% - Data analysis, report and presentation
 - Final Exam: 60%
+
+### How do you do well in this class
+
+- Participate actively in this class. 
+- Do the reading prior to each class period.
+- Practice the materials taught in each lectorial by doing more exercises from the textbook.
+- Make use of your Datacamp account, while its amazngly free. Do more tutorials on data analysis and statistical modeling. 
+- Be curious, be positive, be engaged. 
 
 ### MoVE unit
 
