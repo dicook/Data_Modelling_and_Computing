@@ -278,7 +278,7 @@ If you are good at recognising the shape of Australia, you might realise that th
 But, we can make it look a bit more like Australia by making a map projection.
 
 
-```{r  echo=TRUE, fig.height=6}
+```{r  echo=TRUE, fig.height=6, eval=FALSE}
 ggplot(data=platydata) + 
   geom_point(aes(x=longitude, y=latitude), alpha=0.1) +
   coord_map()
@@ -325,7 +325,7 @@ There are some records dating back before 1800. There were only records from 177
 ```{r eval=FALSE}
 # Check odd cases
 platydata %>% filter(latitude < (-50)) 
-# These jsut have the lat/long wrong
+# These just have the lat/long wrong
 platydata %>% filter(eventDate < ymd("1850-01-01")) 
 ```
 
