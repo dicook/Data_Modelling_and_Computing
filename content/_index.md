@@ -15,7 +15,7 @@ Unless your question is a personal issue or an administrative matter, please do 
 
 ## Schedule
 
-- Lectorials: Tue 4:00-6:00; Thu 10:00-12:00 (101 - LTB Bldg 92
+- Lectorials: Tue 4:00-6:00; Thu 10:00-12:00 (101 - LTB Bldg 92)
 - Note: ED is used for asking for help, reading and lab exercise quizzes and assignment turn in. Only your name and email is stored in this system.
 
 ## Consultation times
@@ -75,10 +75,9 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 		 
 ## Assignments
 
-- Assignment 1: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)](assignments/assignment1_solution.Rmd); Data:  **DUE: Week 3, individual on Tue, group Thu, during class**
+- Assignment 1: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)](); Data:  **DUE: Week 3, individual on Tue, group Thu, during class**
 - Assignment 2: [Instructions]() [SOLUTION]() [(Rmd)](); **DUE: Week 5, individual on Tue, group Thu, during class**
-- Assignment 3: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]()  **DUE: Week 7, individual on Tue, group Thu, at the start of class**
-- Assignment 4: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]() **DUE: Week 9, individual on Tue, group Thu, at the start of class**
+- Assignment 3: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]() **DUE: Week 9, individual on Tue, group Thu, at the start of class**
 - Practical exam: [instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]()  **This will be completed individually during the lectorial on XXX.**
 
 <!--
