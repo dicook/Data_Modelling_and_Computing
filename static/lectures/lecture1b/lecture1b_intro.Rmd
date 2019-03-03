@@ -211,7 +211,7 @@ Take a look at the [R Markdown Gallery](https://rmarkdown.rstudio.com/gallery.ht
 ## Making a report
 
 
-We are pull to take data from the Atlas of Living Australia, and write a short report on Platypus sightings. Install the package `ALA4R` and load it.
+We are going to pull data from the Atlas of Living Australia, and write a short report on Platypus sightings. Install the package `ALA4R` and load it.
 
 ![](images/ala-logo-2016-inline.png)
 
