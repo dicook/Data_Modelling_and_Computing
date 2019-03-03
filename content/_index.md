@@ -128,7 +128,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
         - [flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) package, and there is an [example here](project/pisa_au_app.zip)
     - Presentation in week 12
 
-## Data
+## Data ([ZIP](http://dmac.dicook.org/lectures/data/etc1010_data.zip))
 
 - [music-sub.csv](http://dmac.dicook.org/lectures/data/music-sub.csv)
 - [Pedestrian_sensor_locations.csv](http://dmac.dicook.org/lectures/data/Pedestrian_sensor_locations.csv)
