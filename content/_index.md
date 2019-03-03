@@ -9,7 +9,7 @@ title: Home
 ## Semester 1 2019
 
 - Lecturers: Professor Di Cook (dicook@monash.edu)
-- Tutors: Stuart Lee, Steph Kobakian, Mitch O'Hara-Wild
+- Tutors: Stuart Lee, Steph Kobakian, Mitchell O'Hara-Wild
 
 Unless your question is a personal issue or an administrative matter, please do not send us direct email. The [ED site](https://edstem.org/courses/3443/) is appropriate for questions related to the course material.
 
@@ -21,9 +21,9 @@ Unless your question is a personal issue or an administrative matter, please do 
 ## Consultation times
 
 - Di: Mon 10:30-11:30; Thu 12:30-1:30 Menzies E762A
-- Stuart: 
-- Steph: 
-- Mitchi: 
+- Steph: Mon 12:30-13:30 Menzies W1105
+- Mitch: Wed 12:00-13:00 Menzies W1105
+- Stuart: Fri 10:00-11:00 Menzies W1105
 
 ## MoVE
 
