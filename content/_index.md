@@ -15,7 +15,7 @@ Unless your question is a personal issue or an administrative matter, please do 
 
 ## Schedule
 
-- Lectorials: Tue 4:00-6:00; Thu 10:00-12:00 (101 - LTB Bldg 92)
+- Lectorials: Tue 4:00-5:40; Thu 10:00-11:40 (101 - LTB Bldg 92)
 - Note: ED is used for asking for help, reading and lab exercise quizzes and assignment turn in. Only your name and email is stored in this system.
 
 ## Consultation times
