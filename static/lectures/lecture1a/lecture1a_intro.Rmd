@@ -28,7 +28,7 @@ Welcome to ETC1010: Data Modelling and Computing, semester 2, 2018.
 
 - Di: a professor at Monash University in Melbourne Australia, doing research in statistics, data science, visualisation, and statistical computing. I like to play all sorts of sports, tennis, soccer, hockey, cricket, and go boogie boarding.
 - Steph: graduated with a Bachelor of Economics and Bachelor of Commerce from Monash, and just started a Masters of Statistics at QUT, based at Monash.  Steph loves to read, any and all recommendations are welcome. Has an R package called taipan, and another called sugarbag soon to appear. 
-- Stuart: third year PhD student, with an interest in information visualisation. Has a paper and an R package called plyranges. 
+- Stuart: third year PhD student, interested in visualisation, programming languages and high dimensional data. Likes old movies, cooking and Nintendo. Has many R packages for analysing genomics data: plyranges, superintronic, starmie... 
 - Mitch: a data science exploreR, graduated from Monash University studying Econometrics, Math Statistics & Computational Science. Compulsively collects and uses data to automate gardening, lighting and chickens `r emo::ji("chick")`. Lots of R packages: taipan, tidyverts suite, fasster, ...
 
 ## Language of data analysis
@@ -106,7 +106,7 @@ Start with the [RStudio IDE cheatsheet](https://github.com/rstudio/cheatsheets/r
 
 - __Project__: This is like a multi-tab folder, or a filing cabinet, for your work! Create a project for your work in this class. Just one should be sufficient. You can call it anything you like, or "ETC1010" if you don't have any better ideas. *Remember: every time you start to work on something for this class, open this project!!*
 
-![](images/files.jpg)
+![](images/files.png)
 
 - __Source code editor__: This is where you edit your script! Experiment with writing your data analysis pipeline, ... You can have multiple files open, there are useful shortcuts (eg "Run", "Knit"), code is highlighted usefully and there is tab-completion when you start typing. *Also, if you want to look at any of the data you have read or created, it can be viewed in a tab on this pane.*
 - __Console window__: This is where the code is executed. There is a prompt ">" which says *R is waiting for your command*. You don't actually need to type anything in this pane, you can run code directly from the Editor pane. The functions will show up in this window, and the results will be here. (Although, if you use an R notebook the result will show up in that notebook.)
@@ -346,7 +346,7 @@ LASTLY, come up with a name for your team and tell this to a tutor, along with t
 
 Go to the ED page, and complete the lab quiz.
 
-*NOTE: Reading assignment on web site due for Friday's class*
+*NOTE: Reading assignment on web site due for Thursday's class*
 
 ## Share and share alike
 
