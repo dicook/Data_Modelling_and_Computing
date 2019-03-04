@@ -27,7 +27,7 @@ tutorial_html_dependency()
 Welcome to ETC1010: Data Modelling and Computing, semester 2, 2018.
 
 - Di: a professor at Monash University in Melbourne Australia, doing research in statistics, data science, visualisation, and statistical computing. I like to play all sorts of sports, tennis, soccer, hockey, cricket, and go boogie boarding.
-- Steph: graduated with a Bachelor of Economics and Bachelor of Commerce from Monash, and just started a Masters of Statistics at QUT, based at Monash.  Steph loves to read, any and all recommendations are welcome. Has an R package called taipan, and another called sugarbag soon to appear. 
+- Steph: graduated with a Bachelor of Economics and Bachelor of Commerce from Monash, and studying a Masters of Statistics at QUT, based at Monash.  Steph loves to read `r emo::ji("book")`, any and all recommendations are welcome. Has an R package called taipan, and another called sugarbag soon to appear. 
 - Stuart: third year PhD student, interested in visualisation, programming languages and high dimensional data. Likes old movies, cooking and Nintendo. Has many R packages for analysing genomics data: plyranges, superintronic, starmie... 
 - Mitch: a data science exploreR, graduated from Monash University studying Econometrics, Math Statistics & Computational Science. Compulsively collects and uses data to automate life at home, loves his bees and chickens `r emo::ji("bee")` `r emo::ji("chick")`. Lots of R packages including [vitae](https://github.com/ropenscilabs/vitae), [icon](https://github.com/ropenscilabs/icon/), and [tidy time series forecasting packages](https://github.com/tidyverts/).
 
@@ -295,7 +295,7 @@ Whatever I do in the data analysis that is shown to you during the class, you ca
 - Mid-semester theory and concept exam, 7.5% week 6
 - Data analysis practice exam, 7.5% week 11
 - Project: 15% - Data analysis, report and presentation
-- Final Exam: 60%
+- Final Exam: 50%
 
 ### How do you do well in this class
 
