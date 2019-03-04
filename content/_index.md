@@ -35,7 +35,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
 ## Lecture notes
 
 - Week 1: Getting yourself setup to do reproducible analyses, and introduction to the language of data analysis (the R ecosystem)
-    - [Tue](https://ebsmonash.shinyapps.io/lecture1a_intro/) [(Rmd)](http://dmac.dicook.org/lectures/lecture1a/lecture1a_intro.Rmd); [Reading Textbook 27.1-5](http://r4ds.had.co.nz/r-markdown.html) Go to ED and complete the reading quiz before Friday's class
+    - [Tue](https://ebsmonash.shinyapps.io/lecture1a_intro/) [(Rmd)](http://dmac.dicook.org/lectures/lecture1a/lecture1a_intro.Rmd); [Reading Textbook 27.1-5](http://r4ds.had.co.nz/r-markdown.html) Go to ED and complete the reading quiz before Thursday's class
     - [Thu](https://ebsmonash.shinyapps.io/lecture1b_intro/) [(Rmd)](http://dmac.dicook.org/lectures/lecture1b/lecture1b_intro.Rmd)); [Reading Textbook 12.1-4](http://r4ds.had.co.nz/tidy-data.html) Go to ED and complete the reading quiz before Tuesday's class
 - Week 2: Tidy data principles, reshaping your data into tidy form, and basic data wrangling
     - [Tue]() [(Rmd)]();  [Reading Textbook 5.1, 5.2, 5.3, 5.4, 5.5, 5.6 *only the first paragraph of each section!*](http://r4ds.had.co.nz/transform.html)
