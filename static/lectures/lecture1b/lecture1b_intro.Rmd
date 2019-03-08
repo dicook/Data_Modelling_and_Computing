@@ -36,7 +36,7 @@ library(gridExtra)
 - It combines the core syntax of __markdown__ (an easy-to-write plain text format) __with embedded R code chunks__ that are run so their output can be included in the final document. 
 - R Markdown documents are fully reproducible (they can be automatically regenerated whenever underlying R code or data changes).
 - An R Markdown file is a plain text file that has the extension `.Rmd`
-- These lecture notes are created using R Markdown, flexdashboard output.
+- These lecture notes are created using R Markdown, learnr output.
 
 ### YAML Headers
 

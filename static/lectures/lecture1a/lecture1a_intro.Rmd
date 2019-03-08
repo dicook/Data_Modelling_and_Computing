@@ -88,8 +88,8 @@ Sample of Australian organisations/companies that sent employees to [useR! 2018]
 set.seed(2018)
 ```
 
-- `r emo::ji("airplane")` R (2018-07-02, Feather Spray): [Install this first](https://cran.ms.unimelb.edu.au) because it is what does the work
-- `r emo::ji("airport")` RStudio 1.1.453: [Install the free version](https://www.rstudio.com/products/rstudio/download/) because it helps you work with R.
+- `r emo::ji("airplane")` R latest version: [Install this first](https://cran.ms.unimelb.edu.au) because it is what does the work
+- `r emo::ji("airport")` RStudio latest version: [Install the free Desktop version](https://www.rstudio.com/products/rstudio/download/) because it helps you work with R. 
 
 If you need help on these the [DataCamp installation page can help](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu).
 
@@ -223,8 +223,9 @@ install.packages("learnr")
 - From bioconductor
 ![](images/Bioconductor_original.png)
 ```{r eval=FALSE, echo=TRUE}
-source("https://bioconductor.org/biocLite.R")
-biocLite("ggbio")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("plyranges", version = "3.8")
 ```
 
 - From github repos
@@ -307,11 +308,7 @@ Whatever I do in the data analysis that is shown to you during the class, you ca
 
 ### MoVE unit
 
-If you are enrolled in a MoVE unit and forget your laptop, or do not own one as yet, please visit the locations below to borrow a laptop for an activity or part of a day: Clayton: Room 2.24 - Level 2, Learning and Teaching Building
-
-You’re required to provide proof of ID (student card or personal ID) in order to borrow a laptop. This service is open from 7.45am - 7.00pm on Monday to Friday.
-
-*Access to R is through a server. Last year we found that this was a slow way to work. The most successful approach was to have a USB stick, attach to the borrowed laptop, and install R, RStudio and all your packages on this. Use this as your working environment, with the borrowed laptop simply as the computing engine.*
+*Access to R from a MoVe computer is through a server.  This was a slow way to work. The most successful approach iss to have a USB stick, attach to the borrowed laptop, and install R, RStudio and all your packages on this. Use this as your working environment, with the borrowed laptop simply as the computing engine.*
 
 ### Group assignments
 
@@ -319,11 +316,9 @@ Group assignments will be conducted according to the [Monash policies](https://w
 
 What we expect to see is that each member of the group completes the entire assignment, as best they can. Group members compare their answers and combine it into one document for the final asubmission. 
 
-Individual submissions will be done during Wednesday class, and the group submission will be done in the Friday class. 25% of the grade will come from the individual submission. If any individual assignment is a perfect match for another group member, both will receive zero. 50% of the grade will come from the final group submission. These points are awarded by the instructor's grading.
+25% of the assignment grade will come from peer evaluation. Peer evaluation is an important learning tool. Each student will be randomly assigned another team's submission to provide feedback on three things: (1) Could you reproduce the analysis? (2) Did you learn something new from the other team's approach? (3) What would you suggest to improve their work?
 
-The other 25% of the assignment grade will come from peer evaluation. Peer evaluation is an important learning tool. Each student will be randomly assigned another team's submission to provide feedback on three things: (1) Could you reproduce the analysis? (2) Did you learn something new from the other team's approach? (3) What would you suggest to improve their work?
-
-Conflicts can arise in group work. Conflict can be both productive and destructive. Teams need to work on managing conflicts and building on the strengths of all team members. If the group becomes unmanageble then the members need to consult with the instructor.
+Conflicts can arise in group work. Conflict can be both productive and destructive. Teams need to work on managing conflicts and building on the strengths of all team members. For each assignment, you will be given the option to comment on the efforts of your other group members. If a team member has not contributed to an assignment submission, they might score a 0. In this situation the team will need to discuss team function and dysfunction with the instructor.
 
 #### Making the groups
 
