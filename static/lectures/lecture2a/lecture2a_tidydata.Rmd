@@ -53,7 +53,7 @@ Source: [Measure Evaluation](https://www.measureevaluation.org/resources/newsroo
     - `rates.csv`
     - `WebAirport_FY_1986-2017.xls`
 - Open the `lecture2a_tidydata.Rmd` file, that you have just downloaded in your RStudio window, and run the chunks of code as we talk about them. 
-- Also have the [notes](https://ebsmonash.shinyapps.io/lecture2a_tidydata/)) open in your web browser, so you can do the inline quizzes - for fun.
+- Also have the [notes](https://ebsmonash.shinyapps.io/lecture2a_tidydata/) open in your web browser, so you can do the inline quizzes - for fun.
 
 ## Example: US graduate programs
 
