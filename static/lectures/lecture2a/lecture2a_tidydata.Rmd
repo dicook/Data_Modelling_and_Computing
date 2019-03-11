@@ -38,6 +38,10 @@ This is a link to the course web site, in case you need to go back and forth bet
 
 ![](images/1237b41b-7e70-4377-a230-90b0e3ff4001.jpg)
 
+*You’re ready to sit down with a newly-obtained dataset, excited about how it will open a world of insight and understanding, and then find you can’t use it. You’ll first have to spend a significant amount of time to restructure the data to even begin to produce a set of basic descriptive statistics or link it to other data you’ve been using.*
+
+*“Tidy data” is a term meant to provide a framework for producing data that conform to standards that make data easier to use. Tidy data may still require some cleaning for analysis, but the job will be much easier.*  John Spencer
+
 Source: [Measure Evaluation](https://www.measureevaluation.org/resources/newsroom/blogs/tidy-data-and-how-to-get-it)
 
 ### *FOLLOW ALONG WITH THE NOTES* 
@@ -101,6 +105,7 @@ quiz(
 - A value is the state of a variable when you measure it. The value of a variable typically changes from observation to observation.
 
 ## Tidy tabular form
+
 
 __Tabular data__ is a set of values, each associated with a variable and an observation. Tabular data is __tidy__ if each value is placed in its own `cell`, each variable in its own column, and each observation in its own row.
 
@@ -182,9 +187,13 @@ Messy data is messy in its own way. You can make unique solutions, but then anot
 
 Tidy data can be though of as legos. Once you have this form, you can put it together in so many different ways, to make different analyses.
 
-![](images/lego.png)
+<img src="images/lego.png" style="width: 50%" />
 
 ## Tidy verbs
+
+<img src="images/horst_tidy.jpg" style="width: 50%" />
+
+Source: A drawing made by Alison Horst [@allison_horst](https://twitter.com/allison_horst?lang=en) 
 
 - `gather`: specify the **keys** (identifiers) and the **values** (measures) to make long form (used to be called melting)
 - `spread`: variables in columns (used to be called casting)
@@ -391,6 +400,7 @@ fly_tbl
 
 a. What are the variables and observations in this data?
 b. Put the data in tidy long form (using the names `V2` as the key variable, and `count` as the value). 
+c. Use the `rename` function to make the variable names a little shorter.
 
 You can get the data from  [data/fly_tbl.csv](http://dmac.dicook.org/lectures/data/fly_tbl.csv) 
 

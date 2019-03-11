@@ -62,6 +62,8 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <li>Lots of examples</li>
 </ul>
 <p><img src="images/1237b41b-7e70-4377-a230-90b0e3ff4001.jpg" /></p>
+<p><em>You’re ready to sit down with a newly-obtained dataset, excited about how it will open a world of insight and understanding, and then find you can’t use it. You’ll first have to spend a significant amount of time to restructure the data to even begin to produce a set of basic descriptive statistics or link it to other data you’ve been using.</em></p>
+<p><em>“Tidy data” is a term meant to provide a framework for producing data that conform to standards that make data easier to use. Tidy data may still require some cleaning for analysis, but the job will be much easier.</em> John Spencer</p>
 <p>Source: <a href="https://www.measureevaluation.org/resources/newsroom/blogs/tidy-data-and-how-to-get-it">Measure Evaluation</a></p>
 <div id="section-follow-along-with-the-notes" class="section level3">
 <h3><em>FOLLOW ALONG WITH THE NOTES</em></h3>
@@ -124,27 +126,27 @@ grad %&gt;% top_n(10)</code></pre>
 <tr>
 <td>
 
-<div id="htmlwidget-fda22ba78a20713f9893" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-363f76c575ce4a675452" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-fda22ba78a20713f9893">{"x":{"question":"The average number of graduate students per economics program is ","answers":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"label":"variable-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"The average number of graduate students per economics program is ","a":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-363f76c575ce4a675452">{"x":{"question":"The average number of graduate students per economics program is ","answers":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"label":"variable-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"The average number of graduate students per economics program is ","a":[{"option":"about 61","correct":true,"message":null},{"option":"about 39","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-aa03b7009c5a4181b9fb" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-999e49db55e4d3a2a80b" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-aa03b7009c5a4181b9fb">{"x":{"question":"What is the best description of the relationship between number of students and median time to degree?","answers":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"label":"variable-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the relationship between number of students and median time to degree?","a":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-999e49db55e4d3a2a80b">{"x":{"question":"What is the best description of the relationship between number of students and median time to degree?","answers":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"label":"variable-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the relationship between number of students and median time to degree?","a":[{"option":"as the number of students increases the median time to degree increases, weakly","correct":true,"message":null},{"option":"as the number of students increases the variability in median time to degree decreases","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 </table>
@@ -187,7 +189,7 @@ genes </code></pre>
 <div id="section-melbourne-weather" class="section level3">
 <h3>Melbourne weather</h3>
 <p>What are the variables? Observations?</p>
-<p>😱</p>
+<p>😨</p>
 <pre class="r"><code>melbtemp &lt;- read_fwf(&quot;data/ASN00086282.dly&quot;, 
    col_positions=fwf_widths(c(11, 4, 2, 4, 
         rep(c(5, 1, 1, 1), 31))))
@@ -243,10 +245,12 @@ fly</code></pre>
 <h2>Messy vs tidy</h2>
 <p>Messy data is messy in its own way. You can make unique solutions, but then another data set comes along, and you have to again make a unique solution.</p>
 <p>Tidy data can be though of as legos. Once you have this form, you can put it together in so many different ways, to make different analyses.</p>
-<p><img src="images/lego.png" /></p>
+<p><img src="images/lego.png" style="width: 50%" /></p>
 </div>
 <div id="section-tidy-verbs" class="section level2">
 <h2>Tidy verbs</h2>
+<p><img src="images/horst_tidy.jpg" style="width: 50%" /></p>
+<p>Source: A drawing made by Alison Horst <span class="citation">[@allison_horst]</span>(<a href="https://twitter.com/allison_horst?lang=en" class="uri">https://twitter.com/allison_horst?lang=en</a>)</p>
 <ul>
 <li><code>gather</code>: specify the <strong>keys</strong> (identifiers) and the <strong>values</strong> (measures) to make long form (used to be called melting)</li>
 <li><code>spread</code>: variables in columns (used to be called casting)</li>
@@ -422,40 +426,40 @@ melbtemp_long</code></pre>
 <tr>
 <td>
 
-<div id="htmlwidget-764de4ebb02b44dc6eb8" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-8f10030201c90c8b7518" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-764de4ebb02b44dc6eb8">{"x":{"question":"Which is the best description of the temperature units? ","answers":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"degrees C x10","correct":true,"message":null}],"label":"units-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Which is the best description of the temperature units? ","a":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"degrees C x10","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-8f10030201c90c8b7518">{"x":{"question":"Which is the best description of the temperature units? ","answers":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"degrees C x10","correct":true,"message":null}],"label":"units-1","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"Which is the best description of the temperature units? ","a":[{"option":"degrees farehnheit F","correct":false,"message":null},{"option":"degrees Kelvin K","correct":false,"message":null},{"option":"degrees C x10","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-b9a55aa76326426ee61d" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-4370997fd7054bb174f5" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-b9a55aa76326426ee61d">{"x":{"question":"What is the best description of the precipitation units","answers":[{"option":"mm x10","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"label":"units-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the precipitation units","a":[{"option":"mm x10","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-4370997fd7054bb174f5">{"x":{"question":"What is the best description of the precipitation units","answers":[{"option":"mm x10","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"label":"units-2","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What is the best description of the precipitation units","a":[{"option":"mm x10","correct":true,"message":null},{"option":"inches","correct":false,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 <tr>
 <td>
 
-<div id="htmlwidget-0f672ad3e15c8b0706a8" style="width:100%;height:auto;", class = "quiz html-widget">
+<div id="htmlwidget-d5da1f09934afbe2ab01" style="width:100%;height:auto;", class = "quiz html-widget">
 <div class="panel panel-default">
 <div class="panel-body quizArea">
 </div>
 </div>
 </div>
 
-<script type="application/json" data-for="htmlwidget-0f672ad3e15c8b0706a8">{"x":{"question":"What does -9999 mean?","answers":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"label":"units-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What does -9999 mean?","a":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-d5da1f09934afbe2ab01">{"x":{"question":"What does -9999 mean?","answers":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"label":"units-3","skipStartButton":true,"perQuestionResponseAnswers":true,"perQuestionResponseMessaging":true,"preventUnanswered":true,"displayQuestionCount":false,"displayQuestionNumber":false,"disableRanking":true,"nextQuestionText":"","checkAnswerText":"Submit Answer","allowRetry":false,"randomSortAnswers":false,"json":{"info":{"name":"","main":""},"questions":[{"q":"What does -9999 mean?","a":[{"option":"it was really cold","correct":false,"message":null},{"option":"the keyboard got stuck","correct":false,"message":null},{"option":"the value was missing","correct":true,"message":null}],"correct":"Correct!","incorrect":"Incorrect."}]}},"evals":[],"jsHooks":[]}</script>
 </td>
 </tr>
 </table>
@@ -497,6 +501,7 @@ fly_tbl</code></pre>
 <ol style="list-style-type: lower-alpha">
 <li>What are the variables and observations in this data?</li>
 <li>Put the data in tidy long form (using the names <code>V2</code> as the key variable, and <code>count</code> as the value).</li>
+<li>Use the <code>rename</code> function to make the variable names a little shorter.</li>
 </ol>
 <p>You can get the data from <a href="http://dmac.dicook.org/lectures/data/fly_tbl.csv">data/fly_tbl.csv</a></p>
 </div>

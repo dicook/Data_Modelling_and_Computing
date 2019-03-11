@@ -27,14 +27,128 @@ knitr::opts_chunk$set(
 
 # Exercise
 
-- From the ABS web site data has been extracted on educational attainment, age and sex from the most recent 3 Census collections. Read the data in, skipping the irrelevant lines, for example.
+- Data:
 
-```
+```{r echo=TRUE, eval=FALSE}
 library(readxl)
-census_2006 <- read_xlsx("data/ABS_ed_age_sex_2006.xlsx", skip=6, n_max=50)
+library(tidyverse)
+aec <- read_xlsx("aec/Australian Election Study Interactive Data - Cameron and McAllister 2018.xlsx", sheet="1.5", col_names = c("v1", "v2", "1993", "1996","1998", "2001", "2004", "2007", "2010", "2013", "2016"), range="A3:K36")
+aec_l <- aec %>% gather(year, pct, `1993`:`2016`) %>%   
+  mutate(year = as.numeric(year)) %>%
+  rename(communication = v1)
+
+aec_3.1 <- read_xlsx("aec/Australian Election Study Interactive Data - Cameron and McAllister 2018.xlsx", sheet="3.1", col_names = c("v1", "v2", "1990", "1993", "1996","1998", "2001", "2004", "2007", "2010", "2013", "2016"), range="A3:L87")
+aec_3.1_l <- aec_3.1 %>% gather(year, pct, `1990`:`2016`) %>%   
+  mutate(year = as.numeric(year)) %>%
+  rename(issue = v1)
 ```
 
-1. Tidy the data, to produce a data set with these columns: census, educ, age, sex, count
+- Turn the data into long form, so that year no becomes one of the columns, using the `gather` function. 
+
+1. How many variables are there in this sheet?
+
+**6 variables**
+
+**year**, **communication** (Discuss politics, Persuade others how to vote), **age** (18-24, 25-34, 35-44, 45-54, 55-64, 65plus), **education** (No qualification, Non-tertiary qualification, Tertiary qualification ), **gender** (Female, Male), **vote** (Greens, Labor Party, Liberal Party, National Party, Other). 
+
+2. Subset the data accordingly, and make a line plot of the percentage of people who "Discuss politics" by year. (Hint: `year` needs to be converted to a numeric variable.)
+
+```{r}
+aec_l %>% filter(is.na(v2)) %>% 
+  select(-v2) %>%
+  ggplot(aes(x=year, y=pct, colour=communication)) + 
+  geom_point() +
+  geom_line() + 
+  scale_colour_brewer("", palette="Dark2") +
+  ylab("Percentage") + 
+  scale_x_continuous("", breaks=seq(1993, 2016, 2), 
+    labels=c("93", "95", "97", "99", "01", "03", "05", "07", "09", "11", "13", "15")) +
+  theme(legend.position="bottom")
+```
+
+3. Gender and communication
+
+```{r}
+aec_l %>% filter(!is.na(v2)) %>% 
+  separate(v2, c("var", "level"), extra="merge") %>%
+  filter(var == "Gender") %>%
+  ggplot(aes(x=year, y=pct, colour=level)) +
+    geom_point() +
+    geom_line() + 
+    facet_wrap(~communication) +
+    scale_colour_brewer("", palette="Dark2") +
+    ylab("Percentage") + 
+    scale_x_continuous("", breaks=seq(1993, 2016, 2), 
+       labels=c("93", "95", "97", "99", "01", "03", "05", "07", "09", "11", "13", "15")) +
+  theme(legend.position="bottom")
+```
+
+4. Age and communication
+
+```{r}
+aec_l %>% filter(!is.na(v2)) %>% 
+  separate(v2, c("var", "level"), extra="merge") %>%
+  filter(var == "Age") %>%
+  ggplot(aes(x=year, y=pct, colour=level)) +
+    geom_point() +
+    geom_line() + 
+    facet_wrap(~communication) +
+    scale_colour_brewer("", palette="Dark2") +
+    ylab("Percentage") + 
+    scale_x_continuous("", breaks=seq(1993, 2016, 2), 
+       labels=c("93", "95", "97", "99", "01", "03", "05", "07", "09", "11", "13", "15")) +
+  theme(legend.position="bottom")
+```
+
+5. Vote and communication
+
+```{r}
+aec_l %>% filter(!is.na(v2)) %>% 
+  separate(v2, c("var", "level"), extra="merge") %>%
+  filter(var == "Vote") %>%
+  ggplot(aes(x=year, y=pct, colour=level)) +
+    geom_point() +
+    geom_line() + 
+    facet_wrap(~communication) +
+    scale_colour_brewer("", palette="Dark2") +
+    ylab("Percentage") + 
+    scale_x_continuous("", breaks=seq(1993, 2016, 2), 
+       labels=c("93", "95", "97", "99", "01", "03", "05", "07", "09", "11", "13", "15")) +
+  theme(legend.position="bottom")
+```
+
+
+6. Issue and party
+
+```{r}
+aec_3.1_l %>% filter(is.na(v2)) %>% 
+  select(-v2) %>%
+  ggplot(aes(x=year, y=pct, colour=issue)) + 
+  geom_point() +
+  geom_line() + 
+  scale_colour_brewer("", palette="Dark2") +
+  ylab("Percentage") + 
+  scale_x_continuous("", breaks=seq(1989, 2016, 2), 
+    labels=c("89", "91", "93", "95", "97", "99", "01", "03", "05", "07", "09", "11", "13", "15")) +
+  theme(legend.position="bottom")
+```
+
+```{r}
+aec_3.1_l %>% filter(!is.na(v2)) %>% 
+  separate(v2, c("var", "level"), extra="merge") %>%
+  filter(var == "Vote") %>%
+  ggplot(aes(x=year, y=pct, colour=level)) +
+    geom_point() +
+    geom_line() + 
+    facet_wrap(~issue) +
+    scale_colour_brewer("", palette="Dark2") +
+    ylab("Percentage") + 
+    scale_x_continuous("", breaks=seq(1993, 2016, 2), 
+       labels=c("93", "95", "97", "99", "01", "03", "05", "07", "09", "11", "13", "15")) +
+  theme(legend.position="bottom")
+```
+
+
 
 2. Combine the data from the three different census periods
 
