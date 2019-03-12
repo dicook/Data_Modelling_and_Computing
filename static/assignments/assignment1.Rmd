@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 # Background
 
-Federal elections are held in Australia approximately every three years, with the exact timing at the pleasure of the party in government. It is rumoured that the next election will be in May 2019. The ads have already started on TV, "Australians aren't going to cop it" is the catch phrase of one minor party, robocalls have begun, and voting preference polling is in full swing. This assignment is asking you to work with different publicly available data on the election, with a goal to practice tidying and wrangling skills, with an added side effect of learning about the Australian political landscape.
+Federal elections are held in Australia approximately every three years, with the exact timing at the pleasure of the party in government. It is rumoured that the next election will be in May 2019. The ads have already started on TV, "Australians aren't going to cop it" is the catch phrase of one minor party, robocalls have begun, ads are appearing in facebook, and voting preference polling is in full swing. This assignment is asking you to work with different publicly available data on the election, with a goal to practice tidying and wrangling skills, with an added side effect of learning about the Australian political landscape.
 
 # Instructions
 
@@ -34,8 +34,8 @@ Federal elections are held in Australia approximately every three years, with th
 
 # About the data
 
-- Data 1: Australian Election Study Interactive Data  (AESID)
-- Data 2: First preferences electorate level votes from 2016 (FP)
+- Data 1: Australian Election Study Interactive Data  (AESID) available from https://www.australianelectionstudy.org/voter_studies.html as the "1987-2016 Trends" `xlsx` format spreadsheet.
+- Data 2: First party preferences electorate level votes from 2016 (FPP) available from https://results.aec.gov.au/20499/Website/HouseDownloadsMenu-20499-Csv.htm as "First preferences by candidate by vote type" in `csv` format. 
 
 # Exercise
 
@@ -79,6 +79,39 @@ h. Make a line plot showing the percentage of people who "Discuss politics" by y
 
 i. Write a paragraph on what you learn from this plot. It seems that there was a big drop in people reporting talking about politics after 1998. Using your internet searching skills, do some research to find out plausible reasons for the big drop in these percentages, and describe what you have learned.
 
+2. Download the FPP data, and read the data into R.
+
+```{r eval=FALSE}
+library(tidyverse)
+fpp <- read_csv("aec/HouseFirstPrefsByCandidateByVoteTypeDownload-20499.csv", skip=1)
+```
+
+a. Take a look at the structure of the data file. Is this data in tidy format? Explain your answer.
+
+b. Count the number of candidates in each electorate. What is the most number of candidates in any electorate? What is the least? What is the average number of candidates per electorate?
+
+```{r eval=FALSE}
+fpp %>% count(DivisionNm, sort=TRUE)
+fpp %>% count(DivisionNm) %>% filter(n == min(n))
+fpp %>% count(DivisionNm, sort=TRUE) %>% summarise(mean(n))
+```
+
+c. Filter the data on the candidates who won the electorate. Summarise the number of electorates won by each party. Make a plot of the distribution of percentage of the vote that each winner won by.
+
+d. Make a list of the electorates where the winner did not get the majority first preferences. 
+
+e. Which party received the least votes over the country?
+
+```{r eval=FALSE}
+fpp %>% group_by(PartyNm) %>% summarise(tot=sum(TotalVotes, na.rm=TRUE)) %>% arrange(tot)
+```
+
+f. Write an explanation of preferential voting as it is used in Australia, and how first preferences factor in to the final result. 
+
+
+3. Install the `eechidna` package from ... Examine population in electorates, make a map of the election results
+
+<!--
 2. Subset the data accordingly, and make a line plot of the percentage of people who "Discuss politics" by year. (Hint: `year` needs to be converted to a numeric variable.)
 
 ```{r eval=FALSE}
@@ -186,4 +219,4 @@ aec_3.1_l %>% filter(!is.na(v2)) %>%
 
 5. Subset the data to age groups, 15-19, 20-24, 25-29, 30-34. Make a plot of educ counts by census year, facetted by age group and sex. Write a couple of paragraphs about what you learn.
 
-
+-->

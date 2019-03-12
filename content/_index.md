@@ -75,9 +75,9 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 		 
 ## Assignments
 
-- Assignment 1: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)](); Data:  **DUE: Week 3, individual on Tue, group Thu, during class**
-- Assignment 2: [Instructions]() [SOLUTION]() [(Rmd)](); **DUE: Week 5, individual on Tue, group Thu, during class**
-- Assignment 3: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]() **DUE: Week 9, individual on Tue, group Thu, at the start of class**
+- Assignment 1: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)](); Data:  **DUE: Week 3, Thu, at start of class**
+- Assignment 2: [Instructions]() [SOLUTION]() [(Rmd)](); **DUE: Week 5, Thu, before class**
+- Assignment 3: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]() **DUE: Week 9,  Thu, before class**
 - Practical exam: [instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]()  **This will be completed individually during the lectorial on XXX.**
 
 <!--
