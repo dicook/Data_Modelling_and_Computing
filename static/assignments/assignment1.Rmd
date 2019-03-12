@@ -1,6 +1,7 @@
 ---
-title: "ETC 1010 Assignment 1"
+title: "ETC1010 Assignment 1"
 author: "Professor Di Cook, EBS, Monash U."
+date: "DUE: Thursday March 21, start of class"
 output: html_document
 ---
 
@@ -27,10 +28,20 @@ Federal elections are held in Australia approximately every three years, with th
 
 # Instructions
 
-- This is a team assignment. 
-- You need to write a report with answers to each of the questions. 
-- Turn in the `html` output file, and also the `Rmd` file. 
-- Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative. Five points will be for individual effort. And the remaining 10 points will be the final group report.
+- This is a team assignment. You need to list the members of the team at the top of the report as the authors. You will be asked to report on the efforts of your team members on this assignment. If all members substantially contribute to the submission, then you can elect not to report. If you feel that one of the team members didn't provide a sufficient contribution, please provide this information to us using the form that will be provided, and we will determine an appropriate resolution. It may be a reduction in marks for the assignment. 
+- Team work has pros and cons, but the end result should be a positive impact on your learning. The best way to approach group work, for you as an individual, is to do as much of the assignment as you can, yourself, as soon as the assignment instructions are released. Then work with your team members to see if you can solve each others difficulties. Bring any problems that you can't solve together to a consultation, well before the assignment is due. Final polishing would include comparing your explanations to produce the best written and clearest paragraphs. Team work is common in the work force, and being able to navigate working with others is an important skill to develop. 
+- You need to write a report with answers to each of the questions. **Spell check** using the RStudio spell-checker before submission.
+- R code should be hidden in the final report, unless it is specifically requested.
+- To make it a little easier for you, a skeleton of R code is provided in the Rmd file. Where you see ??? means that something is missing and you will need to fill it in with the appropriate function, argument or operator. You will also need to rearrange the code as necessary to do the calculations needed.
+- Original work is expected. Any material used from external sources needs to be acknowledged.
+- Turn in the `html` output file, and also the `Rmd` file. That is, **two files need to be submitted**. They will be submitted using the ED system, and we will show you how to do this in Thursday's class week 3. 
+
+# Marks 
+
+- Total points for the assignment is 20. 
+- 5 points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative. Peer assessment will happen in the class period when the report is submitted.
+- 5 points will be reserved for readability, clearly written R code, and appropriate citing of external sources.
+- Accuracy and completeness of answers, and clarity of explanations will be the basis for the remaining 10 points.
 
 # About the data
 
@@ -40,50 +51,72 @@ Federal elections are held in Australia approximately every three years, with th
 # Exercise
 
 
-```{r eval=FALSE}
-library(readxl)
-library(tidyverse)
-aec <- read_xlsx("aec/Australian Election Study Interactive Data - Cameron and McAllister 2018.xlsx", sheet="1.5", col_names = c("v1", "v2", "1993", "1996","1998", "2001", "2004", "2007", "2010", "2013", "2016"), range="A3:K36")
-aec_l <- aec %>% gather(year, pct, `1993`:`2016`) %>%   
-  mutate(year = as.numeric(year)) %>%
-  rename(communication = v1)
-
-aec_3.1 <- read_xlsx("aec/Australian Election Study Interactive Data - Cameron and McAllister 2018.xlsx", sheet="3.1", col_names = c("v1", "v2", "1990", "1993", "1996","1998", "2001", "2004", "2007", "2010", "2013", "2016"), range="A3:L87")
-aec_3.1_l <- aec_3.1 %>% gather(year, pct, `1990`:`2016`) %>%   
-  mutate(year = as.numeric(year)) %>%
-  rename(issue = v1)
-```
-
 
 1. Download the AESID data. This is a multisheet excel file. The first sheet gives an overview of how the data was collected. The second sheet provides details on the data in different sheets. Take a look at sheet `1.5` 
 
+```{r eval=FALSE}
+library(readxl)
+library(tidyverse)
+aesid <- read_xlsx("data/Australian Election Study Interactive Data - Cameron and McAllister 2018.xlsx", sheet=???, col_names = c("v1", "v2", "1993", "1996","1998", "2001", "2004", "2007", "2010", "2013", "2016"), range="A3:K36")
+```
+
 a. Make a sketch of what's in this sheet. Particularly map out the variables, and different types of aggregations. How many variables are there in this sheet? List them. How often was the survey conducted? Did the researchers adjust percentages to account for differences between sample and  population demographics? Write a few sentences about the data is in this sheet, in particular how this data might help us to answer the question "What is the trend in the ways people of different ages discuss politics?"
-
-**6 variables**
-
-**year**, **communication** (Discuss politics, Persuade others how to vote), **age** (18-24, 25-34, 35-44, 45-54, 55-64, 65plus), **education** (No qualification, Non-tertiary qualification, Tertiary qualification ), **gender** (Female, Male), **vote** (Greens, Labor Party, Liberal Party, National Party, Other). 
 
 b. Turn the data into long form, where year is in a column. 
 
+```{r eval=FALSE}
+aesid_l <- aesid %>% ???(year, pct, ???:???) 
+```
+
 c. Remove the rows corresponding to overall aggregates.
+
+```{r eval=FALSE}
+aesid_l <- aesid_l %>% ???(!is.na(v2))
+```
 
 d. Rename the first column to "communication".
 
-e. Separate the second column into two, one called "variable", and the second called "level".
+```{r eval=FALSE}
+aesid_l <- aesid_l %>% 
+  ???(communication = ???)
+```
 
-f. Subset to have only rows corresponding to the variable "age".
+e. Separate the second column into two, one called "variable", and the second called "level". (Hint: You will need to use `sep=":"` as an argument.)
 
-g. Convert `year` into a numeric variable.
+```{r eval=FALSE}
+aesid_l <- aesid_l %>% 
+  ???(???, c(???, ???), sep=???)
+```
 
-h. Make a line plot showing the percentage of people who "Discuss politics" by year, overlaid with one for "Persuade others how to vote".
+f. Convert `year` into a numeric variable.
 
-i. Write a paragraph on what you learn from this plot. It seems that there was a big drop in people reporting talking about politics after 1998. Using your internet searching skills, do some research to find out plausible reasons for the big drop in these percentages, and describe what you have learned.
+```{r eval=FALSE}
+aesid_l <- aesid_l %>% 
+  ???(year = ???(year)) 
+```
+
+g. Subset to have only rows corresponding to the variable "age".
+
+```{r eval=FALSE}
+aesid_l <- aesid_l %>% 
+  ???(variable == ???)
+```
+
+h. Make a line plot showing the percentage by year, with separate coloured by age group, and faceted by communcation. Write a paragraph on what you learn from this plot. 
+
+```{r eval=FALSE}
+ggplot(aesid_l, aes(x=???, y=???, colour=???)) + 
+  geom_???() + 
+  facet_wrap(~???)
+```
+
+i. It seems that there was a big drop in people reporting talking about politics, or trying to persuade others how to vote, after 1998. Using your internet searching skills, do some research to find out plausible reasons for the big drop in these percentages, and describe what you have learned.
 
 2. Download the FPP data, and read the data into R.
 
 ```{r eval=FALSE}
 library(tidyverse)
-fpp <- read_csv("aec/HouseFirstPrefsByCandidateByVoteTypeDownload-20499.csv", skip=1)
+fpp <- read_csv("data/HouseFirstPrefsByCandidateByVoteTypeDownload-20499.csv", skip=???)
 ```
 
 a. Take a look at the structure of the data file. Is this data in tidy format? Explain your answer.
@@ -91,132 +124,43 @@ a. Take a look at the structure of the data file. Is this data in tidy format? E
 b. Count the number of candidates in each electorate. What is the most number of candidates in any electorate? What is the least? What is the average number of candidates per electorate?
 
 ```{r eval=FALSE}
-fpp %>% count(DivisionNm, sort=TRUE)
-fpp %>% count(DivisionNm) %>% filter(n == min(n))
-fpp %>% count(DivisionNm, sort=TRUE) %>% summarise(mean(n))
+fpp %>% ???(???, sort=TRUE)
+fpp %>% ???(DivisionNm) %>% ???(n == min(n))
+fpp %>% ???(???, sort=TRUE) %>% ???(mean(n))
 ```
 
-c. Filter the data on the candidates who won the electorate. Summarise the number of electorates won by each party. Make a plot of the distribution of percentage of the vote that each winner won by.
-
-d. Make a list of the electorates where the winner did not get the majority first preferences. 
-
-e. Which party received the least votes over the country?
+c. Filter the data on the candidates who won the electorate. Summarise the number of electorates won by each party. Write a sentence describing what you learn.
 
 ```{r eval=FALSE}
-fpp %>% group_by(PartyNm) %>% summarise(tot=sum(TotalVotes, na.rm=TRUE)) %>% arrange(tot)
+fpp %>% ???(Elected == ???) %>% ???(???, sort=TRUE)
 ```
 
-f. Write an explanation of preferential voting as it is used in Australia, and how first preferences factor in to the final result. 
-
-
-3. Install the `eechidna` package from ... Examine population in electorates, make a map of the election results
-
-<!--
-2. Subset the data accordingly, and make a line plot of the percentage of people who "Discuss politics" by year. (Hint: `year` needs to be converted to a numeric variable.)
+d. Compute a new variable which is the percentage of the vote earned by each candidate. Filter the data on the candidates who won the electorate.  Make a plot of the distribution of percentage of the first preference vote that each winner won with. (Hint: a histogram, density plot or boxplot would be appropriate plots here.)  Write a sentence describing the distribution.
 
 ```{r eval=FALSE}
-aec_l %>% filter(is.na(v2)) %>% 
-  select(-v2) %>%
-  ggplot(aes(x=year, y=pct, colour=communication)) + 
-  geom_point() +
-  geom_line() + 
-  scale_colour_brewer("", palette="Dark2") +
-  ylab("Percentage") + 
-  scale_x_continuous("", breaks=seq(1993, 2016, 2), 
-    labels=c("93", "95", "97", "99", "01", "03", "05", "07", "09", "11", "13", "15")) +
-  theme(legend.position="bottom")
+fpp %>% ???(DivisionNm) %>% 
+  ???(pct = ???/sum(???)) %>% 
+  ???(Elected == ???) %>% 
+  ggplot(aes(x=???)) + geom_???()
 ```
 
-3. Gender and communication
+e. Make a list of the electorates where the winner did not get the majority first preferences, that includes the Division name, candidate name, their first preference percentage and the highest first preference percentage in the electorate. Write a sentence explaining how it happens that a candidate can win the electorate without getting the largest number of first preference votes. 
 
 ```{r eval=FALSE}
-aec_l %>% filter(!is.na(v2)) %>% 
-  separate(v2, c("var", "level"), extra="merge") %>%
-  filter(var == "Gender") %>%
-  ggplot(aes(x=year, y=pct, colour=level)) +
-    geom_point() +
-    geom_line() + 
-    facet_wrap(~communication) +
-    scale_colour_brewer("", palette="Dark2") +
-    ylab("Percentage") + 
-    scale_x_continuous("", breaks=seq(1993, 2016, 2), 
-       labels=c("93", "95", "97", "99", "01", "03", "05", "07", "09", "11", "13", "15")) +
-  theme(legend.position="bottom")
+fpp %>% ???(DivisionNm) %>% 
+  ???(pct = ???/sum(???)) %>% 
+  ???(maxpct = ???(pct)) %>%
+  ???(Elected == ???) %>% 
+  ???(pct < ???) %>% 
+  select(DivisionNm, Surname, GivenNm, PartyNm, pct, maxpct)
 ```
 
-4. Age and communication
+f. How many different parties contested the election? Which party received the least votes over the country? How many electorates were contested by the party with the least votes?
 
 ```{r eval=FALSE}
-aec_l %>% filter(!is.na(v2)) %>% 
-  separate(v2, c("var", "level"), extra="merge") %>%
-  filter(var == "Age") %>%
-  ggplot(aes(x=year, y=pct, colour=level)) +
-    geom_point() +
-    geom_line() + 
-    facet_wrap(~communication) +
-    scale_colour_brewer("", palette="Dark2") +
-    ylab("Percentage") + 
-    scale_x_continuous("", breaks=seq(1993, 2016, 2), 
-       labels=c("93", "95", "97", "99", "01", "03", "05", "07", "09", "11", "13", "15")) +
-  theme(legend.position="bottom")
+fpp %>% ???(PartyNm) %>% ???(tot=sum(???, na.rm=TRUE)) %>% arrange(???)
+fpp %>% ???(PartyNm) %>% ???(tot=sum(???, na.rm=TRUE)) %>% ???()
+fpp %>% ???(PartyNm == ???) 
 ```
 
-5. Vote and communication
-
-```{r eval=FALSE}
-aec_l %>% filter(!is.na(v2)) %>% 
-  separate(v2, c("var", "level"), extra="merge") %>%
-  filter(var == "Vote") %>%
-  ggplot(aes(x=year, y=pct, colour=level)) +
-    geom_point() +
-    geom_line() + 
-    facet_wrap(~communication) +
-    scale_colour_brewer("", palette="Dark2") +
-    ylab("Percentage") + 
-    scale_x_continuous("", breaks=seq(1993, 2016, 2), 
-       labels=c("93", "95", "97", "99", "01", "03", "05", "07", "09", "11", "13", "15")) +
-  theme(legend.position="bottom")
-```
-
-
-6. Issue and party
-
-```{r eval=FALSE}
-aec_3.1_l %>% filter(is.na(v2)) %>% 
-  select(-v2) %>%
-  ggplot(aes(x=year, y=pct, colour=issue)) + 
-  geom_point() +
-  geom_line() + 
-  scale_colour_brewer("", palette="Dark2") +
-  ylab("Percentage") + 
-  scale_x_continuous("", breaks=seq(1989, 2016, 2), 
-    labels=c("89", "91", "93", "95", "97", "99", "01", "03", "05", "07", "09", "11", "13", "15")) +
-  theme(legend.position="bottom")
-```
-
-```{r eval=FALSE}
-aec_3.1_l %>% filter(!is.na(v2)) %>% 
-  separate(v2, c("var", "level"), extra="merge") %>%
-  filter(var == "Vote") %>%
-  ggplot(aes(x=year, y=pct, colour=level)) +
-    geom_point() +
-    geom_line() + 
-    facet_wrap(~issue) +
-    scale_colour_brewer("", palette="Dark2") +
-    ylab("Percentage") + 
-    scale_x_continuous("", breaks=seq(1993, 2016, 2), 
-       labels=c("93", "95", "97", "99", "01", "03", "05", "07", "09", "11", "13", "15")) +
-  theme(legend.position="bottom")
-```
-
-
-
-2. Combine the data from the three different census periods
-
-3. Aggregate the counts across sex, and age, and compute the totals across educ, for each census. Plot these totals against the census year, using a line connecting values for each educ group. Write a couple of paragraphs about what you learn.
-
-4. Subset the data to age group 25-29. Make a plot of educ counts by census year, facetted by sex. Write a couple of paragraphs about what you learn.
-
-5. Subset the data to age groups, 15-19, 20-24, 25-29, 30-34. Make a plot of educ counts by census year, facetted by age group and sex. Write a couple of paragraphs about what you learn.
-
--->
+g. Write an explanation of preferential voting as it is used in Australia, and how first preferences factor in to the final result. 

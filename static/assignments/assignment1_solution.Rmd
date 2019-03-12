@@ -1,11 +1,12 @@
 ---
-title: "ETC 1010 Assignment 1"
+title: "ETC1010 Assignment 1"
 author: "SOLUTION"
 output: html_document
 ---
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
 knitr::opts_chunk$set(
+  echo=FALSE,
   message = FALSE,
   warning = FALSE,
   error = FALSE, 
@@ -16,219 +17,159 @@ knitr::opts_chunk$set(
   fig.align = "center",
   cache = FALSE
 )
+library(knitr)
 ```
+
+
+# About the data
+
+- Data 1: Australian Election Study Interactive Data  (AESID) available from https://www.australianelectionstudy.org/voter_studies.html as the "1987-2016 Trends" `xlsx` format spreadsheet.
+- Data 2: First party preferences electorate level votes from 2016 (FPP) available from https://results.aec.gov.au/20499/Website/HouseDownloadsMenu-20499-Csv.htm as "First preferences by candidate by vote type" in `csv` format. 
 
 # Exercise
 
-- From the ABS web site data has been extracted on educational attainment, age and sex from the most recent 3 Census collections. Read the data in, skipping the irrelevant lines, for example.
+1. Download the AESID data. This is a multisheet excel file. The first sheet gives an overview of how the data was collected. The second sheet provides details on the data in different sheets. Take a look at sheet `1.5` 
 
 ```{r}
 library(readxl)
-census_2006 <- read_xlsx("data/ABS_ed_age_sex_2006.xlsx", skip=9, n_max=10)
-census_2011 <- read_xlsx("data/ABS_ed_age_sex_2011.xlsx", skip=9, n_max=10)
-census_2016 <- read_xlsx("data/ABS_ed_age_sex_2016.xlsx", skip=9, n_max=10)
+library(tidyverse)
+aesid <- read_xlsx("data/Australian Election Study Interactive Data - Cameron and McAllister 2018.xlsx", sheet="1.5", col_names = c("v1", "v2", "1993", "1996","1998", "2001", "2004", "2007", "2010", "2013", "2016"), range="A3:K36")
 ```
 
-The first 9 rows are general information about the data, not actual data. There are 10 rows of data, containing categories of education. The 10th row contains the sum of the other rows. We could drop this and re-calculate totals on the fly. 
+a. Make a sketch of what's in this sheet. Particularly map out the variables, and different types of aggregations. How many variables are there in this sheet? List them. How often was the survey conducted? Did the researchers adjust percentages to account for differences between sample and  population demographics? Write a few sentences about the data is in this sheet, in particular how this data might help us to answer the question "What is the trend in the ways people of different ages discuss politics?"
 
-1. Tidy the data, to produce a data set with these columns: census, educ, age, sex, count
+**6 variables**
 
-The format is really awkward! The main problem in that pairs of columns are age groups, and every second column is a different gender. A first step is getting these column labels to be descriptive, and then gather and separate. The first column contains nothing useful and should be dropped. Also drop the last two columns because these are totals for the education level.
+**year**, **communication** *(Discuss politics, Persuade others how to vote),* **age** *(18-24, 25-34, 35-44, 45-54, 55-64, 65plus),* **education** *(No qualification, Non-tertiary qualification, Tertiary qualification ),* **gender** *(Female, Male),* **vote** *(Greens, Labor Party, Liberal Party, National Party, Other).* 
+
+*Yes, percentages were adjusted to reflect the population demographics: "The 1993, 2010, 2013 and 2016 surveys have been weighted to reflect the characteristics of the national electorate."*
+
+*This spreadsheet contains percentages of people in the survey reporting that they discuss politics and persuade others how to vote, for the years 1993-2016, broken down by several demographics, age, gender, education and voting preference.*
+
+b. Turn the data into long form, where year is in a column. 
+
+```{r echo=TRUE}
+aesid_l <- aesid %>% gather(year, pct, `1993`:`2016`) 
+```
+
+c. Remove the rows corresponding to overall aggregates.
+
+```{r echo=TRUE}
+aesid_l <- aesid_l %>% filter(!is.na(v2))
+```
+
+d. Rename the first column to "communication".
+
+```{r echo=TRUE}
+aesid_l <- aesid_l %>% 
+  rename(communication = v1)
+```
+
+e. Separate the second column into two, one called "variable", and the second called "level". (Hint: You will need to use `sep=":"` as an argument.)
+
+```{r echo=TRUE}
+aesid_l <- aesid_l %>% 
+  separate(v2, c("variable", "level"), sep=":")
+```
+
+f. Convert `year` into a numeric variable.
+
+```{r echo=TRUE}
+aesid_l <- aesid_l %>% 
+  mutate(year = as.numeric(year)) 
+```
+
+g. Subset to have only rows corresponding to the variable "age".
+
+```{r echo=TRUE}
+aesid_l <- aesid_l %>% 
+  filter(variable == "Age")
+```
+
+h. Make a line plot showing the percentage by year, with separate coloured by age group, and faceted by communcation. Write a paragraph on what you learn from this plot. 
+
+```{r}
+ggplot(aesid_l, aes(x=year, y=pct, colour=level)) + 
+  geom_line() + 
+  facet_wrap(~communication)
+```
+
+*More people discuss politics than try to persuade others how to vote. Between 1998-2001 there was a big drop in the percentage of people doing either, especially true for the youngest age group 18-24. The youngest group 18-24 have the highest percentages who report trying to persuade others how to vote.*
+
+i. It seems that there was a big drop in people reporting talking about politics, or trying to persuade others how to vote, after 1998. Using your internet searching skills, do some research to find out plausible reasons for the big drop in these percentages, and describe what you have learned.
+
+*The election was held 6 months earlier than required by law. There was a big swing against the incumbent party, and it did not win the popular vote. This was the biggest discrepancy between the popular vote and the electoral tally in the history of Australian politics. The election was called immediately after the government announced the launch of the Goods and Services Tax (GST), clearly an unpopular policy.*
+
+*Source: https://en.wikipedia.org/wiki/1998_Australian_federal_election#Background*
+
+2. Download the FPP data, and read the data into R.
 
 ```{r}
 library(tidyverse)
-census_2006_long <- census_2006 %>%
-  select(-`Sex Male/Female (SEXP)`, -Male__21, -Female__21) %>%
-  rename(educ=X__1, 
-         m_0004=Male, f_0004=Female, 
-         m_0509=Male__1, f_0509=Female__1,
-         m_1014=Male__2, f_1014=Female__2,
-         m_1519=Male__3, f_1519=Female__3,
-         m_2024=Male__4, f_2024=Female__4,
-         m_2529=Male__5, f_2529=Female__5,
-         m_3034=Male__6, f_3034=Female__6,
-         m_3539=Male__7, f_3539=Female__7,
-         m_4044=Male__8, f_4044=Female__8,
-         m_4549=Male__9, f_4549=Female__9,
-         m_5054=Male__10, f_5054=Female__10,
-         m_5559=Male__11, f_5559=Female__11,
-         m_6064=Male__12, f_6064=Female__12,
-         m_6569=Male__13, f_6569=Female__13,
-         m_7074=Male__14, f_7074=Female__14,
-         m_7579=Male__15, f_7579=Female__15,
-         m_8084=Male__16, f_8084=Female__16,
-         m_8589=Male__17, f_8589=Female__17,
-         m_9094=Male__18, f_9094=Female__18,
-         m_9599=Male__19, f_9599=Female__19,
-         m_100=Male__20, f_100=Female__20) %>%
-  filter(educ != "Total") %>%
-  gather(label, count, -educ) %>%
-  separate(label, c("gender", "age"))
+fpp <- read_csv("data/HouseFirstPrefsByCandidateByVoteTypeDownload-20499.csv", skip=1)
 ```
 
-2. Combine the data from the three different census periods
+a. Take a look at the structure of the data file. Is this data in tidy format? Explain your answer.
 
-The same code from question 1 is repeated. We add a new column called year (2006, 2011, 2016), and bind the rows together.
+*Yes, the data is in tidy format. The observations are made on candidates in the federal election, and there are many variables measured for each candidate populating the columns.*
+
+b. Count the number of candidates in each electorate. What is the most number of candidates in any electorate? What is the least? What is the average number of candidates per electorate?
+
+*The most number of candidates in any electorate is*`r fpp %>% count(DivisionNm, sort=TRUE) %>% summarise(n=max(n))`.
+
+*The least number of candidates in any electorate is* `r fpp %>% count(DivisionNm) %>% summarise(n = min(n))`
+
+*The average number of candidates in any electorate is* `r fpp %>% count(DivisionNm, sort=TRUE) %>% summarise(m=round(mean(n), 1))`
+
+
+c. Filter the data on the candidates who won the electorate. Summarise the number of electorates won by each party. Write a sentence describing what you learn.
 
 ```{r}
-library(tidyverse)
-census_2011_long <- census_2011 %>%
-  select(-`Sex (SEXP)`, -Male__21, -Female__21) %>%
-  rename(educ=X__1, 
-         m_0004=Male, f_0004=Female, 
-         m_0509=Male__1, f_0509=Female__1,
-         m_1014=Male__2, f_1014=Female__2,
-         m_1519=Male__3, f_1519=Female__3,
-         m_2024=Male__4, f_2024=Female__4,
-         m_2529=Male__5, f_2529=Female__5,
-         m_3034=Male__6, f_3034=Female__6,
-         m_3539=Male__7, f_3539=Female__7,
-         m_4044=Male__8, f_4044=Female__8,
-         m_4549=Male__9, f_4549=Female__9,
-         m_5054=Male__10, f_5054=Female__10,
-         m_5559=Male__11, f_5559=Female__11,
-         m_6064=Male__12, f_6064=Female__12,
-         m_6569=Male__13, f_6569=Female__13,
-         m_7074=Male__14, f_7074=Female__14,
-         m_7579=Male__15, f_7579=Female__15,
-         m_8084=Male__16, f_8084=Female__16,
-         m_8589=Male__17, f_8589=Female__17,
-         m_9094=Male__18, f_9094=Female__18,
-         m_9599=Male__19, f_9599=Female__19,
-         m_100=Male__20, f_100=Female__20) %>%
-  filter(educ != "Total") %>%
-  gather(label, count, -educ) %>%
-  separate(label, c("gender", "age"))
-census_2016_long <- census_2016 %>%
-  select(-`SEXP Sex`, -Male__21, -Female__21) %>%
-  rename(educ=X__1, 
-         m_0004=Male, f_0004=Female, 
-         m_0509=Male__1, f_0509=Female__1,
-         m_1014=Male__2, f_1014=Female__2,
-         m_1519=Male__3, f_1519=Female__3,
-         m_2024=Male__4, f_2024=Female__4,
-         m_2529=Male__5, f_2529=Female__5,
-         m_3034=Male__6, f_3034=Female__6,
-         m_3539=Male__7, f_3539=Female__7,
-         m_4044=Male__8, f_4044=Female__8,
-         m_4549=Male__9, f_4549=Female__9,
-         m_5054=Male__10, f_5054=Female__10,
-         m_5559=Male__11, f_5559=Female__11,
-         m_6064=Male__12, f_6064=Female__12,
-         m_6569=Male__13, f_6569=Female__13,
-         m_7074=Male__14, f_7074=Female__14,
-         m_7579=Male__15, f_7579=Female__15,
-         m_8084=Male__16, f_8084=Female__16,
-         m_8589=Male__17, f_8589=Female__17,
-         m_9094=Male__18, f_9094=Female__18,
-         m_9599=Male__19, f_9599=Female__19,
-         m_100=Male__20, f_100=Female__20) %>%
-  filter(educ != "Total") %>%
-  gather(label, count, -educ) %>%
-  separate(label, c("gender", "age"))
+fpp %>% filter(Elected == "Y") %>% 
+  count(PartyNm, sort=TRUE) %>%
+  kable()
 ```
 
-Now create the new variable, and bind the rows.
+*The Liberal and Labor party have a fairly even split of the electorates, with several affiliated parties, with variations of the major party names that are represented in a small number of electorates, and a handful of electorates were won by unaffiliated minor parties and independents.* 
+
+d. Compute a new variable which is the percentage of the vote earned by each candidate. Filter the data on the candidates who won the electorate.  Make a plot of the distribution of percentage of the first preference vote that each winner won with. (Hint: a histogram, density plot or boxplot would be appropriate plots here.)  Write a sentence describing the distribution.
 
 ```{r}
-census_2006_long <- census_2006_long %>% 
-  mutate(year = 2006)
-census_2011_long <- census_2011_long %>% 
-  mutate(year = 2011)
-census_2016_long <- census_2016_long %>% 
-  mutate(year = 2016)
-census <- bind_rows(census_2006_long, census_2011_long, census_2016_long)
+fpp %>% group_by(DivisionNm) %>% 
+  mutate(pct = TotalVotes/sum(TotalVotes)*100) %>% 
+  filter(Elected == "Y") %>% 
+  ggplot(aes(x=pct)) + geom_histogram(binwidth=3)
 ```
 
-3. Aggregate the counts across sex, and age, and compute the totals across educ, for each census. Plot these totals against the census year, using a line connecting values for each educ group. Write a couple of paragraphs about what you learn.
+*The distribution is very bell-shaped, unimodal and symmetric, with values ranging from about 25-65%, and avergaing around 45%.*
+
+e. Make a list of the electorates where the winner did not get the majority first preferences, that includes the Division name, candidate name, their first preference percentage and the highest first preference percentage in the electorate. Write a sentence explaining how it happens that a candidate can win the electorate without getting the largest number of first preference votes. 
 
 ```{r}
-census_educ <- census %>% 
-  group_by(year, educ) %>%
-  summarise(count = sum(count, na.rm=TRUE))
-ggplot(census_educ, aes(x=year, y=count, colour=educ)) + 
-  geom_point() + geom_line()
+fpp %>% group_by(DivisionNm) %>% 
+  mutate(pct = TotalVotes/sum(TotalVotes)*100) %>% 
+  mutate(maxpct = max(pct)) %>%
+  filter(Elected == "Y") %>% 
+  filter(pct < maxpct) %>% 
+  select(DivisionNm, Surname, GivenNm, PartyNm, pct, maxpct) %>%
+  arrange(pct) %>%
+  kable(digits=1)
 ```
 
-The main thing to notice is that there are a lot of education categories, and they are not all the same from one year to another. Filter out the non-categories, e.g. "Not applicable", to focus on the different education levels in the plot. The categories of high school education have changed, and the categories of certificates have changed. We would need to do some re-working of these category names to compare these across years. This will be covered later in the course.
+*When a voter would prefer a minor party, they can cast their vote for that candidate, but if their candidate gets insufficient votes, the voters second (or third) choice of candidate will receive the vote.*
+
+f. How many different parties contested the election? Which party received the least votes over the country? How many electorates were contested by the party with the least votes?
+
+*There were* `r fpp %>% group_by(PartyNm) %>% summarise(tot=sum(TotalVotes, na.rm=TRUE)) %>% tally()` *parties contesting the election.*
 
 ```{r}
-census_educ_short <- census_educ %>%
-  filter(educ %in% c("Advanced Diploma and Diploma Level",
-                     "Bachelor Degree Level", 
-                     "Graduate Diploma and Graduate Certificate Level",
-                     "Postgraduate Degree Level"))
-ggplot(census_educ_short, aes(x=year, y=count, colour=educ)) + 
-  geom_point() + geom_line()
+fpp %>% group_by(PartyNm) %>% summarise(tot=sum(TotalVotes, na.rm=TRUE)) %>% arrange(tot)
 ```
 
-The number of people with all levels of university education have increased over this time period.
+*Australian Progressives, followed by the Clive Palmer party, the candidate with the current catchphrase "Australians aren't going to cop it", received the least number of votes in 2016, * `r fpp %>% filter(PartyNm == "Australian Progressives")`.
 
-4. Subset the data to age group 25-29. Make a plot of educ counts by census year, faceted by sex. Write a couple of paragraphs about what you learn.
+g. Write an explanation of preferential voting as it is used in Australia, and how first preferences factor in to the final result. 
 
-```{r}
-census %>% filter(age == "2529") %>%
-  filter(educ %in% c("Advanced Diploma and Diploma Level",
-                     "Bachelor Degree Level", 
-                     "Graduate Diploma and Graduate Certificate Level",
-                     "Postgraduate Degree Level")) %>%
-  ggplot(aes(x=year, y=count, colour=educ)) + 
-  geom_point() + geom_line() +
-  facet_wrap(~gender)
-```
+*Voters number the candidates on the ballot paper in order of their preference. First preferences are counted. Votes for candidates with the smallest number of first preference votes are re-allocated to the voters second preference. This re-allocation happens until one candidate has the clear majority, and is declared the winner.*
 
-Over both women and men, numbers are increasing. In each education level number of women is high than men.
-
-5. Subset the data to age groups, 15-19, 20-24, 25-29, 30-34. Make a plot of educ counts by census year, faceted by age group and sex. Write a couple of paragraphs about what you learn.
-
-```{r}
-census %>% filter(age %in% c("1519", "2024", "2529", "3034")) %>%
-  filter(educ %in% c("Advanced Diploma and Diploma Level",
-                     "Bachelor Degree Level", 
-                     "Graduate Diploma and Graduate Certificate Level",
-                     "Postgraduate Degree Level")) %>%
-  ggplot(aes(x=year, y=count, colour=educ)) + 
-  geom_point() + geom_line() +
-  facet_grid(age~gender)
-```
-
-The youngest age group, 15-19 tend not to have any university qualifications - we should expect that. Many 20-24 year olds (on the order of 100k) have degrees but not post-graduate degrees. 25-29 and 30-34 year olds have a similar pattern university qualifications. Numbers in all categories have increased over the time period, with perhaps less increase for grad certificates.
-
-# Feedback on submissions
-
-The most surprising thing I learned from this data is that there are more females doing Bachelors degrees, and also post-graduate degrees.
-
-There were several approaches to making plots of these variables. All are ok, but the line plot coloured by education is the best for answering "What is the trend in education over time?" Why? Lines connecting time within education category focuses on the temporal dependence, and trend. 
-
-```{r fig.height=10}
-library(gridExtra)
-p1 <- ggplot(census_educ_short, aes(x=year, y=count, colour=educ)) + 
-  geom_point() + geom_line()
-p2 <- ggplot(census_educ_short, aes(x=educ, y=count, group=year, colour=year)) + 
-  geom_point() + geom_line() + coord_flip()
-p3 <- ggplot(census_educ_short, aes(x=educ, y=count, fill=educ)) + 
-  geom_col() + facet_wrap(~year) + coord_flip() + theme(legend.position = "none")
-grid.arrange(p1, p2, p3, ncol=1)
-```
-
-In Q4, faceting by gender puts the emphasis on comparing education level separately for each gender. To compare genders at each education level it is easier if separate plots are made for each education level. 
-
-```{r }
-p1 <- census %>% filter(age == "2529") %>%
-  filter(educ %in% c("Advanced Diploma and Diploma Level",
-                     "Bachelor Degree Level", 
-                     "Graduate Diploma and Graduate Certificate Level",
-                     "Postgraduate Degree Level")) %>%
-  ggplot(aes(x=year, y=count, colour=educ)) + 
-  geom_point() + geom_line() +
-  facet_wrap(~gender) + theme(legend.position="bottom", legend.direction="vertical")
-p2 <- census %>% filter(age == "2529") %>%
-  filter(educ %in% c("Advanced Diploma and Diploma Level",
-                     "Bachelor Degree Level", 
-                     "Graduate Diploma and Graduate Certificate Level",
-                     "Postgraduate Degree Level")) %>%
-  ggplot(aes(x=year, y=count, colour=gender)) + 
-  geom_point() + geom_line() +
-  facet_wrap(~educ, ncol=2)
-grid.arrange(p1, p2, ncol=2)
-```
+*Source: https://en.wikipedia.org/wiki/Electoral_system_of_Australia*
