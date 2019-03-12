@@ -6,6 +6,7 @@ output: html_document
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
 knitr::opts_chunk$set(
+  echo=FALSE,
   message = FALSE,
   warning = FALSE,
   error = FALSE, 
@@ -18,6 +19,12 @@ knitr::opts_chunk$set(
 )
 ```
 
+![](https://www.abc.net.au/news/image/6018818-3x2-940x627.jpg)
+
+# Background
+
+Federal elections are held in Australia approximately every three years, with the exact timing at the pleasure of the party in government. It is rumoured that the next election will be in May 2019. The ads have already started on TV, "Australians aren't going to cop it" is the catch phrase of one minor party, robocalls have begun, and voting preference polling is in full swing. This assignment is asking you to work with different publicly available data on the election, with a goal to practice tidying and wrangling skills, with an added side effect of learning about the Australian political landscape.
+
 # Instructions
 
 - This is a team assignment. 
@@ -25,11 +32,15 @@ knitr::opts_chunk$set(
 - Turn in the `html` output file, and also the `Rmd` file. 
 - Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative. Five points will be for individual effort. And the remaining 10 points will be the final group report.
 
+# About the data
+
+- Data 1: Australian Election Study Interactive Data  (AESID)
+- Data 2: First preferences electorate level votes from 2016 (FP)
+
 # Exercise
 
-- Data:
 
-```{r echo=TRUE, eval=FALSE}
+```{r eval=FALSE}
 library(readxl)
 library(tidyverse)
 aec <- read_xlsx("aec/Australian Election Study Interactive Data - Cameron and McAllister 2018.xlsx", sheet="1.5", col_names = c("v1", "v2", "1993", "1996","1998", "2001", "2004", "2007", "2010", "2013", "2016"), range="A3:K36")
@@ -43,17 +54,34 @@ aec_3.1_l <- aec_3.1 %>% gather(year, pct, `1990`:`2016`) %>%
   rename(issue = v1)
 ```
 
-- Turn the data into long form, so that year no becomes one of the columns, using the `gather` function. 
 
-1. How many variables are there in this sheet?
+1. Download the AESID data. This is a multisheet excel file. The first sheet gives an overview of how the data was collected. The second sheet provides details on the data in different sheets. Take a look at sheet `1.5` 
+
+a. Make a sketch of what's in this sheet. Particularly map out the variables, and different types of aggregations. How many variables are there in this sheet? List them. How often was the survey conducted? Did the researchers adjust percentages to account for differences between sample and  population demographics? Write a few sentences about the data is in this sheet, in particular how this data might help us to answer the question "What is the trend in the ways people of different ages discuss politics?"
 
 **6 variables**
 
 **year**, **communication** (Discuss politics, Persuade others how to vote), **age** (18-24, 25-34, 35-44, 45-54, 55-64, 65plus), **education** (No qualification, Non-tertiary qualification, Tertiary qualification ), **gender** (Female, Male), **vote** (Greens, Labor Party, Liberal Party, National Party, Other). 
 
+b. Turn the data into long form, where year is in a column. 
+
+c. Remove the rows corresponding to overall aggregates.
+
+d. Rename the first column to "communication".
+
+e. Separate the second column into two, one called "variable", and the second called "level".
+
+f. Subset to have only rows corresponding to the variable "age".
+
+g. Convert `year` into a numeric variable.
+
+h. Make a line plot showing the percentage of people who "Discuss politics" by year, overlaid with one for "Persuade others how to vote".
+
+i. Write a paragraph on what you learn from this plot. It seems that there was a big drop in people reporting talking about politics after 1998. Using your internet searching skills, do some research to find out plausible reasons for the big drop in these percentages, and describe what you have learned.
+
 2. Subset the data accordingly, and make a line plot of the percentage of people who "Discuss politics" by year. (Hint: `year` needs to be converted to a numeric variable.)
 
-```{r}
+```{r eval=FALSE}
 aec_l %>% filter(is.na(v2)) %>% 
   select(-v2) %>%
   ggplot(aes(x=year, y=pct, colour=communication)) + 
@@ -68,7 +96,7 @@ aec_l %>% filter(is.na(v2)) %>%
 
 3. Gender and communication
 
-```{r}
+```{r eval=FALSE}
 aec_l %>% filter(!is.na(v2)) %>% 
   separate(v2, c("var", "level"), extra="merge") %>%
   filter(var == "Gender") %>%
@@ -85,7 +113,7 @@ aec_l %>% filter(!is.na(v2)) %>%
 
 4. Age and communication
 
-```{r}
+```{r eval=FALSE}
 aec_l %>% filter(!is.na(v2)) %>% 
   separate(v2, c("var", "level"), extra="merge") %>%
   filter(var == "Age") %>%
@@ -102,7 +130,7 @@ aec_l %>% filter(!is.na(v2)) %>%
 
 5. Vote and communication
 
-```{r}
+```{r eval=FALSE}
 aec_l %>% filter(!is.na(v2)) %>% 
   separate(v2, c("var", "level"), extra="merge") %>%
   filter(var == "Vote") %>%
@@ -120,7 +148,7 @@ aec_l %>% filter(!is.na(v2)) %>%
 
 6. Issue and party
 
-```{r}
+```{r eval=FALSE}
 aec_3.1_l %>% filter(is.na(v2)) %>% 
   select(-v2) %>%
   ggplot(aes(x=year, y=pct, colour=issue)) + 
@@ -133,7 +161,7 @@ aec_3.1_l %>% filter(is.na(v2)) %>%
   theme(legend.position="bottom")
 ```
 
-```{r}
+```{r eval=FALSE}
 aec_3.1_l %>% filter(!is.na(v2)) %>% 
   separate(v2, c("var", "level"), extra="merge") %>%
   filter(var == "Vote") %>%
