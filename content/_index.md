@@ -17,7 +17,11 @@ Unless your question is a personal issue or an administrative matter, please do 
 
 - Lectorials: Tue 4:00-5:40; Thu 10:00-11:40 (101 - LTB Bldg 92)
 - Note: ED is used for asking for help, reading and lab exercise quizzes and assignment turn in. Only your name and email is stored in this system.
-
+- **If you register after the start of the semester** or if you
+  miss a lecture/lab, it is your responsibility to catch up with
+  missed material, learn about due dates for material to be turned in,
+  and getting assigned to a group for team work.
+  
 ## Consultation times
 
 - Di: Mon 10:30-11:30; Thu 12:30-1:30 Menzies E762A
@@ -75,7 +79,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 		 
 ## Assignments
 
-- Assignment 1: [Instructions](https://dmac.dicook.org/assignments/assignment1.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment1.Rmd) [SOLUTION]() [(Rmd)](); Data:  **DUE: Week 3, Thu, at start of class**
+- Assignment 1: [Instructions](https://dmac.dicook.org/assignments/assignment1.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment1.Rmd) [SOLUTION]() [(Rmd)](); Data: [AESID](aesidxhttps://dmac.dicook.org/assignments/data/Australian Election Study Interactive Data - Cameron and McAllister 2018.xlsx) **DUE: Week 3, Thu, at start of class**
 - Assignment 2: [Instructions]() [SOLUTION]() [(Rmd)](); **DUE: Week 5, Thu, before class**
 - Assignment 3: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]() **DUE: Week 9,  Thu, before class**
 - Practical exam: [instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]()  **This will be completed individually during the lectorial on XXX.**

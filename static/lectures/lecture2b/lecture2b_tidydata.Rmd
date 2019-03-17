@@ -111,13 +111,13 @@ Filter the french fries data to have:
 
 ```{r eval=FALSE, echo=FALSE}
 ff_long %>%
-  filter(week == 1)
+  filter(time == 1)
 ff_long %>%
-  filter(week < 5)
+  filter(time %in% c("1", "2", "3", "4"))
 ff_long %>%
   filter(treatment == 1)
 ff_long %>%
-  filter(week != 2)
+  filter(treatment != 2)
 ```
 
 
@@ -235,6 +235,12 @@ These are convenience functions to compute numbers in different categories.
 
 ```{r}
 ff_long %>% count(type, sort=TRUE)
+```
+
+```{r eval=FALSE, echo=FALSE}
+ff_long %>% count(subject, sort=TRUE)
+ff_long %>% tally()
+ff_long %>% group_by(type) %>% tally()
 ```
 
 ## Putting it together to problem solve
