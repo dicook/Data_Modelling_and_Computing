@@ -45,7 +45,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - [Tue](https://ebsmonash.shinyapps.io/lecture2a_tidydata/) [(Rmd)](http://dmac.dicook.org/lectures/lecture2a/lecture2a_tidydata.Rmd);  [Reading Textbook 5.1, 5.2, 5.3, 5.4, 5.5, 5.6 *only the first paragraph of each section!*](http://r4ds.had.co.nz/transform.html)
     - [Thu](https://ebsmonash.shinyapps.io/lecture2b_tidydata/) [(Rmd)](http://dmac.dicook.org/lectures/lecture2b/lecture2b_tidydata.Rmd) [Reading Text book 3.1-3.3](http://r4ds.had.co.nz/data-visualisation.html)
 - Week 3: Plotting your data, and wrangling temporal data
-    - [Tue]() [(Rmd)]() [Reading Textbook 16.1, 16.2, 16.3.1](http://r4ds.had.co.nz/dates-and-times.html)
+    - [Tue](https://ebsmonash.shinyapps.io/lecture3a_basicvis/) [(Rmd)](http://dmac.dicook.org/lectures/lecture3a/lecture3a_basicvis.Rmd) [Reading Textbook 16.1, 16.2, 16.3.1](http://r4ds.had.co.nz/dates-and-times.html)
     - [Thu]() [(Rmd)]() [Reading Textbook 13.1, 13.2](http://r4ds.had.co.nz/relational-data.html)
 - Week 4: Advanced wrangling, joining tables, and advanced data visualisation
    - [Tue]() [(Rmd)]() [Reading Textbook 3.5-3.7](http://r4ds.had.co.nz/data-visualisation.html)

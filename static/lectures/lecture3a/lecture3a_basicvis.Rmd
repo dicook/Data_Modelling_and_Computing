@@ -208,6 +208,18 @@ ggplot(tb_au, aes(x = 1, y = count, fill = factor(year))) +
 
 - Pretty chart but not easy to interpret, or make comparisons across age groups. 
 
+## Why?
+
+[The various looks of David Bowie](https://www.wired.com/wp-content/uploads/2016/01/DB-Transformation-Colour.gif)
+
+<img src="https://www.wired.com/wp-content/uploads/2016/01/DB-Transformation-Colour.gif" style="width:50%" />
+
+- Using named plots, eg pie chart, bar chart, scatterplot, is like seeing animals in the zoo. 
+- The grammar of graphics allows you to define the mapping between variables in the data, with elements of the plot. 
+- It allows us to see and understand how plots are similar or different. 
+- And you can see how variations in the definition create variations in the plot.
+
+
 ## Lab exercise
 
 1. Pull a copy of the Melbourne pedestrian sensor data for July, 2018, using the `rwalkr` package, filter to keep two sensors "Melbourne Central", "Flinders Street Station Underpass". You can use the code below:
