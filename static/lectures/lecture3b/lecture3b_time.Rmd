@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE,
 tutorial_html_dependency()
 ```
 
-# More on temporal data and visualisation
+# Temporal data and visualisation
 
 ## Course web site
 
@@ -58,7 +58,7 @@ The `lubridate` package makes is easier to work with date/time classes. It helps
 
 ![](images/lubridate.jpg)
 
-### Parsing dates with time zones
+## Parsing dates with time zones
 
 ```{r echo=TRUE}
 library(lubridate)
@@ -97,14 +97,14 @@ now()
 now(tz = "America/Los_Angeles")
 ```
 
-### Parsing date with times
+## Parsing date with times
 
 ```{r echo=TRUE}
 ymd_hms("2018-08-10 10:05:30", tz = "Australia/Melbourne")
 ymd_hms("2018-08-10 10:05:30", tz = "America/Los_Angeles")
 ```
 
-### Extracting temporal elements
+## Extracting temporal elements
 
 Very often we want to know what day of the week it is, because trends and patterns in data can be quite different depending on whether it is a week day or weekend, or simply day (like a market day could be Wednesday). There are various ways to specify day of the week, as a number (this can be confusing, which is 1, Sunday, Monday or even Saturday) or text, or abbreviated text. When we talk with people we would like to use the day name, but operating on days might be useful to have it represented as a number. 
 
@@ -176,7 +176,7 @@ ped <- ped %>%
                      week_start=1))
 ```
 
-### Make some plots
+## Plotting pedestrian sensor
 
 ```{r}
 ped %>% ggplot(aes(x=month, y=Count)) + geom_col()
@@ -219,29 +219,29 @@ ggplot(ped_wday) + geom_errorbar(aes(x=wday, ymin=m-s, ymax=m+s)) +
   xlab("Day of week")
 ```
 
-### Beyond aggregation
+## Distribution of counts
 
 Side-by-side boxplots show the distribution of counts over different temporal elements.
 
-#### Hour of the day
+### Hour of the day
 
 ```{r}
 ped %>% ggplot(aes(x=as.factor(Time), y=Count)) + geom_boxplot()
 ```
 
-#### Day of the week
+### Day of the week
 
 ```{r}
 ped %>% ggplot(aes(x=wday, y=Count)) + geom_boxplot()
 ```
 
-#### Month
+### Month
 
 ```{r}
 ped %>% ggplot(aes(x=month, y=Count)) + geom_boxplot()
 ```
 
-### Incorporating time
+## Time series plots
 
 Use a line plot to indicate consecutive hours of the day.
 
@@ -265,7 +265,7 @@ ped %>% ggplot(aes(x=Time, y=Count, group=Date)) +
   facet_grid(month~wday)
 ```
 
-### On a calendar
+## Calendar plots
 
 ```{r fig.height=6}
 library(sugrrants)

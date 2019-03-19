@@ -46,7 +46,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - [Thu](https://ebsmonash.shinyapps.io/lecture2b_tidydata/) [(Rmd)](http://dmac.dicook.org/lectures/lecture2b/lecture2b_tidydata.Rmd) [Reading Text book 3.1-3.3](http://r4ds.had.co.nz/data-visualisation.html)
 - Week 3: Plotting your data, and wrangling temporal data
     - [Tue](https://ebsmonash.shinyapps.io/lecture3a_basicvis/) [(Rmd)](http://dmac.dicook.org/lectures/lecture3a/lecture3a_basicvis.Rmd) [Reading Textbook 16.1, 16.2, 16.3.1](http://r4ds.had.co.nz/dates-and-times.html)
-    - [Thu]() [(Rmd)]() [Reading Textbook 13.1, 13.2](http://r4ds.had.co.nz/relational-data.html)
+    - [Thu](https://ebsmonash.shinyapps.io/lecture3b_time/) [(Rmd)](http://dmac.dicook.org/lectures/lecture3b/lecture3b_time.Rmd) [Reading Textbook 13.1, 13.2](http://r4ds.had.co.nz/relational-data.html)
 - Week 4: Advanced wrangling, joining tables, and advanced data visualisation
    - [Tue]() [(Rmd)]() [Reading Textbook 3.5-3.7](http://r4ds.had.co.nz/data-visualisation.html)
    - [Thu]() [(Rmd)]() [Reading on handling missing values](https://cran.r-project.org/web/packages/naniar/vignettes/getting-started-w-naniar.html)

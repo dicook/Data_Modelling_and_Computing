@@ -38,10 +38,6 @@ This is a link to the course web site, in case you need to go back and forth bet
 - Open your ETC1010 `Rproj`
 - Download the `Rmd` file from the class web site
 
-### Turn in your individual assignment
-
-Go to ED, the assessments tab. Upload your `Rmd`, and `html`, files. 
-
 ## Example: Tuberculosis data
 
 This is current tuberculosis data taken from [WHO](http://www.who.int/tb/country/data/download/en/), the case notifications table.
