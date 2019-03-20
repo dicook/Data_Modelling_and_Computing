@@ -84,30 +84,32 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Assignment 3: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]() **DUE: Week 9,  Thu, before class**
 - Practical exam: [instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]()  **This will be completed individually during the lectorial on XXX.**
 
-<!--
 ## Assignment 4 peer evaluation
 
 [Peer evaluation assignments](evaluation_assignment.csv)
 
-- 1_PUORG_0101_CTE [zip](assignments/assignment4_2018/1_PUORG_0101_CTE.zip)
-- Agridat [zip](assignments/assignment4_2018/Agridat.zip)
-- Blueberries [zip](assignments/assignment4_2018/Blueberries.zip)
-- Bomrang [zip](assignments/assignment4_2018/Bomrang.zip)
-- Data Confusion [zip](assignments/assignment4_2018/Data Confusion.zip)
-- Eagles [zip](assignments/assignment4_2018/Eagles.zip)
-- GeoZoo [zip](assignments/assignment4_2018/GeoZoo.zip)
-- Infinite [zip](assignments/assignment4_2018/Infinite.zip)
-- nine-nine [zip](assignments/assignment4_2018/nine-nine.zip)
-- Paperclip [zip](assignments/assignment4_2018/Paperclip.zip)
-- R Rated [zip](assignments/assignment4_2018/R Rated.zip)
-- R studio artists [zip](assignments/assignment4_2018/R studio artists.zip)
-- R44 [zip](assignments/assignment4_2018/R44.zip)
-- RnR [zip](assignments/assignment4_2018/RnR.zip)
-- Team Rocket [zip](assignments/assignment4_2018/Team Rocket.zip)
-- The Standard Deviations [zip](assignments/assignment4_2018/The Standard Deviations.zip)
-- Thor [zip](assignments/assignment4_2018/Thor.zip)
-- Titanic{float=False} [zip](assignments/assignment4_2018/Titanic{float=False}.zip)
--->
+- ??? [zip](assignments/assignment1_2019/???.zip)
+- 4000 [zip](assignments/assignment1_2019/4000.zip)
+- C L [zip](assignments/assignment1_2019/C L.zip)
+- dplyr [zip](assignments/assignment1_2019/dplyr.zip)
+- Electric R [zip](assignments/assignment1_2019/Electric R.zip)
+- ETC1010Group [zip](assignments/assignment1_2019/ETC1010Group.zip)
+- FORCATS [zip](assignments/assignment1_2019/FORCATS.zip)
+- GROUP_FIVE [zip](assignments/assignment1_2019/GROUP_FIVE.zip)
+- Hardworking [zip](assignments/assignment1_2019/Hardworking.zip)
+- incRRRedible [zip](assignments/assignment1_2019/incRRRedible.zip)
+- Lubridate [zip](assignments/assignment1_2019/Lubridate.zip)
+- MDJLLSPHPL [zip](assignments/assignment1_2019/MDJLLSPHPL.zip)
+- Not the Swallows! [zip](assignments/assignment1_2019/Not the Swallows!.zip)
+- Python>R [zip](assignments/assignment1_2019/Python>R.zip)
+- SOLO [zip](assignments/assignment1_2019/SOLO.zip)
+- STM [zip](assignments/assignment1_2019/STM.zip)
+- Team HD [zip](assignments/assignment1_2019/Team HD.zip)
+- Team SAMY [zip](assignments/assignment1_2019/Team SAMY.zip)
+- Team STAT [zip](assignments/assignment1_2019/Team STAT.zip)
+- The Amatuer Group [zip](assignments/assignment1_2019/The Amatuer Group.zip)
+- The King Baboon [zip](assignments/assignment1_2019/The King Baboon.zip)
+- VITAE [zip](assignments/assignment1_2019/VITAE.zip)
 
 ## Project
 
