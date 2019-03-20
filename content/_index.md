@@ -84,7 +84,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Assignment 3: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]() **DUE: Week 9,  Thu, before class**
 - Practical exam: [instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]()  **This will be completed individually during the lectorial on XXX.**
 
-## Assignment 4 peer evaluation
+## Assignment 1 peer evaluation
 
 [Peer evaluation assignments](evaluation_assignment.csv)
 
