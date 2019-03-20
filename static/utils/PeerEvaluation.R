@@ -2,7 +2,7 @@ library(googlesheets)
 library(tidyverse)
 
 gs_ls()
-lss <- gs_key("1bm0e4ctLbAsn72yDMKuT5V1iIV2wH_kD2bOWCZx0aOw")
+lss <- gs_key("1fpQO16KCB1aPyfM1LcaWySZuXia_S8UgeXP5kS9dgIU")
 assignments <- gs_read(lss)
 
 # Match groups without self assignment

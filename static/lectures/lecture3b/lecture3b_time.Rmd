@@ -282,6 +282,7 @@ prettify(p1)
 
 ```{r fig.height=6}
 library(tsibble)
+library(timeDate)
 vic_holidays <- holiday_aus(2017, state = "VIC")
 ped <- ped %>%
   mutate(holiday = ifelse(Date %in% vic_holidays$date, "yes", "no")) %>%

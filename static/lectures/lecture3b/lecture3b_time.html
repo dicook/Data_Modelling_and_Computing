@@ -119,9 +119,9 @@ ymd(&quot;2018-08-10&quot;, tz = &quot;America/Los_Angeles&quot;)
 today(tz = &quot;America/Los_Angeles&quot;)
 ## [1] &quot;2019-03-19&quot;
 now()
-## [1] &quot;2019-03-20 04:21:07 AEDT&quot;
+## [1] &quot;2019-03-20 13:16:12 AEDT&quot;
 now(tz = &quot;America/Los_Angeles&quot;)
-## [1] &quot;2019-03-19 10:21:07 PDT&quot;</code></pre>
+## [1] &quot;2019-03-19 19:16:12 PDT&quot;</code></pre>
 </div>
 <div id="section-parsing-date-with-times" class="section level2">
 <h2>Parsing date with times</h2>
@@ -269,6 +269,7 @@ prettify(p1)</code></pre>
 <h3>Holidays</h3>
 <p><img src="images/tsibble.png" /></p>
 <pre class="r"><code>library(tsibble)
+library(timeDate)
 vic_holidays &lt;- holiday_aus(2017, state = &quot;VIC&quot;)
 ped &lt;- ped %&gt;%
   mutate(holiday = ifelse(Date %in% vic_holidays$date, &quot;yes&quot;, &quot;no&quot;)) %&gt;%
