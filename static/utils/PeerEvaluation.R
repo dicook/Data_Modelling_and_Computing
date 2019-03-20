@@ -22,31 +22,31 @@ sampleGroups <- function(groups){
 }
 
 # Assign individuals to evaluate groups
-assignments %>% 
-  filter(!is.na(GROUP)) %>% 
-  mutate(`Evaluation Group` = sampleGroups(GROUP)) %>% 
-  select(STUDENT_CODE, GROUP, `Evaluation Group`) %>% 
+assignments %>%
+  filter(!is.na(GROUP)) %>%
+  mutate(`Evaluation Group` = sampleGroups(GROUP)) %>%
+  select(STUDENT_CODE, GROUP, `Evaluation Group`) %>%
   write_csv("~/github/Data_Modelling_and_Computing/static/evaluation_assignment.csv")
 
 # Prepare submissions for peer evaluation (ZIP)
 
 ## Change to be where you would like your ZIPs to be placed
-zippath <- "~/teaching/ETC1010/a3_groups/"
+zippath <- "~/teaching/ETC1010/a2_groups/"
 ## List the directories that you'd like to ZIP
-submissions <- list.dirs("~/teaching/ETC1010/Assignment 3 group submissions/", recursive = FALSE)
+submissions <- list.dirs("~/teaching/ETC1010/Assignment 2 group submissions/", recursive = FALSE)
 
 ## Check that all groups have submitted assignments
-assignments %>% 
-  mutate(match = EMAIL_ADDRESS %in% basename(submissions))%>% 
-  group_by(GROUP) %>% 
-  summarise(any(match))
+assignments %>%
+  mutate(match = Email %in% basename(submissions))%>%
+  group_by(GROUP) %>%
+  summarise(match = sum(match))
 
 ## Build the ZIPs
-submissions %>% 
+submissions %>%
   map(list.files, recursive = TRUE, full.names = TRUE) %>% # Find files to zip
   map2(submissions, function(...){
     # Find group name to be used for the zip file name
-    group <- assignments %>% filter(EMAIL_ADDRESS == basename(..2)) %>% pull(GROUP)
+    group <- assignments %>% filter(Email == basename(..2)) %>% pull(GROUP)
     # Zip the files in the appropriate folder
     zip(file.path(zippath, group), files = ..1, extras = "-j")
   })
