@@ -144,7 +144,7 @@ The [Melbourne pedestrian sensor portal](http://www.pedestrian.melbourne.vic.gov
 
 ```{r eval=FALSE}
 library(rwalkr)
-ped <- run_melb(year=2017, sensor="Melbourne Central")
+ped <- melb_walk_fast(year=2018, sensor="Melbourne Central")
 save(ped, file="data/ped.rda")
 ```
 
@@ -173,7 +173,7 @@ Create variables with these different temporal components.
 ped <- ped %>%
   mutate(month = month(Date, label = TRUE, abbr = TRUE), 
          wday = wday(Date, label=TRUE, abbr=TRUE,
-                     week_start=1, locale = "English"))
+                     week_start=1)) #, locale = "English"))
 ```
 
 ## Plotting pedestrian sensor
@@ -210,7 +210,7 @@ Brainstorm with your table a solution, to answer these questions:
 ped_day <- ped %>% group_by(Date) %>%
   summarise(dayCount=sum(Count, na.rm=TRUE))
 ped_wday <- ped_day %>% 
-  mutate(wday = wday(Date, label=TRUE, abbr=TRUE, week_start=1, locale = "Englsih")) %>%
+  mutate(wday = wday(Date, label=TRUE, abbr=TRUE, week_start=1)) %>% #, locale = "Englsih")) %>%
   group_by(wday) %>%
     summarise(m=mean(dayCount, na.rm=TRUE), s=sd(dayCount, na.rm=TRUE))
 ggplot(ped_wday) + geom_errorbar(aes(x=wday, ymin=m-s, ymax=m+s)) + 
@@ -283,7 +283,7 @@ prettify(p1)
 ```{r fig.height=6}
 library(tsibble)
 library(timeDate)
-vic_holidays <- holiday_aus(2017, state = "VIC")
+vic_holidays <- holiday_aus(2018, state = "VIC")
 ped <- ped %>%
   mutate(holiday = ifelse(Date %in% vic_holidays$date, "yes", "no")) %>%
   mutate(holiday = ifelse(wday %in% c("Sat", "Sun"), "yes", holiday)) 
@@ -296,7 +296,7 @@ prettify(p1)
 
 ## Lab exercise
 
-Pull the 2017 data for the sensor Birrarung Marr. Make plots to answer these questions. 
+Pull the 2018 data for the sensor Birrarung Marr. Make plots to answer these questions. 
 
 1. Is there the same daily pattern as observed at Melbourne Central? If not, how does it differ?
 2. Can you detect special events, like the Australian Open tennis, based on pedestrian counts?  What dates does it appear that there were events on? Can you match these with known events, found from web searching?
