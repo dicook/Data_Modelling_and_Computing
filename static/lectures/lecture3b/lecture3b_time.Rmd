@@ -173,7 +173,7 @@ Create variables with these different temporal components.
 ped <- ped %>%
   mutate(month = month(Date, label = TRUE, abbr = TRUE), 
          wday = wday(Date, label=TRUE, abbr=TRUE,
-                     week_start=1))
+                     week_start=1, locale = "English"))
 ```
 
 ## Plotting pedestrian sensor
@@ -210,7 +210,7 @@ Brainstorm with your table a solution, to answer these questions:
 ped_day <- ped %>% group_by(Date) %>%
   summarise(dayCount=sum(Count, na.rm=TRUE))
 ped_wday <- ped_day %>% 
-  mutate(wday = wday(Date, label=TRUE, abbr=TRUE, week_start=1)) %>%
+  mutate(wday = wday(Date, label=TRUE, abbr=TRUE, week_start=1, locale = "Englsih")) %>%
   group_by(wday) %>%
     summarise(m=mean(dayCount, na.rm=TRUE), s=sd(dayCount, na.rm=TRUE))
 ggplot(ped_wday) + geom_errorbar(aes(x=wday, ymin=m-s, ymax=m+s)) + 
