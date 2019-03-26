@@ -6,9 +6,11 @@ output: html_document
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
 knitr::opts_chunk$set(
+  echo = FALSE,
   message = FALSE,
   warning = FALSE,
   error = FALSE, 
+  eval = FALSE,
   collapse = TRUE,
   comment = "",
   fig.height = 8,
@@ -18,26 +20,41 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Background
+
+Smart meters are now installed at every property in Melbourne. The Victorian government has a current initiative to encourage households to examine their energy use and particularly to get a better deal on energy pricing. Their tool to compare suppliers is at https://compare.energy.vic.gov.au. If you use this tool between now and the Jun 30, you will get an energy rebate of $50.
+
+In order to compare your energy, you need to download your own usage data, and upload it to the compare website. It is relatively straightforward. You need to go to your provider's page, which can be determined by visiting https://www.energy.vic.gov.au/electricity/electricity-distributors. If you have a recent bill, your meter number will be on it. You need this to create a login with your energy provider (for me this is citipower, https://www.citipower.com.au), so that you can download your data. 
+
 # Instructions
 
-- This is a team assignment. 
-- You need to write a report with answers to each of the questions. 
-- Turn in the `html` output file, and also the `Rmd` file. 
-- Total points for the assignment is 20. Five points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative. Five points will be for individual effort. And the remaining 10 points will be the final group report.
+- This is a team assignment. You need to list the members of the team at the top of the report as the authors. You will be asked to report on the efforts of your team members on this assignment. If all members substantially contribute to the submission, then you can elect not to report. If you feel that one of the team members didn't provide a sufficient contribution, please provide this information to us using the form that will be provided, and we will determine an appropriate resolution. It may be a reduction in marks for the assignment. 
+- Team work has pros and cons, but the end result should be a positive impact on your learning. The best way to approach group work, for you as an individual, is to do as much of the assignment as you can, yourself, as soon as the assignment instructions are released. Then work with your team members to see if you can solve each others difficulties. Bring any problems that you can't solve together to a consultation, well before the assignment is due. Final polishing would include comparing your explanations to produce the best written and clearest paragraphs. Team work is common in the work force, and being able to navigate working with others is an important skill to develop. 
+- You need to write a `learnr` **interactive tutorial** (just like the class lecture notes) with answers to each of the questions. 
+- **Spell check** using the RStudio spell-checker before submission.
+- R code should be hidden in the interactive tutorial, unless it is specifically requested.
+- To make it a little easier for you, a skeleton of R code is provided in the Rmd file. Where you see ??? means that something is missing and you will need to fill it in with the appropriate function, argument or operator. You will also need to rearrange the code as necessary to do the calculations needed. You can write your own code, if you prefer.
+- Original work is expected. Any material used from external sources needs to be acknowledged.
+- Turn in your raw anergy use data (**MAKE SURE THAT YOU HAVE REMOVED YOUR METER ID FROM IT**), and your tidied data that forms the basis of the inetractive tutorial, the `html` output file, and also the `Rmd` file. That is, **two files need to be submitted**. They will be submitted using the ED system, **by 8am** before Thursday's class week 5. 
 
-# Exercise
+# Marks 
 
-Smart meters are now installed at every property in Melbourne. The Victorian government has a current initiative to encourage households to examine their energy use and particularly to get a better deal on energy pricing. Their tool to compare suppliers is at https://compare.energy.vic.gov.au. If you use this tool between now and the end of the year, you will get an energy rebate of $50.
+- Total points for the assignment is 20. 
+- 5 points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative. Peer assessment will happen in the class period when the report is submitted.
+- 5 points will be reserved for readability, clearly written R code, and appropriate citing of external sources.
+- Accuracy and completeness of answers, and clarity of explanations will be the basis for the remaining 10 points.
 
-Your task is to get the electricity usage data for your household. It is relatively straightforward. You need to go to your provider's page, which can be determined by visiting https://www.energy.vic.gov.au/electricity/electricity-distributors. If you have a recent bill, your meter number will be on it. You need this to create a login, so that you can download your data. 
+# About the data
 
-The format of the data should `csv` and look something like mine, which is provided, `meter1.csv`. In addition, there should be a web page, [like this one from citipower](https://customermeterdata.portal.powercor.com.au/customermeterdata/articles/Question/A12-How-do-I-read-the-detailed-report?retURL=%2Fcustomermeterdata%2Fapex%2FCADArticleList&popup=true) describing the format of the data, that will be useful when you are trying to tidy it. You should be able to see half hourly electricity usage. 
+The format of the data should `csv` and look something like mine, which is provided, `meter_di_2019.csv`. In addition, there should be a web page, [like this one from citipower](https://customermeterdata.portal.powercor.com.au/customermeterdata/articles/Question/A12-How-do-I-read-the-detailed-report?retURL=%2Fcustomermeterdata%2Fapex%2FCADArticleList&popup=true) describing the format of the data, that will be useful when you are trying to tidy it. You should be able to see half hourly electricity usage. 
 
-You only need one data set per group. Everyone in the group should work on this one. If you have problems getting your own data, we will provide you with some. 
+You need at least one energy usage data set per group. Everyone in the group should work on this one. If you have problems getting your own data, we will provide you with ours. 
 
-1. Describe the steps that you will need to take to read in your electricity usage, and tidy it. 
+To analyse the energy data, we will also pull weather data from the Bureau of Meterology, and merge the two. If your household has air conditioning we would expect that your usage would be higher on hot days. 
 
-2. Tidy your data, using the `tidyverse` functions. The end product should look something like this:
+The goal of this exercise is to practise wrangling data, work with time, and join data sets.
+
+1. Describe the steps that you will need to take to read in your electricity usage, and tidy it.  Tidy your data, using the `tidyverse` functions. The end product should look something like this:
 
 ```
   date       halfhour   kwh
@@ -52,17 +69,81 @@ You only need one data set per group. Everyone in the group should work on this 
 
 although your `halfhour` variable might be more explicit like 12:00-12:30, 12:30-01:00, 01:00-01:30, ... And you might want to add week day, month, year variables. 
 
-3. Make a line plot of half-hourly usage for these two days, Sunday August 5, 2018 and Wednesday Aug 8, 2018. Describe what you learn about electricity use on these two days. 
+```{r readdata}
+library(tidyverse)
+library(lubridate)
+library(tsibble)
+library(sugrrants)
+library(glue)
+library(emo)
+elec <- read_csv("data/meter_di_2019.csv", skip=???,
+                 col_names = c("id", "date", paste0("d", 1:48), paste0("stuff", 1:5)),
+                 col_types = "ccddddddddddddddddddddddddddddddddddddddddddddddddccccc")
+# elec %>% select(id:d5) %>% head(3)
+```
 
-4. Aggregate your daily kwh usage. Make a side-by-side boxplot of usage by week day. Are there some days of the week that you use more electricity than others?
+```{r wrangledata}
+vic_holidays <- holiday_aus(???, state = ???)
+elec <- elec %>% ???(id == ???)
+elec <- elec %>%
+  mutate(date = ???(date)) %>%
+  ???(id:d48) %>%
+  ???(halfhour, kwh, d1:d48) %>%
+  mutate(halfhour = ???(sub("d", "", halfhour))/2) %>%
+  arrange(date, ???) %>%
+  mutate(wday = ???(date, label = ???, abbr = ???,
+                     week_start = ???),
+         month = ???(date, label = ???, abbr = ???),
+         year = ???(date)) %>%
+  ???(dt = ymd_hm(glue("{date} 12:00"),
+                     tz = "Australia/Melbourne") +
+           minutes(60*halfhour)) %>% 
+  ???(work = ifelse(wday %in% c("Mon", "Tue", "Wed", "Thu", "Fri"), "workday", "holiday")) %>%
+  ???(work = ifelse(date %in% vic_holidays$date, "holiday", work)) %>%
+  filter(date >= ???, date <= ???)
+# elec %>% head(3) 
+```
 
-5. Decide on several (about 3) more types of plots to make to learn about your energy usage. Make these plots and write some paragraphs describing what you have learned. 
+2. Subset your data to contain only records for January 1 through March 18, 2019. 
 
-# Grading
+3. Aggregate your daily kwh usage. (This really assumes no missing data.) Make a side-by-side boxplot of usage by week day. Are there some days of the week that you typically use more electricity than others?
 
-Points for the assignment will be based on:
+```{r daily}
+elec %>%
+  ???(date) %>%
+  ???(kwh=sum(???)) %>%
+  ???(wday = ???(date, label = ???, abbr = ???,
+                     week_start = ???)) %>%
+  ggplot(aes(x=???, y=???)) + geom_???()
+```
 
-- How well you have explained your tidying procedures.
-- Whether the Rmd file, can take your data file as provided,  produce the tidy data, and plots reported in your final submission.
-- Accuracy of your answers to the given questions. 
-- Creativeness in exploring your energy use, and plots used to tell a story. 
+4. Make a line plot of half-hourly usage for the days February 2-7. Describe what you learn about electricity use during this month. 
+
+```{r feb2to8}
+elec %>%
+  ???(date >= ???, date <= ???) %>%
+  ggplot(aes(x=???, y=???, group=???)) + geom_???() + facet_wrap(~???, ncol=3)
+```
+
+5. Extract temperature data at Melbourne airport from the Bureau of Meterology using the `bomrang` package. Colour the line plots from the previous question, based on the maximum daily temperature. What do you learn about the relationship between your energy use and the maximum daily tempoerature. 
+
+```{r getweather}
+library(bomrang)
+library(viridis)
+stations <- sweep_for_stations(latlon = c(-37.8136, 144.9631)) #Melbourne lat/long is 
+maxtemp <- ???(stationid = "086282", type = "max") 
+maxtemp <- maxtemp %>%  
+  ???(date = paste(???, ???, ???, sep="-")) %>%
+  ???(date = ymd(date))
+maxtemp_DF <- maxtemp %>% ???(date >= ???, date <= ???) 
+elec <- elec %>%   
+  ???(maxtemp_DF) 
+elec %>% 
+  filter(date >= ???, date <= ??? %>%
+  ggplot(aes(x=???, y=kwh, group=???, colour=???)) + 
+  geom_line() 
+```
+
+6. Decide on one more plot, for each group member, to make to learn about your energy usage and weather. Make these plots and write some paragraphs describing what you have learned. 
+
+7. Build your answers to these questions into a learnr interactive tutorial, with separate pages as appropriate for each question (2-6), and an interactive quiz on each page relating to the material on the page, to help the reader engage in your energy data analysis.

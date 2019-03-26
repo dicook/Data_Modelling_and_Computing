@@ -167,8 +167,15 @@ N4YRAA_latlon <- N4YRAA_latlon %>% arrange(FL_DATE, DEP_TIME)
 
 ### Map it
 
-```{r}
+```{r eval=FALSE}
+# Need to use a registered google account to get map
+register_google("XXX")
 map <- get_map(c(lon=-92.20562, lat=36.20259), zoom=5)
+save(map, file="data/map.rda")
+```
+
+```{r}
+load("data/map.rda")
 ggmap(map) +
   geom_segment(data=filter(N4YRAA_latlon,
                            FL_DATE == ymd("2017-05-06")),

@@ -26,7 +26,7 @@ Unless your question is a personal issue or an administrative matter, please do 
 
 - Di: Mon 10:30-11:30; Thu 12:30-1:30 Menzies E762A
 - Steph: Mon 12:30-13:30 Menzies W1105
-- Mitch: Wed 12:00-13:00 Menzies W1105
+- Nick: Wed 12:00-13:00 Menzies E774
 - Stuart: Tues 10:00-11:00 Menzies W1105
 
 ## MoVE
@@ -48,7 +48,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - [Tue](https://ebsmonash.shinyapps.io/lecture3a_basicvis/) [(Rmd)](http://dmac.dicook.org/lectures/lecture3a/lecture3a_basicvis.Rmd) [Reading Textbook 16.1, 16.2, 16.3.1](http://r4ds.had.co.nz/dates-and-times.html)
     - [Thu](https://ebsmonash.shinyapps.io/lecture3b_time/) [(Rmd)](http://dmac.dicook.org/lectures/lecture3b/lecture3b_time.Rmd) [Reading Textbook 13.1, 13.2](http://r4ds.had.co.nz/relational-data.html)
 - Week 4: Advanced wrangling, joining tables, and advanced data visualisation
-   - [Tue]() [(Rmd)]() [Reading Textbook 3.5-3.7](http://r4ds.had.co.nz/data-visualisation.html)
+   - [Tue](https://ebsmonash.shinyapps.io/lecture4a_relational/) [(Rmd)](http://dmac.dicook.org/lectures/lecture4a/lecture4a_relational.Rmd) [Reading Textbook 3.5-3.7](http://r4ds.had.co.nz/data-visualisation.html)
    - [Thu]() [(Rmd)]() [Reading on handling missing values](https://cran.r-project.org/web/packages/naniar/vignettes/getting-started-w-naniar.html)
 - Week 5: Handling missing values and scraping data  
     - [Tue]() [(Rmd)]() [Reading exercise is a doing exercise this week - follow the instructions on this site](https://gist.github.com/cpsievert/e05da83fc4253e6d1986)
