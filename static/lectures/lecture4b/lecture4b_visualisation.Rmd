@@ -361,19 +361,20 @@ launchApp(
 
 ```{r eval=FALSE, echo=FALSE}
 library(tidyverse)
-players <- read_csv("data/players.csv")
-teams <- read_csv("data/teams.csv")
-teams <- teams %>% filter(Club != "All Clubs")
+library(plotly)
+players <- read_csv("https://raw.githubusercontent.com/ropenscilabs/ozwomensport/master/AFLW/data/players.csv")
+teams <- read_csv("https://raw.githubusercontent.com/ropenscilabs/ozwomensport/master/AFLW/data/teams.csv")
 library(forcats)
 teams <- teams %>% mutate(Club = fct_reorder(Club, `Kicks TOT`, .desc=TRUE))
 ggplot(teams, aes(x=Club, y=`Kicks TOT`)) +
   geom_col() + coord_flip()
-ggplot(teams, aes(x=Kicks_AVG, y=Handballs_AVG)) + geom_point() + theme(aspect.ratio=1)
-ggplot(teams, aes(x=`Frees For_AVG`, y=`Frees Agst_AVG`)) + geom_point() + theme(aspect.ratio=1)
-players <- players %>% mutate(Club = fct_reorder(Club, Kicks_AVG, "median", .desc=TRUE))
-ggplot(players, aes(x=Club, y=Kicks_AVG)) + geom_boxplot()
-p <- ggplot(players, aes(x=Kicks_AVG, y=Handballs_AVG, label=Player)) + geom_point() + geom_smooth(method="lm") + theme(aspect.ratio=1)
+ggplot(teams, aes(x=`Kicks AVG`, y=`Handballs AVG`, label=Club)) + geom_point() + theme(aspect.ratio=1)
 ggplotly()
+ggplot(teams, aes(x=`Frees For AVG`, y=`Frees Agst AVG`, label=Club)) + geom_point() + theme(aspect.ratio=1)
+ggplotly()
+players <- players %>% mutate(Club = fct_reorder(Club, `Kicks AVG`, "median", .desc=TRUE))
+ggplot(players, aes(x=Club, y=`Kicks AVG`, label=Player)) + geom_boxplot()
+ggplot(players, aes(x=`Kicks AVG`, y=`Handballs AVG`, label=Player)) + geom_point() + geom_smooth(method="lm") + theme(aspect.ratio=1)
 ```
 
 
