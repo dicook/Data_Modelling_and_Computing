@@ -274,6 +274,9 @@ tb_au %>% filter(year == 2012) %>%
   scale_fill_brewer(palette="Dark2")
 ```
 
+Facetting of plots, and proximity are related to change blindness, and area of study in cognitive psychology. There are a series of fabulous videos illustrating the effects of making a visual break, on how the mind processes it by Daniel Simons lab. Here's one example:  
+[The door study](https://www.youtube.com/watch?v=FWSxSQsspiQ)
+
 ## Hierarchy of mappings
 
 1. Position - common scale (BEST): axis system
@@ -316,9 +319,9 @@ library(tidyverse)
 passengers <- passengers %>% 
   filter(!is.na(AIRPORT)) %>%
   select(airport = AIRPORT,
-         Year, IN_DOM = INBOUND, OUT_DOM = OUTBOUND,
-         IN_INTL = INBOUND__1, 
-         OUT_INTL = OUTBOUND__1) %>%
+         Year, IN_DOM = INBOUND..5, OUT_DOM = OUTBOUND..6,
+         IN_INTL = INBOUND..8, 
+         OUT_INTL = OUTBOUND..9) %>%
   filter(!airport %in%  "TOTAL AUSTRALIA") %>%
   gather(key = "where", value = "amount", IN_DOM:OUT_INTL) %>%
   separate(where, into=c("bound", "type_of_flight"))
@@ -348,7 +351,7 @@ launchApp(
 ```
 ## Lab exercises
 
-1. Download the data on the [women's AFL](https://github.com/ropenscilabs/ozwomensport). These are the stats the first two seasons. There are two tables, one for players and one for teams. Be careful how you download. It may be easier to download the zip file. 
+1. Download the data on the [women's AFL](https://github.com/ropenscilabs/ozwomensport). You should also be able to read the data directly from R using the full URL as the file name. These are the stats the first two seasons. There are two tables, one for players and one for teams. Be careful how you download. It may be easier to download the zip file. 
 2. Make a barchart of the total kicks by team, sorted from highest to lowest, for each season. What do you learn?
 3. To compare teams, should you use average or total numbers? Explain your thinking.
 4. Make a scatterplot of average kicks by average handballs, for each season? Use an aspect ratio of 1. What do you learn? Make the plot interactive and report the name of the team(s) that has(ve) the highest on both variables. 
