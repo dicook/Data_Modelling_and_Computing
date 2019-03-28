@@ -86,6 +86,11 @@ ggplot(df, aes(x=x, y=y2)) + geom_point() +
   geom_smooth(method="lm", se=FALSE)
 ggplot(df, aes(x=x, y=y2)) + geom_point() + 
   geom_smooth(se=FALSE)
+ggplot(df, aes(x=x, y=y2)) + geom_point() + 
+  geom_smooth(se=FALSE, span=0.05)
+ggplot(df, aes(x=x, y=y2)) + geom_point() + 
+  geom_smooth(se=FALSE, span=0.2)
+
 ```
 
 

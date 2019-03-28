@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
 library(knitr)
 ```
 
+Marked out of 30 and then scaled to 10 points. 5 points for overall readability to make total out of 15.
 
 # About the data
 
@@ -36,7 +37,7 @@ library(tidyverse)
 aesid <- read_xlsx("data/Australian Election Study Interactive Data - Cameron and McAllister 2018.xlsx", sheet="1.5", col_names = c("v1", "v2", "1993", "1996","1998", "2001", "2004", "2007", "2010", "2013", "2016"), range="A3:K36")
 ```
 
-a. Make a sketch of what's in this sheet. Particularly map out the variables, and different types of aggregations. How many variables are there in this sheet? List them. How often was the survey conducted? Did the researchers adjust percentages to account for differences between sample and  population demographics? Write a few sentences about the data is in this sheet, in particular how this data might help us to answer the question "What is the trend in the ways people of different ages discuss politics?"
+a. *(5)* Make a sketch of what's in this sheet. Particularly map out the variables, and different types of aggregations. How many variables are there in this sheet? List them. How often was the survey conducted? Did the researchers adjust percentages to account for differences between sample and  population demographics? Write a few sentences about the data is in this sheet, in particular how this data might help us to answer the question "What is the trend in the ways people of different ages discuss politics?"
 
 **6 variables**
 
@@ -46,47 +47,47 @@ a. Make a sketch of what's in this sheet. Particularly map out the variables, an
 
 *This spreadsheet contains percentages of people in the survey reporting that they discuss politics and persuade others how to vote, for the years 1993-2016, broken down by several demographics, age, gender, education and voting preference.*
 
-b. Turn the data into long form, where year is in a column. 
+b. *(1)* Turn the data into long form, where year is in a column. 
 
 ```{r echo=TRUE}
 aesid_l <- aesid %>% gather(year, pct, `1993`:`2016`) 
 ```
 
-c. Remove the rows corresponding to overall aggregates.
+c. *(1)* Remove the rows corresponding to overall aggregates.
 
 ```{r echo=TRUE}
 aesid_l <- aesid_l %>% filter(!is.na(v2))
 ```
 
-d. Rename the first column to "communication".
+d. *(1)* Rename the first column to "communication".
 
 ```{r echo=TRUE}
 aesid_l <- aesid_l %>% 
   rename(communication = v1)
 ```
 
-e. Separate the second column into two, one called "variable", and the second called "level". (Hint: You will need to use `sep=":"` as an argument.)
+e. *(1)* Separate the second column into two, one called "variable", and the second called "level". (Hint: You will need to use `sep=":"` as an argument.)
 
 ```{r echo=TRUE}
 aesid_l <- aesid_l %>% 
   separate(v2, c("variable", "level"), sep=":")
 ```
 
-f. Convert `year` into a numeric variable.
+f. *(1)* Convert `year` into a numeric variable.
 
 ```{r echo=TRUE}
 aesid_l <- aesid_l %>% 
   mutate(year = as.numeric(year)) 
 ```
 
-g. Subset to have only rows corresponding to the variable "age".
+g. *(1)* Subset to have only rows corresponding to the variable "age".
 
 ```{r echo=TRUE}
 aesid_l <- aesid_l %>% 
   filter(variable == "Age")
 ```
 
-h. Make a line plot showing the percentage by year, with separate coloured by age group, and faceted by communcation. Write a paragraph on what you learn from this plot. 
+h. *(2)* Make a line plot showing the percentage by year, with separate coloured by age group, and faceted by communcation. Write a paragraph on what you learn from this plot. 
 
 ```{r}
 ggplot(aesid_l, aes(x=year, y=pct, colour=level)) + 
@@ -96,7 +97,7 @@ ggplot(aesid_l, aes(x=year, y=pct, colour=level)) +
 
 *More people discuss politics than try to persuade others how to vote. Between 1998-2001 there was a big drop in the percentage of people doing either, especially true for the youngest age group 18-24. The youngest group 18-24 have the highest percentages who report trying to persuade others how to vote.*
 
-i. It seems that there was a big drop in people reporting talking about politics, or trying to persuade others how to vote, after 1998. Using your internet searching skills, do some research to find out plausible reasons for the big drop in these percentages, and describe what you have learned.
+i. *(2)* It seems that there was a big drop in people reporting talking about politics, or trying to persuade others how to vote, after 1998. Using your internet searching skills, do some research to find out plausible reasons for the big drop in these percentages, and describe what you have learned.
 
 *The election was held 6 months earlier than required by law. There was a big swing against the incumbent party, and it did not win the popular vote. This was the biggest discrepancy between the popular vote and the electoral tally in the history of Australian politics. The election was called immediately after the government announced the launch of the Goods and Services Tax (GST), clearly an unpopular policy.*
 
@@ -109,11 +110,11 @@ library(tidyverse)
 fpp <- read_csv("data/HouseFirstPrefsByCandidateByVoteTypeDownload-20499.csv", skip=1)
 ```
 
-a. Take a look at the structure of the data file. Is this data in tidy format? Explain your answer.
+a. *(1)* Take a look at the structure of the data file. Is this data in tidy format? Explain your answer.
 
 *Yes, the data is in tidy format. The observations are made on candidates in the federal election, and there are many variables measured for each candidate populating the columns.*
 
-b. Count the number of candidates in each electorate. What is the most number of candidates in any electorate? What is the least? What is the average number of candidates per electorate?
+b. *(2)* Count the number of candidates in each electorate. What is the most number of candidates in any electorate? What is the least? What is the average number of candidates per electorate?
 
 *The most number of candidates in any electorate is*`r fpp %>% count(DivisionNm, sort=TRUE) %>% summarise(n=max(n))`.
 
@@ -122,7 +123,7 @@ b. Count the number of candidates in each electorate. What is the most number of
 *The average number of candidates in any electorate is* `r fpp %>% count(DivisionNm, sort=TRUE) %>% summarise(m=round(mean(n), 1))`
 
 
-c. Filter the data on the candidates who won the electorate. Summarise the number of electorates won by each party. Write a sentence describing what you learn.
+c. *(2)* Filter the data on the candidates who won the electorate. Summarise the number of electorates won by each party. Write a sentence describing what you learn.
 
 ```{r}
 fpp %>% filter(Elected == "Y") %>% 
@@ -132,7 +133,7 @@ fpp %>% filter(Elected == "Y") %>%
 
 *The Liberal and Labor party have a fairly even split of the electorates, with several affiliated parties, with variations of the major party names that are represented in a small number of electorates, and a handful of electorates were won by unaffiliated minor parties and independents.* 
 
-d. Compute a new variable which is the percentage of the vote earned by each candidate. Filter the data on the candidates who won the electorate.  Make a plot of the distribution of percentage of the first preference vote that each winner won with. (Hint: a histogram, density plot or boxplot would be appropriate plots here.)  Write a sentence describing the distribution.
+d. *(3)* Compute a new variable which is the percentage of the vote earned by each candidate. Filter the data on the candidates who won the electorate.  Make a plot of the distribution of percentage of the first preference vote that each winner won with. (Hint: a histogram, density plot or boxplot would be appropriate plots here.)  Write a sentence describing the distribution.
 
 ```{r}
 fpp %>% group_by(DivisionNm) %>% 
@@ -143,7 +144,7 @@ fpp %>% group_by(DivisionNm) %>%
 
 *The distribution is very bell-shaped, unimodal and symmetric, with values ranging from about 25-65%, and avergaing around 45%.*
 
-e. Make a list of the electorates where the winner did not get the majority first preferences, that includes the Division name, candidate name, their first preference percentage and the highest first preference percentage in the electorate. Write a sentence explaining how it happens that a candidate can win the electorate without getting the largest number of first preference votes. 
+e. *(3)* Make a list of the electorates where the winner did not get the majority first preferences, that includes the Division name, candidate name, their first preference percentage and the highest first preference percentage in the electorate. Write a sentence explaining how it happens that a candidate can win the electorate without getting the largest number of first preference votes. 
 
 ```{r}
 fpp %>% group_by(DivisionNm) %>% 
@@ -158,7 +159,7 @@ fpp %>% group_by(DivisionNm) %>%
 
 *When a voter would prefer a minor party, they can cast their vote for that candidate, but if their candidate gets insufficient votes, the voters second (or third) choice of candidate will receive the vote.*
 
-f. How many different parties contested the election? Which party received the least votes over the country? How many electorates were contested by the party with the least votes?
+f. *(2)* How many different parties contested the election? Which party received the least votes over the country? How many electorates were contested by the party with the least votes?
 
 *There were* `r fpp %>% group_by(PartyNm) %>% summarise(tot=sum(TotalVotes, na.rm=TRUE)) %>% tally()` *parties contesting the election.*
 
@@ -168,7 +169,7 @@ fpp %>% group_by(PartyNm) %>% summarise(tot=sum(TotalVotes, na.rm=TRUE)) %>% arr
 
 *Australian Progressives, followed by the Clive Palmer party, the candidate with the current catchphrase "Australians aren't going to cop it", received the least number of votes in 2016, * `r fpp %>% filter(PartyNm == "Australian Progressives")`.
 
-g. Write an explanation of preferential voting as it is used in Australia, and how first preferences factor in to the final result. 
+g. *(2)* Write an explanation of preferential voting as it is used in Australia, and how first preferences factor in to the final result. 
 
 *Voters number the candidates on the ballot paper in order of their preference. First preferences are counted. Votes for candidates with the smallest number of first preference votes are re-allocated to the voters second preference. This re-allocation happens until one candidate has the clear majority, and is declared the winner.*
 
