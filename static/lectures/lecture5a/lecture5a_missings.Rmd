@@ -334,8 +334,9 @@ ggplot(tao_shadow,
 The package `impute` from Bioconductor has a nice nearest neighbor imputation implementation.
 
 ```{r eval=FALSE}
-#source("https://bioconductor.org/biocLite.R")
-#biocLite("impute")
+# if (!requireNamespace("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+# BiocManager::install("impute", version = "3.8")
 library(impute)
 tao_impute <- bind_shadow(oceanbuoys) %>%
   arrange(year, sea_temp_c, air_temp_c) %>%

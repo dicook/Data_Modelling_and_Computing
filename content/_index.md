@@ -51,7 +51,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
    - [Tue](https://ebsmonash.shinyapps.io/lecture4a_relational/) [(Rmd)](http://dmac.dicook.org/lectures/lecture4a/lecture4a_relational.Rmd) [map.rda](http://dmac.dicook.org/lectures/lecture4a/data/map.rda) [Reading Textbook 3.5-3.7](http://r4ds.had.co.nz/data-visualisation.html)
    - [Thu](https://ebsmonash.shinyapps.io/lecture4b_visualisation/) [(Rmd)](http://dmac.dicook.org/lectures/lecture4b/lecture4b_visualisation.Rmd) [Reading on handling missing values](https://cran.r-project.org/web/packages/naniar/vignettes/getting-started-w-naniar.html)
 - Week 5: Handling missing values and scraping data  
-    - [Tue]() [(Rmd)]() [Reading exercise is a doing exercise this week - follow the instructions on this site](https://gist.github.com/cpsievert/e05da83fc4253e6d1986)
+    - [Tue](https://ebsmonash.shinyapps.io/lecture5a_missings/) [(Rmd)](http://dmac.dicook.org/lectures/lecture5a/lecture5a_missings.Rmd) [Reading exercise is a doing exercise this week - follow the instructions on this site](https://gist.github.com/cpsievert/e05da83fc4253e6d1986)
     - [Thu]() [(Rmd)]() [Reading Textbook 23.1-2](http://r4ds.had.co.nz/model-basics.html)
 - Week 6: Introduction to modeling, and building many models
     - [Tue]() [(Rmd)]() [Reading Textbook 23.3-5](http://r4ds.had.co.nz/model-basics.html)
