@@ -235,15 +235,6 @@ What do we learn?
 
 - Generate the shadow matrix and make a plot of the winds, coloured by missingness on humidity.
 
-```{r}
-ggplot(data = tao_shadow,
-       aes(x = wind_ew, 
-           y=wind_ns, 
-           colour=humidity_NA)) +
-       scale_colour_brewer(palette="Dark2") +
-       geom_point(alpha=0.7) + theme(aspect.ratio=1) 
-```
-
 ## Strategy
 
 - An small fraction of cases have several missings, drop the cases
@@ -312,31 +303,17 @@ What do we learn?
 
 - Change the code to plot sea temperature against humidity, with colour representing missing humidity values. What do you learn about the imputations?
 
-```{r}
-tao_shadow <- bind_shadow(oceanbuoys)
-tao_shadow <- tao_shadow %>%
-  group_by(year) %>%
-  impute_mean_at(vars(sea_temp_c,
-                      air_temp_c,
-                      humidity))
-ggplot(tao_shadow,
-       aes(x = sea_temp_c,
-           y = humidity, 
-           colour=humidity_NA)) +
-  geom_point(alpha=0.7) + 
-  facet_wrap(~year) + 
-  scale_colour_brewer(palette="Dark2") +
-  theme(aspect.ratio=1)
-```
-
 ###  Nearest neighbors imputation
 
 The package `impute` from Bioconductor has a nice nearest neighbor imputation implementation.
 
 ```{r eval=FALSE}
-# if (!requireNamespace("BiocManager", quietly = TRUE))
-#    install.packages("BiocManager")
-# BiocManager::install("impute", version = "3.8")
+ if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+ BiocManager::install("impute", version = "3.8")
+```
+
+```{r eval=FALSE}
 library(impute)
 tao_impute <- bind_shadow(oceanbuoys) %>%
   arrange(year, sea_temp_c, air_temp_c) %>%
@@ -398,7 +375,7 @@ We are going to examine Melbourne house prices, using a data set available at ht
 3. Make a missing values summary of all the data - what proportion of observations are missing on Price?
 4. Make the shadow matrix, and plot Bathroom vs Bedroom2 coloured by missingness on Bedroom2. Why don't any missing values show up?
 5. Impute the missing values for Bedroom2 and Bathroom, by using mean imputation. Make a plot of the two variables, with the imputed values coloured. Describe the pattern that you see.
-6. Impute the missing values for Bedroom2 and Bathroom, using a linear model on th variable Rooms. Make a plot of the two variables, with the imputed values coloured. Is this better or worse than the mean value imputed values? Explain your thinking. (You can use the code below to help do this type of imputation. )
+6. Impute the missing values for Bedroom2 and Bathroom, using a linear model on th variable Rooms. Make a plot of the two variables, with the imputed values coloured. Is this better or worse than the mean value imputed values? Explain your thinking. (The code below can help you do this type of imputation, but **you will need to make the start of the code yourself, to read in the data, and do the initial exercises**. )
 
 ```{r echo=TRUE, eval=FALSE}
 houses_sub <- houses %>% select(Price, Rooms, Type, Distance, Bedroom2, Bathroom)
