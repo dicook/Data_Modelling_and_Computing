@@ -326,7 +326,7 @@ ggplot(data=nba, aes(x=fct_reorder(TEAM, SALARY), y=SALARY)) +
 library(readxl)
 # devtools::install_github("AnthonyEbert/sawfish")
 library(sawfish) 
-url<-"http://data.gov.au/dataset/rental-bond-and-rental-data-tasmania-2016-to-2017"
+url<-"http://data.gov.au/data/dataset/rental-bond-and-rental-data-tasmania-2016-to-2017"
 fls <- find_files(url, "xlsx")
 f1 <- tempfile()
 download.file(fls[1], f1, mode="wb")

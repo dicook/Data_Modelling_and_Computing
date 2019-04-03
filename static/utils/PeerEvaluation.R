@@ -3,7 +3,7 @@ library(tidyverse)
 
 gs_ls()
 lss <- gs_key("1fpQO16KCB1aPyfM1LcaWySZuXia_S8UgeXP5kS9dgIU")
-assignments <- gs_read(lss)
+assignments <- gs_read(lss, ws=2)
 
 # Match groups without self assignment
 sampleGroups <- function(groups){
@@ -26,14 +26,14 @@ assignments %>%
   filter(!is.na(GROUP)) %>%
   mutate(`Evaluation Group` = sampleGroups(GROUP)) %>%
   select(STUDENT_CODE, GROUP, `Evaluation Group`) %>%
-  write_csv("~/github/Data_Modelling_and_Computing/static/evaluation_assignment.csv")
+  write_csv("evaluation_assignment.csv")
 
 # Prepare submissions for peer evaluation (ZIP)
 
 ## Change to be where you would like your ZIPs to be placed
-zippath <- "~/teaching/ETC1010/a2_groups/"
+zippath <- "a2_groups/"
 ## List the directories that you'd like to ZIP
-submissions <- list.dirs("~/teaching/ETC1010/Assignment 2 group submissions/", recursive = FALSE)
+submissions <- list.dirs("Assignment2 group submissions/", recursive = FALSE)
 
 ## Check that all groups have submitted assignments
 assignments %>%
