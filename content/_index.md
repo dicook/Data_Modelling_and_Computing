@@ -84,8 +84,9 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Assignment 3: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]() **DUE: Week 9,  Thu, before class**
 - Practical exam: [instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]()  **This will be completed individually during the lectorial on XXX.**
 
-## Assignment 1 peer evaluation
+## Assignment 2 peer evaluation
 
+<!--
 [Peer evaluation assignments](evaluation_assignment.csv)
 
 - Unknown [zip](assignments/assignment2_2019/Unknown.zip)
@@ -110,6 +111,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - The Amatuer Group [zip](assignments/assignment2_2019/The Amatuer Group.zip)
 - The King Baboon [zip](assignments/assignment2_2019/The King Baboon.zip)
 - VITAE [zip](assignments/assignment2_2019/VITAE.zip)
+-->
 
 ## Project
 
