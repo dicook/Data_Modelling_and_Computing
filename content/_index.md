@@ -52,7 +52,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
    - [Thu](https://ebsmonash.shinyapps.io/lecture4b_visualisation/) [(Rmd)](http://dmac.dicook.org/lectures/lecture4b/lecture4b_visualisation.Rmd) [Reading on handling missing values](https://cran.r-project.org/web/packages/naniar/vignettes/getting-started-w-naniar.html)
 - Week 5: Handling missing values and scraping data  
     - [Tue](https://ebsmonash.shinyapps.io/lecture5a_missings/) [(Rmd)](http://dmac.dicook.org/lectures/lecture5a/lecture5a_missings.Rmd) [Reading exercise is a doing exercise this week - follow the instructions on this site](https://gist.github.com/cpsievert/e05da83fc4253e6d1986)
-    - [Thu]() [(Rmd)]() [Reading Textbook 23.1-2](http://r4ds.had.co.nz/model-basics.html)
+    - [Thu](https://ebsmonash.shinyapps.io/lecture5b_harvesting_data/) [(Rmd)](http://dmac.dicook.org/lectures/lecture5b/lecture5b_harvesting_data.Rmd) [Reading Textbook 23.1-2](http://r4ds.had.co.nz/model-basics.html)
 - Week 6: Introduction to modeling, and building many models
     - [Tue]() [(Rmd)]() [Reading Textbook 23.3-5](http://r4ds.had.co.nz/model-basics.html)
     - [Thu]() [(Rmd)]() [Reading Textbook 25.1, 25.2 (only the first section)](http://r4ds.had.co.nz/many-models.html)
@@ -84,32 +84,34 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Assignment 3: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]() **DUE: Week 9,  Thu, before class**
 - Practical exam: [instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]()  **This will be completed individually during the lectorial on XXX.**
 
-## Assignment 1 peer evaluation
+## Assignment 2 peer evaluation
 
+<!--
 [Peer evaluation assignments](evaluation_assignment.csv)
 
-- Unknown [zip](assignments/assignment1_2019/Unknown.zip)
-- 4000 [zip](assignments/assignment1_2019/4000.zip)
-- C L [zip](assignments/assignment1_2019/C L.zip)
-- dplyr [zip](assignments/assignment1_2019/dplyr.zip)
-- Electric R [zip](assignments/assignment1_2019/Electric R.zip)
-- ETC1010Group [zip](assignments/assignment1_2019/ETC1010Group.zip)
-- FORCATS [zip](assignments/assignment1_2019/FORCATS.zip)
-- GROUP_FIVE [zip](assignments/assignment1_2019/GROUP_FIVE.zip)
-- Hardworking [zip](assignments/assignment1_2019/Hardworking.zip)
-- incRRRedible [zip](assignments/assignment1_2019/incRRRedible.zip)
-- Lubridate [zip](assignments/assignment1_2019/Lubridate.zip)
-- MDJLLSPHPL [zip](assignments/assignment1_2019/MDJLLSPHPL.zip)
-- Not the Swallows! [zip](assignments/assignment1_2019/Not the Swallows!.zip)
-- Python>R [zip](assignments/assignment1_2019/Python>R.zip)
-- SOLO [zip](assignments/assignment1_2019/SOLO.zip)
-- STM [zip](assignments/assignment1_2019/STM.zip)
-- Team HD [zip](assignments/assignment1_2019/Team HD.zip)
-- Team SAMY [zip](assignments/assignment1_2019/Team SAMY.zip)
-- Team STAT [zip](assignments/assignment1_2019/Team STAT.zip)
-- The Amatuer Group [zip](assignments/assignment1_2019/The Amatuer Group.zip)
-- The King Baboon [zip](assignments/assignment1_2019/The King Baboon.zip)
-- VITAE [zip](assignments/assignment1_2019/VITAE.zip)
+- Unknown [zip](assignments/assignment2_2019/Unknown.zip)
+- 4000 [zip](assignments/assignment2_2019/4000.zip)
+- C L [zip](assignments/assignment2_2019/C L.zip)
+- dplyr [zip](assignments/assignment2_2019/dplyr.zip)
+- Electric R [zip](assignments/assignment2_2019/Electric R.zip)
+- ETC1010Group [zip](assignments/assignment2_2019/ETC1010Group.zip)
+- FORCATS [zip](assignments/assignment2_2019/FORCATS.zip)
+- GROUP_FIVE [zip](assignments/assignment2_2019/GROUP_FIVE.zip)
+- Hardworking [zip](assignments/assignment2_2019/Hardworking.zip)
+- incRRRedible [zip](assignments/assignment2_2019/incRRRedible.zip)
+- Lubridate [zip](assignments/assignment2_2019/Lubridate.zip)
+- MDJLLSPHPL [zip](assignments/assignment2_2019/MDJLLSPHPL.zip)
+- Not the Swallows! [zip](assignments/assignment2_2019/Not the Swallows!.zip)
+- Python>R [zip](assignments/assignment2_2019/Python>R.zip)
+- SOLO [zip](assignments/assignment2_2019/SOLO.zip)
+- STM [zip](assignments/assignment2_2019/STM.zip)
+- Team HD [zip](assignments/assignment2_2019/Team HD.zip)
+- Team SAMY [zip](assignments/assignment2_2019/Team SAMY.zip)
+- Team STAT [zip](assignments/assignment2_2019/Team STAT.zip)
+- The Amatuer Group [zip](assignments/assignment2_2019/The Amatuer Group.zip)
+- The King Baboon [zip](assignments/assignment2_2019/The King Baboon.zip)
+- VITAE [zip](assignments/assignment2_2019/VITAE.zip)
+-->
 
 ## Project
 
