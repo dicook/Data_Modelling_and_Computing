@@ -90,12 +90,12 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 [Peer evaluation assignments](evaluation_assignment.csv)
 
 - Unknown [zip](assignments/assignment2_2019/Unknown.zip)
-- 4000 [zip](assignments/assignment2_2019/4000.zip)
-- C L [zip](assignments/assignment2_2019/C L.zip)
-- dplyr [zip](assignments/assignment2_2019/dplyr.zip)
-- Electric R [zip](assignments/assignment2_2019/Electric R.zip)
-- ETC1010Group [zip](assignments/assignment2_2019/ETC1010Group.zip)
-- FORCATS [zip](assignments/assignment2_2019/FORCATS.zip)
+- 4000 [zip](assignments/assignment2_2019/4000.zip) [shinyapp](https://ebsmonash.shinyapps.io/4000_Assignment2)
+- C L [zip](assignments/assignment2_2019/C L.zip) [shinyapp](https://ebsmonash.shinyapps.io/CLreport)
+- dplyr [zip](assignments/assignment2_2019/dplyr.zip) [shinyapp](https://ebsmonash.shinyapps.io/assignment2DPLYR/)
+- Electric R [zip](assignments/assignment2_2019/Electric R.zip) [shinyapp](https://ebsmonash.shinyapps.io/electricR_Ass2/)
+- ETC1010Group [zip](assignments/assignment2_2019/ETC1010Group.zip) [shinyapp](https://ebsmonash.shinyapps.io/ETC1010Group/)
+- FORCATS [zip](assignments/assignment2_2019/FORCATS.zip) [shinyapp](https://ebsmonash.shinyapps.io/FORCATS/
 - GROUP_FIVE [zip](assignments/assignment2_2019/GROUP_FIVE.zip)
 - Hardworking [zip](assignments/assignment2_2019/Hardworking.zip)
 - incRRRedible [zip](assignments/assignment2_2019/incRRRedible.zip)

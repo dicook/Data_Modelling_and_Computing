@@ -33,13 +33,14 @@ assignments %>%
 ## Change to be where you would like your ZIPs to be placed
 zippath <- "a2_groups/"
 ## List the directories that you'd like to ZIP
-submissions <- list.dirs("Assignment2 group submissions/", recursive = FALSE)
+submissions <- list.dirs("Assignment 2 group submissions/", recursive = FALSE)
 
 ## Check that all groups have submitted assignments
 assignments %>%
   mutate(match = Email %in% basename(submissions))%>%
   group_by(GROUP) %>%
-  summarise(match = sum(match))
+  summarise(match = sum(match)) %>%
+  print(n=22)
 
 ## Build the ZIPs
 submissions %>%
