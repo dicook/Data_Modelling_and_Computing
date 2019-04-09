@@ -54,8 +54,8 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - [Tue](https://ebsmonash.shinyapps.io/lecture5a_missings/) [(Rmd)](http://dmac.dicook.org/lectures/lecture5a/lecture5a_missings.Rmd) [Reading exercise is a doing exercise this week - follow the instructions on this site](https://gist.github.com/cpsievert/e05da83fc4253e6d1986)
     - [Thu](https://ebsmonash.shinyapps.io/lecture5b_harvesting_data/) [(Rmd)](http://dmac.dicook.org/lectures/lecture5b/lecture5b_harvesting_data.Rmd) [Reading Textbook 23.1-2](http://r4ds.had.co.nz/model-basics.html)
 - Week 6: Introduction to modeling, and building many models
-    - [Tue](https://ebsmonash.shinyapps.io/lecture6a_models/) [(Rmd)](http://dmac.dicook.org/lectures/lecture6a/lecture6a_models.Rmd) [Reading Textbook 23.3-5](http://r4ds.had.co.nz/model-basics.html)
-    - [Thu]() [(Rmd)]()
+    - [Tue](https://ebsmonash.shinyapps.io/lecture6a_models/) [(Rmd)](http://dmac.dicook.org/lectures/lecture6a/lecture6a_models.Rmd)
+    - [Thu]() [(Rmd)]()  [Reading Textbook 23.3-5](http://r4ds.had.co.nz/model-basics.html)
 - Week 7: Intermediate models 
     - [Tue]() [(Rmd)]) [Reading Textbook 24.1-2](http://r4ds.had.co.nz/model-building.html) 
     - [Thu]() [(Rmd)]()  [Reading Textbook 25.1, 25.2 (only the first section)](http://r4ds.had.co.nz/many-models.html)
@@ -93,7 +93,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - dplyr [zip](assignments/assignment2_2019/dplyr.zip) [shinyapp](https://ebsmonash.shinyapps.io/assignment2DPLYR/)
 - Electric R [zip](assignments/assignment2_2019/Electric R.zip) [shinyapp](https://ebsmonash.shinyapps.io/electricR_Ass2/)
 - ETC1010Group [zip](assignments/assignment2_2019/ETC1010Group.zip) [shinyapp](https://ebsmonash.shinyapps.io/ETC1010Group/)
-- FORCATS [zip](assignments/assignment2_2019/FORCATS.zip) [shinyapp](https://ebsmonash.shinyapps.io/FORCATS/
+- FORCATS [zip](assignments/assignment2_2019/FORCATS.zip) [shinyapp](https://ebsmonash.shinyapps.io/FORCATS/)
 - GROUP_FIVE [zip](assignments/assignment2_2019/GROUP_FIVE.zip) [shinyapp](https://ebsmonash.shinyapps.io/GroupFive/)
 - Hardworking [zip](assignments/assignment2_2019/Hardworking.zip) [shinyapp](https://ebsmonash.shinyapps.io/Hardworking/)
 - incRRRedible [zip](assignments/assignment2_2019/incRRRedible.zip) [shinyapp](https://ebsmonash.shinyapps.io/IncRRRedible/)
