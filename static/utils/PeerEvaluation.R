@@ -28,6 +28,10 @@ assignments %>%
   select(STUDENT_CODE, GROUP, `Evaluation Group`) %>%
   write_csv("evaluation_assignment.csv")
 
+s <- read_csv("evaluation_assignment.csv")
+s %>% count(`Evaluation Group`, sort=TRUE) %>% print(n=21)
+s %>% count(`GROUP`, sort=TRUE) %>% print(n=21)
+
 # Prepare submissions for peer evaluation (ZIP)
 
 ## Change to be where you would like your ZIPs to be placed

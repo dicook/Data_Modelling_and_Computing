@@ -54,11 +54,11 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - [Tue](https://ebsmonash.shinyapps.io/lecture5a_missings/) [(Rmd)](http://dmac.dicook.org/lectures/lecture5a/lecture5a_missings.Rmd) [Reading exercise is a doing exercise this week - follow the instructions on this site](https://gist.github.com/cpsievert/e05da83fc4253e6d1986)
     - [Thu](https://ebsmonash.shinyapps.io/lecture5b_harvesting_data/) [(Rmd)](http://dmac.dicook.org/lectures/lecture5b/lecture5b_harvesting_data.Rmd) [Reading Textbook 23.1-2](http://r4ds.had.co.nz/model-basics.html)
 - Week 6: Introduction to modeling, and building many models
-    - [Tue]() [(Rmd)]() [Reading Textbook 23.3-5](http://r4ds.had.co.nz/model-basics.html)
-    - [Thu]() [(Rmd)]() [Reading Textbook 25.1, 25.2 (only the first section)](http://r4ds.had.co.nz/many-models.html)
+    - [Tue](https://ebsmonash.shinyapps.io/lecture6a_models/) [(Rmd)](http://dmac.dicook.org/lectures/lecture6a/lecture6a_models.Rmd) [Reading Textbook 23.3-5](http://r4ds.had.co.nz/model-basics.html)
+    - [Thu]() [(Rmd)]()
 - Week 7: Intermediate models 
     - [Tue]() [(Rmd)]) [Reading Textbook 24.1-2](http://r4ds.had.co.nz/model-building.html) 
-    - [Thu]() [(Rmd)]() Reading for this week is to browse through some of the data stories linked to the project instructions below.
+    - [Thu]() [(Rmd)]()  [Reading Textbook 25.1, 25.2 (only the first section)](http://r4ds.had.co.nz/many-models.html)
 - Week 8: Analysing text data
     - [Tue]() [(Rmd)]() Complete the "class network" survey!
     - [Thu]() [(Rmd)]() NO READING THIS WEEK!
@@ -86,32 +86,29 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 ## Assignment 2 peer evaluation
 
-<!--
-[Peer evaluation assignments](evaluation_assignment.csv)
+[Peer evaluation assignments](assignments/assignment2_2019/evaluation_assignment.csv)
 
-- Unknown [zip](assignments/assignment2_2019/Unknown.zip)
 - 4000 [zip](assignments/assignment2_2019/4000.zip) [shinyapp](https://ebsmonash.shinyapps.io/4000_Assignment2)
 - C L [zip](assignments/assignment2_2019/C L.zip) [shinyapp](https://ebsmonash.shinyapps.io/CLreport)
 - dplyr [zip](assignments/assignment2_2019/dplyr.zip) [shinyapp](https://ebsmonash.shinyapps.io/assignment2DPLYR/)
 - Electric R [zip](assignments/assignment2_2019/Electric R.zip) [shinyapp](https://ebsmonash.shinyapps.io/electricR_Ass2/)
 - ETC1010Group [zip](assignments/assignment2_2019/ETC1010Group.zip) [shinyapp](https://ebsmonash.shinyapps.io/ETC1010Group/)
 - FORCATS [zip](assignments/assignment2_2019/FORCATS.zip) [shinyapp](https://ebsmonash.shinyapps.io/FORCATS/
-- GROUP_FIVE [zip](assignments/assignment2_2019/GROUP_FIVE.zip)
-- Hardworking [zip](assignments/assignment2_2019/Hardworking.zip)
-- incRRRedible [zip](assignments/assignment2_2019/incRRRedible.zip)
-- Lubridate [zip](assignments/assignment2_2019/Lubridate.zip)
-- MDJLLSPHPL [zip](assignments/assignment2_2019/MDJLLSPHPL.zip)
-- Not the Swallows! [zip](assignments/assignment2_2019/Not the Swallows!.zip)
-- Python>R [zip](assignments/assignment2_2019/Python>R.zip)
-- SOLO [zip](assignments/assignment2_2019/SOLO.zip)
-- STM [zip](assignments/assignment2_2019/STM.zip)
-- Team HD [zip](assignments/assignment2_2019/Team HD.zip)
-- Team SAMY [zip](assignments/assignment2_2019/Team SAMY.zip)
-- Team STAT [zip](assignments/assignment2_2019/Team STAT.zip)
-- The Amatuer Group [zip](assignments/assignment2_2019/The Amatuer Group.zip)
-- The King Baboon [zip](assignments/assignment2_2019/The King Baboon.zip)
-- VITAE [zip](assignments/assignment2_2019/VITAE.zip)
--->
+- GROUP_FIVE [zip](assignments/assignment2_2019/GROUP_FIVE.zip) [shinyapp](https://ebsmonash.shinyapps.io/GroupFive/)
+- Hardworking [zip](assignments/assignment2_2019/Hardworking.zip) [shinyapp](https://ebsmonash.shinyapps.io/Hardworking/)
+- incRRRedible [zip](assignments/assignment2_2019/incRRRedible.zip) [shinyapp](https://ebsmonash.shinyapps.io/IncRRRedible/)
+- Lubridate [zip](assignments/assignment2_2019/Lubridate.zip) [shinyapp](https://ebsmonash.shinyapps.io/Lubridate/#section-about-the-data)
+- MDJLLSPHPL [zip](assignments/assignment2_2019/MDJLLSPHPL.zip) [shinyapp](https://ebsmonash.shinyapps.io/MDHLJLLS_Assignment2/)
+- Not the Swallows! [zip](assignments/assignment2_2019/Not the Swallows!.zip) [shinyapp](https://ebsmonash.shinyapps.io/Assignment2_Not_The_Doves/)
+- Python>R [zip](assignments/assignment2_2019/Python>R.zip) [shinyapp](https://ebsmonash.shinyapps.io/pythonR/)
+- STM [zip](assignments/assignment2_2019/STM.zip) [shinyapp](https://ebsmonash.shinyapps.io/STM_ASS2/)
+- Team HD [zip](assignments/assignment2_2019/Team HD.zip) [shinyapp](https://ebsmonash.shinyapps.io/TeamHD/)
+- Team SAMY [zip](assignments/assignment2_2019/Team SAMY.zip) [shinyapp](https://ebsmonash.shinyapps.io/assignment2_mm/)
+- Team STAT [zip](assignments/assignment2_2019/Team STAT.zip) [shinyapp](https://ebsmonash.shinyapps.io/TEAM_STAT/)
+- The Amatuer Group [zip](assignments/assignment2_2019/The Amatuer Group.zip) [shinyapp](https://ebsmonash.shinyapps.io/TheAmatuerGroup)
+- The King Baboon [zip](assignments/assignment2_2019/The King Baboon.zip) [shinyapp](https://ebsmonash.shinyapps.io/TheKingBaboon/)
+- Tidyverse [zip](assignments/assignment2_2019/Tidyverse.zip) [shinyapp](https://ebsmonash.shinyapps.io/Tidyverse/)
+- VITAE [zip](assignments/assignment2_2019/VITAE.zip) [shinyapp](https://ebsmonash.shinyapps.io/VITAE/)
 
 ## Project
 
