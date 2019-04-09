@@ -24,10 +24,10 @@ Unless your question is a personal issue or an administrative matter, please do 
   
 ## Consultation times
 
-- Di: Mon 10:30-11:30; Thu 12:30-1:30 Menzies E762A
+- Di: Mon 10:30-11:30; Fri 10:00-11:00 Menzies E762A
 - Steph: Mon 12:30-13:30 Menzies W1105
 - Nick: Wed 12:00-13:00 Menzies E774
-- Stuart: Fri 10:00-11:00 Menzies W1105
+- Stuart: Thu 12:30-1:30 Menzies W1105
 
 ## MoVE
 
@@ -82,7 +82,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Assignment 1: [Instructions](https://dmac.dicook.org/assignments/assignment1.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment1.Rmd) [SOLUTION](https://dmac.dicook.org/assignments/assignment1_solution.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment1_solution.Rmd); Data: [AESID](https://australianelectionstudy.org/voter-studies/) **DUE: Week 3, Thu, at start of class** [Peer feedback](https://dmac.dicook.org/assignments/assignment1_feedback.html)
 - Assignment 2: [Instructions](https://dmac.dicook.org/assignments/assignment2.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment2.Rmd) [meter_di_2019.csv](https://dmac.dicook.org/assignments/data/meter_di_2019.csv) [SOLUTION]() [(Rmd)](); **DUE: Week 5, Thu, before class**
 - Assignment 3: [Instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]() **DUE: Week 9,  Thu, before class**
-- Practical exam: [instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]()  **This will be completed individually during the lectorial on XXX.**
+- Practical exam: [instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]()  **This will be completed individually during the lectorial on Thursday Week 6.**
 
 ## Assignment 2 peer evaluation
 
