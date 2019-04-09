@@ -24,10 +24,10 @@ Unless your question is a personal issue or an administrative matter, please do 
   
 ## Consultation times
 
-- Di: Mon 10:30-11:30; Fri 10:00-11:00 Menzies E762A
+- Di: Mon 10:30-11:30; Thu 12:30-1:30 Menzies E762A
 - Steph: Mon 12:30-13:30 Menzies W1105
 - Nick: Wed 12:00-13:00 Menzies E774
-- Stuart: Thu 12:30-1:30 Menzies W1105
+- Stuart: Fri 10:00-11:00 Menzies W1105
 
 ## MoVE
 
