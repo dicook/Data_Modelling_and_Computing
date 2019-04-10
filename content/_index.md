@@ -113,7 +113,8 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 ## Project
 
 - [Project instructions](project/project-ETC1010.pdf) 
-    - Deadline 1:  Team members and team name, data description. Below are some links to data stories that might stimulate your creative thinking
+    - Deadline 1:  Find team members, and potential topics to study
+    - Deadline 2:  Team members and team name, data description. Below are some links to data stories that might stimulate your creative thinking
         - [Blue Bikes Sharing in Boston](https://www.r-bloggers.com/blue-bikes-sharing-in-boston/)
         - 	[What birds are observed near Radolfzell? Bird occurrence data in R](https://ropensci.org/blog/2018/08/21/birds-radolfzell/)
 		- [Who wrote the anti-Trump New York Times op-ed? Using tidytext to find document similarity](https://www.r-bloggers.com/who-wrote-the-anti-trump-new-york-times-op-ed-using-tidytext-to-find-document-similarity/)
@@ -127,10 +128,11 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 		- [Analysis of Los Angeles Crime with R](https://datascienceplus.com/analysis-of-los-angeles-crime-with-r/)
 		- [Looking at Seinfeld dialogues using #tidytext](https://pradeepadhokshaja.wordpress.com/2018/08/06/looking-at-seinfeld-dialogues-using-tidytext/)
 		- [Twitter Coverage of the useR Conference 2018](https://github.com/neilfws/Twitter/blob/master/user2018/code/R/user2018.md)
-    - Deadline 2:  Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
-    - Deadline 3:  Final version of story board uploaded. There are two ways to do the storyboard:
+    - Deadline 3:  Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
+    - Deadline 4:  Final version of story board uploaded. There are several ways to do the storyboard:
         - `learnr` package that the lecture notes are written in. [Example files with css](project/lecture10b.zip)
         - [flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) package, and there is an [example here](project/pisa_au_app.zip)
+		- or a basic [shiny](https://shiny.rstudio.com/gallery/) app
     - Presentation in week 12
 
 ## Data ([ZIP](http://dmac.dicook.org/lectures/data/etc1010_data.zip))
