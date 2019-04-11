@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2019.4.8)  11 APR 2019 09:37
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2019.4.8)  11 APR 2019 15:21
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -68,7 +68,7 @@ Here is how much of TeX's memory you used:
 /amsfonts/cm/cmbx10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmbx12.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmr10.pfb>
-Output written on project-ETC1010.pdf (1 page, 48239 bytes).
+Output written on project-ETC1010.pdf (1 page, 47948 bytes).
 PDF statistics:
  20 PDF objects out of 1000 (max. 8388607)
  13 compressed objects within 1 object stream
