@@ -23,11 +23,182 @@ library(broom)
 library(gridExtra)
 ```
 
-# Many models
+## Overview
+
+- Optimisation for model fitting
+- Components of variation
+- Model goodness of fit statistics
+- Many models
 
 ## Course web site
 
 This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: [http://dmac.dicook.org](http://dmac.dicook.org)
+
+## Using optimisation to get a good fit
+
+- GOAL: Fitted model is close to all observed points
+- APPROACH: Measure the distance between the observed and fitted value, for each observation. 
+- SOLUTION: Best model makes all these distances as small as possible
+
+### Typical distances
+
+- Squared: $\sum_{i=1}^n (y_i - \widehat{y_i})^2$ (Fit is called **least squares fit**)
+- Absolute: $\sum_{i}|~y_i - \widehat{y_i}~|$ (Fit called **least absolute deviations**)
+- Power $p$: $\sum_{i=1}^n (y_i - \widehat{y_i})^p$ ($p=2,4,6,... L_p$ distance)
+
+Let's take a look, for the examples from last lecture. Data is simulated from this model:
+
+$\widehat{y}=2+3x+x^2-2x^3$
+
+```{r echo=FALSE}
+library(tidyverse)
+x <- runif(100, -1, 1)
+df <- tibble(x, y=2+3*x+x^2-2*x^3+rnorm(100)*0.2)
+ggplot(df, aes(x=x, y=y)) + geom_point()
+```
+
+We know that $\beta_0=2, \beta_1=3, \beta_2=1, \beta_3=-2$. 
+
+From the data, assume we DO NOT KNOW these parameter values, (*but that we do know the model family*) and we will estimate the parameters from the data provided. We need to find values for $b_0, b_1, b_2, b_3$ that minimise the distance between the resulting fitted value ($\widehat{y}$) and the observed $y$.
+
+```{r}
+square_err <- function(par, data) {
+  sq <- sum((data$y-(par[1]+par[2]*data$x+par[3]*data$x^2+par[4]*data$x^3))^2)
+  return(sq)
+}
+fit <- optim(c(1,1,1,1), square_err, data=df)
+df <- df %>% mutate(fitted = fit$par[1] + fit$par[2]*x +
+                      fit$par[3]*x^2 + fit$par[4]*x^3)
+ggplot(df, aes(x=x, y=y)) + geom_point() +
+  geom_line(aes(y=fitted), colour="blue") 
+```
+
+### Your turn
+
+1. Get my code to work for you. Your results might vary slightly from mine, because it is generating a different sample or data, and this might result in different parameter estimates
+2. Write a function to compute least absolute deviation, and run the optimisation with this instead of least squares
+3. Plot the data, least squares line, and the least absolute deviation model fits.
+
+```{r eval=FALSE, echo=FALSE}
+abs_dev_err <- function(par, data) {
+  ad <- sum(abs(data$y-(par[1]+par[2]*data$x+par[3]*data$x^2+par[4]*data$x^3)))
+  return(ad)
+}
+fit2 <- optim(c(1,1,1,1), abs_dev_err, data=df)
+df <- df %>% mutate(fitted2 = fit2$par[1] + fit2$par[2]*x +
+                      fit2$par[3]*x^2 + fit2$par[4]*x^3)
+ggplot(df, aes(x=x, y=y)) + geom_point() +
+  geom_line(aes(y=fitted), colour="blue") +
+  geom_line(aes(y=fitted2), colour="red")
+```
+
+## Components of variation
+
+- total variation: how much does Y vary, which is what we want to explain using the other variables
+- variation explained by the model
+- residual variation:  what's left over after fitting the model
+
+Open the app available at [https://ebsmonash.shinyapps.io/SSregression/](https://ebsmonash.shinyapps.io/SSregression/). (The original version was obtained from [https://github.com/paternogbc/SSregression](https://github.com/paternogbc/SSregression), developed by Gustavo Brant Paterno, a PhD student from Brazil.)
+
+The app simulates some data using different slopes and error variance. It allows you to see how characteristics of the data affect model summaries. Time to play!
+
+1. Vary the slope from high positive to zero. What happens to the error variance? The total variance and the regression variance (due to model)? Does the proportion of variation of each component change? How? Is this the same if you vary from large negative slope to zero?
+2. Holding the slope fixed at 1, increase the standard deviation of the error model. What happens to components of variation?
+3. As the slope changes, what happens to the intercept?
+4. Why isn't the estimated slope the same as what is set by the slider?
+
+```{r variance, echo=FALSE}
+quiz(
+  question("Which following is the `total variation`?",
+    answer("The sum of squared difference between observed response and fitted values."),
+    answer("The sum of squared difference between observed response and average response.", correct = TRUE),
+    answer("The sum of squared difference between fitted response and average response.")),
+  question("Which following is the `model variation`?",
+    answer("The sum of squared difference between observed response and fitted values."),
+    answer("The sum of squared difference between observed response and average response."),
+    answer("The sum of squared difference between fitted response and average response.", correct = TRUE)), 
+  question("Which following is the `residual variance`?",
+    answer("The sum of squared difference between observed response and fitted values.", correct = TRUE),
+    answer("The sum of squared difference between observed response and average response."),
+    answer("The sum of squared difference between fitted response and average response."))
+)
+```
+
+## Model goodness of fit statistics
+
+Simulate data again from this model:
+
+$\widehat{y}=2+3x+x^2-2x^3$
+
+Then consider these two models:
+
+1. $\widehat{y}=b_0+b_1x+b_2x^2$
+2. $\widehat{y}=b_0+b_1x+b_2x^2+b_3x^3$
+
+Model 2 would be the correct family, because it matches how we generated the data. The model goodness of fit statistics should reflect this.
+
+```{r}
+library(broom)
+df <- df %>%
+  mutate(x2=x^2, x3=x^3)
+df_mod1 <- lm(y~x+x2, data=df)
+df_mod2 <- lm(y~x+x2+x3, data=df)
+glance(df_mod1)
+glance(df_mod2)
+```
+
+The statistics are:
+
+- $R^2$: (model variance)/(total variance), the amount of variance in response explained by the model. Always ranges between 0 and 1, with 1 indicating a perfect fit. Adding more variables to the model will always increase $R^2$, so what is important is how big an increase is gained. Adjusted $R^2$ reduces this for every additional variable added. 
+- Deviance is the residual variation, how much variation in response that IS NOT explained by the model. The close to 0 the better, but it is not on a standard scale. In comparing two models if one has substantially lower deviance, then it is a better model.
+- Similarly BIC (Bayes Information Criterion) indicates how well the model fits, best used to compare two models. The lower is better.
+- df is the degrees of freedom left from the model fit. Starts at $n$ (sample size) and drops for each additional parameter estimated by the model. 
+
+All of these statistics indicate the model 2 is substantially a better fit than model 1.
+
+### Your turn:
+
+- For the co2 model fitting from yesterday, examine the model fit statistics for the linear model vs the one with a quadratic term. What do they indicate is the better fit?
+- Try fitting the seasonal pattern with one of the ideas you came up with yesterday. Use the model fit statistics, and residual plots, to determine if the model is better than the quadratic model.
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(broom)
+CO2.spo <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", col_names=c("date", "time", "day", "decdate", "n", "flg", "co2"), skip=69) %>%
+  mutate(lat = -90.0, lon = 0, stn = "spo") %>%
+  filter(flg==0) %>%
+  mutate(date = ymd(date))
+CO2.spo <- CO2.spo %>% mutate(day0=day-min(day))
+co2_fit1 <- lm(co2~day0, data=CO2.spo)
+co2_fit2 <- lm(co2~day0+I(day0^2), data=CO2.spo)
+glance(co2_fit1)
+glance(co2_fit2)
+library(lubridate)
+CO2.spo <- CO2.spo %>% mutate(month=month(date, label = TRUE, abbr = TRUE))
+co2_fit3 <- lm(co2~day0+I(day0^2)+month, data=CO2.spo)
+glance(co2_fit3)
+co2_model3 <- augment(co2_fit3, CO2.spo)
+ggplot(co2_model3, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+ggplot(filter(co2_model3, year(date)>1975, year(date)<1987),
+       aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue") 
+tidy(co2_fit3)
+co2_fit4 <- lm(co2~day0*month+I(day0^2)*month, data=CO2.spo)
+glance(co2_fit4)
+co2_model4 <- augment(co2_fit4, CO2.spo)
+ggplot(co2_model4, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+ggplot(filter(co2_model4, year(date)>1965, year(date)<1972),
+       aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue") 
+```
+
 
 ## Beyond a single model
 

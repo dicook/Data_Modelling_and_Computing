@@ -60,7 +60,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - [Tue]() [(Rmd)]) [Reading Textbook 24.1-2](http://r4ds.had.co.nz/model-building.html) 
     - [Thu]() [(Rmd)]()  [Reading Textbook 25.1, 25.2 (only the first section)](http://r4ds.had.co.nz/many-models.html)
 - Week 8: Analysing text data
-    - [Tue]() [(Rmd)]() Complete the "class network" survey!
+    - [Tue](https://ebsmonash.shinyapps.io/lecture7a_models/) [(Rmd)](http://dmac.dicook.org/lectures/lecture7a/lecture7a_models.Rmd) Complete the "class network" survey!
     - [Thu]() [(Rmd)]() NO READING THIS WEEK!
 - Week 9: Wrangling, plotting and modeling network data
    - [Tue]() [(Rmd)]() NO READING THIS WEEK!
