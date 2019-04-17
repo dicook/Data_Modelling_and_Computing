@@ -113,7 +113,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 ## Project
 
 - [Project instructions](project/project-ETC1010.pdf) 
-    - Deadline 1:  Find team members, and potential topics to study
+    - Deadline 1:  Find team members, and potential topics to study [Current list of groups and topcs - PLEASE CHECK YOURS](project/project_milestone1.csv)
     - Deadline 2:  Team members and team name, data description. Below are some links to data stories that might stimulate your creative thinking
         - [Blue Bikes Sharing in Boston](https://www.r-bloggers.com/blue-bikes-sharing-in-boston/)
         - 	[What birds are observed near Radolfzell? Bird occurrence data in R](https://ropensci.org/blog/2018/08/21/birds-radolfzell/)
