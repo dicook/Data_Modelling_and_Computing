@@ -114,7 +114,12 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 - [Project instructions](project/project-ETC1010.pdf) 
     - Deadline 1:  Find team members, and potential topics to study [Current list of groups and topcs - PLEASE CHECK YOURS](project/project_milestone1.csv)
-    - Deadline 2:  Team members and team name, data description. Below are some links to data stories that might stimulate your creative thinking
+    - Deadline 2:  Team members and team name, data description. 
+	- Examples from S2 2018
+    	- [How Much Dirt Does Facebook Have On You?](https://ebsmonash.shinyapps.io/R_rated/)
+        - [Analysing Movie Data](https://ebsmonash.shinyapps.io/Thor/)
+		- [Finding a good Parisian airbnb](https://ebsmonash.shinyapps.io/The_Hotel_People/)
+	- Examples from different web sites
         - [Blue Bikes Sharing in Boston](https://www.r-bloggers.com/blue-bikes-sharing-in-boston/)
         - 	[What birds are observed near Radolfzell? Bird occurrence data in R](https://ropensci.org/blog/2018/08/21/birds-radolfzell/)
 		- [Who wrote the anti-Trump New York Times op-ed? Using tidytext to find document similarity](https://www.r-bloggers.com/who-wrote-the-anti-trump-new-york-times-op-ed-using-tidytext-to-find-document-similarity/)
