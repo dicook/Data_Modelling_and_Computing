@@ -115,7 +115,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 ## Project
 
 - [Project instructions](project/project-ETC1010.pdf) 
-    - Deadline 1:  Find team members, and potential topics to study [Current list of groups and topcs - PLEASE CHECK YOURS](project/project_milestone1.csv)
+    - Deadline 1:  Find team members, and potential topics to study [Current list of groups and topics - PLEASE CHECK YOURS](project/project_milestone1.csv)
     - Deadline 2:  Team members and team name, data description. 
 	- Examples from S2 2018
     	- [How Much Dirt Does Facebook Have On You?](https://ebsmonash.shinyapps.io/R_rated/)
