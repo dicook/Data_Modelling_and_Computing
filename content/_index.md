@@ -176,6 +176,8 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 ## Exam information
 
+- [Midterm 2019](exam/midterm2019.pdf) [SOLUTION](exam/midterm2019_solution.pdf)
+
 - [Formula sheet](exam/formula_sheet.pdf)
 - [Practice exam](exam/practice_exam2017.pdf) (This has 10 questions, actual exam has 9.)
 - [Practice exam solution](exam/practice_exam2017_solution.pdf)
