@@ -86,6 +86,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 ## Assignment 2 peer evaluation
 
+<!--
 [Peer evaluation assignments](assignments/assignment2_2019/evaluation_assignment.csv)
 
 - 4000 [zip](assignments/assignment2_2019/4000.zip) [shinyapp](https://ebsmonash.shinyapps.io/4000_Assignment2)
@@ -109,6 +110,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - The King Baboon [zip](assignments/assignment2_2019/The King Baboon.zip) [shinyapp](https://ebsmonash.shinyapps.io/TheKingBaboon/)
 - Tidyverse [zip](assignments/assignment2_2019/Tidyverse.zip) [shinyapp](https://ebsmonash.shinyapps.io/Tidyverse/)
 - VITAE [zip](assignments/assignment2_2019/VITAE.zip) [shinyapp](https://ebsmonash.shinyapps.io/VITAE/)
+-->
 
 ## Project
 
