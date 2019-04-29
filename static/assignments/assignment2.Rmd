@@ -1,5 +1,5 @@
 ---
-title: "ETC 1010 Assignment 2"
+title: "ETC1010 Assignment 2"
 author: "Professor Di Cook, EBS, Monash U."
 output: html_document
 ---
