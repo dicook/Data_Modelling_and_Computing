@@ -143,13 +143,13 @@ fit %>% arrange(desc(.resid)) %>% top_n(10)
 
 The idea is to find the important words for the content of each document by decreasing the weight of commonly used words and increasing the weight for words that are not used very much in a collection or corpus of documents.
 
-The statistic *term frequency, inverse document frequency*, `tf-idf`, is intended to measure how important a word is to a document in a collection (or corpus) of documents, for example, to one novel in a collection of novels or to one website in a collection of websites.
+The statistic *term frequency, inverse document frequency*, `tf_idf`, is intended to measure how important a word is to a document in a collection (or corpus) of documents, for example, to one novel in a collection of novels or to one website in a collection of websites.
 
 $tf_{word} = \frac{Number~of~times~word~t~appears~in~a~document}{Total~number~of~words~in~the~document}$
 
 $idf_{word} = log \frac{number~of~documents}{number~of~documents~word~appears~in}$
 
-$td-idf = tf\times idf$
+$tf_idf = tf\times idf$
 
 ```{r}
 darwin1_words <- darwin1_words %>%
