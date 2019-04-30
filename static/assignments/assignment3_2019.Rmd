@@ -1,0 +1,155 @@
+---
+title: "ETC1010 Assignment 3"
+author: "Professor Di Cook, EBS, Monash U."
+output: html_document
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE, 
+  eval = FALSE,
+  collapse = TRUE,
+  comment = "",
+  fig.height = 8,
+  fig.width = 12,
+  fig.align = "center",
+  cache = FALSE
+)
+```
+
+# Background
+
+The Australian Federal election has been called for May 18, 2019. This assignment is going to look in more detail at fitting models to ABS data and two party preference voting patterns.
+
+# Instructions
+
+- This is a team assignment. You need to list the members of the team at the top of the report as the authors. You will be asked to report on the efforts of your team members on this assignment. If all members substantially contribute to the submission, then you can elect not to report. If you feel that one of the team members didn't provide a sufficient contribution, please provide this information to us using the form that will be provided, and we will determine an appropriate resolution. It may be a reduction in marks for the assignment. 
+- Team work has pros and cons, but the end result should be a positive impact on your learning. The best way to approach group work, for you as an individual, is to do as much of the assignment as you can, yourself, as soon as the assignment instructions are released. Then work with your team members to see if you can solve each others difficulties. Bring any problems that you can't solve together to a consultation, well before the assignment is due. Final polishing would include comparing your explanations to produce the best written and clearest paragraphs. Team work is common in the work force, and being able to navigate working with others is an important skill to develop. 
+- You need to write a `learnr` **interactive tutorial** (just like the class lecture notes) with answers to each of the questions. 
+- **Spell check** using the RStudio spell-checker before submission.
+- R code should be hidden in the interactive tutorial, unless it is specifically requested.
+- To make it a little easier for you, a skeleton of R code is provided in the Rmd file. Where you see ??? means that something is missing and you will need to fill it in with the appropriate function, argument or operator. You will also need to rearrange the code as necessary to do the calculations needed. You can write your own code, if you prefer.
+- Original work is expected. Any material used from external sources needs to be acknowledged.
+- Make a zip archive of your app directory, and submit it using the ED system, **by 8am** before Thursday's class week 9. 
+
+# Marks 
+
+- Total points for the assignment is 20. 
+- 5 points of the score from the assignment will be given by another team, who will give you full marks if they can compile your report, and get the same answers as you, and find your explanations of the plots understandable and informative. Peer assessment will happen in the class period when the report is submitted.
+- 5 points will be reserved for readability, clearly written R code, and appropriate citing of external sources.
+- Accuracy and completeness of answers, and clarity of explanations will be the basis for the remaining 10 points.
+
+# About the data
+
+```{r}
+# install.packages("eechidna")
+library(tidyverse)
+library(eechidna)
+library(ggthemes)
+library(viridis)
+library(plotly)
+library(ggcorrplot)
+```
+
+# Exercise
+
+1. Explain the difference between the available datasets (`abs`, `fp`, `nat_data`, `nat_map`, `tcp`, tpp`) in the package. 
+
+2. Make a map of election results for 2016 (you can use the `fp16` data, filtered to contain only the winners). Map colour to abbreviated party name.
+
+```{r}
+data(nat_map16)
+nat_map16$region <- nat_map16$elect_div
+data(fp16)
+fp16$region <- fp16$DivisionNm
+fp16_win <- fp16 %>% filter(Elected == ???)
+both <- intersect(unique(???), unique(nat_map16$region))
+ggplot(aes(map_id=???), data=subset(fp16_win, region %in% ???)) +
+  geom_map(aes(fill=???), map=subset(nat_map16, region %in% ???)) +
+  expand_limits(x=nat_map16$long, y=nat_map16$lat) + 
+  theme_map() + scale_fill_brewer(palette=???)
+```
+
+3. This question examines the distribution of people who have completed a Bachelors degree or above. 
+    a. Compute a five number summary of percentage. Write a sentence explaining what you learn from this summary. Which electorate has almost 50% of members with a Bachelor's or higher?
+    b. Make a histogram with a frequency polygon overlaid of percentage. Write a sentence describing the distribution.
+    c. Display percentage as a choropleth map showing the distribution across electorates. Write a sentence discussing the locations where you might see more educated electorates.
+
+```{r}
+data(abs2016)
+ggplot(abs2016, aes(x=???)) + geom_histogram(binwidth=???) +
+  geom_???(binwidth=???)
+abs2016$region <- abs2016$DivisionNm
+both <- intersect(unique(abs2016$region), unique(???))
+ggplot(aes(map_id=region), data=subset(abs2016, region %in% ???)) +
+  geom_map(aes(fill=???), map=subset(nat_map16, region %in% ???)) +
+  expand_limits(x=nat_map16$long, y=nat_map16$lat) + 
+  scale_fill_???() +
+  theme_???()
+```
+
+4. This question is for examining the relationship in two party preferences and the demographics of electorates, for the results of the 2016 election. 
+    a. Some of the variables appear to be unusable, because they have constant percentages across electorates. Find these variables, and remove them.
+    b. Fit single variable models with percentage of votes for the Coalition as the response against all of the ABS variables. (Yes, there more than 70! And we will use these models to find the most important of all.)
+        i. Which variable best explains the vote percentage? Report the $R^2$. Make a plot of it with the response. Describe the relationship. 
+        ii. Which variable is most associated with ALP votes? Make a plot of it with the response. Write a senence to describe the relationship. (Hint: you will need to look at slope.)
+        iii. If we were to make a model including all of the variables, it could be problematic to include correlated predictors. Compute all of the pairwise correlations. Find a pair of variables with almost perfect positive correlation, and plot them.
+
+```{r}
+data(tpp16)
+tpp_abs16 <- ??? %>% left_join(abs2016, by=c(???, ???))
+ggplot(tpp_abs16, aes(x=???, y=LNP_Percent)) + 
+  geom_point() + 
+  geom_smooth(method="lm")
+abs16_cor <- ???(tpp_abs16[,-1])
+ggcorrplot(???, hc.order = TRUE, outline.col = "white")
+ggplotly()
+ggplot(tpp_abs16, aes(x=???, y=???)) + 
+  geom_point() + theme(aspect.ratio=1)
+```
+
+5. Fit a many models approach for percent LNP on BachelorAbv over the 6 election cycles in the data, that is, one model each electorate. (Hint: you will need to combine the `abs` and `tpp` data sets for the 6 elections.)
+    a. Record the model coefficients for each fit. Make an interactive plot of slope against intercept. What does the negative relationship between slop and intercept mean?
+    b. Find and plot the relationship between LNP percent and BachelorAv, for an electorate (that has data for all 6 elections) with a negative association. Colour points by year. 
+    c. Find and plot the relationship between LNP percent and BachelorAbv, for an electorate (that has data for all 6 elections) with a positice association. Colour points by year.
+    d. Find the electorate named MELBOURNE and plot the relationship between LNP percent and BachelorAv, for an electorate (that has data for all 6 elections) with a positice association. Colour points by year.
+    e. It seems to be that when you show the colour that the later years correspond with a higher percentage of BachelorAbv. Is there generally a trend in the percentage of electorate with a Bachelors or above, over years? Is Australia becoming a more educated country? Make a plot or calculations to support your answer. 
+```{r}
+data(tpp01)
+data(abs2001)
+d01 <- tpp01 %>% select(???, ???, ???) %>%
+  left_join(???, by=c("UniqueID", "DivisionNm")) %>%
+  mutate(year = ???)
+d04 <- ???
+d07 <- ???
+d10 <- ???
+d13 <- ???
+d16 <- ???
+bach_yr <- bind_???(d01, d04, d07, d10, d13, d16)
+library(purrr)
+library(broom)
+by_electorate <- bach_yr %>% 
+  select(???, ???, ???, ???) %>%
+  group_by(???) %>% 
+  nest()
+by_electorate <- by_electorate %>% 
+  mutate(
+    model = purrr::map(data, ~ lm(??? ~ ???, 
+                                  data = .))
+  )
+electorate_coefs <- by_electorate %>% 
+  unnest(model %>% purrr::map(broom::???))
+electorate_coefs <- electorate_coefs %>% 
+  select(DivisionNm, term, estimate) %>% 
+  spread(???, ???) %>%
+  rename(intercept = `(Intercept)`)
+ggplot(electorate_coefs, aes(x=???, y=???, 
+                          label=DivisionNm)) +
+  geom_point(alpha=0.5, size=2) 
+ggplotly()
+bach_yr %>% filter(DivisionNm == ???) %>%
+  ggplot(aes(x=BachelorAbv, y=LNP_Percent, colour=year)) + geom_point()
+```
