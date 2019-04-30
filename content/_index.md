@@ -81,7 +81,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 - Assignment 1: [Instructions](https://dmac.dicook.org/assignments/assignment1.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment1.Rmd) [SOLUTION](https://dmac.dicook.org/assignments/assignment1_solution.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment1_solution.Rmd); Data: [AESID](https://australianelectionstudy.org/voter-studies/) **DUE: Week 3, Thu, at start of class** [Peer feedback](https://dmac.dicook.org/assignments/assignment1_feedback.html)
 - Assignment 2: [Instructions](https://dmac.dicook.org/assignments/assignment2.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment2.Rmd) [meter_di_2019.csv](https://dmac.dicook.org/assignments/data/meter_di_2019.csv) [SOLUTION](https://dmac.dicook.org/assignments/assignment2_solution.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment2_solution.Rmd); **DUE: Week 5, Thu, before class**
-- Assignment 3: [Instructions](https://dmac.dicook.org/assignments/assignment3.html) [(Rmd)]() [SOLUTION]() [(Rmd)](https://dmac.dicook.org/assignments/assignmen32.Rmd) **DUE: Week 9,  Thu, before class**
+- Assignment 3: [Instructions](https://dmac.dicook.org/assignments/assignment3.html) [(Rmd)]() [SOLUTION]() [(Rmd)](https://dmac.dicook.org/assignments/assignment3.Rmd) **DUE: Week 9,  Thu, before class**
 - Practical exam: [instructions]() [(Rmd)]() [SOLUTION]() [(Rmd)]()  **This will be completed individually during the lectorial on Thursday Week 6.**
 
 ## Assignment 2 peer evaluation
