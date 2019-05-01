@@ -93,9 +93,9 @@ quiz(
 
 ## Sentiment analysis
 
-Once you have a bag of words, you need to join the sentiments dictionary to the words data. Particularly the lexicon `nrc` has multiple tags per word, so you may need ot use an "inner_join". `inner_join()` returns all rows from x where there are matching values in y, and all columns from x and y. If there are multiple matches between x and y, all combination of the matches are returned.
+Once you have a bag of words, you need to join the sentiments dictionary to the words data. Particularly the lexicon `nrc` has multiple tags per word, so you may need to use an "inner_join". `inner_join()` returns all rows from x where there are matching values in y, and all columns from x and y. If there are multiple matches between x and y, all combination of the matches are returned.
 
-The `janeaustenr` package cntains the full texts for Jane Austen's 6 completed novels, Sense and Sensibility", "Pride and Prejudice", "Mansfield Park", "Emma", "Northanger Abbey", and "Persuasion", ready for text analysis. 
+The `janeaustenr` package contains the full texts for Jane Austen's 6 completed novels, Sense and Sensibility", "Pride and Prejudice", "Mansfield Park", "Emma", "Northanger Abbey", and "Persuasion", ready for text analysis. 
 
 ```{r}
 library(janeaustenr)
@@ -172,18 +172,17 @@ emma_afinn %>% mutate(sentiment = ifelse(score>0, "positive", "negative")) %>% c
 
 ### Your turn
 
-- Using your choice of lexicon (nrc, bing, or afinn) compute the proportion of postive words in each of Austen's books.
+- Using your choice of lexicon (nrc, bing, or afinn) compute the proportion of positive words in each of Austen's books.
 - Which book is the most positive? negative?
 
-```{r}
+```{r eval=FALSE, echo=FALSE}
 pos_nrc <- tidy_books %>%
-  #filter(book == "Emma") %>%
-  group_by(book) %>%
-  inner_join(nrc_pn) %>% 
-  count(sentiment) %>% 
-  mutate(pos = n/sum(n)) %>%
-  filter(sentiment == "positive")
-pos_nrc %>% arrange(desc(pos))
+  group_by(???) %>%
+  ???_join(nrc_pn) %>% 
+  ???(sentiment) %>% 
+  mutate(pos = ???/sum(n)) %>%
+  filter(sentiment == ???)
+pos_nrc %>% arrange(desc(???))
 ```
 
 ## Example: Simpsons
@@ -258,52 +257,40 @@ sc_s %>% filter(name %in% keep$name) %>%
 
 1. Bart Simpson is featured at various ages. How has the sentiment of his words changed over his life?
 
-```{r eval=FALSE}
-sc %>% count(name, sort=TRUE) %>%
-  filter(grepl("Bart", name)) %>% print(n=50)
+```{r eval=FALSE, echo=FALSE}
+sc %>% ???(name, sort=TRUE) %>%
+  ???(grepl("Bart", name)) %>% print(n=50)
 bart_names <- c("Bart Simpson", "Baby Bart", 
                 "1-Year-Old Bart", "2-Year-Old Bart", 
                 "5-Year-Old Bart", "80-Year-Old Bart")
-bart <- sc %>% filter(name %in% bart_names)
+bart <- sc %>% filter(name %in% ???)
 bart_word <- bart %>%
-  unnest_tokens(word, normalized_text) %>%
-  filter(!word %in% stop_words$word) %>%
-  count(name, word) %>%
+  unnest_tokens(word, ???) %>%
+  ???_join(stop_words) %>%
+  ???(name, word) %>%
   ungroup() %>%
   filter(!is.na(word))
 bart_s <- bart_word %>% 
-  inner_join(get_sentiments("afinn"), by = "word")
-bart_s %>% group_by(name) %>% 
-  summarise(m=mean(score)) %>% 
+  ???_join(get_sentiments("afinn"), by = "word")
+bart_s %>% group_by(???) %>% 
+  ???(m=mean(score)) %>% 
   arrange(desc(m))
 ```
 
 2. Repeat the sentiment analysis with the NRC lexicon. What character is the most "angry"? "joyful"?
 
-```{r eval=FALSE}
+```{r eval=FALSE, echo=FALSE}
 sc_s <- sc_word %>% 
-  inner_join(get_sentiments("nrc"), by = "word")
-statmode = function(x){ 
-    ta = table(x)
-    tam = max(ta)
-    if (all(ta == tam))
-         mod = NA
-    else
-         if(is.numeric(x))
-    mod = as.numeric(names(ta)[ta == tam])
-    else
-         mod = names(ta)[ta == tam]
-    return(mod)
-}
-sc_s %>% filter(name %in% keep$name) %>% 
-  group_by(name) %>% 
-  summarise(angry = sum(n[sentiment=="anger"]/sum(n))) %>%
+  ???_join(get_sentiments("nrc"), by = "word")
+sc_s %>% filter(name %in% ???) %>% 
+  group_by(///) %>% 
+  summarise(angry = sum(n[sentiment==???]/sum(n))) %>%
   arrange(desc(angry))
 ```
 
 ## Example: AFL Finals tweets
 
-The `rtweet` package allows you to pull tweets from the archive. It gives only the last 6-9 days worth of data. Youneed ot have a twitter account, and you need to create an app (its really basic) in order to pull twitter data. The instructions that come from this package (https://rtweet.info) are pretty simple to follow.
+The `rtweet` package allows you to pull tweets from the archive. It gives only the last 6-9 days worth of data. You need to have a twitter account, and you need to create an app (its really basic) in order to pull twitter data. The instructions that come from this package (https://rtweet.info) are pretty simple to follow.
 
 Given that it is AFL final week, I thought it might be interesting to look at tweets that use the hashtag "#AFLFinals". Once you have a developer account, this is as simple as 
 
@@ -313,7 +300,7 @@ afl <- search_tweets(
 )
 ```
 
-I have provide the data collected in the last week. You can load it with 
+I have provide the data collected in the last year's AFL finals. You can load it with:
 
 ```{r}
 load("data/afl_twitter.rda")
@@ -322,28 +309,29 @@ afl
 
 ### Your turn
 
+- When was the final played last year?
 - What is the range of dates of this data?
 - Who is the most frequent tweeter using this hashtag?
 - Are there some days that have more tweets than others?
-- Are there some hours f the day that are more common tweet times?
+- Are there some hours of the day that are more common tweet times?
 
 ### Sentiment analysis
 
 We need to break the text of each tweet into words, tag the words with sentiments, and make a cumulative score for each tweet.
 
-```{r}
+```{r eval=FALSE, echo=FALSE}
 afl_sentiment <- afl %>% 
-  group_by(status_id) %>%
-  unnest_tokens(word, text) %>%
-  inner_join(get_sentiments("afinn")) %>%
-  summarise(sentiment = mean(score, na.rm=T)) 
+  group_by(???) %>%
+  unnest_tokens(word, ???) %>%
+  ???_join(get_sentiments("afinn")) %>%
+  ???(sentiment = mean(score, na.rm=T)) 
 afl_sentiment <- afl %>% select(status_id, screen_name, created_at, text) %>% 
-  left_join(afl_sentiment, by="status_id")
-afl_sentiment %>% group_by(screen_name) %>%
-  summarise(s = mean(sentiment, na.rm=TRUE)) %>% arrange(desc(s))
-afl_sentiment %>% mutate(day = ymd(as.Date(created_at))) %>% ggplot(aes(x=day, y=sentiment)) + geom_point() + geom_smooth(se=FALSE)
-afl_sentiment %>% filter(screen_name == "aflratings") %>% 
-  mutate(day = ymd(as.Date(created_at))) %>%
+  left_join(afl_sentiment, by=c(???))
+afl_sentiment %>% group_by(???) %>%
+  ???(s = mean(sentiment, na.rm=TRUE)) %>% arrange(desc(s))
+afl_sentiment %>% mutate(day = ???)) %>% ggplot(aes(x=day, y=sentiment)) + geom_point() + geom_smooth(se=FALSE)
+afl_sentiment %>% filter(screen_name == ???) %>% 
+  mutate(day = ???) %>%
   ggplot(aes(x=day, y=sentiment)) + geom_point() + geom_smooth()
 ```
 
