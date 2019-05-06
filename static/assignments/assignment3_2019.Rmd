@@ -93,9 +93,9 @@ ggplot(aes(map_id=region), data=subset(abs2016, region %in% ???)) +
 
 4. This question is for examining the relationship in two party preferences and the demographics of electorates, for the results of the 2016 election. 
     a. Some of the variables appear to be unusable, because they have constant percentages across electorates. Find these variables, and remove them.
-    b. Fit single variable models with percentage of votes for the Coalition as the response against all of the ABS variables. (Yes, there more than 70! And we will use these models to find the most important of all.)
+    b. Fit single variable models with percentage of votes for the Coalition (LNP) as the response against all of the ABS variables. (Yes, there more than 70! And we will use these models to find the most important of all. _Hint: you can use the same code structure as the gapminder example in lecture 7b_)
         i. Which variable best explains the vote percentage? Report the $R^2$. Make a plot of it with the response. Describe the relationship. 
-        ii. Which variable is most associated with ALP votes? Make a plot of it with the response. Write a senence to describe the relationship. (Hint: you will need to look at slope.)
+        ii. Which variable is most associated with LNP votes? Make a plot of it with the response. Write a senence to describe the relationship. (Hint: you will need to look at slope.)
         iii. If we were to make a model including all of the variables, it could be problematic to include correlated predictors. Compute all of the pairwise correlations. Find a pair of variables with almost perfect positive correlation, and plot them.
 
 ```{r}
