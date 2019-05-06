@@ -1,93 +1,95 @@
-s1.name,s2.name,team,Q2
-Mubin,Ryan,Titanic{float=False},J
-Yat,Mitch,nine-nine,J
-Emily,Mitch,Agridat,D
-Cameron,Mitch,Titanic{float=False},A
-Colm,Mitch,nine-nine,A
-Tarushi,Zina,R studio artists,G
-Jia,Barry,nine-nine,A
-Oliver,Mitch,Thor,A
-Samuel,Mitch,Titanic{float=False},H
-Naufal,Christopher,The Standard Deviations,C
-Ezray,Zina,Data Confusion,H
-Hongrui,Zina,Infinite,A
-James,Mitch,1_PUORG_0101_CTE,A
-Victor,Naomi,RnR,I
-James,Di,Team Rocket,I
-Son,Mitch,R44,A
-Xiangmei,Mitch,1_PUORG_0101_CTE,A
-Patrick,Mitch,Data Confusion,A
-Christopher,Zina,The Standard Deviations,G
-Yijia,Mitch,Infinite,A
-William,Steph,Blueberries,I
-Tram,Ryan,Thor,D
-Gia,Xiangmei,1_PUORG_0101_CTE,E
-Junfu,Di,R44,F
-Ryan,Mubin,Thor,J
-Arunabh,Victor,RnR,F
-Kuan,Shidie,Paperclip,G
-David,Emily,Agridat,G
-Barry,Jia,Bomrang,G
-Joachim,Steph,Team Rocket,G
-Trang,Di,Bomrang,A
-Naomi,Victor,RnR,J
-Cassandra,Mitch,Paperclip,G
-Benjamin,Mitch,Data Confusion,A
-Jake,Zina,Paperclip,D
-Yuening,Ryan,Thor,G
-Mingzhao,Geoffrey,Bomrang,A
-Joshua,Mitch,Titanic{float=False},G
-Liem,Mitch,Eagles,G
-Ho,Steph,Paperclip,A
-Stephany,Steph,R Rated,G
-Cindy,Steph,R Rated,I
-Ziyue,Zina,GeoZoo,A
-Shidie,Kuan,R studio artists,G
-Jingwen,James,Team Rocket,A
-Rowina,Steph,R Rated,G
-Yasmin,Steph,Agridat,F
-Geoffrey,Barry,Bomrang,H
-Xuan,Bernard,Blueberries,C
-Wilbert,Junfu,R44,D
-Bernard,Mitch,Blueberries,I
-Mubin,Cameron,Titanic{float=False},J
-Emily,Steph,Agridat,D
-Tarushi,Mitch,R studio artists,G
-Samuel,Mubin,Titanic{float=False},H
-Victor,Arunabh,RnR,I
-Christopher,Mitch,The Standard Deviations,G
-Junfu,Mitch,R44,F
-Ryan,Tram,Thor,J
-Arunabh,Naomi,RnR,F
-Kuan,Jake,Paperclip,G
-David,Yasmin,Agridat,G
-Naomi,Arunabh,RnR,J
-Yuening,Tram,Thor,G
-Mingzhao,Barry,Bomrang,A
-Joshua,Mubin,Titanic{float=False},G
-Ho,Emily,Paperclip,A
-Stephany,Di,R Rated,G
-Cindy,Di,R Rated,I
-Ziyue,Mitch,GeoZoo,A
-Rowina,Di,R Rated,G
-Xuan,William,Blueberries,C
-Mubin,Joshua,Titanic{float=False},J
-Samuel,Joshua,Titanic{float=False},H
-Junfu,Wilbert,R44,F
-Naomi,Zina,RnR,J
-Mingzhao,Trang,Bomrang,A
-Ho,Di,Paperclip,A
-Rowina,Stephany,R Rated,G
-Xuan,Wen,Blueberries,C
-Mubin,Samuel,Titanic{float=False},J
-Samuel,Cameron,Titanic{float=False},H
-Rowina,Cindy,R Rated,G
-Xuan,Zina,Blueberries,C
-Xuan Lin,Mitch,Blueberries,C
-Mitch,NA,Kowari,NA
-Zina,NA,Kowari,NA
-Barry,NA,Bomrang,NA
-Di,NA,Kowari,NA
-Steph,NA,Kowari,NA
-James,NA,Team Rocket,NA
-Wen,Wen,Blueberries,NA
+s1.name,s2.name,team
+angelina,di,Electric R
+marina,di,MDJLLSPHPL
+sachin,di,ETC1010Group
+wangting,steph,Team S.T.A.T.
+wei wen,nick,The Amatuer Group
+nicholas,steph,FORCATS
+hongliang,di,Hardworking
+nicole,di,Not the Swallows!
+lindsay robert,di,MDJLLSPHPL
+nicholas,steph,incRRRedible
+hui,nick,VITAE
+jason,di,Tidyverse
+wai,jamesjing,dplyr
+qihao,di,C L
+steph,di,tutor
+yifang,di,Electric R
+tong,nick,The King Baboon
+yanchen,di,Team SAMY
+yutong,di,Hardworking
+alicia,yee ling,Lubridate
+rachell,di,4000
+gerard,steph,4000
+jamesjing,wai,ETC1010Group
+jeffrey,nick,ETC1010Group
+patrick,di,VITAE
+liana,steph,ETC1010Group
+zhexu,di,incRRRedible
+haoxin,di,MDJLLSPHPL
+razeen,di,FORCATS
+min,steph,incRRRedible
+cheng,nick,The King Baboon
+xinyi,steph,SOLO
+michael,nick,incRRRedible
+yongqi,di,dplyr
+yongqi,stuart,dplyr
+manshood,di,The Amatuer Group
+manshood,stuart,The Amatuer Group
+jupinder,di,Python>R
+travis,nick,4000
+jacob,di,MDJLLSPHPL
+rongqian,hui,Team HD
+yee ling,nick,Lubridate
+fangzhou,di,dplyr
+adam lloyd,di,Team HD
+alexander,steph,Python>R
+ferid,stuart,4000
+yini,di,Electric R
+suyue,di,The King Baboon
+shraavan,matthew,S.T.M
+james,steph,Not the Swallows!
+shevin,james,Not the Swallows!
+shevin,nicole,Not the Swallows!
+jesslyn,steph,FORCATS
+thomas,matthew,S.T.M
+matthew,NA,S.T.M.
+malo,di,Tidyverse
+marina,nick,MDJLLSPHPL
+wangting,di,Team S.T.A.T.
+hongliang,nick,Hardworking
+lindsay,nick,MDJLLSPHPL
+jason,nick,Tidyverse
+steph,stuart,tutor
+alicia,di,Lubridate
+gerard,stuart,4000
+haoxin,nick,MDJLLSPHPL
+razeen,stuart,FORCATS
+jesslyn,razeen,FORCATS
+min,di,incRRRedible
+min,stuart,incRRRedible
+xinyi,di,SOLO
+yee ling,steph,Lubridate
+fangzhou,steph,dplyr
+suyue,nick,The King Baboon
+shraavan,thomas,S.T.M
+thomas,steph,S.T.M
+hongliang,stuart,Hardworking
+lindsay robert,marina,MDJLLSPHPL
+jason,stuart,Tidyverse
+razeen,steph,FORCATS
+yee ling,stuart,Lubridate
+shraavan satya,di,S.T.M
+hongliang,mitch,Hardworking
+jason,steph,Tidyverse
+hongliang,steph,Hardworking
+di,steph,tutor
+di,stuart,tutor
+di,nick,tutor
+nick,di,tutor
+stuart,di,tutor
+stuart,steph,tutor
+nick,steph,tutor
+nick,stuart,tutor
+stuart,nick,tutor
+mitch,NA,tutor

@@ -168,6 +168,7 @@ emma_afinn <- tidy_books %>%
 emma_nrc %>% count(sentiment) %>% mutate(n/sum(n))
 emma_bing %>% count(sentiment) %>% mutate(n/sum(n))
 emma_afinn %>% mutate(sentiment = ifelse(score>0, "positive", "negative")) %>% count(sentiment) %>% mutate(n/sum(n))
+
 ```
 
 ### Your turn
@@ -203,7 +204,7 @@ sc %>% count(name, sort=TRUE)
 
 ```{r}
 sc %>%
-  unnest_tokens(word, normalized_text) %>%
+  unnest_tokens(word, spoken_words) %>%
   filter(!word %in% stop_words$word) %>%
   count(word, sort = TRUE) %>%
   ungroup() %>%
@@ -224,7 +225,7 @@ Using AFINN words will be tagged on a negative to positive scale of -1 to 5.
 
 ```{r}
 sc_word <- sc %>%
-  unnest_tokens(word, normalized_text) %>%
+  unnest_tokens(word, spoken_words) %>%
   filter(!word %in% stop_words$word) %>%
   count(name, word) %>%
   ungroup() %>%

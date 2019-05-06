@@ -63,7 +63,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - [Tue](https://ebsmonash.shinyapps.io/lecture8a_text/) [(Rmd)](http://dmac.dicook.org/lectures/lecture8a/lecture8a_text.Rmd) Complete the "class network" survey!
     - [Thu](https://ebsmonash.shinyapps.io/lecture8b_text/) [(Rmd)](http://dmac.dicook.org/lectures/lecture8b/lecture8b_text.Rmd) NO READING THIS WEEK!
 - Week 9: Wrangling, plotting and modeling network data
-   - [Tue]() [(Rmd)]() NO READING THIS WEEK!
+   - [Tue](https://ebsmonash.shinyapps.io/lecture9a_networks/) [(Rmd)]((http://dmac.dicook.org/lectures/lecture9a/lecture9a_networks.Rmd) NO READING THIS WEEK!
    - [Thu]() [(Rmd)]() NO READING THIS WEEK!
 - Week 10: Computational modeling, and good data collection practices
    - [Tue]() [(Rmd)]() NO READING THIS WEEK!

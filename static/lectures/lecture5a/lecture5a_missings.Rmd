@@ -378,6 +378,7 @@ We are going to examine Melbourne house prices, using a data set available at ht
 6. Impute the missing values for Bedroom2 and Bathroom, using a linear model on th variable Rooms. Make a plot of the two variables, with the imputed values coloured. Is this better or worse than the mean value imputed values? Explain your thinking. (The code below can help you do this type of imputation, but **you will need to make the start of the code yourself, to read in the data, and do the initial exercises**. )
 
 ```{r echo=TRUE, eval=FALSE}
+houses <- read_csv("data/Melbourne_housing_FULL.csv")
 houses_sub <- houses %>% select(Price, Rooms, Type, Distance, Bedroom2, Bathroom)
 houses_sub <- houses_sub %>% bind_shadow()
 br2 <- lm(Bedroom2~Rooms, data=houses_sub)
@@ -387,7 +388,10 @@ houses_sub <- houses_sub %>%
          Bathroom=ifelse(is.na(Bathroom), predict(br2, new=houses_sub), Bathroom))
 ggplot(houses_sub, aes(x=Bedroom2, y=Bathroom,
                        colour=Bedroom2_NA)) +
-  geom_point(alpha=0.2)
+  geom_point(alpha=0.2) + scale_colour_brewer("Miss bedroom", palette="Dark2")
+ggplot(houses_sub, aes(x=Bedroom2, y=Bathroom,
+                       colour=Bedroom2_NA)) +
+  geom_point(alpha=0.2) + scale_colour_brewer("Miss bedroom", palette="Dark2")
 ```
 
 ## Share and share alike

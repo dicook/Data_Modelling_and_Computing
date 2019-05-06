@@ -90,6 +90,9 @@ ggplot(data = MMnet, aes(from_id = from_id, to_id = to_id)) +
     xlim(c(-0.05, 1.05)) +
     theme_net() +
     theme(legend.position = "bottom")
+```
+
+```{r eval=FALSE}
 ggplotly()
 ```
 
@@ -169,7 +172,7 @@ head(hp.edges)
 ```
 
 
-```{r fig.width=10, fig.height=7}
+```{r fig.width=10, fig.height=7, eval=FALSE}
 hp.all <- fortify(as.edgedf(hp.edges), hp.chars, group = "book")
 ggplot(data=hp.all, aes(from_id = from, to_id = to_id)) + 
   geom_net(fiteach=T, directed = T, size = 3, linewidth = .5, 
@@ -189,24 +192,12 @@ ggplot(data=hp.all, aes(from_id = from, to_id = to_id)) +
 
 ![](images/class_network.png)
 
-- Colour by team name. You could use code like this:
-
-```
-library(viridis)
-clrs <- magma(19)
-plotting stuff goes here
-  + scale_colour_manual(values=clrs)
-```
 
 - Try changing the layout method to "circle" or "mds"
 - Try setting a random seed, a random number that affects the initial condition for the layout optimisation. You coulde use code like this, substituting in a different:
+- For the class members/tutors, shevin, james, nicole, wai, jamesjing, write out the 5x5 association matrix.
 
-```
-set.seed(2512)
-```
-- For the class members/tutors, Mitch, Zina, Tarushi, Cassandra, Christopher, write out the 5x5 association matrix.
-
-`r emo::clock(lubridate::ymd_hms("2018-09-16 12:30:00"))` **Lab quiz time!**
+`r emo::clock(lubridate::ymd_hms("2019-05-07 17:30:00"))` **Lab quiz time!**
 
 <!--
 ## Simpsons
