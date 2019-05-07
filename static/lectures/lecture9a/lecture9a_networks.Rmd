@@ -172,7 +172,7 @@ head(hp.edges)
 ```
 
 
-```{r fig.width=10, fig.height=7, out.width = '100%'}
+```{r fig.width=10, fig.height=7, out.width = '100%', eval=FALSE}
 # for each book, expand the edges data and join it to characters
 hp.all <- hp.edges %>%
   group_by(book) %>%
