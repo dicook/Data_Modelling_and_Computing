@@ -78,8 +78,12 @@ glimpse(madmen)
 - Overlaying other aspects, e.g. gender
 
 ```{r fig.width=8, fig.height=6}
-# data step: join the edge and node data with a fortify call
-MMnet <- fortify(as.edgedf(madmen$edges), madmen$vertices)
+# data step: use a full join to expand the edges data and join it to the nodes
+MMnet <- madmen$edges %>%
+  rename(from_id = Name1, to_id = Name2) %>%
+  mutate_all(as.character) %>%
+  full_join(mutate(madmen$vertices, label = as.character(label)), 
+            by = c("from_id" = "label"))
 # create plot
 set.seed(5556677)
 ggplot(data = MMnet, aes(from_id = from_id, to_id = to_id)) +
@@ -92,9 +96,6 @@ ggplot(data = MMnet, aes(from_id = from_id, to_id = to_id)) +
     theme(legend.position = "bottom")
 ```
 
-```{r eval=FALSE}
-ggplotly()
-```
 
 Which actor was most connected?
 
@@ -125,13 +126,12 @@ glimpse(football)
 
 ```{r fig.width=11, fig.height=8, fig.align='center'}
 # data step: merge vertices and edges
-ftnet <- merge(
+ftnet <- full_join(
   football$edges, football$vertices,
-  by.x = "from", by.y = "label", all = TRUE
-)
+  by = c("from" = "label")
+) %>%
+  mutate(schools = ifelse(value == "Independents", from, ""))
 
-# label independent schools
-ftnet$schools <- ifelse(ftnet$value == "Independents", ftnet$from, "")
 ggplot(data = ftnet,
        aes(from_id = from, to_id = to)) +
   geom_net(
@@ -172,9 +172,16 @@ head(hp.edges)
 ```
 
 
-```{r fig.width=10, fig.height=7, eval=FALSE}
-hp.all <- fortify(as.edgedf(hp.edges), hp.chars, group = "book")
-ggplot(data=hp.all, aes(from_id = from, to_id = to_id)) + 
+```{r fig.width=10, fig.height=7, out.width = '100%'}
+# for each book, expand the edges data and join it to characters
+hp.all <- hp.edges %>%
+  group_by(book) %>%
+  group_map(~ full_join(.x, hp.chars, by = c("name1" = "name"))) %>%
+  ungroup() %>%
+  rename(from_id = name1, to_id = name2)
+  
+  
+ggplot(data=hp.all, aes(from_id = from_id, to_id = to_id)) + 
   geom_net(fiteach=T, directed = T, size = 3, linewidth = .5, 
            ealpha = .5, labelon = T, fontsize = 3, repel = T, 
            labelcolour = "black", arrowsize = .5, singletons = FALSE,
