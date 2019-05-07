@@ -201,7 +201,12 @@ ggplot(data=hp.all, aes(from_id = from_id, to_id = to_id)) +
 
 
 - Try changing the layout method to "circle" or "mds"
-- Try setting a random seed, a random number that affects the initial condition for the layout optimisation. You coulde use code like this, substituting in a different:
+- Try setting a random seed, a random number that affects the initial condition for the layout optimisation. You coulde use code like this, substituting in a different number:
+
+```{r}
+set.seed(2019 + 5 + 7)
+```
+
 - For the class members/tutors, shevin, james, nicole, wai, jamesjing, write out the 5x5 association matrix.
 
 `r emo::clock(lubridate::ymd_hms("2019-05-07 17:30:00"))` **Lab quiz time!**
