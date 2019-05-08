@@ -28,23 +28,24 @@ assignments %>%
   select(STUDENT_CODE, GROUP, `Evaluation Group`) %>%
   write_csv("evaluation_assignment.csv")
 
+# Check that all groups have at leat two evaluators
 s <- read_csv("evaluation_assignment.csv")
-s %>% count(`Evaluation Group`, sort=TRUE) %>% print(n=21)
+s %>% count(`Evaluation Group`, sort=TRUE) %>% print(n=25)
 s %>% count(`GROUP`, sort=TRUE) %>% print(n=21)
 
 # Prepare submissions for peer evaluation (ZIP)
 
 ## Change to be where you would like your ZIPs to be placed
-zippath <- "a2_groups/"
+zippath <- "a3_groups/"
 ## List the directories that you'd like to ZIP
-submissions <- list.dirs("Assignment 2 group submissions/", recursive = FALSE)
+submissions <- list.dirs("Assignment 3 group submissions/", recursive = FALSE)
 
 ## Check that all groups have submitted assignments
 assignments %>%
   mutate(match = Email %in% basename(submissions))%>%
   group_by(GROUP) %>%
   summarise(match = sum(match)) %>%
-  print(n=22)
+  print(n=25)
 
 ## Build the ZIPs
 submissions %>%
