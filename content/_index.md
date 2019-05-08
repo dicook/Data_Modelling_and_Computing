@@ -84,9 +84,10 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Assignment 3: [Instructions](https://dmac.dicook.org/assignments/assignment3_2019.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment3_2019.Rmd)) [SOLUTION]() [(Rmd)]() **DUE: Week 9,  Thu, before class**
 - Practical exam: [Example from 2018 instructions](https://dmac.dicook.org/assignments/assignment5.html) [(Rmd)]((https://dmac.dicook.org/assignments/assignment5.Rmd) [Example from 2018  SOLUTION]((https://dmac.dicook.org/assignments/assignment5_solution.html) [(Rmd)]((https://dmac.dicook.org/assignments/assignment5_solution.Rmd)  **This will be completed individually during the lectorial on Thursday Week 6.**
 
+<!--
+
 ## Assignment 2 peer evaluation
 
-<!--
 [Peer evaluation assignments](assignments/assignment2_2019/evaluation_assignment.csv)
 
 - 4000 [zip](assignments/assignment2_2019/4000.zip) [shinyapp](https://ebsmonash.shinyapps.io/4000_Assignment2)
@@ -110,6 +111,36 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - The King Baboon [zip](assignments/assignment2_2019/The King Baboon.zip) [shinyapp](https://ebsmonash.shinyapps.io/TheKingBaboon/)
 - Tidyverse [zip](assignments/assignment2_2019/Tidyverse.zip) [shinyapp](https://ebsmonash.shinyapps.io/Tidyverse/)
 - VITAE [zip](assignments/assignment2_2019/VITAE.zip) [shinyapp](https://ebsmonash.shinyapps.io/VITAE/)
+-->
+
+## Assignment 3 peer evaluation
+
+<!--
+[Peer evaluation assignments](assignments/assignment3_2019/evaluation_assignment.csv)
+
+- 4000 [zip](assignments/assignment3_2019/4000.zip) 
+- C L [zip](assignments/assignment3_2019/C L.zip) 
+- dplyr [zip](assignments/assignment3_2019/dplyr.zip) 
+- Electric R [zip](assignments/assignment3_2019/Electric R.zip) 
+- ETC1010Group [zip](assignments/assignment3_2019/ETC1010Group.zip) 
+- FORCATS [zip](assignments/assignment3_2019/FORCATS.zip) 
+- GROUP_FIVE [zip](assignments/assignment3_2019/GROUP_FIVE.zip) 
+- Hardworking [zip](assignments/assignment3_2019/Hardworking.zip) 
+- incRRRedible [zip](assignments/assignment3_2019/incRRRedible.zip) 
+- Lubridate [zip](assignments/assignment3_2019/Lubridate.zip) 
+- MDJLLSPHPL [zip](assignments/assignment3_2019/MDJLLSPHPL.zip) 
+- Not the Swallows! [zip](assignments/assignment3_2019/Not the Swallows!.zip) 
+- Python>R [zip](assignments/assignment3_2019/Python>R.zip) 
+- STM [zip](assignments/assignment3_2019/STM.zip) 
+- Team HD [zip](assignments/assignment3_2019/Team HD.zip) 
+- Team SAMY [zip](assignments/assignment3_2019/Team SAMY.zip) 
+- Team STAT [zip](assignments/assignment3_2019/Team STAT.zip) 
+- The Amatuer Group [zip](assignments/assignment3_2019/The Amatuer Group.zip) 
+- The King Baboon [zip](assignments/assignment3_2019/The King Baboon.zip) 
+- Tidyverse [zip](assignments/assignment3_2019/Tidyverse.zip) 
+- VITAE [zip](assignments/assignment3_2019/VITAE.zip) 
+- Bryan [zip](assignments/assignment3_2019/Bryan.zip) 
+- Manshood [zip](assignments/assignment3_2019/Manshood.zip) 
 -->
 
 ## Project
