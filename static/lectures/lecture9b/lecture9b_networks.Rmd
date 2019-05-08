@@ -240,7 +240,40 @@ p4 <- ru_sub_dt %>% select(date, AUD, SGD, NZD) %>%
 grid.arrange(p1, p2, p3, p4, ncol=2)
 ```
 
+## Class network
 
+Because we collected information on what you most needed help with, we can use this information in the network display too. 
+
+We'd generally be interesting to know if there are some groups that tend to all need help on the same things, or if there are groups where each person needs help on different things so they are complementary. 
+
+Here we use the same network layout, and colour nodes by the topic identified as getting help on. We can see most of the class needs help on R.
+
+```{r}
+class <- read_csv("data/class_network.csv")
+# Make variables to indicate help topics
+class <- class %>% 
+  mutate(R = ifelse(str_detect(type, "A"), "yes", "no")) %>%
+  mutate(math = ifelse(str_detect(type, "B"), "yes", "no")) %>%
+  mutate(stat = ifelse(str_detect(type, "C"), "yes", "no")) %>%
+  mutate(model = ifelse(str_detect(type, "D"), "yes", "no")) %>%
+  mutate(plot = ifelse(str_detect(type, "E"), "yes", "no")) %>%
+  mutate(miss = ifelse(str_detect(type, "F"), "yes", "no")) %>%
+  mutate(assign = ifelse(str_detect(type, "G"), "yes", "no")) %>%
+  mutate(lab = ifelse(str_detect(type, "H"), "yes", "no")) %>%
+  mutate(lang = ifelse(str_detect(type, "I"), "yes", "no")) %>%
+  mutate(support = ifelse(str_detect(type, "J"), "yes", "no")) %>%
+  mutate(midterm = ifelse(str_detect(type, "K"), "yes", "no")) 
+
+set.seed(20190508)
+ggplot(data = class, aes(from_id = s1.name, to_id = s2.name, colour=R)) +
+  geom_net(layout.alg = "kamadakawai",
+    size = 2, labelon = TRUE, 
+    fontsize = 3, vjust = -0.6, 
+    ecolour = "grey60", ealpha = 0.5, directed = TRUE, 
+    arrow=arrow(angle=10, length=unit(0.3, "cm"), type="open")) +
+  scale_colour_brewer(palette="Dark2", na.value="grey80") +
+    theme_net() 
+```
 
 ## Share and share alike
 

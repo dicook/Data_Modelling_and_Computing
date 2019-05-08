@@ -269,6 +269,37 @@ p4 &lt;- ru_sub_dt %&gt;% select(date, AUD, SGD, NZD) %&gt;%
 grid.arrange(p1, p2, p3, p4, ncol=2)</code></pre>
 </div>
 </div>
+<div id="section-class-network" class="section level2">
+<h2>Class network</h2>
+<p>Because we collected information on what you most needed help with, we can use this information in the network display too.</p>
+<p>We’d generally be interesting to know if there are some groups that tend to all need help on the same things, or if there are groups where each person needs help on different things so they are complementary.</p>
+<p>Here we use the same network layout, and colour nodes by the topic identified as getting help on. We can see most of the class needs help on R.</p>
+<pre class="r"><code>class &lt;- read_csv(&quot;data/class_network.csv&quot;)
+# Make variables to indicate help topics
+class &lt;- class %&gt;% 
+  mutate(R = ifelse(str_detect(type, &quot;A&quot;), &quot;yes&quot;, &quot;no&quot;)) %&gt;%
+  mutate(math = ifelse(str_detect(type, &quot;B&quot;), &quot;yes&quot;, &quot;no&quot;)) %&gt;%
+  mutate(stat = ifelse(str_detect(type, &quot;C&quot;), &quot;yes&quot;, &quot;no&quot;)) %&gt;%
+  mutate(model = ifelse(str_detect(type, &quot;D&quot;), &quot;yes&quot;, &quot;no&quot;)) %&gt;%
+  mutate(plot = ifelse(str_detect(type, &quot;E&quot;), &quot;yes&quot;, &quot;no&quot;)) %&gt;%
+  mutate(miss = ifelse(str_detect(type, &quot;F&quot;), &quot;yes&quot;, &quot;no&quot;)) %&gt;%
+  mutate(assign = ifelse(str_detect(type, &quot;G&quot;), &quot;yes&quot;, &quot;no&quot;)) %&gt;%
+  mutate(lab = ifelse(str_detect(type, &quot;H&quot;), &quot;yes&quot;, &quot;no&quot;)) %&gt;%
+  mutate(lang = ifelse(str_detect(type, &quot;I&quot;), &quot;yes&quot;, &quot;no&quot;)) %&gt;%
+  mutate(support = ifelse(str_detect(type, &quot;J&quot;), &quot;yes&quot;, &quot;no&quot;)) %&gt;%
+  mutate(midterm = ifelse(str_detect(type, &quot;K&quot;), &quot;yes&quot;, &quot;no&quot;)) 
+
+set.seed(20190508)
+ggplot(data = class, aes(from_id = s1.name, to_id = s2.name, colour=R)) +
+  geom_net(layout.alg = &quot;kamadakawai&quot;,
+    size = 2, labelon = TRUE, 
+    fontsize = 3, vjust = -0.6, 
+    ecolour = &quot;grey60&quot;, ealpha = 0.5, directed = TRUE, 
+    arrow=arrow(angle=10, length=unit(0.3, &quot;cm&quot;), type=&quot;open&quot;)) +
+  scale_colour_brewer(palette=&quot;Dark2&quot;, na.value=&quot;grey80&quot;) +
+    theme_net() </code></pre>
+<p><img src="lecture9b_networks_files/figure-html/unnamed-chunk-14-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
 <div id="section-share-and-share-alike" class="section level2">
 <h2>Share and share alike</h2>
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>. 
