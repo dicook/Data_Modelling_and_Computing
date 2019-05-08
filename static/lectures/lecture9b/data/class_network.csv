@@ -1,0 +1,95 @@
+s1.name,s2.name,team,type
+angelina,di,Electric R,"A, D, G, J, K"
+marina,di,MDJLLSPHPL,"A, G"
+sachin,di,ETC1010Group,"A, H, J"
+wangting,steph,Team S.T.A.T.,"A, C, E, I, J"
+wei wen,nick,The Amatuer Group,"A, D, E, F, G, H, I, J"
+nicholas,steph,FORCATS,"A, G, K"
+hongliang,di,Hardworking,"A, D, E, G, H, I, K"
+nicole,di,Not the Swallows!,A
+lindsay robert,di,MDJLLSPHPL,"A, D, E, F, G, I"
+nicholas,steph,incRRRedible,"A, E, G, I"
+hui,nick,VITAE,"A, C, D, E, G, H, I"
+jason,di,Tidyverse,"A, G, H, J"
+wai,jamesjing,dplyr,"A, B, C, D, G, H, I"
+qihao,di,C L,"A, H, K"
+steph,di,tutor,"A, I"
+yifang,di,Electric R,"E, F, H"
+tong,nick,The King Baboon,"A, D, E, F, G, H, I, J"
+yanchen,di,Team SAMY,"A, H"
+yutong,di,Hardworking,"A, C, D, G, K"
+alicia,yee ling,Lubridate,"A, D, F, G, H, K"
+rachell,di,4000,"A, I"
+gerard,steph,4000,"A, D, E, F, G, H, I, J"
+jamesjing,wai,ETC1010Group,I
+jeffrey,nick,ETC1010Group,B
+patrick,di,VITAE,"A, C, D, E, F, I, J"
+liana,steph,ETC1010Group,"A, D"
+zhexu,di,incRRRedible,"A, E, F, G, H"
+haoxin,di,MDJLLSPHPL,"A, D, E, G, H"
+razeen,di,FORCATS,"A, G, H"
+min,steph,incRRRedible,"A, C, D, E"
+cheng,nick,The King Baboon,"A, C, D, E, F, G, H, I, K"
+xinyi,steph,SOLO,"A, E, I"
+michael,nick,incRRRedible,"A, D, E, F, G, H, J"
+yongqi,di,dplyr,"A, B, C, D, H"
+yongqi,stuart,dplyr,"A, B, C, D, H"
+manshood,di,The Amatuer Group,"A, G, I"
+manshood,stuart,The Amatuer Group,"A, G, I"
+jupinder,di,Python>R,"A, G, H"
+travis,nick,4000,A
+jacob,di,MDJLLSPHPL,"A, H, I, J"
+rongqian,hui,Team HD,"A, D, E, F, G, H, I, K"
+yee ling,nick,Lubridate,"A, G, H, I"
+fangzhou,di,dplyr,"A, B, C, D"
+adam lloyd,di,Team HD,"A, D, G, H, I, K"
+alexander,steph,Python>R,"A, G"
+ferid,stuart,4000,H
+yini,di,Electric R,"E, H, K"
+suyue,di,The King Baboon,"A, D, G, I, K"
+shraavan,matthew,S.T.M,"A, G, I"
+james,steph,Not the Swallows!,A
+shevin,james,Not the Swallows!,A
+shevin,nicole,Not the Swallows!,A
+jesslyn,steph,FORCATS,"A, D, I, J"
+thomas,matthew,S.T.M,"A, G, J"
+matthew,NA,S.T.M.,NA
+malo,di,Tidyverse,D
+marina,nick,MDJLLSPHPL,"A, G"
+wangting,di,Team S.T.A.T.,"A, C, E, I, J"
+hongliang,nick,Hardworking,"A, D, E, G, H, I, K"
+lindsay,nick,MDJLLSPHPL,"A, D, E, F, G, I"
+jason,nick,Tidyverse,"A, G, H, J"
+steph,stuart,tutor,"A, I"
+alicia,di,Lubridate,"A, D, F, G, H, K"
+gerard,stuart,4000,"A, D, E, F, G, H, I, J"
+haoxin,nick,MDJLLSPHPL,"A, D, E, G, H"
+razeen,stuart,FORCATS,"A, G, H"
+jesslyn,razeen,FORCATS,"A, D, I, J"
+min,di,incRRRedible,"A, C, D, E"
+min,stuart,incRRRedible,"A, C, D, E"
+xinyi,di,SOLO,"A, E, I"
+yee ling,steph,Lubridate,"A, G, H, I"
+fangzhou,steph,dplyr,"A, B, C, D"
+suyue,nick,The King Baboon,"A, D, G, I, K"
+shraavan,thomas,S.T.M,"A, G, I"
+thomas,steph,S.T.M,"A, G, J"
+hongliang,stuart,Hardworking,"A, D, E, G, H, I, K"
+lindsay robert,marina,MDJLLSPHPL,"A, D, E, F, G, I"
+jason,stuart,Tidyverse,"A, G, H, J"
+razeen,steph,FORCATS,"A, G, H"
+yee ling,stuart,Lubridate,"A, G, H, I"
+shraavan satya,di,S.T.M,"A, G, I"
+hongliang,mitch,Hardworking,"A, D, E, G, H, I, K"
+jason,steph,Tidyverse,"A, G, H, J"
+hongliang,steph,Hardworking,"A, D, E, G, H, I, K"
+di,steph,tutor,NA
+di,stuart,tutor,NA
+di,nick,tutor,NA
+nick,di,tutor,NA
+stuart,di,tutor,NA
+stuart,steph,tutor,NA
+nick,steph,tutor,NA
+nick,stuart,tutor,NA
+stuart,nick,tutor,NA
+mitch,NA,tutor,NA

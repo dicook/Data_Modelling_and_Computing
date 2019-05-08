@@ -207,12 +207,12 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Newcastle Jets: [facebook posts](http://dmac.dicook.org/lectures/data/ncj_posts.rda), [scores](http://dmac.dicook.org/lectures/data/ncj.csv)
 - Melbourne housing data: [Melbourne_housing_FULL.csv](http://dmac.dicook.org/lectures/data/Melbourne_housing_FULL.csv)
 - AFL tweets: [afl_twitter.rda](http://dmac.dicook.org/lectures/lecture8b/data/afl_twitter.rda)
-- Go-to class network: [class_names.csv](http://dmac.dicook.org/lectures/lecture9a/data/class_names.csv)
 - Cross-currency rates May-Sep 2018 [rates_new.csv](http://dmac.dicook.org/lectures/lecture9b/data/rates_new.csv)
 - Clothes random sample: [clothes.csv](http://dmac.dicook.org/lectures/lecture10b/data/clothes.csv)
 - Google map of Australia: [oz.rda](http://dmac.dicook.org/lectures/lecture1b/data/oz.rda)
 - Harry Potter Books [hpedges.rda](http://dmac.dicook.org/lectures/lecture9a/data/hpedges.rda) and [hpchars.rda](http://dmac.dicook.org/lectures/lecture9a/data/hpchars.rda)
 - Class network [class_names.csv](http://dmac.dicook.org/lectures/lecture9a/data/class_names.csv)
+- Class network (more details) [class_network.csv](http://dmac.dicook.org/lectures/lecture9b/data/class_network.csv)
 
 ## Exam information
 
