@@ -84,38 +84,9 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Assignment 3: [Instructions](https://dmac.dicook.org/assignments/assignment3_2019.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment3_2019.Rmd)) [SOLUTION]() [(Rmd)]() **DUE: Week 9,  Thu, before class**
 - Practical exam: [Example from 2018 instructions](https://dmac.dicook.org/assignments/assignment5.html) [(Rmd)]((https://dmac.dicook.org/assignments/assignment5.Rmd) [Example from 2018  SOLUTION]((https://dmac.dicook.org/assignments/assignment5_solution.html) [(Rmd)]((https://dmac.dicook.org/assignments/assignment5_solution.Rmd)  **This will be completed individually during the lectorial on Thursday Week 6.**
 
-<!--
-
-## Assignment 2 peer evaluation
-
-[Peer evaluation assignments](assignments/assignment2_2019/evaluation_assignment.csv)
-
-- 4000 [zip](assignments/assignment2_2019/4000.zip) [shinyapp](https://ebsmonash.shinyapps.io/4000_Assignment2)
-- C L [zip](assignments/assignment2_2019/C L.zip) [shinyapp](https://ebsmonash.shinyapps.io/CLreport)
-- dplyr [zip](assignments/assignment2_2019/dplyr.zip) [shinyapp](https://ebsmonash.shinyapps.io/assignment2DPLYR/)
-- Electric R [zip](assignments/assignment2_2019/Electric R.zip) [shinyapp](https://ebsmonash.shinyapps.io/electricR_Ass2/)
-- ETC1010Group [zip](assignments/assignment2_2019/ETC1010Group.zip) [shinyapp](https://ebsmonash.shinyapps.io/ETC1010Group/)
-- FORCATS [zip](assignments/assignment2_2019/FORCATS.zip) [shinyapp](https://ebsmonash.shinyapps.io/FORCATS/)
-- GROUP_FIVE [zip](assignments/assignment2_2019/GROUP_FIVE.zip) [shinyapp](https://ebsmonash.shinyapps.io/GroupFive/)
-- Hardworking [zip](assignments/assignment2_2019/Hardworking.zip) [shinyapp](https://ebsmonash.shinyapps.io/Hardworking/)
-- incRRRedible [zip](assignments/assignment2_2019/incRRRedible.zip) [shinyapp](https://ebsmonash.shinyapps.io/IncRRRedible/)
-- Lubridate [zip](assignments/assignment2_2019/Lubridate.zip) [shinyapp](https://ebsmonash.shinyapps.io/Lubridate/#section-about-the-data)
-- MDJLLSPHPL [zip](assignments/assignment2_2019/MDJLLSPHPL.zip) [shinyapp](https://ebsmonash.shinyapps.io/MDHLJLLS_Assignment2/)
-- Not the Swallows! [zip](assignments/assignment2_2019/Not the Swallows!.zip) [shinyapp](https://ebsmonash.shinyapps.io/Assignment2_Not_The_Doves/)
-- Python>R [zip](assignments/assignment2_2019/Python>R.zip) [shinyapp](https://ebsmonash.shinyapps.io/pythonR/)
-- STM [zip](assignments/assignment2_2019/STM.zip) [shinyapp](https://ebsmonash.shinyapps.io/STM_ASS2/)
-- Team HD [zip](assignments/assignment2_2019/Team HD.zip) [shinyapp](https://ebsmonash.shinyapps.io/TeamHD/)
-- Team SAMY [zip](assignments/assignment2_2019/Team SAMY.zip) [shinyapp](https://ebsmonash.shinyapps.io/assignment2_mm/)
-- Team STAT [zip](assignments/assignment2_2019/Team STAT.zip) [shinyapp](https://ebsmonash.shinyapps.io/TEAM_STAT/)
-- The Amatuer Group [zip](assignments/assignment2_2019/The Amatuer Group.zip) [shinyapp](https://ebsmonash.shinyapps.io/TheAmatuerGroup)
-- The King Baboon [zip](assignments/assignment2_2019/The King Baboon.zip) [shinyapp](https://ebsmonash.shinyapps.io/TheKingBaboon/)
-- Tidyverse [zip](assignments/assignment2_2019/Tidyverse.zip) [shinyapp](https://ebsmonash.shinyapps.io/Tidyverse/)
-- VITAE [zip](assignments/assignment2_2019/VITAE.zip) [shinyapp](https://ebsmonash.shinyapps.io/VITAE/)
--->
 
 ## Assignment 3 peer evaluation
 
-<!--
 [Peer evaluation assignments](assignments/assignment3_2019/evaluation_assignment.csv)
 
 - 4000 [zip](assignments/assignment3_2019/4000.zip) 
@@ -130,7 +101,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Lubridate [zip](assignments/assignment3_2019/Lubridate.zip) 
 - MDJLLSPHPL [zip](assignments/assignment3_2019/MDJLLSPHPL.zip) 
 - Not the Swallows! [zip](assignments/assignment3_2019/Not the Swallows!.zip) 
-- Python>R [zip](assignments/assignment3_2019/Python>R.zip) 
+- Python>R [zip](assignments/assignment3_2019/PythonR.zip) 
 - STM [zip](assignments/assignment3_2019/STM.zip) 
 - Team HD [zip](assignments/assignment3_2019/Team HD.zip) 
 - Team SAMY [zip](assignments/assignment3_2019/Team SAMY.zip) 
@@ -139,9 +110,8 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - The King Baboon [zip](assignments/assignment3_2019/The King Baboon.zip) 
 - Tidyverse [zip](assignments/assignment3_2019/Tidyverse.zip) 
 - VITAE [zip](assignments/assignment3_2019/VITAE.zip) 
-- Bryan [zip](assignments/assignment3_2019/Bryan.zip) 
 - Manshood [zip](assignments/assignment3_2019/Manshood.zip) 
--->
+
 
 ## Project
 
