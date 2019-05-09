@@ -83,7 +83,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Assignment 2: [Instructions](https://dmac.dicook.org/assignments/assignment2.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment2.Rmd) [meter_di_2019.csv](https://dmac.dicook.org/assignments/data/meter_di_2019.csv) [SOLUTION](https://dmac.dicook.org/assignments/assignment2_solution.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment2_solution.Rmd); **DUE: Week 5, Thu, before class**
 - Assignment 3: [Instructions](https://dmac.dicook.org/assignments/assignment3_2019.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment3_2019.Rmd)) [SOLUTION]() [(Rmd)]() **DUE: Week 9,  Thu, before class**
 - Practical exam: [Example from 2018 instructions](https://dmac.dicook.org/assignments/assignment5.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment5.Rmd) [Example from 2018  SOLUTION](https://dmac.dicook.org/assignments/assignment5_solution.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment5_solution.Rmd) [monash_species.csv](https://dmac.dicook.org/assignments/data/monash_species.csv)
-**This will be completed individually during the lectorial on Thursday.**
+**This will be completed individually during the lectorial on Thursday Week 11.**
 
 
 ## Assignment 3 peer evaluation
