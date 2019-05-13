@@ -218,29 +218,16 @@ The relative error is $1-R^2$. For this example, after 6 splits it is `r gof[6,3
 
 Here is a small data set. Manually compute a regression tree model for the data. Sketch the model.
 
-```{r}
+```{r eval=FALSE}
 d <- tibble(x=c(1, 2, 3, 4, 5), y=c(10, 12, 5, 4, 3))
 d
 ggplot(d, aes(x=x, y=y)) + 
-  geom_point()
+  geom_???()
 ```
 
 ```{r eval=FALSE, echo=FALSE}
-sst <- var(d$y)*(nrow(d)-1)
-compute_anova <- function(left, right) {
-  ssl <- var(left$y)*(nrow(left)-1)
-  if (nrow(left) == 1)
-    ssl <- 1
-  ssr <- var(right$y)*(nrow(right)-1)
-  if (nrow(right) == 1)
-    ssr <- 1
-  av <- sst - (ssl+ssr)
-  return(av)
-}
-compute_anova(d[1,],d[2:5,])
-compute_anova(d[1:2,],d[3:5,])
-compute_anova(d[1:3,],d[4:5,])
-compute_anova(d[1:4,],d[5,])
+sst <- var(d$y)*(nrow(???)-1)
+compute_anova(???,???)
 ```
 
 ## Classification trees
@@ -267,18 +254,18 @@ pisa_au <- pisa_au %>%
   filter(!is.na(gender)) %>%
   filter(!is.na(anxtest)) %>%
   filter(!is.na(wealth)) %>%
-  filter(!is.na(math_time)) %>%
+  filter(!is.na(???)) %>%
   filter(!is.na(books)) %>%
-  filter(!is.na(tvs))
-p1 <- ggplot(pisa_au, aes(x=gender, y=math)) +
+  filter(!is.na(???))
+p1 <- ggplot(pisa_au, aes(x=???, y=math)) +
   geom_boxplot() 
 p2 <- ggplot(pisa_au, aes(x=anxtest, y=math)) +
   geom_point() + geom_smooth(se=FALSE)
-p3 <- ggplot(pisa_au, aes(x=wealth, y=math)) +
+p3 <- ggplot(pisa_au, aes(x=???, y=math)) +
   geom_point() + geom_smooth(se=FALSE)
 p4 <- ggplot(pisa_au, aes(x=math_time, y=math)) +
   geom_point() + geom_smooth(se=FALSE)
-p5 <- ggplot(pisa_au, aes(x=factor(books), y=math)) +
+p5 <- ggplot(pisa_au, aes(x=factor(???), y=math)) +
   geom_boxplot() 
 p6 <- ggplot(pisa_au, aes(x=factor(tvs), y=math)) +
   geom_boxplot() 
@@ -288,7 +275,7 @@ grid.arrange(p1, p2, p3, p4, p5, p6, ncol=3)
 - Fit a linear model
 
 ```{r eval=FALSE, echo=FALSE}
-pisa_lm <- lm(math~gender+anxtest+wealth+math_time+books+tvs,
+pisa_lm <- lm(math~gender+???+wealth+math_time+books+???,
               data=pisa_au, weights=stuweight)
 summary(pisa_lm)
 ```
@@ -296,12 +283,12 @@ summary(pisa_lm)
 - Fit a regression tree
 
 ```{r eval=FALSE, echo=FALSE}
-pisa_rp <- rpart(math~gender+anxtest+wealth+math_time+books+tvs, data=pisa_au, weights=stuweight)
+pisa_rp <- rpart(math~gender+???+wealth+math_time+books+???, data=pisa_au, weights=stuweight)
 pisa_rp
 ```
 
 ```{r eval=FALSE, echo=FALSE}
-rpart.plot(pisa_rp)
+rpart.plot(???)
 ```
 
 - What is the most important variable
@@ -323,7 +310,7 @@ pisa_rp_aug <- cbind(pisa_au, e=???(pisa_rp))
 - Change the control parameters to reduce the $R^2$ of the tree below that of the regression model.
 
 ```{r eval=FALSE, echo=FALSE}
-pisa_rp <- rpart(math~gender+anxtest+wealth+math_time+books+tvs, data=pisa_au, weights=stuweight, control = rpart.control(???))
+pisa_rp <- rpart(math~gender+???+wealth+math_time+???+tvs, data=pisa_au, weights=stuweight, control = rpart.control(???))
 pisa_rp
 pisa_rp_aug <- cbind(pisa_au, e=???(pisa_rp))
 1-sum(pisa_rp_aug$e^2)/sum((pisa_au$math-???(pisa_au$math))^2)
