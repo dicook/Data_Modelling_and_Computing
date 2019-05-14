@@ -66,7 +66,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
    - [Tue](https://ebsmonash.shinyapps.io/lecture9a_networks/) [(Rmd)](http://dmac.dicook.org/lectures/lecture9a/lecture9a_networks.Rmd) NO READING THIS WEEK!
    - [Thu](https://ebsmonash.shinyapps.io/lecture9b_networks/) [(Rmd)](http://dmac.dicook.org/lectures/lecture9b/lecture9b_networks.Rmd) NO READING THIS WEEK!
 - Week 10: Computational modeling, and good data collection practices
-   - [Tue](https://ebsmonash.shinyapps.io/lecture10_trees/) [(Rmd)](http://dmac.dicook.org/lectures/lecture10a/lecture10_trees.Rmd) NO READING THIS WEEK!
+   - [Tue](https://ebsmonash.shinyapps.io/lecture10a_trees/) [(Rmd)](http://dmac.dicook.org/lectures/lecture10a/lecture10a_trees.Rmd) NO READING THIS WEEK!
    - [Thu]() [(Rmd)]() NO READING THIS WEEK!
 - Week 11: 
    - Tue: Assignment 5 completed individually during the lectorial. Final polishing of project story boards. 
