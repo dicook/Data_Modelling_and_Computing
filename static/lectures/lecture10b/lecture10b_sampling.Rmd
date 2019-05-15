@@ -84,12 +84,12 @@ Let's do it!
 
 - Use simple random sampling to select samples size 10, and compute the proportions of people who see one colour dress over another. How closely does this match the proportions for the full data?
 
-```{r}
+```{r eval=FALSE}
 library(tidyverse)
 clothes <- read_csv("data/clothes.csv")
-clothes %>% count(Q2) %>% mutate(prop = n/sum(n))
+clothes %>% count(Q2) %>% mutate(prop = n/???)
 
-clothes %>% sample_n(10) %>% count(Q2) %>% mutate(prop = n/sum(n))
+clothes %>% sample_n(10) %>% count(Q2) %>% mutate(prop = n/???)
 ```
 
 ## Observational study
@@ -219,16 +219,16 @@ For the "simple random sampling" survey data.
 - Take a stratified sample, by selecting two members from each clothing colour group, using simple random sampling
 - Compute the proportion seeing the dress as "blue and black" in each strata sample, and average these proportions to get an overall estimate.
 
-```{r}
-clothes %>% count(Q2) %>% mutate(prop = n/sum(n))
+```{r eval=FALSE}
+clothes %>% count(Q2) %>% mutate(prop = n/???)
 clothes %>% 
   group_by(Q1) %>%
-  count(Q2) %>% mutate(prop = n/sum(n))
+  count(Q2) %>% mutate(prop = n/???)
 
 
 clothes %>% 
   group_by(Q1) %>%
-  sample_n(2) %>% count(Q2) %>% mutate(prop = n/sum(n))
+  sample_n(2) %>% count(Q2) %>% mutate(prop = n/???)
 ```
 
 ## Final notes
