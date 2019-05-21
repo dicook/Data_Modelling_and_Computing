@@ -1,0 +1,126 @@
+---
+title: "ETC 1010 Assignment 5"
+author: "Di Cook"
+output: html_document
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE, 
+  collapse = TRUE,
+  comment = "",
+  fig.height = 8,
+  fig.width = 12,
+  fig.align = "center",
+  cache = FALSE
+)
+```
+
+```{r}
+library(tidyverse)
+library(rwalkr)
+library(lubridate)
+library(ggmap)
+library(broom)
+```
+
+# Exercise
+
+For the *week of your birthday* in 2016, read in the pedestrian counts for all the sensors in Melbourne, using code like this:
+
+```{r echo=TRUE, cache=TRUE}
+myweek <- walk_melb(ymd("2016-10-31"), ymd("2016-11-06")) # Monday through Sunday
+```
+
+
+1. (1pt) Who is the author of the `rwalkr` package? `EARO WANG`
+2. (1pt) How many sensors are there in your data set? `r myweek %>% select(Sensor) %>% distinct() %>% tally()`
+3. (2pts) Create a week day variable, which specifies that the day in this order Mon, Tue, ... and count the number of pedestrians each day at "QV Market-Peel St". What is the busiest day?
+
+```{r echo=TRUE}
+myweek <- myweek %>% mutate(day = wday(Date, label=TRUE, abbr=TRUE, week_start = 1))
+qv <- myweek %>% 
+  filter(Sensor == "QV Market-Peel St") %>% 
+  group_by(day) %>% 
+  summarise(n=sum(Count, na.rm=T))
+qv
+qv %>% filter(n==max(n))
+```
+
+4. (2pts) Make a plot of Count by Time separately for each day, for "QV Market-Peel St". Write a couple of sentences describing the pattern.
+
+```{r}
+myweek %>% 
+  filter(Sensor == "QV Market-Peel St") %>% 
+  ggplot(aes(x=Time, y=Count)) + geom_line() +
+  facet_wrap(~day, ncol=4)
+```
+
+`QV Market-Peel St` *has a big peak in the middle of the weekend days. The week days are mixed. Monday and Wednesday have triple peaks, which look like commuter and lunch time traffic.  These patterns are not there on Tuesday, Thursday or Friday. Tuesday has the smallest number of people walking by. Thursday and Friday appear to have the middle of the day peak, but also possibly the commuter traffic as well, which makes for a difficult pattern detection. The opening hours for QV market are Tues, Thu-Sun, and it looks like the Thu-Sun are busy market days, as well as commuting, but Tues doesn't have a large number of people attending.*
+
+5. (3pts) Plot a google map of Melbourne, with the pedestrian sensor locations overlaid. Colour the points by the total number of pedestrians during the week. Describe the spatial pattern, where most people are walking.
+
+```{r echo=TRUE}
+melb <- get_map(location=c(144.9631, -37.8136), zoom=14)
+loc <- pull_sensor()
+loc <- loc %>% 
+  filter(Sensor %in% myweek$Sensor)
+# sens_count <- myweek %>% group_by(Sensor) %>% summarise(n=sum(Count, na.rm=TRUE)) %>%
+#   left_join(loc, by="Sensor")
+sens_count <- myweek %>% group_by(Sensor) %>% summarise(n=sum(Count, na.rm=TRUE)) %>%
+  left_join(loc, by="Sensor")
+ggmap(melb) + geom_point(data=sens_count, aes(x=Longitude, y=Latitude, colour=n), size=4, alpha=0.7) +
+  scale_colour_distiller(palette="YlOrRd")
+```
+
+*The corridor along Flinders to Swanston to Bourke is the busiest pedestrian traffic.*
+
+6. (1pt) There are some mismatches in sensor names between the locations data and the counts data. Name one, if you find one.
+
+```{r}
+myweek %>% select(Sensor) %>% distinct() %>% anti_join(loc, by="Sensor")
+```
+
+*For me there are two missing sensors, but this might not be the case for everyone.*
+
+7. (3pts) Create a new variable, indicating week day vs weekend. Fit a linear model with log count (+1) as the response variable, to hour of the day, coded as a factor, for "Flinders St-Swanston St (West)". Use an interaction. Explain why an interaction is a good idea. 
+
+```{r echo=TRUE}
+myweek <- myweek %>% mutate(weekend = ifelse(day %in% c("Sat", "Sun"), TRUE, FALSE)) %>%
+  mutate(lCount = log10(Count+1))
+flinders <- myweek %>% filter(Sensor == "Flinders St-Swanston St (West)")
+mod <- lm(lCount~factor(Time)*weekend, data=flinders)
+#tidy(mod)
+glance(mod)
+fit <- augment(mod, flinders)
+fit <- fit %>% mutate(.raw_fitted = 10^(.fitted)-1)
+```
+
+*Using an interaction term allows weekends to have a different pattern to week days.*
+
+8. (2pts) Make a plot of the fitted values, but on the raw count scale, not logs. Overlay this on a plot of the original data. Facet the plot by the weekend variable. It should look like this:
+
+```{r echo=TRUE}
+ggplot() + 
+  geom_line(data=fit, aes(x=Time, y=Count, group=Date), colour="hotpink", alpha=0.9) +
+  geom_line(data=fit, aes(x=Time, y=.raw_fitted), size=1.5) + facet_wrap(~weekend) 
+```
+
+
+9. (2pts) Predict the number of pedestrians walking by 5-6pm, on a week day.
+
+```{r echo=TRUE}
+fit %>% filter((!weekend), Time == 17) %>% select(.raw_fitted) %>% distinct()
+```
+
+10. (2pts) Explain why using time as a factor was a better approach than using it as a numerical variable, for studying the pedestrian patterns during the day.
+
+*With time treated as a factor there is flexibility in the type of pattern in counts that is captured by the model.*
+
+
+# Grading
+
+One point is reserved for easy to compile, spell-checked, nicely turned in work.
