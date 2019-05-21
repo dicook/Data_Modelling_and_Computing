@@ -85,7 +85,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Practical exam: **This will be completed individually during the lectorial on Thursday Week 11.**
     - [Example from 2018 instructions](https://dmac.dicook.org/assignments/assignment5.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment5.Rmd) [Example from 2018  SOLUTION](https://dmac.dicook.org/assignments/assignment5_solution.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment5_solution.Rmd) [monash_species.csv](https://dmac.dicook.org/assignments/data/monash_species.csv)
 	[monash_map.rda](https://dmac.dicook.org/assignments/data/monash_map.rda)
-	- [Example 2 from 2018 instructions](https://dmac.dicook.org/assignments/practical_exam_S1_2018.html) [(Rmd)](https://dmac.dicook.org/assignments/practical_exam_S1_2018.Rmd) [Example from 2018  SOLUTION](https://dmac.dicook.org/assignments/practical_exam_S1_2018_solution.html) [(Rmd)](https://dmac.dicook.org/assignments/practical_exam_S1_2018_solution.Rmd)
+	- [Example 2 from 2018 instructions](https://dmac.dicook.org/exam/practical_exam_S1_2018.html) [(Rmd)](https://dmac.dicook.org/exam/practical_exam_S1_2018.Rmd) [Example from 2018  SOLUTION](https://dmac.dicook.org/exam/practical_exam_S1_2018_solution.html) [(Rmd)](https://dmac.dicook.org/exam/practical_exam_S1_2018_solution.Rmd)
 
 
 <!--
