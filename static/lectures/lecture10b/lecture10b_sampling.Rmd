@@ -87,9 +87,9 @@ Let's do it!
 ```{r eval=FALSE}
 library(tidyverse)
 clothes <- read_csv("data/clothes.csv")
-clothes %>% count(Q2) %>% mutate(prop = n/???)
+clothes %>% count(Q2) %>% mutate(prop = n/sum(n))
 
-clothes %>% sample_n(10) %>% count(Q2) %>% mutate(prop = n/???)
+clothes %>% sample_n(20) %>% count(Q2) %>% mutate(prop = n/sum(n))
 ```
 
 ## Observational study
