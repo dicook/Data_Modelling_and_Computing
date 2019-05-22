@@ -146,6 +146,33 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
         - [flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) package, and there is an [example here](project/pisa_au_app.zip)
 		- or a basic [shiny](https://shiny.rstudio.com/gallery/) app
     - Presentation in week 12
+        - Tuesday May 28
+            - VITAE+: Hui, Chen, Xinyi, Qihao (9 mins)
+            - Disney: Nelson, Wei Wen, Shangen, Rachell (9 mins)
+            - GROUP_FIVE: Murphy, Mustafa, Abin, Chuang (9 mins)
+            - Guangzhou: Yongqi, Fangzhou (5 mins)
+            - incRRRedible: Zhexu, Michael, Min, Nicholas (9 mins)
+            - MDJLLSPHPL: Lindsay, Jacob, Marina, Haoxin (9 mins)
+            - Not the Swallows!: Nicole, James, James, Shevin (9 mins)
+            - Team OG: Boy (4 mins)
+            - Team S.T.A.T.: Samantha, Thomas, Allan, Wangting (9 mins)
+            - the notsure group TM: Jeffrey, Sachin, Liana (7 mins)
+            - S.T.M.: Thomas, Matthew, Shraavan (7 mins)
+        - Thursday May 30
+            - SmartR: Yifang, Danielle, Yini, Angelina (9 mins)
+            - The King Baboon: Cheng, Suyue, Daniel, Tong (9 mnis)
+            - team_R: Ernest, Jason, Malo, Nicholas (9 mins)
+            - Team SAMY: Alice, Stefan, Michael, Yanchen (9 mins)
+            - Python>R: Alexander, Stephen, Jupinder, Colin (9 mins)
+            - New Team: Rongqian, Dan, Xinyi (7 mins)
+            - ManKar: Manshood, Karan (5 mins)
+            - Lubridate: Yee Ling, Alicia, Timothy, Yih (9 mins)
+            - Hardworking: Hongliang, Kerenhapukh, Jiaen, Yutong (9 mins)
+            - FORCATS: Nicholas, Jesslyn, Razeen, Jonathan (9 mins)
+            - JW: James, Wai Wei Eugene (5 mins)
+            - Da Bois: Adam, Patrick (5 mins)
+
+
 
 ## Data ([ZIP](http://dmac.dicook.org/lectures/data/etc1010_data.zip))
 
