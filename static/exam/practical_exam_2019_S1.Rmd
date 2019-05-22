@@ -1,0 +1,114 @@
+---
+title: "ETC1010 Practical exam S1 2019"
+author: "Professor Di Cook, EBS, Monash"
+output: html_document
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE, 
+  collapse = TRUE,
+  comment = "",
+  fig.height = 8,
+  fig.width = 12,
+  fig.align = "center",
+  cache = FALSE
+)
+```
+
+```{r eval=FALSE}
+library(tidyverse)
+library(lubridate)
+library(forcats)
+```
+
+# About the data
+
+This exam is motivated by the [blog post by Peter Ellis](http://freerangestats.info/blog/2019/03/02/aust-election-1) on polls leading up to the Australian Federal election, and the most recent [blog post from election day](http://freerangestats.info/elections/oz/index.html). A copy of the data can be downloaded from or read directly from [here](https://raw.githubusercontent.com/ellisp/ozfedelect/master/comparison-data/ozpolls.csv). Download and read the data into your R session. 
+
+# Exercise
+
+
+```{r eval=FALSE}
+#load(???)
+ozpolls <- read_csv(???)
+```
+
+
+1. (1pt) What was the earliest and latest dates of polls being conducted in the data provided?
+
+```{r eval=FALSE}
+ozpolls %>% select(???) %>% summary()
+```
+
+2. (1pt) How many different firms have conducted polls in this data? 
+
+```{r eval=FALSE}
+ozpolls %>% ???(???, sort=TRUE)
+```
+
+3. (3pts) Use your internet search skills. Who are these pollsters? What organisations own them? How does each organisation collect their data? Write a paragraph explaining what you have managed to find, and what you couldn't find. (Focus your attention on the firms who are frequently making polls. )
+
+4. (2pts) Is the data in tidy form? Explain your answer.
+
+5. (2pts) Have all of the polling firms been operating for the same time period? 
+
+```{r eval=FALSE}
+ozpolls %>% group_by(???) %>% 
+  summarise(first=first(???), last=last(???)) %>%
+  arrange(first)
+```
+6. (3pts) Are the pollsters all reporting similar numbers? Compute the five number summary (min, q1, median, q3, max) of Lib/Nat `intended_vote`, separately for each pollster, and sort from highest to lowest median value. (Be sure to drop the actual election results.) Write a few sentences explaining what you learn, particularly focusing on the initial question which relates to pollster bias. 
+
+```{r eval=FALSE}
+ozpolls %>% filter(party==???, preference_type==???) %>% 
+  ggplot(aes(x=fct_reorder(???, ???), y=???)) + 
+  geom_???() + xlab("") + coord_flip()
+```
+
+7. (3pts) Using the actual election results, what has been the vote recorded by the Lib/Nat for each of the elections, 2007, 2010, 2013, and 2016. What is the average of these numbers? If the polls were accurately reflecting the actual vote, across all these years, what would be the expected average for each pollster? Using these numbers refine your explanation from the previous question in relation to pollster bias.
+
+```{r eval=FALSE}
+ozpolls %>% filter(firm == ???, party == ???, preference_type==???)
+```
+
+8. (3pts) Make a plot of intended vote (two party preferred) for Lib/Nat by time of poll. Add a `loess` smoother that will allow the reader to look at the rough average of the polls, and hence see how the voting public are trending over time. Overlay the actual election results (as points). Include a baseline at 50% that will show the critical juncture when the outcome would likely be a change in government. Coming into the election last Saturday (18/5/2019), what did it look like the result would be?
+
+```{r eval=FALSE}
+ggplot(???, aes(x=mid_date, y=???)) + 
+  geom_???(yintercept=???, colour="white", size=4) +
+  geom_???(alpha=???) + 
+  geom_???(span=???) +
+  geom_point(data=filter(ozpolls, firm == "Election result", ???), aes(x=mid_date, y=???), colour=???, size=???, alpha=???) + 
+  xlab(???) + ylab(???)
+```
+9. (2pts) Re-make the time plot, facetted by pollster, but only those who have conducted at least 20 polls. What can be said about the time frame for each pollster's operations? 
+(1pt) Add the actual election results to the plot.
+
+10. (3pts) Re-visit the idea that the pollsters might be biased, by computing the average intended vote for Lib/Nat, by month, for the polls since Jul 1, 2018. Only examine the major pollsters operating in this period (Newspoll, Essential, Ipsos). By making a table of the numbers or a plot, make a final statement about pollsters and bias in Australia.
+
+```{r eval=FALSE}
+recent_pollsters <- ozpolls %>% filter(mid_date > ???) %>%
+  filter(party==???, preference_type==???) %>%
+  mutate(month=???, year=???) %>% 
+  group_by(???, ???) %>%
+  summarise(LNP_vote = ???) %>%
+  ungroup() %>%
+  mutate(???) %>%
+  filter(firm %in% ???)
+```
+
+
+
+
+
+# Grading
+
+Two points reserved for easy to compile, spell-checked, nicely turned in work.
+
+# Hand in
+
+Turn in your Rmd and html output. 
