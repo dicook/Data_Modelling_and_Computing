@@ -71,7 +71,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
 - Week 11: 
    - Tue: Guest lecture. Final polishing of project story boards. 
    - Thu: Practical exam. Turn in project.
-- Practical Exam: [exam_rmd](exam/practical_exam_2019_S1.Rmd) [exam_data][exam/ozpolls.csv]
+- Practical Exam: [exam_rmd](exam/practical_exam_2019_S1.Rmd) [exam_data](exam/ozpolls.csv)
 - Week 12: Project presentations
 
 <!--
