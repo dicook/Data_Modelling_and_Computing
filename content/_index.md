@@ -159,9 +159,10 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
             - Team S.T.A.T.: Samantha, Thomas, Allan, Wangting (9 mins)
             - the notsure group TM: Jeffrey, Sachin, Liana (7 mins)
             - S.T.M.: Thomas, Matthew, Shraavan (7 mins)
+	    - Traferger: Travis, Gerry, Ferid (7 mins)
         - Thursday May 30
             - SmartR: Yifang, Danielle, Yini, Angelina (9 mins)
-            - The King Baboon: Cheng, Suyue, Daniel, Tong (9 mnis)
+            - The King Baboon: Cheng, Suyue, Daniel, Tong (9 mins)
             - team_R: Ernest, Jason, Malo, Nicholas (9 mins)
             - Team SAMY: Alice, Stefan, Michael, Yanchen (9 mins)
             - Python>R: Alexander, Stephen, Jupinder, Colin (9 mins)
