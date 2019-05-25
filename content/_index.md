@@ -71,6 +71,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
 - Week 11: 
    - Tue: Guest lecture. Final polishing of project story boards. 
    - Thu: Practical exam. Turn in project.
+- Practical Exam: [exam_rmd](exam/practical_exam_2019_S1.Rmd) [exam_data](exam/ozpolls.csv)
 - Week 12: Project presentations
 
 <!--
@@ -158,9 +159,10 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
             - Team S.T.A.T.: Samantha, Thomas, Allan, Wangting (9 mins)
             - the notsure group TM: Jeffrey, Sachin, Liana (7 mins)
             - S.T.M.: Thomas, Matthew, Shraavan (7 mins)
+	    - Traferger: Travis, Gerry, Ferid (7 mins)
         - Thursday May 30
             - SmartR: Yifang, Danielle, Yini, Angelina (9 mins)
-            - The King Baboon: Cheng, Suyue, Daniel, Tong (9 mnis)
+            - The King Baboon: Cheng, Suyue, Daniel, Tong (9 mins)
             - team_R: Ernest, Jason, Malo, Nicholas (9 mins)
             - Team SAMY: Alice, Stefan, Michael, Yanchen (9 mins)
             - Python>R: Alexander, Stephen, Jupinder, Colin (9 mins)
