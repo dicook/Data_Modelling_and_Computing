@@ -170,7 +170,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
             - Hardworking: Hongliang, Kerenhapukh, Jiaen, Yutong (9 mins)
             - FORCATS: Nicholas, Jesslyn, Razeen, Jonathan (9 mins)
             - JW: James, Wai Wei Eugene (5 mins)
-            - Da Bois: Adam, Patrick (5 mins)
+            - [Da Bois](https://ebsmonash.shinyapps.io/FantasyAFL/): Adam, Patrick (5 mins)
 
 
 
