@@ -148,7 +148,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 		- or a basic [shiny](https://shiny.rstudio.com/gallery/) app
     - Presentation in week 12
         - Tuesday May 28
-            - VITAE+: Hui, Chen, Xinyi, Qihao (9 mins)
+            - [VITAE+](https://ebsmonash.shinyapps.io/WorldIncomeInequalityMurder/#section-conclusion): Hui, Chen, Xinyi, Qihao (9 mins)
             - Disney: Nelson, Wei Wen, Shangen, Rachell (9 mins)
             - GROUP_FIVE: Murphy, Mustafa, Abin, Chuang (9 mins)
             - Guangzhou: Yongqi, Fangzhou (5 mins)
