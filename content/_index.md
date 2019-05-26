@@ -163,7 +163,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
         - Thursday May 30
             - SmartR: Yifang, Danielle, Yini, Angelina (9 mins)
             - The King Baboon: Cheng, Suyue, Daniel, Tong (9 mins)
-            - team_R: Ernest, Jason, Malo, Nicholas (9 mins)
+            - team_R: Jason, Malo, Nicholas (9 mins)
             - Team SAMY: Alice, Stefan, Michael, Yanchen (9 mins)
             - Python>R: Alexander, Stephen, Jupinder, Colin (9 mins)
             - New Team: Rongqian, Dan, Xinyi (7 mins)
@@ -171,7 +171,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
             - Lubridate: Yee Ling, Alicia, Timothy, Yih (9 mins)
             - Hardworking: Hongliang, Kerenhapukh, Jiaen, Yutong (9 mins)
             - FORCATS: Nicholas, Jesslyn, Razeen, Jonathan (9 mins)
-            - JW: James, Wai Wei Eugene (5 mins)
+            - JW: James, Wai Hai Eugene (5 mins)
             - [Da Bois](https://ebsmonash.shinyapps.io/FantasyAFL/): Adam, Patrick (5 mins)
 
 
