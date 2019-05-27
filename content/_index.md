@@ -158,7 +158,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
             - Team OG: Boy (4 mins)
             - [Team S.T.A.T.](https://ebsmonash.shinyapps.io/Marvel/): Samantha, Thomas, Allan, Wangting (9 mins)
             - [the notsure group TM](https://ebsmonash.shinyapps.io/Avocados/): Jeffrey, Sachin, Liana (7 mins)
-            - [S.T.M.](): Thomas, Matthew, Shraavan (7 mins)
+            - [S.T.M.](https://ebsmonash.shinyapps.io/trafficfines/): Thomas, Matthew, Shraavan (7 mins)
 	        - [Traferger](https://ebsmonash.shinyapps.io/Migration/): Travis, Gerry, Ferid (7 mins)
         - Thursday May 30
             - [SmartR](https://ebsmonash.shinyapps.io/NSWMarineLife/#section-animal-geographic-analysis): Yifang, Danielle, Yini, Angelina (9 mins)
