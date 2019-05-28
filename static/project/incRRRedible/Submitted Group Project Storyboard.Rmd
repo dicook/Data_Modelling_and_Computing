@@ -1,0 +1,1298 @@
+---
+title: "Tennis"
+author: "Michael Roberts, Min Liu, Nicholas Hovens, Zhexu Zhang"
+date: "6 May 2019"
+output:
+  html_document:
+    df_print: paged
+leader: Michael Roberts
+---
+
+```{r setup, include=FALSE}
+#library(learnr)
+knitr::opts_chunk$set(echo = TRUE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 4,
+                      fig.width = 8,
+                      fig.align = "center",
+                      cache = FALSE)
+#tutorial_html_dependency()
+library(tidyverse)
+library(plotly)
+library(tidytext)
+library(lubridate)
+library(deuce)
+library(plyr)
+library(dplyr)
+library(ggplot2)
+library(devtools)
+library(DescTools)
+data("atp_players")
+data("atp_rankings")
+
+data("fetch_atp_rankings")
+data("fetch_wta_rankings")
+data("wta_players")
+data("wta_rankings")
+```
+
+
+## Introduction
+
+**Team members:** Michael Roberts, Min Liu, Nicholas Hovens, Zhexu Zhang
+
+### What is tennis
+
+<iframe src="https://giphy.com/embed/l378nQAeexVYyjqs8" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/l378nQAeexVYyjqs8">via GIPHY</a></p>
+
+* tennis is a racket sport
+* can be played individually against a single opponent or between two teams of two players each
+* each player uses the racket to hit the tennis ball over the net to their opponents side of the court
+* the object of the game is to hit the ball in such a way that the opponent cannot play a valid return
+* the player who plays the winning shot gets a point 
+
+### About our data
+* we used the "deuce" package to obtain our data https://github.com/skoval/deuce
+
+## Australian Men's ATP Rankings
+* The ATP rankings are used by the Association of Tennis Professionals (ATP) to determine qualification for entry as well as the seeding of players in all singles and doubles tournaments
+* The rankings are updated every Monday, so I have used the first Monday of every year from 2001 - 2018 for the following analysis
+* I will be focusing on the singles rankings
+
+### Cleaning of the data
+
+```{r eval=FALSE}
+atp_players1 <- atp_players %>%
+ select(name, player_id, country_code)%>%
+ filter(country_code == "AUS")
+
+atp_rankings1 <- atp_rankings %>%
+ select(ranking, player_id, date)%>%
+ filter(ranking <= 100) 
+
+atp_data <- atp_players1 %>%
+  left_join(atp_rankings1, by = "player_id") %>%
+  mutate(year = year(date), 
+         day = day(date),
+         month = month(date, label=TRUE, abbr=TRUE))#, locale = "English"))
+
+current_atprankings <- fetch_atp_rankings("2019-05-20", min_rank = 1, max_rank = 100) %>%
+ select(player, rank, date) %>%
+  rename(c("player" = "name", "rank" = "ranking"))
+
+currentatp_data <- atp_players1 %>%
+  full_join(current_atprankings, by = "name") %>%
+  na.omit(currentatp_data)
+```
+
+* the atp_players data was read in, relevant variables were selected and the country was filtered to display only Australian players
+* the atp_rankings data was read in, the relevant variables were selected and the rankings were filtered to show the top 100
+* the atp players and atp rankings data was then combined via a left join so that the rankings can be attributed to name 
+* the date of the rankings was also split into 3 variables: year, month and day
+* the same was done for the current ATP rankings (fetch_atp_rankings), a couple of the variables were renamed so they could be joined to the atp_players data and the NA values were omitted
+
+### Individual Australian players ATP rankings
+
+```{r echo=FALSE}
+atp_players1 <- atp_players %>%
+ select(name, player_id, country_code)%>%
+ filter(country_code == "AUS")
+
+atp_rankings1 <- atp_rankings %>%
+ select(ranking, player_id, date)%>%
+ filter(ranking <= 100) 
+
+atp_data <- atp_players1 %>%
+  left_join(atp_rankings1, by = "player_id") %>%
+  mutate(year = year(date), 
+         day = day(date),
+         month = month(date, label=TRUE, abbr=TRUE))#, locale = "English"))
+
+atp_ausrankings <- atp_data %>%
+  select(name, ranking, year, day, month) %>%
+  filter(year > 2000, month == "Jan", day < 8) %>%
+  ggplot(aes(x = year, y = ranking, colour = name)) +
+  geom_point()
+atp_ausrankings
+```
+
+* Lleyton Hewitt has been our highest ranked (1) male tennis player since 2001
+* He was ranked in the top 100 from 2001 - 2012, then 2013 - 2015
+
+<iframe src="https://giphy.com/embed/3otPoF2hzMGINMhMNa" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/usopen-tennis-us-open-3otPoF2hzMGINMhMNa">via GIPHY</a></p>
+* We have had at least 1 player ranked in the top 100 each year since 2001
+* We have had at least 1 player ranked in the top 50 each year except 2009 and 2011
+* Australia hasn't had any men ranked in the top 10 since 2006
+
+
+
+### Total Australian's in the ATP top 100 per year
+
+```{r echo=FALSE}
+atp_auscount <- atp_data %>%
+  select(name, ranking, country_code, year, month, day) %>%
+  filter(year > 2000, month == "Jan", day < 8, country_code == "AUS") %>%
+  dplyr::count(country_code, year) %>%
+  ggplot(aes(x = year, y = n, fill = n)) +
+  geom_bar(stat = "identity") 
+atp_auscount
+```
+
+* Between 2001-2018, 2001 saw the most Australian male tennis players in the top 100 with 7
+* Rapid decline after that with Australia seeing between 1 or 2 male tennis players in the top 100 from 2003 - 2012
+* Looks to be a steady increase from 2013 onwards
+
+
+### Current Australian's in the top 100 ATP Rankings
+
+```{r echo=FALSE}
+atp_players1 <- atp_players %>%
+ select(name, player_id, country_code)%>%
+ filter(country_code == "AUS")
+
+current_atprankings <- fetch_atp_rankings("2019-05-20", min_rank = 1, max_rank = 100) %>%
+ select(player, rank, date) %>%
+  rename(c("player" = "name", "rank" = "ranking"))
+
+currentatp_data <- atp_players1 %>%
+  full_join(current_atprankings, by = "name") %>%
+  na.omit(currentatp_data) %>%
+  ggplot(aes(x = name, y = ranking, fill = name)) +
+  geom_bar(stat = "identity")
+
+currentatp_data
+```
+
+* As of right now, Australia has 5 players ranked in the ATP top 100
+* Continues with the trending increase of Australian players in the ATP top 100
+* Highest Australian right now is Nick Kyrgios who is ranked at 36
+
+<iframe src="https://giphy.com/embed/3o7528F6lKNstvlVks" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/australianopen-tennis-australian-open-3o7528F6lKNstvlVks">via GIPHY</a></p>
+
+
+### Top ten countries with players in the ATP top 100 since 2001
+
+```{r echo=FALSE}
+atp_players1 <- atp_players %>%
+ select(name, player_id, country_code)
+
+
+atp_rankings1 <- atp_rankings %>%
+ select(ranking, player_id, date)%>%
+ filter(ranking <= 100) 
+
+atp_data <- atp_players1 %>%
+  left_join(atp_rankings1, by = "player_id") %>%
+  mutate(year = year(date), 
+         day = day(date),
+         month = month(date, label=TRUE, abbr=TRUE))#, locale = "English"))
+
+atp_worldrankings <- atp_data %>%
+  select(name, ranking, country_code, year, month, day) %>%
+  filter(year > 2000, month == "Jan", day < 8) %>%
+  dplyr::count(country_code) %>%
+  top_n(10) %>%
+  ggplot(aes(x = reorder(country_code, -n), y = n, fill = country_code, lab =FALSE)) +
+  xlab("Country") +
+  ylab("Number of players in top 100") +
+  geom_bar(stat = "identity")
+ atp_worldrankings
+```
+
+* Spain has had the most players ranked in the top 100 since 2001 with 234 players
+* Australia has had the 10th most with 52 players
+* 7 of the countries in the top ten are from Europe
+
+## Australian Women's WTA Rankings
+* The WTA rankings are used by the Women's Tennis Association (WTA) to determine qualification for entry as well as the seeding of players in all singles and doubles tournaments
+* The rankings are updated every Monday, so I have used the first Monday of every year from 2001 - 2018 for the following analysis
+* I will be focusing on the singles rankings
+
+### Cleaning of the data
+
+```{r eval=FALSE}
+wta_players1 <- wta_players %>%
+ select(name, player_id, country_code)%>%
+ filter(country_code == "AUS")
+
+wta_rankings1 <- wta_rankings %>%
+ select(ranking, player_id, date)%>%
+ filter(ranking <= 100) 
+
+wta_data <- wta_players1 %>%
+  left_join(wta_rankings1, by = "player_id") %>%
+  mutate(year = year(date), 
+         day = day(date),
+         month = month(date, label=TRUE, abbr=TRUE))#, locale = "English"))
+
+wta_ausrankings <- wta_data %>%
+  select(name, ranking, year, day, month) %>%
+  filter(year > 2000, month == "Jan", day < 8)
+
+current_wtarankings <- fetch_wta_rankings(min_rank = 1, max_rank = 100) %>%
+  select(player, nation, rank, date) %>%
+  filter(nation == "Australia") %>%
+```
+
+* similar to the cleaning for the ATP rankings
+* wta_players, wta_rankings, fetch_wta_rankings were used to obtain the data
+
+
+### Individual Australian players WTA rankings
+
+```{r echo=FALSE}
+wta_players1 <- wta_players %>%
+ select(name, player_id, country_code)%>%
+ filter(country_code == "AUS")
+
+wta_rankings1 <- wta_rankings %>%
+ select(ranking, player_id, date)%>%
+ filter(ranking <= 100) 
+
+wta_data <- wta_players1 %>%
+  left_join(wta_rankings1, by = "player_id") %>%
+  mutate(year = year(date), 
+         day = day(date),
+         month = month(date, label=TRUE, abbr=TRUE))#, locale = "English"))
+
+wta_ausrankings <- wta_data %>%
+  select(name, ranking, year, day, month) %>%
+  filter(year > 2000, month == "Jan", day < 8) %>%
+  ggplot(aes(x = year, y = ranking, colour = name)) +
+  geom_point()
+wta_ausrankings
+```
+
+* Samantha Stosur has been our highest ranked female tennis player (6) since 2001
+* She has been in the top 100 since 2005 and the top 25 from 2010 - 2015
+
+<iframe src="https://giphy.com/embed/l4FGnuZKZJhrgHkM8" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/tennischannel-l4FGnuZKZJhrgHkM8">via GIPHY</a></p>
+
+* Since 2001, there hasn't been a year with no Australian female tennis players in the top 100
+* Australia has had at least one female tennis player ranked in the top 50 every year since 2001, except for 2009
+
+### Total Australian's in the WTA top 100 per year
+
+```{r echo=FALSE}
+wta_auscount <- wta_data %>%
+  select(name, ranking, country_code, year, month, day) %>%
+  filter(year > 2000, month == "Jan", day < 8, country_code == "AUS") %>%
+  dplyr::count(country_code, year) %>%
+  ggplot(aes(x = year, y = n, fill = n)) +
+  geom_bar(stat = "identity") 
+wta_auscount
+```
+
+* 2002 and 2008 had the most female players in the top 100 with ten
+* 2014 and 2017 had the least with two
+* Seems to be a steady decrease in players in the wta top 100 since 2008
+
+### Current Australian's in the top 100 WTA Rankings
+
+```{r echo=FALSE}
+current_wtarankings <- fetch_wta_rankings(min_rank = 1, max_rank = 100) %>%
+  select(player, nation, rank, date) %>%
+  filter(nation == "Australia") %>%
+  ggplot(aes(x = player, y = rank, fill = player)) +
+  geom_bar(stat = "identity")
+current_wtarankings
+```
+* As of right now, Australia has 5 players ranked in the WTA top 100
+* This is the most Australia has had in the WTA top 100 since 2012
+* This could show the beginning of another rise in Australians in the WTA top 100
+* Highest Australian right now is Ash Barty who is ranked 8th
+
+<iframe src="https://giphy.com/embed/xUNd9EAh2umxsbNStW" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/australianopen-sport-xUNd9EAh2umxsbNStW">via GIPHY</a></p>
+
+
+### Top ten countries with players in the WTA top 100 since 2001
+
+```{r echo=FALSE}
+wta_players1 <- wta_players %>%
+ select(name, player_id, country_code)
+
+
+wta_rankings1 <- wta_rankings %>%
+ select(ranking, player_id, date)%>%
+ filter(ranking <= 100) 
+
+wta_data <- wta_players1 %>%
+  left_join(wta_rankings1, by = "player_id") %>%
+  mutate(year = year(date), 
+         day = day(date),
+         month = month(date, label=TRUE, abbr=TRUE))#, locale = "English"))
+
+wta_worldrankings <- wta_data %>%
+  select(name, ranking, country_code, year, month, day) %>%
+  filter(year > 2001, month == "Jan", day < 8) %>%
+  dplyr::count(country_code) %>%
+  top_n(10) %>%
+  ggplot(aes(x = reorder(country_code, -n), y = n, fill = country_code, lab =FALSE)) +
+  xlab("Country") +
+  ylab("Number of players in top 100") +
+  geom_bar(stat = "identity")
+
+wta_worldrankings
+```
+
+* Russia has had the most players ranked in the top 100 since 2001 with 314 players
+* Australia has had the 9th most with 89
+* 7 of the countries in the top ten are from Europe
+
+
+
+```{r include=FALSE}
+#library(learnr)
+library(tidyverse)
+library(dplyr)
+library(lubridate)
+library(deuce)
+library(plyr)
+library(DescTools)
+library(ggplot2)
+data("atp_elo")
+
+data("atp_rankings")
+data("atp_players")
+
+data("atp_elo")
+head(atp_elo)
+str(atp_elo)
+
+data("atp_rankings")
+head(atp_rankings)
+str(atp_rankings)
+
+data("atp_players")
+head(atp_players)
+str(atp_players)
+
+data("atp_matches")
+head(atp_matches)
+str(atp_matches)
+
+data("atp_tournaments")
+head(atp_tournaments)
+str(atp_tournaments)
+```
+
+## Predicting players ATP rankings in ten years
+
+In this section, we will attempt to discover if the ranking of an ATP player can be predicted to any degree of reliability through looking at their ranking in the early days of their professional career and their overall performance in ATP tournaments with a special focus on grand slams. This section continues to use the deuce package, and the first thing to do here is to obtain a profile of each player, with their rankings and some other personal information, such as date of birth. 
+This is accomplished through the atp_rankings data set, which is joined to the atp_players table, a second table which contains a more fleshed out version of the players name, date of birth. The result of this join is displayed below: 
+
+```{r include=FALSE}
+#We can use fetch_activity function to find out when these players first appeared
+#I need to somehow match up player ID and player name
+#The atp_players table matches this - let's join the player names, IDs and rankings - here goes
+
+rankings <- join(atp_rankings, atp_players, by = "player_id", type = "inner")
+
+
+str(rankings)
+```
+```{r echo=FALSE}
+head(rankings)
+```
+
+
+We would now like to split the rankings of players into their ATP ranking points after the first 3,6,9 months, then 1 through to 5 years of their arrival on the ATP tour. This is done by taking the ranking table formed previously, grouping by player, and filtering out all dates outside the time period of interest (so to determine ATP ranking points after 6 months, we select the last recorded value of ATP ranking points after filtering out dates beyond 6 months after their first recorded date). This results in tables for each of the data sets, which are then joined together to create a single time breakdown of the progression of these players ATP ranking points. 
+
+
+```{r include=FALSE}
+#now I have ranking points and players, I now need to know how to plot the amount of ranking points in the first 3 months, 6 months, 9 months and 12 months - how can I do that?
+
+three_months <- rankings %>% arrange(date) %>% group_by(name) %>% arrange(date) %>% filter(date <= AddMonths(date[1], 3)) %>% filter(date == date[length(date)]) %>% select(c(name, date, ranking_points)) %>% rename(c("ranking_points" = "rnkng_pnts_3mnths", "date" = "date_3mnths"))
+
+
+six_months <- rankings %>% arrange(date) %>% group_by(name) %>% arrange(date) %>% filter(date <= AddMonths(date[1], 6)) %>% filter(date == date[length(date)]) %>% select(c(name, date, ranking_points)) %>% rename(c("ranking_points" = "rnkng_pnts_6mnths", "date" = "date_6mnths"))
+
+
+nine_months <- rankings %>% arrange(date) %>% group_by(name) %>% arrange(date) %>% filter(date <= AddMonths(date[1], 9)) %>% filter(date == date[length(date)]) %>% select(c(name, date, ranking_points)) %>% rename(c("ranking_points" = "rnkng_pnts_9mnths", "date" = "date_9mnths"))
+
+
+one_year <- rankings %>% arrange(date) %>% group_by(name) %>% arrange(date) %>% filter(date <= AddMonths(date[1], 12)) %>% filter(date == date[length(date)]) %>% select(c(name, date, ranking_points)) %>% rename(c("ranking_points" = "rnkng_pnts_1yr", "date" = "date_1yr"))
+
+
+two_year <- rankings %>% arrange(date) %>% group_by(name) %>% arrange(date) %>% filter(date <= AddMonths(date[1], 24)) %>% filter(date == date[length(date)]) %>% select(c(name, date, ranking_points)) %>% rename(c("ranking_points" = "rnkng_pnts_2yr", "date" = "date_2yr"))
+
+
+three_year <- rankings %>% arrange(date) %>% group_by(name) %>% arrange(date) %>% filter(date <= AddMonths(date[1], 36)) %>% filter(date == date[length(date)]) %>% select(c(name, date, ranking_points)) %>% rename(c("ranking_points" = "rnkng_pnts_3yr", "date" = "date_3yr"))
+
+
+four_year <- rankings %>% arrange(date) %>% group_by(name) %>% arrange(date) %>% filter(date <= AddMonths(date[1], 48)) %>% filter(date == date[length(date)]) %>% select(c(name, date, ranking_points)) %>% rename(c("ranking_points" = "rnkng_pnts_4yr", "date" = "date_4yr"))
+
+
+five_year <- rankings %>% arrange(date) %>% group_by(name) %>% arrange(date) %>% filter(date <= AddMonths(date[1], 60)) %>% filter(date == date[length(date)]) %>% select(c(name, date, ranking_points)) %>% rename(c("ranking_points" = "rnkng_pnts_5yr", "date" = "date_5yr"))
+
+
+ten_year <- rankings %>% arrange(date) %>% group_by(name) %>% arrange(date) %>% filter(date <= AddMonths(date[1], 120)) %>% filter(date == date[length(date)]) %>% select(c(name, date, ranking_points)) %>% rename(c("ranking_points" = "rnkng_pnts_10yr", "date" = "date_10yr"))
+
+```
+
+
+```{r include=FALSE}
+three_six <- merge(three_months, six_months, by = "name")
+three_six_nine <- merge(three_six, nine_months, by = "name")
+three_six_nine_1yr <- merge(three_six_nine, one_year, by = "name")
+three_six_nine_1yr_2yr <- merge(three_six_nine_1yr,two_year, by = "name")
+three_six_nine_1yr_2yr_3yr <- merge(three_six_nine_1yr_2yr,three_year, by = "name")
+three_six_nine_1yr_2yr_3yr_4yr <- merge(three_six_nine_1yr_2yr_3yr,four_year, by = "name")
+three_six_nine_1yr_2yr_3yr_4yr_5yr <- merge(three_six_nine_1yr_2yr_3yr_4yr,five_year, by = "name")
+
+player_stats <- merge(three_six_nine_1yr_2yr_3yr_4yr_5yr, ten_year, by = "name")
+
+head(player_stats)
+str(player_stats)
+
+## OK we can see there are 13 variables in this data frame of which 6 are meaningful for PCA 
+## dates variables are not meaningful here.
+```
+
+### OBTAINING SOME INDICATION GRAND SLAM PERFORMANCE
+
+How players perform in the glamorous and exciting grand slams over the years may well prove to be a predictor of ranking points after a solid amount of time competing at the top level (10 years, hopefully). Below is calculated the number of wins and losses recorded for each player in grand slams. It is not however, a good idea to split this variable into similar time frames as the ranking variables above, as some players may not have even played a grand slam in their first year, or even 2 or 3 years on tour. Therefore, we take this observation after 4 years.
+
+This is found by taking the table provided by the deuce package, atp_matches (containing point by point breakdown statistics of many grand slam matches over the course of history), and joining this data set with that describing ATP ranking points after 4 years. The date in this second table provides the cutoff date past which we should not consider grand slam results. A snippet of the code to produce this overall data set is shown below: 
+
+Separate tables are created for wins and losses in grand slams, and finally they are joined to create the final data set.
+
+```{r echo=TRUE}
+#******************************************4 YEAR GS************************************************************
+atp_matches <- rename(atp_matches,replace = c("winner_name" = "name"))
+
+tournaments_4yr <- join(atp_matches, four_year, by = "name") %>% select(c(tourney_name, tourney_level, name, winner_rank, winner_rank_points, loser_name, loser_rank, loser_rank_points, tourney_start_date, date_4yr, rnkng_pnts_4yr))
+
+
+gs_4yr <- tournaments_4yr %>% filter(tourney_level == "Grand Slams") %>% group_by(name) %>% filter(tourney_start_date <= date_4yr)
+gs_4yr_wins <- count(gs_4yr$name) %>% rename(c("x" = "name", "freq" = "gs_wins"))
+gs_4yr_wins <- join(gs_4yr_wins, four_year, by = "name") %>% separate(date_4yr, into = c("year_4yr", "month_4yr", "day_4yr")) %>% select(name, gs_wins)
+
+
+gs_4yr <- tournaments_4yr %>% filter(tourney_level == "Grand Slams") %>% group_by(loser_name) %>% filter(tourney_start_date <= date_4yr)
+gs_4yr_losses <- count(gs_4yr$loser_name) %>% rename(c("x" = "name", "freq" = "gs_losses"))
+gs_4yr_losses <- join(gs_4yr_losses, four_year, by = "name") %>% separate(date_4yr, into = c("year_4yr", "month_4yr", "day_4yr")) %>% select(name, gs_losses)
+
+
+gs_4yr_wlr <- join(gs_4yr_losses, gs_4yr_wins, by = "name")
+
+head(gs_4yr_wlr)
+
+
+```
+
+
+
+### OBTAINING OVERALL ATP TOURNAMENT PERFORMANCE
+
+In tennis, there is a fair number of players who may do well in tournaments other than grand slams, but who repeatedly fail to bring it together on the big stage. (Alexander Zverev and Nick Kyrgios are debatedly two of those, just to name a few.) We thought it would be good to include some reference to these other tournaments as indicators of performance on the ATP tour. 
+
+Luckily this information was available in the atp_matches table once more, and allowed us to focus on all professional level tournaments including grand slams. This table was again joined to the four year ranking table, or the same reason as it was in the previous step (obtaining grand slam performance). Four years was chosen as the cutoff again, to make the wins and losses obtained here comparable to those of the grand slam data.
+
+```{r echo=FALSE}
+#*******************************************ALL ATP TOUNAMENTS 4 YEAR****************************************
+tournaments_4yr <- join(atp_matches, four_year, by = "name") %>% select(c(tourney_name, tourney_level, name, winner_rank, winner_rank_points, loser_name, loser_rank, loser_rank_points, tourney_start_date, date_4yr, rnkng_pnts_4yr))
+
+ATP_4yr <- tournaments_4yr %>% filter(tourney_level == "Grand Slams" | tourney_level == "250 or 500" | tourney_level == "Davis Cup" | tourney_level == "Tour Finals" | tourney_level == "Masters") %>% group_by(name) %>% filter(tourney_start_date <= date_4yr)
+ATP_4yr_wins <- count(ATP_4yr$name)%>% rename(c("x" = "name", "freq" = "atp_wins"))
+ATP_4yr_wins <- join(ATP_4yr_wins, four_year, by = "name") %>% separate(date_4yr, into = c("year_4yr", "month_4yr", "day_4yr"))
+
+ATP_4yr <- tournaments_4yr %>% filter(tourney_level == "Grand Slams" | tourney_level == "250 or 500" | tourney_level == "Davis Cup" | tourney_level == "Tour Finals" | tourney_level == "Masters") %>% group_by(loser_name) %>% filter(tourney_start_date <= date_4yr)
+ATP_4yr_losses <- count(ATP_4yr$loser_name)%>% rename(c("x" = "name", "freq" = "atp_losses"))
+
+
+ATP_4yr_wlr <- join(ATP_4yr_wins, ATP_4yr_losses, by = "name")
+
+
+atp <- ATP_4yr_wlr %>% select(name, atp_wins, atp_losses)
+
+
+```
+
+
+
+
+
+```{r echo=FALSE}
+## so lets select out the relevant variables we want and call this ranking_variables
+
+library(dplyr)
+
+ranking_variables <- player_stats %>%
+  select(name, rnkng_pnts_3mnths, rnkng_pnts_6mnths, rnkng_pnts_9mnths, 
+              rnkng_pnts_1yr, rnkng_pnts_2yr, rnkng_pnts_3yr, rnkng_pnts_4yr, rnkng_pnts_5yr, rnkng_pnts_10yr)
+
+str(ranking_variables)
+head(ranking_variables)
+```
+
+
+Having obtained this data we could now join the atp tournaments, grand slams and ranking statistics and combine them all in one table, shown below. 
+
+```{r echo=TRUE}
+##join atp tournament performance to ranking data
+ranking_variables_distinct <- merge(ranking_variables, atp, by = "name")
+
+
+##have to do this joining BEFORE ADJUSTING FOR DUPLICATES
+ranking_variables_distinct <- merge(ranking_variables_distinct, gs_4yr_wlr, by = "name")
+
+
+head(ranking_variables_distinct)
+```
+
+The data set contained some duplicate rows as some players had identical names! This was dealt with by adjusting the players name each time it came up, adding an incrementing number to the end of it e.g. William Brown 1, William Brown 2 etc, if there were multiple instances of William Brown for some reason.
+
+```{r echo=FALSE}
+## we need to remove duplicate names
+
+## distinct() [dplyr package] to remove duplicate rows in a data frame.
+
+ranking_variables_distinct <- distinct(ranking_variables_distinct)
+
+
+str(ranking_variables_distinct)
+```
+
+
+```{r echo=FALSE}
+
+##of players with identical names, keep only one
+##**************************************DON'T HAVE TO DO THIS***********************************************************************
+ranking_variables_distinct$name[581:584] <- c("Alexander Zlatnik 1", "Alexander Zlatnik 2", "Alexander Zlatnik 3", "Alexander Zlatnik 4" )
+
+
+ranking_variables_distinct$name[773:774] <- c("Amir Reza 1", "Amir Reza 2")
+
+
+ranking_variables_distinct$name[890:897] <- c("Andrea Turini 1", "Andrea Turini 2", "Andrea Turini 3", "Andrea Turini 4", "Andrea Turini 5", "Andrea Turini 6", "Andrea Turini 7", "Andrea Turini 8" )
+
+
+#ranking_variables_distinct$name[2760:2761] <- c("Dane Mcgregor 1", "Dane Mcgregor 2")
+
+
+##Federico Iannaccone has too many
+##so remove the guy and continue
+
+ranking_variables_distinct <- ranking_variables_distinct %>% filter(name != c("Federico Iannaccone"))
+
+
+#ranking_variables_distinct$name[7636:7637] <- c("Kenichi Kiyomiya 1", "Kenichi Kiyomiya 2")
+
+
+#ranking_variables_distinct$name[7380:7381] <- c("Kenichi Kiyomiya 3", "Kenichi Kiyomiya 4")
+
+
+#ranking_variables_distinct$name[9161:9162] <- c("Mathias Hellstrom 1", "Mathias Hellstrom 2")
+
+
+#ranking_variables_distinct$name[8905:8906] <- c("Mathias Hellstrom 3", "Mathias Hellstrom 4")
+
+##***********************************************************************************************************
+
+##*************************************************************************************************
+##remove duplicates HERE!!
+ranking_variables_distinct$name[917:922] <- c("Saeed Meer 1", "Saeed Meer 2", "Saeed Meer 3", "Saeed Meer 4", "Saeed Meer 5", "Saeed Meer 6" )
+
+
+ranking_variables_distinct$name[1077:1084] <- c("William Brown 1", "William Brown 2", "William Brown 3", "William Brown 4", "William Brown 5", "William Brown 6", "William Brown 7", "William Brown 8")
+
+
+ranking_variables_distinct$name[1050:1053] <- c("Terry Ryan 1", "Terry Ryan 2", "Terry Ryan 3", "Terry Ryan 4" )
+
+##***********************************************************************************************
+
+```
+
+### PCA ANALYSIS ON THE VARIABLES ON THIS DATASET
+In this section we conduct principal component analysis on all the variables in this data set. This will allow us to identify which variables are intercorrelated, and which of them are most important in explaining variation among them. The variables will be separated into principal components which will highlight the most important information in the data set. 
+
+The first step here is to take our data set and remove the name column, then format all the other variables as numeric, a key condition for PCA.
+
+```{r echo=FALSE}
+
+
+## first change the character variables to numeric for rankings variables ie columns 2:7
+## a function to do this selecting the columns of interest except the first which is the names chr variable
+
+
+## change first column to rownames
+ranking_variables_distinct <- data.frame(ranking_variables_distinct, row.names = 1)
+
+
+i <- c(1:13)                                  # Specify columns you want to change
+## We can now use the apply function to change columns 2 to 10 to numeric:
+  
+ranking_variables_distinct[ , i] <- apply(ranking_variables_distinct[ , i], 2,  # Specify own function within apply
+                      function(x) as.numeric(as.character(x)))
+
+str(ranking_variables_distinct)
+
+## remove column name from first column as rownames
+
+ranking_variables_distinct <- ranking_variables_distinct[-1]
+row.names(ranking_variables_distinct) <- ranking_variables_distinct$name
+
+str(ranking_variables_distinct)
+head(ranking_variables_distinct)
+
+```
+
+### DATA STANDARDISATION
+In principal component analysis, variables are often scaled (i.e. standardized). This is a good idea when variables are measured in different scales (e.g: kilograms, kilometers, centimeters, …); otherwise, the PCA outputs obtained will be severely affected.
+
+The goal here is to make the variables comparable. Generally variables are scaled to have: 
+i) standard deviation one and 
+ii) mean zero
+The function PCA() [FactoMineR package] can be used.
+
+This standardization to the same scale avoids some variables to become dominant just because of their large measurement units. It makes variable comparable.
+
+The R code below, computes principal component analysis on the active individuals/variables: 
+
+
+```{r}
+library("FactoMineR")
+res.pca1 <- PCA(ranking_variables_distinct, graph = FALSE)
+print(res.pca1)
+```
+
+
+### VISUALIZATION AND INTERPRETATION
+
+We will use the factoextra R package to help in the interpretation of PCA. 
+
+Eigenvalues / Variances
+The eigenvalues measure the amount of variation retained by each principal component in the data set.
+Eigenvalues are large for the first PCs and small for the subsequent PCs. That is, the first PCs corresponds to the directions with the maximum amount of variation in the data set.
+
+We examine the eigenvalues to determine the number of principal components to be considered. 
+The eigenvalues and the proportion of variances (i.e., information) retained by the principal components (PCs) can be extracted using the function get_eigenvalue() from the factoextra package.
+
+```{r echo=FALSE}
+
+library("factoextra")
+eig.val <- get_eigenvalue(res.pca1)
+eig.val
+
+
+
+```
+
+Eigenvalues can be used to determine the number of principal components to retain after PCA (Kaiser 1961):
+
+An eigenvalue > 1 indicates that PCs account for more variance than accounted by one of the original variables in standardized data. 
+This is commonly used as a cutoff point for which PCs are retained. This is true only when the data is standardized.
+
+You can also limit the number of components to a number that accounts for a certain fraction of the total variance. So for example here, as can be seen from the eigen values above, we might choose to stop at dimension 7, as up to this point, 95% of the variation is explained.
+
+
+### SCREE PLOT
+An alternative method to determine the number of principal components is to look at a Scree Plot, 
+which is the plot of eigenvalues ordered from largest to the smallest. 
+The number of component is determined at the point, beyond which the remaining eigenvalues are all relatively small and of comparable size (Jollife 2002, Peres-Neto, Jackson, and Somers (2005)).
+
+The scree plot can be produced using the function fviz_eig() or fviz_screeplot() from the factoextra package.
+
+```{r echo=FALSE}
+
+
+fviz_eig(res.pca1, addlabels = TRUE, ylim = c(0, 70))
+
+```
+From the plot above, we might want to stop at the 7th principal component. 
+95% of the information (variances) contained in the data are retained by the first five principal components.PUT RIGHT VALUES IN
+
+### RESULTS
+To extract the results for variables from a PCA output we can use the function 
+get_pca_var() (factoextra package). This function provides a list of matrices containing all the 
+results for the active variables (coordinates, correlation between variables and axes, squared cosine and 
+contributions)
+
+The components of the get_pca_var() can be used in the plot of our variables as follows:
+
+var$coord: coordinates of variables to create a scatter plot
+var$cos2: represents the quality of representation for variables on the factor map. It’s calculated as the squared coordinates: var.cos2 = var.coord * var.coord.
+var$contrib: contains the contributions (in percentage) of the variables to the principal components. The contribution of a variable (var) to a given principal component is (in percentage) : (var.cos2 * 100) / (total cos2 of the component).
+
+```{r echo=FALSE}
+## Graph of variables
+
+
+var <- get_pca_var(res.pca1)
+var
+
+## The different components can be accessed as follow:
+
+# Coordinates
+head(var$coord)
+# Cos2: quality on the factore map
+head(var$cos2)
+# Contributions to the principal components
+head(var$contrib)
+```
+
+
+### CORRELATION CIRCLE
+The correlation between a variable and a principal component (PC) is used as the coordinates of the variable on the PC. The representation of variables differs from the plot of the observations: 
+The observations are represented by their projections, but the variables are represented by their correlations (Abdi and Williams 2010).
+Color by cos2 values: quality on the factor map
+
+```{r echo=FALSE}
+# 
+fviz_pca_var(res.pca1, col.var = "cos2",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), 
+             repel = TRUE # Avoid text overlapping
+)
+```
+
+
+The plot above is also known as variable correlation plots. It shows the relationships between all variables.
+It can be interpreted as follows:
+
+Positively correlated variables are grouped together. We can see that atp_wins and gs_wins are correlated, as well as atp_losses and gs_losses. This makes sense, as players who do well in most atp tournaments will tend to also perform in the grand slams, although there are some outliers as mentioned previously.
+Negatively correlated variables are positioned on opposite sides of the plot origin (opposed quadrants).
+Interestingly, ranking points and tournament performance are not correlated, from this data. This is somewhat counter intuitive, as one would suspect that good tournament performance would result in better ranks. However, there would be some players who do well in tournaments which don't offer a high number of ranking points, which would explain why tournament performance and ranking points are not really correlated here.
+
+The distance between variables and the origin measures the quality of the variables on the factor map. Variables that are away from the origin are well represented on the factor map. Due to the cluster of variables on this correlation plot, it is hard to see the quality for each variable. The cos2 on the key of this plot is explained below.
+
+
+### QUALITY OF REPRESENTATION
+
+The quality of representation of the variables on factor map is called cos2 (square cosine, squared coordinates).
+
+A high cos2 indicates a good representation of the variable on the principal component. 
+In this case the variable is positioned close to the circumference of the correlation circle.
+
+A low cos2 indicates that the variable is not perfectly represented by the PCs. 
+In this case the variable is close to the center of the circle.
+
+```{r echo=FALSE}
+##  You can access to the cos2 as follow:
+
+head(var$cos2, 4)
+
+## You can visualize the cos2 of variables on all the dimensions using the corrplot package:
+
+library("corrplot")
+corrplot(var$cos2, is.corr = FALSE)
+```
+
+A bar chart of the cos2 is probably a more user-friendly result:
+```{r echo=FALSE}
+## It’s also possible to create a bar plot of variables cos2 using the function fviz_cos2()[in factoextra]:
+
+# Total cos2 of variables on Dim.1 and Dim.2
+fviz_cos2(res.pca1, choice = "var", axes = 1:2)
+
+```
+
+
+Contributions of variables to PCs
+The contributions of variables in accounting for the variability in a given principal component are expressed in percentage.
+
+Variables that are correlated with PC1 (i.e., Dim.1) and PC2 (i.e., Dim.2) are the most important in explaining the variability in the data set. Variables that are not correlated with any PC or correlated with the last dimensions are variables with low contribution and might be removed to simplify the overall analysis.
+The larger the value of the contribution, the more the variable contributes to the component.
+```{r echo=FALSE}
+## 
+##  The contribution of variables can be extracted as follow :
+
+head(var$contrib, 4)
+
+## .
+```
+
+
+```{r echo=FALSE}
+
+library("corrplot")
+corrplot(var$contrib, is.corr=FALSE)
+```
+
+Once again bar charts is also helpful to visualise which variables are contributing most to the variations.
+Here are the contributions of each variable to PC1. 
+```{r echo=FALSE}
+## 
+# Contributions of variables to PC1
+fviz_contrib(res.pca1, choice = "var", axes = 1, top = 10)
+```
+
+Likewise the contributions to PC2
+```{r echo=FALSE}
+# Contributions of variables to PC2
+
+fviz_contrib(res.pca1, choice = "var", axes = 2, top = 10)
+```
+
+
+Now the total contribution to PC1 and PC2
+```{r echo=FALSE}
+## The total contribution to PC1 and PC2 is obtained with the following R code:
+
+fviz_contrib(res.pca1, choice = "var", axes = 1:2, top = 10)
+```
+
+Clearly these plots confirm the information plotted in the correlation circle above. The ranking points are correlated with Dim 1 and tournament performance to Dim2.
+
+The red dashed line on the graphs above indicate the expected average contribution. 
+
+### LINEAR REGRESSION TO PREDICT RANKING AT TEN YEAR MARK
+
+We will now perform multiple linear regression to determine the contributions of different variables to rnkng_pnts_10yr, the outcome variable here.
+
+The first model takes into account all possible variables, with ranking points at ten years as the outcome.
+
+```{r echo=FALSE}
+##  
+##  build the linear regression model
+
+model1 <- lm(rnkng_pnts_10yr ~ rnkng_pnts_6mnths + rnkng_pnts_9mnths + rnkng_pnts_1yr + rnkng_pnts_2yr + rnkng_pnts_3yr +
+            rnkng_pnts_4yr + rnkng_pnts_5yr + gs_losses + gs_wins + atp_wins + atp_losses, data = ranking_variables_distinct)
+summary(model1)
+```
+
+Clearly ranking points at 6 months, and tournament results are quite insignificant here, indicating that as one might expect, ranking can only be loosely predicted by previous rankings at around 5 or 6 years prior to the current date. The R squared value of this regression is a weak 0.5376, telling us that predicting will be unreliable at the best of times. 
+
+We will now remove the variables which don't contribute to the prediction, and build a new model.
+
+```{r echo=FALSE}
+model2 <- lm(rnkng_pnts_10yr ~  rnkng_pnts_1yr + rnkng_pnts_2yr + rnkng_pnts_3yr +
+               rnkng_pnts_4yr + rnkng_pnts_5yr, data = ranking_variables_distinct)
+summary(model2) 
+```
+
+Interestingly the model hardly improves, meaning that even though ranking points in the first 5 years a player is on tour can be somewhat helpful in predicting where they will be in ten years, it is still anybody's guess. 
+
+It can however be seen that the later ranking points (those at 3, 4 and 5 years) are more significant than earlier ones, so a final regression model will be constructed, taking only these into account.
+
+```{r echo=FALSE}
+
+model3 <- lm(rnkng_pnts_10yr ~   rnkng_pnts_3yr + 
+               rnkng_pnts_4yr + rnkng_pnts_5yr, data = ranking_variables_distinct)
+summary(model3) 
+```
+Once again, the R squared value does not change, remaining 0.5093.
+
+### CONCLUSIONS
+
+You may be wondering why ranking points at 10 years was chosen as an outcome variable, as it is highly variable. Surely career high ranking or cumulative ranking points would have been more informative outcome variables. The simple answer to this is that there was insufficient data (not to mention time:) ) to obtain these sort of variables.
+
+Overall however, it is plain that trying to predict the chosen outcome variable was unreliable at best. Only a few variables which were closer to the outcome can predict with anything approaching 50% reliability.
+
+It is perhaps not surprising that trying to predict sport in general is highly difficult, as if it was able to be predicted easily, there would be no interest in it. This simply highlights the exciting nature of the game of tennis, in that matches can change drastically across a couple of sets of even games or points, and there are so many variables which contribute the outcome of any one match (location, court surface or player injury record or status, for example) that it is very hard to forecast results.
+
+Throughout this analysis it became increasingly evident that one cannot simply trust data given, and the importance of conducting sanity checks throughout the analysis cannot be overestimated, both for detecting errors in ones own analysis and for noticing unrealistic readings in the supplied data. For example, some of the data sets in the deuce package contained multiple missing values making analysis unreliable, and sometimes contained multiple instances of the same player (up to 80 instances of identical players). 
+
+
+## Left-handed vs Right-handed players
+
+* Do Left-handed players have an advantage over Right-handed players in the last four years from 2015 to 2018 in ATP?
+
+* There is a saying that left-handed people have an advantage over right-handed people.Is it true or not?
+
+### Dataset
+
+* First we just use atp_players data set and join to the data set atp_rankings using left_join by player id to get the ranking data and handedness type of player at the same time. 
+* then unselect “date” variable in this data set because it’s same as ranking_date.  
+* filter date from 2015 to 2018 for our research.
+
+```{r include=FALSE}
+data(atp_players)
+data(atp_rankings)
+atp_ht <-atp_players %>% 
+  select(player_id,hand) %>%
+  left_join(atp_rankings,by=c("player_id")) %>%select(-date) %>%
+  filter(ranking_date >= "20150101",ranking_date <= "20190101")
+atp_ht
+```
+
+### Average ranking of each player
+
+* Because the ranking period of each player is not the same,  we take the average ranking to analyse whether the handedness type has any effect on player ranking.
+* Because the data is too large and we only take the latest 4 years from 2015 to 2018 to calculate average ranking for each handedness type and got the data set like it.
+
+```{r echo=FALSE}
+atp_ht15 <-atp_ht %>% filter(ranking_date >="20150101",ranking_date<="20160101") 
+atp_htR15 <-atp_ht15 %>% filter(hand == "R") %>% 
+  group_by(player_id) %>%
+  dplyr::summarise(AVE=mean(ranking,na.rm=TRUE)) %>%
+  filter(!is.na(AVE)) %>% mutate(hand = "R")
+atp_htL15 <- atp_ht %>% filter(hand == "L") %>%
+  group_by(player_id) %>%
+  dplyr::summarise(AVE=mean(ranking,na.rm = TRUE)) %>%
+  filter(!is.na(AVE)) %>% mutate(hand = "L")
+atp_htp15 <- rbind(atp_htR15,atp_htL15) %>%mutate(year=2015)
+atp_ht16 <-atp_ht %>% filter(ranking_date >="20160101",ranking_date<="20170101") 
+atp_htR16 <-atp_ht16 %>% filter(hand == "R") %>% 
+  group_by(player_id) %>%
+  dplyr::summarise(AVE=mean(ranking)) %>% mutate(hand="R")  %>%
+  filter(!is.na(AVE)) %>%mutate(hand = "R")
+atp_htL16 <- atp_ht %>% filter(hand == "L") %>%
+  group_by(player_id) %>%
+  dplyr::summarise(AVE=mean(ranking,na.rm = TRUE)) %>% 
+  filter(!is.na(AVE)) %>% mutate(hand = "L")
+atp_htp16 <- rbind(atp_htR16,atp_htL16) %>% mutate(year=2016)
+atp_ht17 <-atp_ht %>% filter(ranking_date >="20170101",ranking_date<="20180101") 
+atp_htR17 <-atp_ht17 %>% filter(hand == "R") %>% 
+  group_by(player_id) %>%
+  dplyr::summarise(AVE=mean(ranking)) %>%
+  filter(!is.na(AVE)) %>% mutate(hand = "R")
+atp_htL17 <- atp_ht %>% filter(hand == "L") %>%
+  group_by(player_id) %>%
+  dplyr::summarise(AVE=mean(ranking,na.rm = TRUE)) %>%
+  filter(!is.na(AVE)) %>% mutate(hand = "L")
+atp_htp17 <- rbind(atp_htR17,atp_htL17) %>%mutate(year=2017)
+atp_ht18 <-atp_ht %>% filter(ranking_date >="20180101",ranking_date<="20190101") 
+atp_htR18 <-atp_ht18 %>% filter(hand == "R") %>%
+  group_by(player_id) %>%
+  dplyr::summarise(AVE=mean(ranking)) %>%
+  filter(!is.na(AVE)) %>% mutate(hand="R")
+atp_htL18 <- atp_ht %>% filter(hand == "L") %>%
+  group_by(player_id) %>%
+  dplyr::summarise(AVE=mean(ranking,na.rm = TRUE)) %>%
+  filter(!is.na(AVE)) %>% mutate(hand = "L")
+atp_htp18 <- rbind(atp_htR18,atp_htL18) %>% mutate(year=2018)
+atp_htpall <- rbind(atp_htp15,atp_htp16,atp_htp17,atp_htp18)
+atp_htpall
+```
+
+### Distruibution of Average ranking.
+
+* We use the box plot to observe the distribution of player's average ranking for right hand and left hand.
+```{r echo=TRUE}
+ggplot(atp_htpall,aes(x=hand, y=AVE)) + 
+  geom_boxplot() +
+  facet_wrap(~year)
+```
+* We can see that the difference between the two handedness type is tiny.
+* The distribution of left-handed players are worse than right-handed players. But it can't be prove that the claim is true or false.
+
+### Detailed analyse
+
+* For the detailed analyse, we create a subset to compare the ranking of left-handed players and right-handed players.
+* Because the ranking rule in tennis is that players' ranking refreshed once a week base on their performance in matches. 
+```{r echo=FALSE}
+ATP1 <-atp_ht18%>%
+  filter(hand == "R") %>% 
+  dplyr::count(player_id) %>%  dplyr::count(n) %>% mutate(hand="R")
+ATP2 <-atp_ht18%>%
+  filter(hand == "L") %>%
+   dplyr::count(player_id) %>%  dplyr::count(n) %>% mutate(hand="L")
+ATP18 <- rbind(ATP1,ATP2) %>%  dplyr::rename("ranking weeks" = "n", "frequency" = "nn")
+atp1<- filter(ATP18,hand == "R") %>% filter(frequency == max(frequency))
+atp2<- filter(ATP18,hand == "L") %>% filter(frequency == max(frequency))
+weeks18 <-rbind(atp1,atp2)
+weeks18
+```
+
+And after cleaning the data set, we found that the common ranking weeks for left-handed players and right-handed players is 33weeks in 2018.
+
+
+So we choose 33 weeks as our ranking period and calculate the average ranking for left-handed players and right-handed players in latest year 2018.
+
+```{r echo=FALSE}
+sampleR18 <- atp_ht18 %>%
+  filter(hand == "R") %>% 
+   dplyr::count(player_id) %>% 
+  filter(n == "33") 
+mysampleR18 <- atp_ht18 %>% filter(player_id %in% sampleR18$player_id)
+sampleL18 <- atp_ht18 %>%
+  filter(hand == "L") %>%
+   dplyr::count(player_id) %>% 
+  filter(n == "33") 
+mysampleL18 <- atp_ht18 %>% filter(player_id %in% sampleL18$player_id)
+sample18 <- rbind(mysampleR18,mysampleL18) %>% select(-ranking_points)
+sample18 <- sample18 %>%
+  mutate(date=ymd(ranking_date)) %>% select(-ranking_date) %>%
+  mutate(day=day(date),
+         month=month(date),
+         year=year(date))
+sample18R <- sample18 %>% filter(hand == "R") %>% group_by(month) %>%
+   dplyr::summarise(n=mean(ranking)) %>% mutate(hand="R")
+sample18L <- sample18 %>% filter(hand == "L") %>% group_by(month) %>%
+   dplyr::summarise(n=mean(ranking)) %>% mutate(hand="L")
+Sample18 <- rbind(sample18R,sample18L) %>% mutate(year=2018)
+Sample18
+```
+
+
+### Comparision
+```{r echo=TRUE}
+ggplot(Sample18,aes(x=month, y=n, color=hand, group=hand, width=0.5)) +
+  geom_line() 
+```
+
+* We can see that the average ranking of left-handed players is much lower than the right-handed players among 33weeks.
+* What about the trend of average ranking for left-handed players and right-handed players from 2015 to 2018?
+
+
+### Among 2015-2018
+
+* Similarly, we got the common ranking weeks data set of average ranking for all left-handed players and right-handed players from 2015 to 2018
+
+```{r echo=FALSE}
+##2015
+ATP3 <-atp_ht15%>%
+  filter(hand == "R") %>% 
+   dplyr::count(player_id) %>%  dplyr::count(n) %>% mutate(hand="R")
+ATP4 <-atp_ht15%>%
+  filter(hand == "L") %>%
+   dplyr::count(player_id) %>%  dplyr::count(n) %>% mutate(hand="L")
+ATP15 <- rbind(ATP3,ATP4) %>%  dplyr::rename("ranking weeks" = "n", "frequency" = "nn")
+atp3 <- filter(ATP15,hand == "R") %>% filter(frequency == max(frequency))
+atp4 <- filter(ATP15,hand == "L") %>% filter(frequency == max(frequency))
+weeks15 <-rbind(atp3,atp4) %>% mutate(year=2015)
+##2016
+ATP5 <-atp_ht16%>%
+  filter(hand == "R") %>% 
+   dplyr::count(player_id) %>%  dplyr::count(n) %>% mutate(hand="R")
+ATP6 <-atp_ht16%>%
+  filter(hand == "L") %>%
+   dplyr::count(player_id) %>%  dplyr::count(n) %>% mutate(hand="L")
+ATP16 <- rbind(ATP5,ATP6) %>%  dplyr::rename("ranking weeks" = "n", "frequency" = "nn")
+atp5 <- filter(ATP16,hand == "R") %>% filter(frequency == max(frequency))
+atp6 <- filter(ATP16,hand == "L") %>% filter(frequency == max(frequency))
+weeks16 <-rbind(atp5,atp6) %>% mutate(year=2016)
+##2017
+ATP7 <-atp_ht17%>%
+  filter(hand == "R") %>% 
+   dplyr::count(player_id) %>%  dplyr::count(n) %>% mutate(hand="R")
+ATP8 <-atp_ht17%>%
+  filter(hand == "L") %>%
+   dplyr::count(player_id) %>%  dplyr::count(n) %>% mutate(hand="L")
+ATP17 <- rbind(ATP7,ATP8) %>%  dplyr::rename("ranking weeks" = "n", "frequency" = "nn")
+atp7 <- filter(ATP17,hand == "R") %>% filter(frequency == max(frequency))
+atp8 <- filter(ATP17,hand == "L") %>% filter(frequency == max(frequency))
+weeks17 <-rbind(atp7,atp8) %>% mutate(year=2017)
+weeks <-rbind(weeks15,weeks16,weeks17)
+weeks
+```
+
+
+And got the average ranking for left-handed players and right-handed players from 2015 to 2017 in their ranking period.
+
+```{r echo=FALSE}
+##2015
+sampleR15 <- atp_ht15 %>%
+  filter(hand == "R") %>% 
+   dplyr::count(player_id) %>% 
+  filter(n == "46") 
+mysampleR15 <- atp_ht15 %>% filter(player_id %in% sampleR15$player_id)
+sampleL15 <- atp_ht15 %>%
+  filter(hand == "L") %>%
+   dplyr::count(player_id) %>% 
+  filter(n == "46") 
+mysampleL15 <- atp_ht15 %>% filter(player_id %in% sampleL15$player_id)
+sample15 <- rbind(mysampleR15,mysampleL15) %>% select(-ranking_points)
+sample15 <- sample15 %>%
+  mutate(date=ymd(ranking_date)) %>% select(-ranking_date) %>%
+  mutate(day=day(date),
+         month=month(date),
+         year=year(date))
+sample15R <- sample15 %>% filter(hand == "R") %>% group_by(month) %>%
+   dplyr::summarise(n=mean(ranking)) %>% mutate(hand="R")
+sample15L <- sample15 %>% filter(hand == "L") %>% group_by(month) %>%
+   dplyr::summarise(n=mean(ranking)) %>% mutate(hand="L")
+Sample15 <- rbind(sample15R,sample15L) %>% mutate(year=2015)
+
+##2016
+sampleR16 <- atp_ht16 %>%
+  filter(hand == "R") %>% 
+  dplyr::count(player_id) %>% 
+  filter(n == "46") 
+mysampleR16 <- atp_ht16 %>% filter(player_id %in% sampleR16$player_id)
+sampleL16 <- atp_ht16 %>%
+  filter(hand == "L") %>%
+   dplyr::count(player_id) %>% 
+  filter(n == "46") 
+mysampleL16 <- atp_ht16 %>% filter(player_id %in% sampleL16$player_id)
+sample16 <- rbind(mysampleR16,mysampleL16) %>% select(-ranking_points)
+sample16 <- sample16 %>%
+  mutate(date=ymd(ranking_date)) %>% select(-ranking_date) %>%
+  mutate(day=day(date),
+         month=month(date),
+         year=year(date))
+sample16R <- sample16 %>% filter(hand == "R") %>% group_by(month) %>%
+   dplyr::summarise(n=mean(ranking)) %>% mutate(hand="R")
+sample16L <- sample16 %>% filter(hand == "L") %>% group_by(month) %>%
+   dplyr::summarise(n=mean(ranking)) %>% mutate(hand="L")
+Sample16 <- rbind(sample16R,sample16L) %>% mutate(year=2016)
+
+##2017
+sampleR17 <- atp_ht17 %>%
+  filter(hand == "R") %>% 
+   dplyr::count(player_id) %>% 
+  filter(n == "48") 
+mysampleR17 <- atp_ht17 %>% filter(player_id %in% sampleR17$player_id)
+sampleL17 <- atp_ht17 %>%
+  filter(hand == "L") %>%
+   dplyr::count(player_id) %>% 
+  filter(n == "48") 
+mysampleL17 <- atp_ht17 %>% filter(player_id %in% sampleL17$player_id)
+sample17 <- rbind(mysampleR17,mysampleL17) %>% select(-ranking_points)
+sample17 <- sample17 %>%
+  mutate(date=ymd(ranking_date)) %>% select(-ranking_date) %>%
+  mutate(day=day(date),
+         month=month(date),
+         year=year(date))
+sample17R <- sample17 %>% filter(hand == "R") %>% group_by(month) %>%
+   dplyr::summarise(n=mean(ranking)) %>% mutate(hand="R")
+sample17L <- sample17 %>% filter(hand == "L") %>% group_by(month) %>%
+   dplyr::summarise(n=mean(ranking)) %>% mutate(hand="L")
+Sample17 <- rbind(sample17R,sample17L) %>% mutate(year=2017)
+Sampleall <-rbind(Sample15,Sample16,Sample17,Sample18)
+Sampleall
+```
+
+
+Then we plot the data by bar chart.
+
+```{r echo=TRUE}
+ggplot(Sampleall,aes(x=month,y=n,fill=hand)) +
+ geom_bar(stat="identity", position=position_dodge())+
+  facet_wrap(~year)+
+  scale_x_continuous(breaks = seq(1,12,1))
+```
+
+* It can be clearly seen that right-handed players ' average ranking are better than left-handed players in 2015 and 2016, and left-handed player's average ranking are better than right-handed players in 2017 and 2018.
+
+
+### What we learnt
+* Actually  there is no direct relationship between the right-handed and left-handed.
+* The left-handed forehand usually likes to hit the right-handed backhand, which is a problem of habit. 
+* It is considered that backhand is not good to return the ball, and this is exactly the forehand that left-handed people can make strength.
+* So there is a saying that left-handed people have an advantage over right-handed people, but it doesn't directly affect player rankings.
+
+## Winners and Losers
+
+### Tidy the data
+
+* For exploring topic 4, we use a ATP data file from "deuce" package named as "atp_matches". In this original data file, it has a lot of missing(NA) values. Furthermore, not all of the variables are what we want to focus on. Thus, we use the following code  to tidy the original data file:
+
+ select(year,tourney_name,surface,winner_name,loser_name) %>%
+ na.omit(matches)
+
+* i.e. at first, selecting the variable we want.
+second, exclude the na values.
+
+
+```{r include=FALSE}
+data(atp_matches)
+
+matches <- atp_matches %>% 
+  select(year,tourney_name,surface,winner_name,loser_name) %>%
+  na.omit(matches)
+matches
+```
+
+
+### Count the no. of winnings and losings for each players
+
+
+```{r echo=FALSE}
+matches %>% dplyr::count(winner_name, sort=TRUE)
+matches %>% dplyr::count(loser_name, sort=TRUE)
+```
+
+
+* Clearly, Roger Federer hits the winners most for 1218 times during 1997-2018.
+* The second is Jimmy Connors who hits the winners for 1197 times from 1970-1995. 
+* Joao Sousa hits the losers most for 695 times from 2014 to 2018.
+
+
+### Roger Federer's Career growth
+
+
+```{r echo=FALSE}
+
+df1 <- data.frame(matches %>% group_by(year) %>%
+  dplyr::count(loser_name) %>%
+filter(loser_name == "Roger Federer"))
+
+df5 <- data.frame(matches %>% group_by(year) %>%
+dplyr::count(winner_name) %>%
+filter(winner_name == "Roger Federer"))
+
+ggplot(data= df5, aes(x= year, y= n)) + geom_line(colour="blue") + geom_point() + labs(title= "Career growth", x= "year", y="number of wins")
+
+df6 <- merge(df1,df5,by="year",all=TRUE) %>%
+  dplyr::rename("number_of_winnings"="n.y"   )  %>%
+  dplyr::rename("number_of_losings"="n.x"     ) %>%
+  mutate(total_matches = number_of_losings + number_of_winnings) %>%
+  mutate(prob_of_winning =number_of_winnings/total_matches)
+
+
+df7<- data.frame(df6 %>% select(year,prob_of_winning))
+
+ggplot(data= df7, aes(x= year, y= prob_of_winning)) + geom_line(colour="blue") + geom_point() + labs(title= "Career growth", x= "year", y="prob. of winning")
+```
+
+
+* By looking at the above 2 graphs, Roger Federer started his career in 1997. 
+* Federer was ranked in the top 100 in the world in 1998. 
+* His tennis career has grown steadily since 2000 and reached his peak in 2005/2006.
+* From 2008, his grades slipped due to Infectious mononucleosis(disease), and reached his trough in 2013 due to both illness and injury. 
+* After 2014, it is shown a up-down volatility trend due to intermittent injuries.
+
+
+### Jimmy Connors's Career growth
+
+
+```{r echo=FALSE}
+df <- data.frame(matches %>%group_by(year) %>%
+  dplyr::count(winner_name) %>%
+  filter(winner_name == "Jimmy Connors"))
+
+df8 <- data.frame(matches %>% group_by(year) %>%
+  dplyr::count(loser_name) %>%
+filter(loser_name == "Jimmy Connors"))
+                 
+ggplot(data= df, aes(x= year, y= n)) + geom_line(colour="blue") + geom_point() + labs(title= "Career growth", x= "year", y="number of wins")
+
+df9 <- merge(df,df8,by="year",all=TRUE) %>%
+  dplyr::rename("number_of_winnings"="n.x"   )  %>%
+  dplyr::rename("number_of_losings"="n.y"     ) %>%
+  mutate(total_matches = number_of_losings + number_of_winnings) %>%
+  mutate(prob_of_winning =number_of_winnings/total_matches)
+
+
+df10<- data.frame(df9 %>% select(year,prob_of_winning))
+
+ggplot(data= df10, aes(x= year, y= prob_of_winning)) + geom_line(colour="blue") + geom_point() + labs(title= "Career growth", x= "year", y="prob. of winning")
+```
+
+
+* By looking at the above 2 graphs, Jimmy Connors started his career in 1970. 
+* During 1970 and 1974, his career shows significant growth. 
+* After that, it is shown a gradual decline and he retired in 1995 finally.
+
+
+
+###Joao Sousa's Career growth
+
+```{r echo=FALSE}
+df2 <- data.frame(matches %>% group_by(year) %>%
+  dplyr::count(loser_name) %>%
+filter(loser_name == "Joao Sousa"))
+
+ggplot(data= df2, aes(x= year, y= n)) + geom_line(colour="blue") + geom_point() + labs(title= "Career decline", x= "year", y="number of loses")
+
+df3 <- data.frame(matches %>% group_by(year) %>%
+dplyr::count(winner_name) %>%
+filter(winner_name == "Joao Sousa"))
+
+df4 <- merge(df2,df3,by="year",all=TRUE) %>%
+  dplyr::rename("number_of_winnings"="n.y"   )  %>%
+  dplyr::rename("number_of_losings"="n.x"     ) %>%
+  mutate(total_matches = number_of_losings + number_of_winnings) %>%
+  mutate(prob_of_losings =number_of_losings/total_matches)
+
+
+ggplot(data= df4, aes(x= year, y= prob_of_losings)) + geom_line(colour="blue") + geom_point() + labs(title= "Career decline", x= "year", y="prob. of losings")
+```
+
+* By looking at the overall trend from 2004 to 2018, there's no doubt that Joao Sousa's professional career is a decline since the probability of losings and the times of being losers increase year by year.
+
+## THANKS FOR LISTENING! :)
