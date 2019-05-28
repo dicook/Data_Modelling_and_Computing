@@ -564,12 +564,12 @@ Nets3
 
 Row {.tabset}
 -----------------------
-###New York Knicks
+### New York Knicks
 ```{r echo=FALSE}
 knitr::include_graphics("data/gifs/Knicks.gif")
 ```
 
-###Static Graph
+### Static Graph
 ```{r echo=FALSE}
 knicks <- read_csv("data/Knicks.csv")
 knicks2 <- select(knicks, "Team", "Season", "W/L%") %>% separate("Season", c("Year", "End_Year"))
@@ -586,7 +586,7 @@ Row{.tabset}
 knitr::include_graphics("data/gifs/Warriors.gif")
 ```
 
-###Static Graph
+### Static Graph
 ```{r echo=FALSE}
 warriors <- read_csv("data/Warriors.csv")
 warriors2 <- select(warriors, "Team", "Season", "W/L%") %>% separate("Season", c("Year", "End_Year"))
@@ -603,7 +603,7 @@ Row{.tabset}
 knitr::include_graphics("data/gifs/Bulls.gif")
 ```
 
-###Static Graph
+### Static Graph
 ```{r echo=FALSE}
 bulls <- read_csv("data/Bulls.csv")
 bulls2 <- select(bulls, "Team", "Season", "W/L%") %>% separate("Season", c("Year", "End_Year"))
@@ -620,7 +620,7 @@ Row{.tabset}
 knitr::include_graphics("data/gifs/Rockets.gif")
 ```
 
-###Static Graph
+### Static Graph
 ```{r echo=FALSE}
 rockets <- read_csv("data/Rockets.csv")
 rockets2 <- select(rockets, "Team", "Season", "W/L%") %>% separate("Season", c("Year", "End_Year"))
@@ -637,7 +637,7 @@ Row{.tabset}
 knitr::include_graphics("data/gifs/Clippers.gif")
 ```
 
-###Static Graph
+### Static Graph
 ```{r echo=FALSE}
 clippers <- read_csv("data/Clippers.csv")
 clippers2 <- select(clippers, "Team", "Season", "W/L%") %>% separate("Season", c("Year", "End_Year"))
@@ -649,13 +649,13 @@ clippers3
 
 Row{.tabset}
 ------------------------
-###Boston Celtics
+### Boston Celtics
 
 ```{r echo=FALSE}
 knitr::include_graphics("data/gifs/Celtics.gif")
 ```
 
-###Static Graph
+### Static Graph
 ```{r echo=FALSE}
 celtics <- read_csv("data/Celtics.csv")
 celtics2 <- select(celtics, "Team", "Season", "W/L%") %>% separate("Season", c("Year", "End_Year"))
@@ -672,7 +672,7 @@ Row{.tabset}
 knitr::include_graphics("data/gifs/Mavs.gif")
 ```
 
-###Static Graph
+### Static Graph
 ```{r echo=FALSE}
 mavs <- read_csv("data/Mavs.csv")
 mavs2 <- select(mavs, "Team", "Season", "W/L%") %>% separate("Season", c("Year", "End_Year"))
@@ -684,7 +684,7 @@ mavs3
 
 Row
 ----------------------
-###Discussion
+### Discussion
 <ul style="list-style-type: circle;">
 <li>The NBA team with the most of number of wins were the Celtics, Lakers and the Bulls</li>
 <li>There is some evidence to suggest that there is a larger spread in total wins per team after the salary cap was introduced however is not conclusive</li>
