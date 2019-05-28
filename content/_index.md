@@ -165,7 +165,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
             - The King Baboon: Cheng, Suyue, Daniel, Tong (9 mins)
             - [team_R](https://ebsmonash.shinyapps.io/Housing/): Jason, Malo, Nicholas (7 mins)
             - Team SAMY: Alice, Stefan, Michael, Yanchen (9 mins)
-            - [Python>R](http://dmac.dicook.org/static/project/Project_Python_R/Project.html): Alexander, Stephen, Jupinder, Colin (9 mins)
+            - [Python>R](http://dmac.dicook.org/project/Project_Python_R/Project.html): Alexander, Stephen, Jupinder, Colin (9 mins)
             - [New Team](https://ebsmonash.shinyapps.io/olympics/): Rongqian, Dan, Xinyi (7 mins)
             - ManKar: Manshood, Karan (5 mins)
             - Lubridate: Yee Ling, Alicia, Timothy, Yih (9 mins)
