@@ -25,8 +25,8 @@ Unless your question is a personal issue or an administrative matter, please do 
 ## Consultation times
 
 - Di: Mon 10:30-11:30; Thu 12:30-1:30 Menzies E762A
-- Steph: Mon 12:30-13:30 Menzies W1105
-- Nick: Wed 12:00-13:00 Menzies E774
+- Nick: Mon 12:30-13:30 Menzies W1105
+- Steph: Wed 12:00-13:00 Menzies E774
 - Stuart: Fri 10:00-11:00 Menzies W1105
 
 ## MoVE
@@ -152,7 +152,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
             - [Disney](https://ebsmonash.shinyapps.io/Instagram/): Nelson, Wei Wen, Shangen, Rachell (9 mins)
             - [GROUP_FIVE](https://ebsmonash.shinyapps.io/HongKongAirBNB/): Murphy, Mustafa, Abin, Chuang (9 mins)
             - [Guangzhou: Yongqi](https://ebsmonash.shinyapps.io/BabyNames/), Fangzhou (5 mins)
-            - [incRRRedible](project/incRRRedible/Submitted_Group_Project_Storyboard.html): Zhexu, Michael, Min, Nicholas (9 mins)
+            - [incRRRedible](http://dmac.dicook.org/project/incRRRedible/Submitted_Group_Project_Storyboard.html): Zhexu, Michael, Min, Nicholas (9 mins)
             - [MDJLLSPHPL](https://ebsmonash.shinyapps.io/GenderPayGap/): Lindsay, Jacob, Marina, Haoxin (9 mins)
             - [Not the Swallows!](https://ebsmonash.shinyapps.io/foosball/): Nicole, James, James, Shevin (9 mins)
             - Team OG: Boy (4 mins)
@@ -165,13 +165,13 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
             - The King Baboon: Cheng, Suyue, Daniel, Tong (9 mins)
             - [team_R](https://ebsmonash.shinyapps.io/Housing/): Jason, Malo, Nicholas (7 mins)
             - Team SAMY: Alice, Stefan, Michael, Yanchen (9 mins)
-            - [Python>R](static/project/Project_Python_R/Project.html): Alexander, Stephen, Jupinder, Colin (9 mins)
+            - [Python>R](http://dmac.dicook.org/project/Project_Python_R/Project.html): Alexander, Stephen, Jupinder, Colin (9 mins)
             - [New Team](https://ebsmonash.shinyapps.io/olympics/): Rongqian, Dan, Xinyi (7 mins)
             - ManKar: Manshood, Karan (5 mins)
             - Lubridate: Yee Ling, Alicia, Timothy, Yih (9 mins)
             - [Hardworking](https://ebsmonash.shinyapps.io/spotify/#section-group-member-sentimental-analysis): Hongliang, Kerenhapukh, Jiaen, Yutong (9 mins)
             - FORCATS: Nicholas, Jesslyn, Razeen, Jonathan (9 mins)
-            - EJW: Earnest, James, Wai Hai Eugene (5 mins)
+            - EJW: Earnest, James, Wai Hei Eugene (5 mins)
             - [Da Bois](https://ebsmonash.shinyapps.io/FantasyAFL/): Adam, Patrick (5 mins)
 
 
