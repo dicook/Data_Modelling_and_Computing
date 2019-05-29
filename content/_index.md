@@ -170,7 +170,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
             - [ManKar](): Manshood, Karan (5 mins)
             - [Lubridate](https://ebsmonash.shinyapps.io/OzTourism/): Yee Ling, Alicia, Timothy, Yih (9 mins)
             - [Hardworking](https://ebsmonash.shinyapps.io/spotify/#section-group-member-sentimental-analysis): Hongliang, Kerenhapukh, Jiaen, Yutong (9 mins)
-            - FORCATS: Nicholas, Jesslyn, Razeen, Jonathan (9 mins)
+            - [FORCATS](https://ebsmonash.shinyapps.io/CPI_Aust/): Nicholas, Jesslyn, Razeen, Jonathan (9 mins)
             - EJW: Earnest, James, Wai Hei Eugene (5 mins)
             - [Da Bois](https://ebsmonash.shinyapps.io/FantasyAFL/): Adam, Patrick (5 mins)
 
