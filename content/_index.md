@@ -25,7 +25,7 @@ Unless your question is a personal issue or an administrative matter, please do 
 ## Consultation times
 
 - Di: Mon 10:30-11:30; Thu 12:30-1:30 Menzies E762A
-- Nick: Mon 12:30-13:30 Menzies W1105
+- Nick: ~~Wed 12:00-13:00 Menzies E774~~ Mon 10:30-11:30; Thu 12:30-1:30 Menzies E762A (taking over Di while she is overseas)
 - Steph: Wed 12:00-13:00 Menzies E774
 - Stuart: Fri 10:00-11:00 Menzies W1105
 
