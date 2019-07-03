@@ -1,0 +1,161 @@
+---
+title: "ETC1010 Practical exam S1 2019"
+author: "SOLUTION"
+output: html_document
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE, 
+  collapse = TRUE,
+  comment = "",
+  fig.height = 8,
+  fig.width = 12,
+  fig.align = "center",
+  cache = FALSE
+)
+```
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(forcats)
+```
+
+# About the data
+
+This exam is motivated by the [blog post by Peter Ellis](http://freerangestats.info/blog/2019/03/02/aust-election-1) on polls leading up to the Australian Federal election, and the most recent [blog post from election day](http://freerangestats.info/elections/oz/index.html). A copy of the data can be downloaded from or read directly from [here](https://raw.githubusercontent.com/ellisp/ozfedelect/master/comparison-data/ozpolls.csv). Download and read the data into your R session. 
+
+# Exercise
+
+
+```{r}
+ozpolls <- read_csv("https://raw.githubusercontent.com/ellisp/ozfedelect/master/comparison-data/ozpolls.csv")
+```
+
+
+1. (1pt) What was the earliest and latest dates of polls being conducted in the data provided?
+
+```{r}
+ozpolls %>% select(start_date) %>% summary()
+```
+
+2. (1pt) How many different firms have conducted polls in this data? 
+
+```{r}
+ozpolls %>% count(firm, sort=TRUE)
+```
+
+3. (3pts) Use your internet search skills. Who are these pollsters? What organisations own them? How does each organisation collect their data? Write a paragraph explaining what you have managed to find, and what you couldn't find. (Focus your attention on the firms who are frequently making polls. )
+
+**Newspoll is associated with The Australian newspaper, which is owned by Murdoch Media empire. However, https://en.wikipedia.org/wiki/Newspoll is administered by Galaxy, and owned by international market research and data analytics group, YouGov. The latest polling information is displayed at http://www.newspoll.com.au, but it does not give details on how the data is collected.**
+
+**[Essential](https://www.theguardian.com/australia-news/ng-interactive/2019/may/16/the-guardian-essential-report-16-may-results) is associated with the Guardian newspaper. They maintain a panel of 100,000 members, and draw from this panel about 1000 for interviews each week. It has an aim of 50/50 male/female ratio of over 18 years olds. Data is sourced from Your Source, another company.**
+
+**Ipsos is a specialist polling organisation with no apparent affiliation with news organisations or political parties. In the [most recent poll](https://www.ipsos.com/en-au/labor-retains-lead-election-race-tightens), they sampled 1,842 people, using random digit dialing of mobile phone numbers.**
+
+**[Roy Morgan](http://www.roymorgan.com/about) is an Australia market research company. It is independent, and the company now operates globally. [Their most recent polling data](http://www.roymorgan.com/findings/7980-electors-think-alp-will-win-election-may-18-2019-201905161025) was collected by asking respondents "Regardless of who you have or will vote for who do you THINK will win the Federal Election?" Data was collected on 3,004 voters, by SMS.**
+
+4. (2pts) Is the data in tidy form? Explain your answer.
+
+**Yes! It is in long form, where every measured value `intended_vote` is identified by numerous characteristics, dates, firm, preference type, party.**
+
+5. (2pts) Have all of the polling firms been operating for the same time period? 
+
+```{r}
+ozpolls %>% group_by(firm) %>% 
+  summarise(first=first(start_date), last=last(end_date)) %>%
+  arrange(first)
+```
+
+**There is a lot of difference in the operating time frames of the pollsters. The main ones have been consistently polling for a decade or more. Others have popped up and disappeared, e.g. AMR. And Nielsen, which was a major operator, stopped conducting polls in 2014.**
+
+6. (3pts) Are the pollsters all reporting similar numbers? Compute the five number summary (min, q1, median, q3, max) of Lib/Nat `intended_vote`, separately for each pollster, and sort from highest to lowest median value. (Be sure to drop the actual election results.) Write a few sentences explaining what you learn, particularly focusing on the initial question which relates to pollster bias. 
+
+```{r}
+ozpolls %>% filter(party=="Lib/Nat", preference_type=="Two-party-preferred") %>% 
+  ggplot(aes(x=fct_reorder(firm, intended_vote), y=intended_vote)) + 
+  geom_boxplot() + xlab("") + coord_flip()
+
+#ozpolls %>% filter(party=="Lib/Nat", preference_type=="Two-party-preferred") %>% 
+#  filter(year(start_date) > 2018) %>%
+#  ggplot(aes(x=fct_reorder(firm, intended_vote), y=intended_vote)) + 
+#  geom_boxplot() + xlab("") + coord_flip()
+
+```
+
+**The median intended vote varies among pollsters. With Nielsen generally providing much more favorable results for Lib/Nat, and Ipsos the least. It suggests that the pollsters may either be biased towards one politcal party or another, or that their collection methods sample different types of people.**
+
+7. (3pts) Using the actual election results, what has been the vote recorded by the Lib/Nat for each of the elections, 2007, 2010, 2013, and 2016. What is the average of these numbers? If the polls were accurately reflecting the actual vote, across all these years, what would be the expected average for each pollster? Using these numbers refine your explanation from the previous question in relation to pollster bias.
+
+```{r }
+ozpolls %>% filter(firm == "Election result", party == "Lib/Nat", preference_type=="Two-party-preferred") %>% group_by(start_date) %>% summarise(m=mean(intended_vote))
+ozpolls %>% filter(firm == "Election result", party == "Lib/Nat", preference_type=="Two-party-preferred") %>% group_by(start_date) %>% summarise(m=mean(intended_vote)) %>% summarise(mean(m))
+```
+
+**The percentage vote for Lib/Nat has varied at each election. In 2007, they lost to ALP, but attained government in 2010, 2013, and 2016. The average percentage across this time was 50.275. Thus the polls would be expected to be centred around this value. That is clearly not the case for many pollsters, with many having medians above or below this number.**
+
+8. (3pts) Make a plot of intended vote (two party preferred) for Lib/Nat by time of poll. Add a `loess` smoother that will allow the reader to look at the rough average of the polls, and hence see how the voting public are trending over time. Overlay the actual election results (as points). Include a baseline at 50% that will show the critical juncture when the outcome would likely be a change in government. Coming into the election last Saturday (18/5/2019), what did it look like the result would be?
+
+```{r}
+ggplot(filter(ozpolls, firm != "Election result", party=="Lib/Nat", preference_type=="Two-party-preferred"), aes(x=mid_date, y=intended_vote)) + 
+  geom_hline(yintercept=50, colour="white", size=4) +
+  geom_point(alpha=0.5) + 
+  geom_smooth(span=0.1) +
+  geom_point(data=filter(ozpolls, firm == "Election result", party == "Lib/Nat", preference_type=="Two-party-preferred"), aes(x=mid_date, y=intended_vote), colour="orange", size=3, alpha=0.8) + 
+  xlab("") + ylab("% intended vote for LNP")
+```
+
+**It looked like the Lib/Nat were set to lose, with a steady lower than 50% poll. However, the trend appeared to be in their favour in the last few polls of last week.**
+
+9. (2pts) Re-make the time plot, facetted by pollster, but only those who have conducted at least 20 polls. What can be said about the time frame for each pollster's operations? 
+(1pt) Add the actual election results to the plot.
+
+```{r}
+ozpolls_only <- ozpolls %>% filter(firm != "Election result") %>%
+  filter(party=="Lib/Nat", preference_type=="Two-party-preferred") %>%
+  filter(firm %in% c("Newspoll", "Roy Morgan", "Essential", "Ipsos", "Galaxy", "ReachTEL", "Nielsen"))
+el_results <- filter(ozpolls, firm == "Election result", party == "Lib/Nat", preference_type=="Two-party-preferred") 
+el_results <- bind_rows(el_results, el_results, el_results, el_results,
+                        el_results, el_results, el_results) %>%
+  mutate(firm = rep(c("Newspoll", "Roy Morgan", "Essential", "Ipsos", "Galaxy", "ReachTEL", "Nielsen"), 4))
+ggplot(ozpolls_only, aes(x=mid_date, y=intended_vote, colour=firm)) + 
+  geom_hline(yintercept=50, colour="white", size=2) +
+  geom_point(alpha=0.5) + 
+  geom_smooth(span=0.2, se=FALSE) +
+  facet_wrap(~firm, ncol=3) +
+  scale_colour_brewer("", palette="Dark2") +
+  annotate("point", x=el_results$mid_date, y=el_results$intended_vote, colour="orange", size=1) + 
+  xlab("") + ylab("% intended vote for LNP") +
+  theme(legend.position="bottom")
+```
+
+**Many of the pollsters really have come and gone. Ipsos is a recent player in the Australian polling scene. Roy Morgan was a frequent pollster but seemed to have a break, and conducted just a few polls leading to this election. ReachTEL appeared to stop polling late last year. Nielsen dropped out of the polling scene in 2014.**
+
+10. (3pts) Re-visit the idea that the pollsters might be biased, by computing the average intended vote for Lib/Nat, by month, for the polls since Jul 1, 2018. Only examine the major pollsters operating in this period (Newspoll, Essential, Ipsos). By making a table of the numbers or a plot, make a final statement about pollsters and bias in Australia.
+
+```{r}
+recent_pollsters <- ozpolls %>% filter(mid_date > ymd("2018-06-30")) %>%
+  filter(party=="Lib/Nat", preference_type=="Two-party-preferred") %>%
+  mutate(month=month(mid_date), year=year(mid_date)) %>% 
+  group_by(firm, month) %>%
+  summarise(LNP_vote = mean(intended_vote), year=first(year)) %>%
+  ungroup() %>%
+  mutate(yrmth = year+month/10) %>%
+  filter(firm %in% c("Newspoll", "Essential", "Ipsos"))
+
+ggplot(recent_pollsters, aes(x=yrmth, y=LNP_vote, colour=firm)) + 
+  geom_hline(yintercept=50, colour="white", size=2) +
+  geom_point() + geom_line() + scale_colour_brewer("", palette="Dark2") +
+  xlab("")
+
+#ggplot(recent_pollsters, aes(x=yrmth, y=intended_vote, colour=firm)) + 
+#  geom_hline(yintercept=50, colour="white", size=2) +
+#  geom_boxplot() + scale_colour_brewer("", palette="Dark2")
+```
+
+**The disparity between pollsters may have simply been a timing association. In the time frame they were conducting polls, the voting tendency was different from another time. This is true for Nielsen, that the high percentage for Lib/Nat coincided with a period of general favorability. When examined together in the same time frame, there is little difference in the results, one week Ipsos is higher than Essential, and another week it is reversed. This is purely sampling variability rather than bias.**
+

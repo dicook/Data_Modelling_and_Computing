@@ -6,6 +6,19 @@ title: Home
 
 # ETC1010: Data Modelling and Computing
 
+## Grade distribution
+
+- HD     15
+- D        30
+- C        29
+- P         5
+- F         2
+
+## Mark distribution
+
+- median: 71.5
+- min: 30; Q1: 65; Q3: 78; max: 88
+
 ## Semester 1 2019
 
 - Lecturers: Professor Di Cook (dicook@monash.edu)
@@ -71,7 +84,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
 - Week 11: 
    - Tue: Guest lecture. Final polishing of project story boards. 
    - Thu: Practical exam. Turn in project.
-- Practical Exam: [exam_rmd](exam/practical_exam_2019_S1.Rmd) [exam_data](exam/ozpolls.csv)
+- Practical Exam: [exam_rmd](exam/practical_exam_2019_S1.Rmd) [exam_data](exam/ozpolls.csv) [SOLUTION](exam/practical_exam_2019_S1_solution.html) [(Rmd)](exam/practical_exam_2019_S1_solution.Rmd)
 - Week 12: Project presentations
 
 <!--
