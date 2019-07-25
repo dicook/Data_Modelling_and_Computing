@@ -6,29 +6,17 @@ title: Home
 
 # ETC1010: Data Modelling and Computing
 
-## Grade distribution
+## Semester 2 2019
 
-- HD     15
-- D        30
-- C        29
-- P         5
-- F         2
+- Lecturer: Dr. Nicholas Tierney (nicholas.tierney at  monash.edu)
+- Chief Examiner: Professor Di Cook
+- Tutors: Steph Kobakian, Mitchell O'Hara-Wild, Sayani Gupta, Sherry 
 
-## Mark distribution
-
-- median: 71.5
-- min: 30; Q1: 65; Q3: 78; max: 88
-
-## Semester 1 2019
-
-- Lecturers: Professor Di Cook (dicook@monash.edu)
-- Tutors: Stuart Lee, Steph Kobakian, Mitchell O'Hara-Wild
-
-Unless your question is a personal issue or an administrative matter, please do not send us direct email. The [ED site](https://edstem.org/courses/3443/) is appropriate for questions related to the course material.
+Unless your question is a personal issue or an administrative matter, please do not send us direct email. The [ED site](https://edstem.org/courses/3645/) is appropriate for questions related to the course material.
 
 ## Schedule
 
-- Lectorials: Tue 4:00-5:40; Thu 10:00-11:40 (101 - LTB Bldg 92)
+- Lectorials: Wed 1500-1650; Fri 08:00-10:00 (101 - LTB Bldg 92)
 - Note: ED is used for asking for help, reading and lab exercise quizzes and assignment turn in. Only your name and email is stored in this system.
 - **If you register after the start of the semester** or if you
   miss a lecture/lab, it is your responsibility to catch up with
@@ -37,10 +25,11 @@ Unless your question is a personal issue or an administrative matter, please do 
   
 ## Consultation times
 
-- Di: Mon 10:30-11:30; Thu 12:30-1:30 Menzies E762A
-- Nick: ~~Wed 12:00-13:00 Menzies E774~~ Mon 10:30-11:30; Thu 12:30-1:30 Menzies E762A (taking over Di while she is overseas)
-- Steph: Wed 12:00-13:00 Menzies E774
-- Stuart: Fri 10:00-11:00 Menzies W1105
+- Nick: Thurs 10:30-11:30; Fri 12:30-1:30 Menzies E774
+- Steph: Wed 1300 - 1400
+- Sayani: Wed 1700 - 1800
+- Sherry: Thurs 1530 - 1630
+- Mitch: Fri
 
 ## MoVE
 
@@ -55,36 +44,18 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - [Tue](https://ebsmonash.shinyapps.io/lecture1a_intro/) [(Rmd)](http://dmac.dicook.org/lectures/lecture1a/lecture1a_intro.Rmd); [Reading Textbook 27.1-5](http://r4ds.had.co.nz/r-markdown.html) Go to ED and complete the reading quiz before Thursday's class
     - [Thu](https://ebsmonash.shinyapps.io/lecture1b_intro/) [(Rmd)](http://dmac.dicook.org/lectures/lecture1b/lecture1b_intro.Rmd)); [Reading Textbook 12.1-4](http://r4ds.had.co.nz/tidy-data.html) Go to ED and complete the reading quiz before Tuesday's class
 - Week 2: Tidy data principles, reshaping your data into tidy form, and basic data wrangling
-    - [Tue](https://ebsmonash.shinyapps.io/lecture2a_tidydata/) [(Rmd)](http://dmac.dicook.org/lectures/lecture2a/lecture2a_tidydata.Rmd);  [Reading Textbook 5.1, 5.2, 5.3, 5.4, 5.5, 5.6 *only the first paragraph of each section!*](http://r4ds.had.co.nz/transform.html)
-    - [Thu](https://ebsmonash.shinyapps.io/lecture2b_tidydata/) [(Rmd)](http://dmac.dicook.org/lectures/lecture2b/lecture2b_tidydata.Rmd) [Reading Text book 3.1-3.3](http://r4ds.had.co.nz/data-visualisation.html)
 - Week 3: Plotting your data, and wrangling temporal data
-    - [Tue](https://ebsmonash.shinyapps.io/lecture3a_basicvis/) [(Rmd)](http://dmac.dicook.org/lectures/lecture3a/lecture3a_basicvis.Rmd) [Reading Textbook 16.1, 16.2, 16.3.1](http://r4ds.had.co.nz/dates-and-times.html)
-    - [Thu](https://ebsmonash.shinyapps.io/lecture3b_time/) [(Rmd)](http://dmac.dicook.org/lectures/lecture3b/lecture3b_time.Rmd) [Reading Textbook 13.1, 13.2](http://r4ds.had.co.nz/relational-data.html)
 - Week 4: Advanced wrangling, joining tables, and advanced data visualisation
-   - [Tue](https://ebsmonash.shinyapps.io/lecture4a_relational/) [(Rmd)](http://dmac.dicook.org/lectures/lecture4a/lecture4a_relational.Rmd) [map.rda](http://dmac.dicook.org/lectures/lecture4a/data/map.rda) [Reading Textbook 3.5-3.7](http://r4ds.had.co.nz/data-visualisation.html)
-   - [Thu](https://ebsmonash.shinyapps.io/lecture4b_visualisation/) [(Rmd)](http://dmac.dicook.org/lectures/lecture4b/lecture4b_visualisation.Rmd) [Reading on handling missing values](https://cran.r-project.org/web/packages/naniar/vignettes/getting-started-w-naniar.html)
 - Week 5: Handling missing values and scraping data  
-    - [Tue](https://ebsmonash.shinyapps.io/lecture5a_missings/) [(Rmd)](http://dmac.dicook.org/lectures/lecture5a/lecture5a_missings.Rmd) [Reading exercise is a doing exercise this week - follow the instructions on this site](https://gist.github.com/cpsievert/e05da83fc4253e6d1986)
-    - [Thu](https://ebsmonash.shinyapps.io/lecture5b_harvesting_data/) [(Rmd)](http://dmac.dicook.org/lectures/lecture5b/lecture5b_harvesting_data.Rmd) [Reading Textbook 23.1-2](http://r4ds.had.co.nz/model-basics.html)
 - Week 6: Introduction to modeling, and building many models
-    - [Tue](https://ebsmonash.shinyapps.io/lecture6a_models/) [(Rmd)](http://dmac.dicook.org/lectures/lecture6a/lecture6a_models.Rmd)
-    - [Thu]() [(Rmd)]()  [Reading Textbook 23.3-5](http://r4ds.had.co.nz/model-basics.html)
 - Week 7: Intermediate models 
-    - [Tue](https://ebsmonash.shinyapps.io/lecture7a_models/) [(Rmd)](http://dmac.dicook.org/lectures/lecture7a/lecture7a_models.Rmd) [Reading Textbook 24.1-2](http://r4ds.had.co.nz/model-building.html) 
-    - [Thu]() [(Rmd)]()  [Reading Textbook 25.1, 25.2 (only the first section)](http://r4ds.had.co.nz/many-models.html)
 - Week 8: Analysing text data
-    - [Tue](https://ebsmonash.shinyapps.io/lecture8a_text/) [(Rmd)](http://dmac.dicook.org/lectures/lecture8a/lecture8a_text.Rmd) Complete the "class network" survey!
-    - [Thu](https://ebsmonash.shinyapps.io/lecture8b_text/) [(Rmd)](http://dmac.dicook.org/lectures/lecture8b/lecture8b_text.Rmd) NO READING THIS WEEK!
 - Week 9: Wrangling, plotting and modeling network data
-   - [Tue](https://ebsmonash.shinyapps.io/lecture9a_networks/) [(Rmd)](http://dmac.dicook.org/lectures/lecture9a/lecture9a_networks.Rmd) NO READING THIS WEEK!
-   - [Thu](https://ebsmonash.shinyapps.io/lecture9b_networks/) [(Rmd)](http://dmac.dicook.org/lectures/lecture9b/lecture9b_networks.Rmd) NO READING THIS WEEK!
 - Week 10: Computational modeling, and good data collection practices
-   - [Tue](https://ebsmonash.shinyapps.io/lecture10a_trees/) [(Rmd)](http://dmac.dicook.org/lectures/lecture10a/lecture10a_trees.Rmd) NO READING THIS WEEK!
-   - [Thu](https://ebsmonash.shinyapps.io/lecture10b_sampling) [(Rmd)](http://dmac.dicook.org/lectures/lecture10b/lecture10b_sampling.Rmd) NO READING THIS WEEK!
 - Week 11: 
    - Tue: Guest lecture. Final polishing of project story boards. 
    - Thu: Practical exam. Turn in project.
-- Practical Exam: [exam_rmd](exam/practical_exam_2019_S1.Rmd) [exam_data](exam/ozpolls.csv) [SOLUTION](exam/practical_exam_2019_S1_solution.html) [(Rmd)](exam/practical_exam_2019_S1_solution.Rmd)
+- Practical Exam: 
 - Week 12: Project presentations
 
 <!--
@@ -93,43 +64,11 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 		 
 ## Assignments
 
-- Assignment 1: [Instructions](https://dmac.dicook.org/assignments/assignment1.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment1.Rmd) [SOLUTION](https://dmac.dicook.org/assignments/assignment1_solution.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment1_solution.Rmd); Data: [AESID](https://australianelectionstudy.org/voter-studies/) **DUE: Week 3, Thu, at start of class** [Peer feedback](https://dmac.dicook.org/assignments/assignment1_feedback.html)
-- Assignment 2: [Instructions](https://dmac.dicook.org/assignments/assignment2.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment2.Rmd) [meter_di_2019.csv](https://dmac.dicook.org/assignments/data/meter_di_2019.csv) [SOLUTION](https://dmac.dicook.org/assignments/assignment2_solution.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment2_solution.Rmd); **DUE: Week 5, Thu, before class**
-- Assignment 3: [Instructions](https://dmac.dicook.org/assignments/assignment3_2019.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment3_2019.Rmd)) [SOLUTION]() [(Rmd)]() **DUE: Week 9,  Thu, before class**
-- Practical exam: **This will be completed individually during the lectorial on Thursday Week 11.**
+- Assignment 1: [Instructions](https://dmac.dicook.org/assignments/assignment1.html)
+- Assignment 2: [Instructions](https://dmac.dicook.org/assignments/assignment2.html) - Assignment 3: [Instructions](https://dmac.dicook.org/assignments/assignment3_2019.- Practical exam: **This will be completed individually during the lectorial on Thursday Week 11.**
     - [Example from 2018 instructions](https://dmac.dicook.org/assignments/assignment5.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment5.Rmd) [Example from 2018  SOLUTION](https://dmac.dicook.org/assignments/assignment5_solution.html) [(Rmd)](https://dmac.dicook.org/assignments/assignment5_solution.Rmd) [monash_species.csv](https://dmac.dicook.org/assignments/data/monash_species.csv)
 	[monash_map.rda](https://dmac.dicook.org/assignments/data/monash_map.rda)
 	- [Example 2 from 2018 instructions](https://dmac.dicook.org/exam/practical_exam_S1_2018.html) [(Rmd)](https://dmac.dicook.org/exam/practical_exam_S1_2018.Rmd) [Example from 2018  SOLUTION](https://dmac.dicook.org/exam/practical_exam_S1_2018_solution.html) [(Rmd)](https://dmac.dicook.org/exam/practical_exam_S1_2018_solution.Rmd)
-
-
-<!--
-## Assignment 3 peer evaluation
-
-[Peer evaluation assignments](assignments/assignment3_2019/evaluation_assignment.csv)
-
-- 4000 [zip](assignments/assignment3_2019/4000.zip) 
-- C L [zip](assignments/assignment3_2019/C L.zip) 
-- dplyr [zip](assignments/assignment3_2019/dplyr.zip) 
-- Electric R [zip](assignments/assignment3_2019/Electric R.zip) 
-- ETC1010Group [zip](assignments/assignment3_2019/ETC1010Group.zip) 
-- FORCATS [zip](assignments/assignment3_2019/FORCATS.zip) 
-- GROUP_FIVE [zip](assignments/assignment3_2019/GROUP_FIVE.zip) 
-- Hardworking [zip](assignments/assignment3_2019/Hardworking.zip) 
-- incRRRedible [zip](assignments/assignment3_2019/incRRRedible.zip) 
-- Lubridate [zip](assignments/assignment3_2019/Lubridate.zip) 
-- MDJLLSPHPL [zip](assignments/assignment3_2019/MDJLLSPHPL.zip) 
-- Not the Swallows! [zip](assignments/assignment3_2019/Not the Swallows!.zip) 
-- Python>R [zip](assignments/assignment3_2019/PythonR.zip) 
-- STM [zip](assignments/assignment3_2019/STM.zip) 
-- Team HD [zip](assignments/assignment3_2019/Team HD.zip) 
-- Team SAMY [zip](assignments/assignment3_2019/Team SAMY.zip) 
-- Team STAT [zip](assignments/assignment3_2019/Team STAT.zip) 
-- The Amatuer Group [zip](assignments/assignment3_2019/The Amatuer Group.zip) 
-- The King Baboon [zip](assignments/assignment3_2019/The King Baboon.zip) 
-- Tidyverse [zip](assignments/assignment3_2019/Tidyverse.zip) 
-- VITAE [zip](assignments/assignment3_2019/VITAE.zip) 
-- Manshood [zip](assignments/assignment3_2019/Manshood.zip) 
--->
 
 ## Project
 
@@ -156,38 +95,6 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 		- [Twitter Coverage of the useR Conference 2018](https://github.com/neilfws/Twitter/blob/master/user2018/code/R/user2018.md)
     - Deadline 3:  Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
     - Deadline 4:  Final version of story board uploaded. There are several ways to do the storyboard:
-        - `learnr` package that the lecture notes are written in. [Example files with css](project/lecture10b.zip)
-        - [flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) package, and there is an [example here](project/pisa_au_app.zip)
-		- or a basic [shiny](https://shiny.rstudio.com/gallery/) app
-    - Presentation in week 12
-        - Tuesday May 28
-            - [VITAE+](https://ebsmonash.shinyapps.io/WorldIncomeInequalityMurder/#section-conclusion): Hui, Chen, Xinyi, Qihao (9 mins)
-            - [Disney](https://ebsmonash.shinyapps.io/Instagram/): Nelson, Wei Wen, Shangen, Rachell (9 mins)
-            - [GROUP_FIVE](https://ebsmonash.shinyapps.io/HongKongAirBNB/): Murphy, Mustafa, Abin, Chuang (9 mins)
-            - [Guangzhou: Yongqi](https://ebsmonash.shinyapps.io/BabyNames/), Fangzhou (5 mins)
-            - [incRRRedible](http://dmac.dicook.org/project/incRRRedible/Submitted_Group_Project_Storyboard.html): Zhexu, Michael, Min, Nicholas (9 mins)
-            - [MDJLLSPHPL](https://ebsmonash.shinyapps.io/GenderPayGap/): Lindsay, Jacob, Marina, Haoxin (9 mins)
-            - [Not the Swallows!](https://ebsmonash.shinyapps.io/foosball/): Nicole, James, James, Shevin (9 mins)
-            - [Team OG](https://ebsmonash.shinyapps.io/soccer/): Boy (4 mins)
-            - [Team S.T.A.T.](https://ebsmonash.shinyapps.io/Marvel/): Samantha, Thomas, Allan, Wangting (9 mins)
-            - [the notsure group TM](https://ebsmonash.shinyapps.io/Avocados/): Jeffrey, Sachin, Liana (7 mins)
-            - [S.T.M.](https://ebsmonash.shinyapps.io/trafficfines/): Thomas, Matthew, Shraavan (7 mins)
-	        - [Traferger](https://ebsmonash.shinyapps.io/Migration/): Travis, Gerry, Ferid (7 mins)
-        - Thursday May 30
-            - [SmartR](https://ebsmonash.shinyapps.io/NSWMarineLife/#section-animal-geographic-analysis): Yifang, Danielle, Yini, Angelina (9 mins)
-            - [The King Baboon](https://ebsmonash.shinyapps.io/tradewar/): Cheng, Suyue, Daniel, Tong (9 mins)
-            - [team_R](https://ebsmonash.shinyapps.io/Housing/): Jason, Malo, Nicholas (7 mins)
-            - [Team SAMY](https://ebsmonash.shinyapps.io/NBA_Project/): Alice, Stefan, Michael, Yanchen (9 mins)
-            - [Python>R](http://dmac.dicook.org/project/Project_Python_R/Project.html): Alexander, Stephen, Jupinder, Colin (9 mins)
-            - [New Team](https://ebsmonash.shinyapps.io/olympics/): Rongqian, Dan, Xinyi (7 mins)
-            - [ManKar](https://ebsmonash.shinyapps.io/movies/): Manshood, Karan (5 mins)
-            - [Lubridate](https://ebsmonash.shinyapps.io/OzTourism/): Yee Ling, Alicia, Timothy, Yih (9 mins)
-            - [Hardworking](https://ebsmonash.shinyapps.io/spotify/#section-group-member-sentimental-analysis): Hongliang, Kerenhapukh, Jiaen, Yutong (9 mins)
-            - [FORCATS](https://ebsmonash.shinyapps.io/CPI_Aust/): Nicholas, Jesslyn, Razeen, Jonathan (9 mins)
-            - EJW: Earnest, James, Wai Hei Eugene (5 mins)
-            - [Da Bois](https://ebsmonash.shinyapps.io/FantasyAFL/): Adam, Patrick (5 mins)
-
-
 
 ## Data ([ZIP](http://dmac.dicook.org/lectures/data/etc1010_data.zip))
 
@@ -233,7 +140,6 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 ## Exam information
 
 - [Midterm 2019](exam/midterm2019.pdf) [SOLUTION](exam/midterm2019_solution.pdf)
-
 - [Formula sheet](exam/formula_sheet.pdf)
 - [Practice exam](exam/practice_exam2017.pdf) (This has 10 questions, actual exam has 9.)
 - [Practice exam solution](exam/practice_exam2017_solution.pdf)
@@ -251,6 +157,6 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 ## Computing information
 
-- R version 3.5.1 (2018-07-02) -- "Feather Spray", install on your computer from https://cran.r-project.org
-- RStudio Desktop 1.1.453, install on your computer from https://www.rstudio.com/products/rstudio/download/
+- R version 3.6.1 (2019-07-02) -- "Action of the Toes", install on your computer from https://cran.r-project.org
+- RStudio Desktop 1.2.1335, install on your computer from https://www.rstudio.com/products/rstudio/download/#download
 - Packages will be installed as we need them
