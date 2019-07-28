@@ -22,21 +22,13 @@ footnotereturnlinkcontents = "↩"
     weight = 2
 [[menu.main]]
     name = "ED (Discuss, Ass'ts & quizzes)"
-    url = "https://edstem.com.au"
+    url = "https://edstem.org/courses/3645"
     weight = 3
 [[menu.main]]
-    name = "DataCamp"
-    url = "https://www.datacamp.com"
-    weight = 4
-[[menu.main]]
     name = "Unit guide"
-    url = "https://unitguidemanager.monash.edu/view?unitCode=ETC1010&tpCode=S1-01&tpYear=2019"
-    weight = 5
-[[menu.main]]
-    name = "Moodle (marks)"
-    url = "https://lms.monash.edu/course/view.php?id=49067"
-    weight = 6
+    url = "https://unitguidemanager.monash.edu/view?unitCode=ETC1010&tpCode=S2-01&tpYear=2019"
+    weight = 4
 
 [params]
     description = "A website built through Hugo and blogdown."
-    footer = "&copy; [Di Cook](https://dicook.org) 2017-9 | [Github](https://github.com/dicook) | [Twitter](https://twitter.com/dicook)"
+    footer = "&copy; [Di Cook](https://dicook.org) 2017-9 & &copy; [Nick Tierney](https://njtierney.com) 2019  | [Github](https://github.com/njtierney) | [Twitter](https://twitter.com/nj_tierney)"
