@@ -25,11 +25,12 @@ Unless your question is a personal issue or an administrative matter, please do 
   
 ## Consultation times
 
-- Nick: Thurs 10:30-11:30; Fri 12:30-1:30 Menzies E774
+- Nick: Thurs 10:30-11:30 **Menzies E762A (Prof. Di Cook's office for first week)**
 - Steph: Wed 1300 - 1400
-- Sayani: Wed 1700 - 1800
-- Sherry: Thurs 1530 - 1630
+- Sayani: Wed 1700 - 1800 **Menzies W1105**
+- Sherry: Thurs 1530 - 1630 **Menzies W1105**
 - Mitch: Fri 1130 - 1230
+- Nick: Fri 12:30-1:30 **Menzies E762A (Prof. Di Cook's office for first week)**
 
 ## MoVE
 
@@ -40,7 +41,8 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
 
 ## Lecture notes
 
-- Week 1: Introduction to the language of data analysis (the R ecosystem)
+- Week 1: Introduction to the language of data analysis. 
+    - Reading: [Chapter 2 (very short)](https://r4ds.had.co.nz/explore-intro.html), [Chapter 3](https://r4ds.had.co.nz/data-visualisation.html#the-layered-grammar-of-graphics), [Chapter 4 (very short)](https://r4ds.had.co.nz/workflow-basics.html)
 - Week 2: Tidy data principles, reshaping your data into tidy form, and basic data wrangling
 - Week 3: Plotting your data, and wrangling temporal data
 - Week 4: Advanced wrangling, joining tables, and advanced data visualisation
@@ -63,6 +65,8 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 ## Assignments
 
 ## Project
+
+## Data
 
 ## Useful resources
 
