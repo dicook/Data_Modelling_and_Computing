@@ -417,6 +417,14 @@ Whatever I do in the data analysis that is shown to you during the class, you ca
 - Consultation times (6 x 1Hr consultations)
 ]
 
+---
+
+# MoVE unit
+
+.huge[
+Access to R from a MoVe computer is through a server.  This was a slow way to work. The most successful approach iss to have a USB stick, attach to the borrowed laptop, and install R, RStudio and all your packages on this. Use this as your working environment, with the borrowed laptop simply as the computing engine.
+]
+
 
 ---
 
@@ -458,13 +466,6 @@ class: center, bottom, bg-indigo
 The ED system for doing online quizzes, conduct discussions, ask questions about the course material and exercises, and turn in assignments and project. *Only your name and email address are recorded in the ED systems.*
 ]
 
----
-
-# MoVE unit
-
-.huge[
-Access to R from a MoVe computer is through a server.  This was a slow way to work. The most successful approach iss to have a USB stick, attach to the borrowed laptop, and install R, RStudio and all your packages on this. Use this as your working environment, with the borrowed laptop simply as the computing engine.
-]
 
 ---
 
@@ -688,45 +689,25 @@ library(package_name)
 ```
 
 ---
-class: center, middle
+class: bg-main1
 
 # Recap
 
 
+.huge.white[
 Check your knowledge and comprehension by taking your first lab quiz on Ed
 
 Go to the ED page, and complete the lab quiz.
 
-*NOTE: Reading assignment on web site due before Thursday's class*
-
+*NOTE: Reading assignment on web site due before Friday's class*
+]
 ---
 
 ## Share and share alike
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 
----
-
-## Getting set up
-
-## Packages
-
-There are more than 15000 packages available on the main archive contributed by experts (and relatively new to R people too). There are another several hundred on the bioconductor archive, focused primarily on bioinformatics applications. There are many more on people's github pages, that may be in development.
-
-### Install packages
-
-- From CRAN 
-![](images/R.jpg)
-
-```{r eval=FALSE, echo=TRUE}
-install.packages("learnr")
-```
-
-- From github repos
-![](images/github.png)
-```{r eval=FALSE, echo=TRUE}
-devtools::install_github("skoval/deuce")
-```
+???
 
 ### Cheatsheets
 

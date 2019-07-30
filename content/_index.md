@@ -46,7 +46,8 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
     - Wednesday Lecture
     - Wednesday Slides
     - Wednesday Exercises
-    - Friday Reading: [Chapter 27](https://r4ds.had.co.nz/r-markdown.html) - Go to ED and complete the reading quiz before Friday's class.
+    - Friday Reading: [Chapter 27](https://r4ds.had.co.nz/r-markdown.html), [Chapters 1 - 4 in Rmarkdown for Scientists](https://rmd4sci.njtierney.com/why-rmarkdown.html)
+    - Friday Reading Quiz: Go to ED and complete the reading quiz before Friday's class.
 - Week 2: Tidy data principles, reshaping your data into tidy form, and basic data wrangling
 - Week 3: Plotting your data, and wrangling temporal data
 - Week 4: Advanced wrangling, joining tables, and advanced data visualisation
