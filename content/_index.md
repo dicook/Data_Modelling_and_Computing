@@ -42,7 +42,11 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
 ## Lecture notes
 
 - Week 1: Introduction to the language of data analysis. 
-    - Reading: [Chapter 2 (very short)](https://r4ds.had.co.nz/explore-intro.html), [Chapter 3](https://r4ds.had.co.nz/data-visualisation.html#the-layered-grammar-of-graphics), [Chapter 4 (very short)](https://r4ds.had.co.nz/workflow-basics.html)
+    - Wednesday Reading: [Chapter 2 (very short)](https://r4ds.had.co.nz/explore-intro.html), [Chapter 3](https://r4ds.had.co.nz/data-visualisation.html#the-layered-grammar-of-graphics), [Chapter 4 (very short)](https://r4ds.had.co.nz/workflow-basics.html)
+    - Wednesday Lecture
+    - Wednesday Slides
+    - Wednesday Exercises
+    - Friday Reading: [Chapter 27](https://r4ds.had.co.nz/r-markdown.html) - Go to ED and complete the reading quiz before Friday's class.
 - Week 2: Tidy data principles, reshaping your data into tidy form, and basic data wrangling
 - Week 3: Plotting your data, and wrangling temporal data
 - Week 4: Advanced wrangling, joining tables, and advanced data visualisation
@@ -72,6 +76,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 - [Amazing new book on data visualisation by Kieran Healy](http://socviz.co/index.html#preface)
 - [The R Generation](https://rss.onlinelibrary.wiley.com/doi/epdf/10.1111/j.1740-9713.2018.01169.x)
+- [RStudio Cheatsheets](https://www.rstudio.com/resources/cheatsheets/)
 
 ## Computing information
 
