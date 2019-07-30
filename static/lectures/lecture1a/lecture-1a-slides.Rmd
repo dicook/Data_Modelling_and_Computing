@@ -1,0 +1,729 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+subtitle: "Week of introduction"
+author: "Professor Di Cook & Dr. Nicholas Tierney"
+institute: "EBS, Monash U."
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["shinobi", "ninjutsu", "css/slides.css"]
+    seal: true
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+exclude: true
+<style type="text/css">
+code.r{
+  font-size: 16px;
+}
+pre {
+  font-size: 16px !important;
+}
+</style>
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(echo = FALSE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 4,
+                      fig.width = 8,
+                      fig.align = "center",
+                      cache = FALSE)
+options(htmltools.dir.version = FALSE)
+```
+
+---
+class: bg-indigo center middle
+
+.vvvhuge.white[
+What was that song?
+]
+
+---
+
+# Week of introduction
+
+Welcome to ETC1010: Data Modelling and Computing, semester 2, 2018.
+
+* gif *
+
+---
+class: bg-indigo middle center
+
+.vvvhuge.white[
+About your instructors
+]
+
+
+---
+# Nick
+
+.huge[
+* `r emo::ji("mortar_board")` Bachelor of Psychological Sciences UQ
+*  `r emo::ji("mortar_board")` PhD in Statistics at QUT. 
+* Research: missing data, data visualisation, statistical computing
+* R `r emo::ji("package")`: `naniar`, `visdat`, 
+* rstats `r emo::ji("microphone")`: Credibly Curious w Saskia Freytag
+* `r emo::ji("heart")` outdoors, especially: `r emo::ji("hiking_boot")`, `r emo::ji("man_running")`, and `r emo::ji("man_climbing")`.
+]
+
+---
+# Steph
+
+.huge[
+* Graduated with a Bachelor of Economics and Bachelor of Commerce from Monash
+* and studying a Masters of Statistics at QUT, based at Monash.  
+* loves to read `r emo::ji("book")`, any and all recommendations are welcome. 
+* Has an R package called taipan, and another called sugarbag soon to appear. 
+]
+
+---
+
+# Mitch
+
+.huge[
+* A data science exploreR, graduated from Monash University studying Econometrics, Math Statistics & Computational Science. 
+* Compulsively collects and uses data to automate life at home, loves his bees and chickens `r emo::ji("bee")` `r emo::ji("chick")`. 
+* Lots of R packages including [vitae](https://github.com/ropenscilabs/vitae), [icon](https://github.com/ropenscilabs/icon/), and [tidy time series forecasting packages](https://github.com/tidyverts/).
+]
+
+---
+
+# Sayani
+
+.huge[
+* A statistician and currently in her second year of PhD. 
+* Masters and Honors in Statistics back in India, where she also worked as a consultant and senior analyst in firms like KPMG and American Express.  
+* Trained in Indian classical vocal music for more than 10 years and loves to nurture that in her spare time. 
+* Currently an intern with Google Summer of Code 2019 and also on her way to finish writing her first ever R package "gravitas".
+]
+
+---
+
+# Sherry
+
+.huge[
+* Commerce bachelor in 2018 & doing Honours in Econometrics this year. 
+* loves puzzles games like jigsaws `r emo::ji("jigsaw")`. 
+* Doing honours thesis with Di Cook and is on the way to have her first ever package, whose name is still a mystery `r emo::ji("thinking")`.
+]
+
+---
+
+# Di (course creator)
+
+.huge[
+* Professor at Monash University in Melbourne Australia, doing research in statistics, data science, visualisation, and statistical computing. 
+* I like to play all sorts of sports, tennis, soccer, hockey, cricket, and go boogie boarding.
+]
+
+
+---
+class: bg-indigo
+
+.white[
+# Your Turn: Turn to the people next to you and ask 2 questions:
+]
+
+.vhuge.white[
+* Are you more of a dog or a cat person?
+* What languages do you know how to speak?
+]
+
+```{r first-timer}
+library(countdown)
+countdown(minutes = 3,
+          left = 0, 
+          right = 0,
+          padding = "15px",
+          margin = "5%",
+          font_size = "6em",
+          play_sound = TRUE)
+```
+
+
+---
+
+## Language of data analysis
+
+*This course is brought to you today by the letter "R"!*
+
+```{r grover, out.width = "55%", echo = FALSE}
+knitr::include_graphics("images/grover_R.png")
+```
+
+Grover image sourced from https://en.wikipedia.org/wiki/Grover.
+
+---
+layout: false
+class: bg-main1
+
+# What is R? 
+
+.blockquote.huge[
+R is a language for data analysis. If R seems a bit confusing, disorganized, and perhaps incoherent at times, in some ways that's because so is data analysis.
+
+-- Roger Peng, 12/07/2018
+]
+
+---
+
+# Why R?
+
+.huge[
+* __Free__
+* __Powerful__: Over 15000 contributed packages on the main repository (CRAN), as of Feb 2019, provided by top international researchers and programmers. 
+* __Flexible__: It is a language, and thus allows you to create your own solutions
+* __Community__: Large global community friendly and helpful, lots of resources
+]
+
+---
+
+.center[
+# Community
+]
+
+.left-code.large[
+R Consortium conducted a survey of users 2017.
+
+These are the locations of respondents to an R Consortium survey conducted in 2017.
+
+**8% of R users are between 18-24 BUT 45% of R users are between 25-34!**
+
+]
+
+.right-plot[
+```{r r-community, out.width = "90%"}
+include_graphics("images/R_community.png")
+```
+]
+
+---
+
+# Why R?
+
+.huge[
+`r emo::ji("cartwheel")` Flexibility <--------> Complexity `r emo::ji("nervous")`
+
+`r emo::ji("swim")` Ability to program <---------> Programming requirement `r emo::ji("scream")`
+
+*It's taught to New Zealand high school students!* 
+]
+
+
+---
+class: bg-indigo
+
+.white[
+#  Sample of Australian organisations/companies that sent employees to [useR! 2018](https://user2018.r-project.org)
+]
+
+.blockquote.white.vlarge[
+ABS, CSIRO, ATO, Microsoft, Energy Qld, Auto and General, Bank of Qld, BHP, AEMO, Google, Flight Centre, Youi, Amadeus Investment Partners,  Yahoo, Sydney Trains, Tennis Australia, Rio Tinto, Reserve Bank of Australia, PwC, Oracle, Netflix, NOAA Fisheries, NAB, Menulog, Macquarie Bank, Honeywell, Geoscience Australia, DFAT, DPI, CBA, Bank of Italy, Australian Red Cross Blood Service, Amazon, Bunnings.
+]
+
+
+---
+background-image: url(https://njtierney.updog.co/img/tower-of-babel.gif)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, bg-black
+
+<!-- There can be many ways to achieve the same result. I don't know everything. You might find a better solution than I have give you. Your tutors might give you different ways to do it than I told you.  -->
+
+---
+
+## Let's start writing...
+
+.huge[
+This section is based on an exercise from [data science in a box by Mine Çetinkaya-Rundel](https://github.com/rstudio-education/datascience-box/blob/c2e3ed13417c896fb49b78fd4a5a551392286351/extras/exercises/01-unvotes/unvotes.Rmd)
+
+Go to [bit.ly/SHORTCODE TO BE SHARED IN CLASS]() to log in to RStudio cloud.
+
+Log in with Google / GitHub / other credentials.
+
+.blockquote[ If you have questions, place a sticky note on your laptop.]
+
+]
+
+---
+
+## Create your first data visualisation
+
+.vlarge[
+- Once you log on to RStudio Cloud, click on this course's workspace "ETC1010 2019 semester 2"
+- You should see a project called UN Votes, fork it by clicking on the  icon. This will create your copy of the project and launch it.
+- In the Files pane in the bottom right corner, spot the file called `unvotes.Rmd`. Open it, and then click on the "Knit" button.
+- Go back to the file and change your name on top (in the `yaml` -- we'll talk about what this means later) and knit again.
+- Then change the country names to those you're interested in. Your spelling and capitalization should match the data so take a peek at the Appendix to see how the country names are spelled. Knit again. And voila, your first data visualization!
+
+]
+> If you have questions or issues, place a sticky note on the laptop
+
+---
+
+# What can you do at the end of semester?
+
+.huge[
+Some of our best final projects:
+
+* [instagram](https://ebsmonash.shinyapps.io/Instagram/)
+* [babynames](https://ebsmonash.shinyapps.io/BabyNames/)
+* [oztourism](https://ebsmonash.shinyapps.io/OzTourism/)
+* [salary gaps](https://dmac.dicook.org/project/project_python_r/project#introduction)
+* [FantasyAFL](https://ebsmonash.shinyapps.io/FantasyAFL/)
+]
+
+
+---
+class: bg-indigo
+
+.white.huge[What you need to learn]
+
+.blockquote.huge[
+Data preparation accounts for about 80% of the work of data scientists 
+
+-- [Gil Press, Forbes 2016](https://www.forbes.com/sites/gilpress/2016/03/23/data-preparation-most-time-consuming-least-enjoyable-data-science-task-survey-says/##47cbbbf46f63)
+]
+
+*This is one of the least taught parts of data science, and business analytics, and yet it is what data scientists spend most of their time on. By the end of this semester, we hope that you will have the tools to be more efficient and effective in this area, so that you have more time to spend on your mining and modeling.*
+
+
+---
+
+# Learning objectives
+
+.huge[
+The learning goals associated with this unit are to:
+
+1. Learn to read different data formats, learn about tidy data and wrangling techniques
+2. Apply effective visualisation and modelling to understand relationships between variables, and make decisions with data
+3. Develop communication skills using reproducible reporting.
+
+]
+
+---
+
+# Philosophy
+
+.blockquote.huge[
+If you feed a person a fish, they eat for a day. If you teach a person to fish, they eat for a lifetime.
+]
+
+
+.huge[
+Whatever I do in the data analysis that is shown to you during the class, you can do it, too.
+]
+
+---
+
+# Course Website: http://dmac.netlify.org
+
+.huge[
+
+- "dmac" = Data Modeling and Computing
+- [unit guide](https://unitguidemanager.monash.edu/view?unitCode=ETC1010&tpCode=S2-01&tpYear=2018) (authority on course structure).
+- Lecture notes for each class
+- Assignment and project instructions
+- Textbook + other online resources related to topics
+]
+
+---
+
+# Ed System
+
+.huge[
+The ED system for doing online quizzes, conduct discussions, ask questions about the course material and exercises, and turn in assignments and project. *Only your name and email address are recorded in the ED systems.*
+]
+
+---
+
+# Grading
+
+.vlarge[
+- Reading quizzes: 5% - Prior to each class, for the first 8 weeks, check the web site. Quiz needs to be completed by class time. No mulligans. One can be missed without penalty. 
+- Lab exercise: 5% - Each class period will have a quiz to be completed individually. Two can be missed without penalty. 
+- Assignment: 12% - Teamwork, data analysis challenge, due weeks 3, 5, 9.
+- Mid-semester theory and concept exam, 8% week 6
+- Data analysis practice exam, 10% week 11
+- Project: 10% - Data analysis, report and presentation, week 11.
+- Final Exam: 50%
+]
+
+---
+
+# How do you do well in this class
+
+.huge[
+- Do the reading prior to each class period.
+- Participate actively in this class. 
+- Ask questions on the **ed**.
+- Come to consultation if you have questions.
+- Practice the materials taught in each lectorial by doing more exercises from the textbook.
+- Be curious, be positive, be engaged. 
+]
+
+---
+
+## Diversity & Inclusiveness:
+
+.vlarge[
+- Intent: Students from all diverse backgrounds and perspectives be well-served by this course, that students' learning needs be addressed both in and out of class, and that the diversity that the students bring to this class be viewed as a resource, strength and benefit. It is my intent to present materials and activities that are respectful of diversity: gender identity, sexuality, disability, age, socioeconomic status, ethnicity, race, nationality, religion, and culture. Let me know ways to improve the effectiveness of the course for you personally, or for other students or student groups.
+
+- If you have a name and/or set of pronouns that differ from those that appear in your official Monash records, please let me know!
+]
+
+---
+
+# Diversity & Inclusiveness:
+
+.huge[
+- If you feel like your performance in the class is being impacted by your experiences outside of class, please don't hesitate to come and talk with me. I want to be a resource for you. If you prefer to speak with someone outside of the course, talk to . 
+
+- I (like many people) am still in the process of learning about diverse perspectives and identities. If something was said in class (by anyone) that made you feel uncomfortable, please talk to me about it.
+]
+
+---
+
+## Tips for asking questions
+
+.large[
+- First search existing discussion for answers. If the question has already been answered, you're done! If it has already been asked but you're not satisfied with the answer, add to the thread. 
+- Give your question context from course concepts not couse assignments.
+    - Good context: "I have a question on filtering"
+    - Bad context: "I have a question on Assignment 1"
+- Be precise in your description:
+    - Good description: "I am getting the following error and I'm not sure how to resolve it - `Error: could not find function "ggplot"`"
+    - Bad description: "R giving errors, help me! Aaaarrrrrgh!" 
+- Note that you can edit a question after posting it.
+]
+
+---
+
+## Tips for asking questions
+
+.huge[
+- Format your questions nicely using markdown and code formatting.
+- Where appropriate, provide links to specific files, or even lines within them, in the body of your issue. This will help your helper understand your question. Note that only the teaching team will have access to private repos.
+]
+    
+---
+
+## Academic integrity
+
+.huge[
+- Only work that is clearly assigned as team work can be completed collaboratively.
+
+- Use of disallowed materials during the take home exam will not be tolerated.
+]
+
+---
+
+## Sharing/reusing code
+
+.large[
+- I am well aware that a huge volume of code is available on the web to solve any number of problems.
+- Unless I explicitly tell you not to use something the course's policy is that you may make use of any online resources (e.g. StackOverflow) but you must explicitly cite where you obtained any code you directly use (or use as inspiration). 
+- Any recycled code that is discovered and is not explicitly cited will be treated as plagiarism. 
+- On individual assignments you may not directly share code with another student in this class, and on team assignments you may not directly share code with another team in this class. 
+- Except for the take home exams, you are welcome to discuss the problems together and ask for advice, but you may not send or make use of code from another team.
+- On the take home exams all communication with classmates is explicitly forbidden.
+]
+
+---
+
+# MoVE unit
+
+.huge[
+Access to R from a MoVe computer is through a server.  This was a slow way to work. The most successful approach iss to have a USB stick, attach to the borrowed laptop, and install R, RStudio and all your packages on this. Use this as your working environment, with the borrowed laptop simply as the computing engine.
+]
+
+---
+
+# Group assignments
+
+.vlarge[
+Group assignments will be conducted according to the [Monash policies](https://www.monash.edu/__data/assets/pdf_file/0011/1098659/Team-Assessment-Guidelines.pdf). 
+
+What we expect:
+
+ * Each member of the group completes the entire assignment, as best they can.
+ * Group members compare answers and combine it into one document for the final asubmission. 
+]
+
+---
+
+# Group assignments
+
+.vlarge[
+
+* 25% of the assignment grade will come from peer evaluation. 
+* Peer evaluation is an important learning tool. 
+
+Each student will be randomly assigned another team's submission to provide feedback on three things: 
+
+  1. Could you reproduce the analysis? 
+  2. Did you learn something new from the other team's approach?
+  3. What would you suggest to improve their work?
+]
+
+---
+
+# Group Assignments
+
+.vlarge[
+
+* Conflicts can arise in group work. 
+* They can be both productive and destructive. 
+* Teams need to work on managing conflicts and building on the strengths of all team members. 
+* For each assignment, you will be given the option to comment on the efforts of your other group members. 
+* If a team member has not contributed to an assignment submission, they might score a 0. 
+* In this situation the team will need to discuss team function and dysfunction with the instructor.
+
+]
+---
+class: bg-indigo
+
+.vhuge.white[
+Your Turn: Making the groups
+]
+
+.huge.white[
+We are going to set up the groups for doing assignment work.
+
+1. Choose a quote from the bag. 
+2. Find the other people in the class with the same quote as you
+3. Grab your gear and claim a table to work together at. 
+
+]
+
+---
+class: bg-indigo
+
+.huge.white[
+Here are some icebreakers to help you get to know each other:
+
+1. If you were a comic strip character, who would you be and why?
+2. What thought or message would you want to put in a fortune cookie?
+3. What is one food you'd never want to taste again?
+4. What award would you love to win and for what achievement?
+
+LASTLY, come up with a name for your team and tell this to a tutor, along with the names of members of the team.
+]
+
+---
+class: bg-indigo
+
+.white.huge[
+
+]
+
+---
+
+## Reproducibility checklist
+
+Near-term goals:
+
+- Are the tables and figures reproducible from the code and data?
+- Does the code actually do what you think it does?
+- In addition to what was done, is it clear **why** it was done? 
+(e.g., how were parameter settings chosen?)
+
+Long-term goals:
+
+- Can the code be used for other data?
+- Can you extend the code to do other things?
+
+---
+
+## Toolkit
+
+* image of R, Rstudio, tidyverse?*
+
+- Scriptability $\rightarrow$ R
+
+- Literate programming (code, narrative, output in one place) $\rightarrow$ R Markdown
+
+---
+
+class: center, middle
+
+# R and RStudio
+
+---
+
+## What is R/RStudio?
+
+- R is a statistical programming language
+
+- RStudio is a convenient interface for R (an integreated development environment, IDE)
+
+---
+
+## Let's take a tour - R / RStudio
+
+.center.gigantic.white[
+DEMO
+]
+
+--
+
+Concepts introduced:
+
+- Console
+
+- Using R as a calculator
+
+- Environment
+
+- Loading and viewing a data frame
+
+- Accessing a variable in a data frame
+
+- R functions
+
+---
+
+## R essentials
+
+A short list (for now):
+
+- Functions are (most often) verbs, followed by what they will be applied to in paramtheses:
+
+```{r eval=FALSE}
+do_this(to_this)
+do_that(to_this, to_that, with_those)
+```
+
+--
+
+- Columns (variables) in data frames are accessed with `$`:
+
+```{r eval=FALSE}
+dataframe$var_name
+```
+
+--
+
+- Packages are installed with the `install.packages` function and loaded with the `library` function, once per session:
+
+```{r eval=FALSE}
+install.packages("package_name")
+library(package_name)
+```
+
+---
+
+## What is the Tidyverse?
+
+.pull-left[
+![](img/tidyverse.png)
+]
+
+.pull-right[
+<center>
+<a href="https://www.tidyverse.org/">tidyverse.org</a>
+</center>
+
+- The tidyverse is an opinionated collection of R packages designed for data science. 
+- All packages share an underlying philosophy and a common syntax. 
+]
+
+--
+
+*Fun fact:* [Hadley Wickham](http://hadley.nz/), the author and maintainer of these packages (along with a team of developers), was a student of the creator of the course, Professor Di Cook.
+
+
+---
+
+class: center, middle
+
+# Recap
+
+---
+
+## Recap
+
+Check your knowledge and comprehension by taking your first lab quiz on Ed
+
+Go to the ED page, and complete the lab quiz.
+
+*NOTE: Reading assignment on web site due before Thursday's class*
+
+---
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+
+---
+
+## Getting set up
+
+```{r}
+set.seed(2019)
+```
+
+- `r emo::ji("airplane")` R latest version: [Install this first](https://cloud.r-project.org/) because it is what does the work
+- `r emo::ji("airport")` RStudio latest version: [Install the free Desktop version](https://www.rstudio.com/products/rstudio/download/) because it helps you work with R. 
+
+*If R were an airplane, RStudio would be the airport</b>, providing many, many supporting services that make it easier for you, the pilot, to take off and go to awesome places. Sure, you can fly an airplane without an airport, but having those runways and supporting infrastructure is a game-changer* [Julie Lowndes](http://jules32.github.io/resources/RStudio_intro/) 
+
+## Packages
+
+There are more than 15000 packages available on the main archive contributed by experts (and relatively new to R people too). There are another several hundred on the bioconductor archive, focused primarily on bioinformatics applications. There are many more on people's github pages, that may be in development.
+
+**Install once, use many times**
+
+```{r echo=TRUE, eval = FALSE}
+library(learnr)
+```
+
+
+### Install packages
+
+- From CRAN 
+![](images/R.jpg)
+
+```{r eval=FALSE, echo=TRUE}
+install.packages("learnr")
+```
+
+- From bioconductor
+![](images/Bioconductor_original.png)
+```{r eval=FALSE, echo=TRUE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("plyranges", version = "3.8")
+```
+
+- From github repos
+![](images/github.png)
+```{r eval=FALSE, echo=TRUE}
+devtools::install_github("skoval/deuce")
+```
+
+### Cheatsheets
+
+RStudio started a trend by writing really concise summaries, and others have added to the collection. You can find the RStudio collection in the "Help" menu on the IDE, and at https://www.rstudio.com/resources/cheatsheets/. 
+
+Start with the [RStudio IDE cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/rstudio-ide.pdf). 
+
+### Using the IDE
+
+- __Project__: This is like a multi-tab folder, or a filing cabinet, for your work! Create a project for your work in this class. Just one should be sufficient. You can call it anything you like, or "ETC1010" if you don't have any better ideas. *Remember: every time you start to work on something for this class, open this project!!*
+
+
+- __Source code editor__: This is where you edit your script! Experiment with writing your data analysis pipeline, ... You can have multiple files open, there are useful shortcuts (eg "Run", "Knit"), code is highlighted usefully and there is tab-completion when you start typing. *Also, if you want to look at any of the data you have read or created, it can be viewed in a tab on this pane.*
+- __Console window__: This is where the code is executed. There is a prompt ">" which says *R is waiting for your command*. You don't actually need to type anything in this pane, you can run code directly from the Editor pane. The functions will show up in this window, and the results will be here. (Although, if you use an R notebook the result will show up in that notebook.)
+- __Help__: *?function* will show the help pages for the function here.
+- __Plot__: Plots you ask R to make will show up here, and you can zoom to make them bigger in a separate window if you want.
+- __Environment__: Data that you have read into R, or data or functions that you create will be listed here. **When you quit R, you will be asked if you want to save the environment. I suggest that you always answer NO.** Because we are scripting everything it is always easy to re-create the objects in the environment. The only time it can be useful is if you have created something that took a while, but a better option is to save this object to a file, and read it in at the start of the next R session.
