@@ -363,7 +363,7 @@ include_graphics("https://nypdecider.files.wordpress.com/2014/08/help-me-help-yo
 ## Let's start writing...
 
 .huge[
-Go to [bit.ly/LINK SHARED IN CLASS]() to log in to RStudio cloud.
+Go to [bit.ly/ask-nick]() to log in to RStudio cloud.
 
 Log in with Google / GitHub / other credentials.
 
@@ -812,7 +812,7 @@ class: bg-indigo
 What is R/RStudio?
 ]
 
-.blockquote.vlarge[
+.blockquote.vlarge.white[
 If R were **an airplane**, RStudio would be **the airport**, providing many, many supporting services that make it easier for you, the pilot, to take off and go to awesome places. Sure, you can fly an airplane without an airport, but having those runways and supporting infrastructure is a game-changer
 
 -- [Julie Lowndes](http://jules32.github.io/resources/RStudio_intro/) 
