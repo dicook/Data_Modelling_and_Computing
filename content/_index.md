@@ -43,7 +43,7 @@ Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required 
 
 - Week 1: Introduction to the language of data analysis. 
     - Wednesday Reading: [Chapter 2 (very short)](https://r4ds.had.co.nz/explore-intro.html), [Chapter 3](https://r4ds.had.co.nz/data-visualisation.html#the-layered-grammar-of-graphics), [Chapter 4 (very short)](https://r4ds.had.co.nz/workflow-basics.html)
-    - Wednesday Slides: [PDF](https://dmac.dicook.org/lectures/lecture1a/lecture-1a-slides.pdf); [Rmd](https://dmac.dicook.org/lectures/lecture1a/lecture-1a-slides.Rmd)
+    - Wednesday Slides: [HTML](https://dmac.dicook.org/lectures/lecture1a/lecture-1a-slides.html); [PDF](https://dmac.dicook.org/lectures/lecture1a/lecture-1a-slides.pdf); [Rmd](https://dmac.dicook.org/lectures/lecture1a/lecture-1a-slides.Rmd)
     - Remember to do Ed quiz!
     - Friday Reading: [Chapter 27](https://r4ds.had.co.nz/r-markdown.html), [Chapters 1 - 4 in Rmarkdown for Scientists](https://rmd4sci.njtierney.com/why-rmarkdown.html)
     - Friday Reading Quiz: Go to ED and complete the reading quiz before Friday's class.
