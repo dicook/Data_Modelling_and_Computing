@@ -37,6 +37,45 @@ library(gridExtra)
 ```
 
 ---
+class: bg-indigo
+
+.vhuge.white[
+Your Turn: Making the groups
+]
+
+.huge.white[
+We are going to set up the groups for doing assignment work.
+
+1. Choose a quote from the bag. 
+2. Find the other people in the class with the same quote as you
+3. Grab your gear and claim a table to work together at. 
+
+]
+
+---
+class: bg-indigo
+
+.huge.white[
+Your Turn: Ask your team mates these questions:
+
+1. What is one food you'd never want to taste again?
+2. If you were a comic strip character, who would you be and why?
+
+LASTLY, come up with a name for your team and tell this to a tutor, along with the names of members of the team.
+]
+
+```{r countdown-two}
+countdown(minutes = 5,
+          left = 0, 
+          right = 0,
+          padding = "15px",
+          margin = "3%",
+          font_size = "4em",
+          play_sound = TRUE)
+```
+
+
+---
 
 ## Reproducibility checklist
 

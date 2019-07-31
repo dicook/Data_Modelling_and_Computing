@@ -29,6 +29,7 @@ pre {
 
 ```{r setup, include=FALSE}
 library(knitr)
+library(kableExtra)
 opts_chunk$set(echo = FALSE,   
                       message = FALSE,
                       warning = FALSE,
@@ -47,6 +48,10 @@ class: bg-indigo center middle
 What is this song?
 ]
 
+.vhuge.white[
+(Discuss with your neighbour)
+]
+
 ---
 
 background-image: url(https://media.giphy.com/media/OkJat1YNdoD3W/giphy.gif)
@@ -59,9 +64,13 @@ class: bg-main1
 
 # What is this course?
 
-.huge.white[
-This is a course on introduction to **data** **modelling** and **computing**. 
+.vhuge.white[
+This is a course on introduction to **data**, **modelling**, and **computing**. 
+]
 
+--
+
+.vhuge.white[
 You can also think of it as introduction to data science or introduction to data analysis.
 ]
 
@@ -70,7 +79,7 @@ class: bg-main1
 
 # What is this course?
 
-.vlarge.white[
+.huge.white[
 
 **Q - What data analysis background does this course assume?**  
 
@@ -80,10 +89,10 @@ A - None.
 
 --
 
-.vlarge.white[
+.huge.white[
 
 **Q - Is this an intro stat course?**  
-A - Statistics $\ne$ data science. BUT they are closely related and have tremendous of overlap. This course is a great way to get started with statistics. But this course is **not** your typical high school statistics course.
+A - Statistics $\ne$ data science. BUT they are closely related. This course is a great way to get started with statistics. But is **not** your typical high school statistics course.
 ]
 
 ---
@@ -91,30 +100,50 @@ class: bg-main1
 
 # What is this course?
 
-.vlarge.white[
+.huge.white[
 **Q - Will we be doing computing?**   
 A - Yes.
 ]
 
 --
 
-.vlarge.white[
+.huge.white[
 **Q - Is this an intro Computer Science course?**  
-A - No, but there might be shared themes.
+A - No, but there are some shared themes.
 ]
 
---
+---
+class: bg-main1
 
-.vlarge.white[
+# What is this course?
+
+.huge.white[
 **Q - What computing language will we learn?**  
 A - R.
 ]
 
 --
 
-.vlarge.white[
+.huge.white[
 **Q: Why not language X?**  
 A: We can discuss that over `r emo::ji("coffee")`.
+]
+
+---
+class: bg-main1
+
+# What is this course?
+
+--
+
+.vhuge.white[
+Taught as a **lectorial** (Lecture + Tutorial)
+]
+
+--
+
+.vhuge.white[
+It is **not** recorded because **you** are doing work
 ]
 
 ---
@@ -133,7 +162,7 @@ About your instructors
 *  `r emo::ji("mortar_board")` PhD in Statistics at QUT. 
 * Research: missing data, data visualisation, statistical computing
 * R `r emo::ji("package")`: `naniar`, `visdat`, 
-* rstats `r emo::ji("microphone")`: Credibly Curious w Saskia Freytag
+* `#rstats` `r emo::ji("microphone")`: Credibly Curious w Saskia Freytag
 * `r emo::ji("heart")` outdoors, especially: `r emo::ji("hiking_boot")`, `r emo::ji("man_running")`, and `r emo::ji("man_climbing")`.
 ]
 
@@ -217,10 +246,10 @@ countdown(minutes = 3,
 
 
 ---
-class: bg-indigo
+class: bg-main1
 
 .vhuge.white[
-The language of data analysis
+The _language_ of data analysis
 ]
 
 .left-code.white.vhuge[
@@ -249,6 +278,7 @@ R is a language for data analysis. If R seems a bit confusing, disorganized, and
 ]
 
 ---
+class: bg-main1
 
 # Why R?
 
@@ -281,19 +311,6 @@ include_graphics("images/R_community.png")
 ]
 
 ---
-
-# Why R?
-
-.huge[
-`r emo::ji("cartwheel")` Flexibility <--------> Complexity `r emo::ji("nervous")`
-
-`r emo::ji("swim")` Ability to program <---------> Programming requirement `r emo::ji("scream")`
-
-*It's taught to New Zealand high school students!* 
-]
-
-
----
 class: bg-indigo
 
 .white[
@@ -304,22 +321,58 @@ class: bg-indigo
 ABS, **CSIRO**, ATO, **Microsoft**, Energy Qld, Auto and General, Bank of Qld, BHP, AEMO, Google, Flight Centre, Youi, Amadeus Investment Partners,  Yahoo, Sydney Trains, Tennis Australia, Rio Tinto, Reserve Bank of Australia, PwC, Oracle, **Netflix**, NOAA Fisheries, NAB, Menulog, Macquarie Bank, Honeywell, Geoscience Australia, DFAT, DPI, CBA, Bank of Italy, Australian Red Cross Blood Service, **Amazon**, **Bunnings**.
 ]
 
+---
+class: center
+# Traffic Light System
 
+```{r tom-cruise, out.width = "90%"}
+include_graphics("https://nypdecider.files.wordpress.com/2014/08/help-me-help-you.gif")
+```
+
+---
+.center[
+# Traffic Light System
+]
+
+--
+
+.red.pull-left.huge.middle[
+# Red Post it
+
+--
+
+* I need a hand
+* Slow down
+
+]
+
+
+--
+
+.green.pull-right.huge.middle[
+# Green Post it
+
+--
+
+* I am up to speed
+* I have completed  the thing
+]
 
 ---
 
 ## Let's start writing...
 
 .huge[
-This section is based on an exercise from [data science in a box by Mine Çetinkaya-Rundel](https://github.com/rstudio-education/datascience-box/blob/c2e3ed13417c896fb49b78fd4a5a551392286351/extras/exercises/01-unvotes/unvotes.Rmd)
-
-Go to [bit.ly/SHORTCODE TO BE SHARED IN CLASS]() to log in to RStudio cloud.
+Go to [bit.ly/LINK SHARED IN CLASS]() to log in to RStudio cloud.
 
 Log in with Google / GitHub / other credentials.
 
-.blockquote[ If you have questions, place a sticky note on your laptop.]
+.red[If you have questions, place a red sticky note on your laptop.]
 
+.green[If you are done, place a green sticky on your laptop]
 ]
+
+This section is based on an exercise from [data science in a box by Mine Çetinkaya-Rundel](https://github.com/rstudio-education/datascience-box/blob/c2e3ed13417c896fb49b78fd4a5a551392286351/extras/exercises/01-unvotes/unvotes.Rmd)
 
 ---
 
@@ -355,13 +408,21 @@ class: bg-indigo
 
 .white.huge[What you need to learn]
 
-.blockquote.huge[
+.blockquote.huge.white[
 Data preparation accounts for about 80% of the work of data scientists 
 
 -- [Gil Press, Forbes 2016](https://www.forbes.com/sites/gilpress/2016/03/23/data-preparation-most-time-consuming-least-enjoyable-data-science-task-survey-says/##47cbbbf46f63)
 ]
 
-*This is one of the least taught parts of data science, and business analytics, and yet it is what data scientists spend most of their time on. By the end of this semester, we hope that you will have the tools to be more efficient and effective in this area, so that you have more time to spend on your mining and modeling.*
+---
+class: bg-indigo
+
+.white.huge[Data Preparation]
+
+.white.huge[
+* This is one of the least taught parts of data science, and business analytics, and yet it is what data scientists spend most of their time on. 
+* By the end of this semester, you will have the tools to be more efficient and effective in this area, so that you have more time to spend on your mining and modeling.
+]
 
 
 ---
@@ -379,14 +440,24 @@ The learning goals associated with this unit are to:
 
 ---
 class: bg-black
-.white.vhuge[
-What could the image below say about R?
-]
+.white.vhuge.left-code[
+What could this image say about R?
 
-```{r babel, out.width = "50%"}
-include_graphics("https://njtierney.updog.co/img/tower-of-babel.gif")
+```{r countdown-babel}
+countdown(minutes = 3,
+          left = 0,
+          play_sound = TRUE,
+          font_size = "1.5em")
 ```
 
+
+]
+
+.right-plot[
+```{r babel, out.width = "100%"}
+include_graphics("https://njtierney.updog.co/img/tower-of-babel.gif")
+```
+]
 <!-- There can be many ways to achieve the same result. I don't know everything. You might find a better solution than I have give you. Your tutors might give you different ways to do it than I told you.  -->
 
 
@@ -405,7 +476,7 @@ Whatever I do in the data analysis that is shown to you during the class, you ca
 
 ---
 
-# Course Website: http://dmac.netlify.org
+# Course Website: http://dmac.dicook.org
 
 .huge[
 
@@ -422,23 +493,113 @@ Whatever I do in the data analysis that is shown to you during the class, you ca
 # MoVE unit
 
 .huge[
-Access to R from a MoVe computer is through a server.  This was a slow way to work. The most successful approach iss to have a USB stick, attach to the borrowed laptop, and install R, RStudio and all your packages on this. Use this as your working environment, with the borrowed laptop simply as the computing engine.
+You can use the rstudio cloud server.
+
+In the future we will have R and Rstudio installed locally.
+
+When this happens, you can use USB stick, attach to the borrowed laptop, and install R, RStudio and all your packages on this. Use can then use the USB stick as your working environment, with the borrowed laptop simply as the computing engine.
 ]
 
 
 ---
-
 # Grading
 
-.vlarge[
-- Reading quizzes: 5% - Prior to each class, for the first 8 weeks, check the web site. Quiz needs to be completed by class time. No mulligans. One can be missed without penalty. 
-- Lab exercise: 5% - Each class period will have a quiz to be completed individually. Two can be missed without penalty. 
-- Assignment: 12% - Teamwork, data analysis challenge, due weeks 3, 5, 9.
-- Mid-semester theory and concept exam, 8% week 6
-- Data analysis practice exam, 10% week 11
-- Project: 10% - Data analysis, report and presentation, week 11.
-- Final Exam: 50%
+.huge[
+```{r grade-table, results = "asis"}
+grade <- data.frame(
+  Assessment = c("Reading Quiz", "Lab Exercise"),
+  Weight = c("5%", "5%"),
+  Task = c("Complete prior to each class, for the first 8 weeks on ED. Quiz needs to be completed by class time. No mulligans. One can be missed without penalty.",
+           "Each class period will have a quiz to be completed individually. Two can be missed without penalty.")
+)
+
+kable(grade, 
+      format = "html",
+      align = c("c"))
+
+```
 ]
+
+---
+
+# Grading Example: Reading Quiz
+
+.vhuge[
+* Before 8am on Friday, you need to complete the 5 question **reading quiz** on ED
+* Before 3pm **next Wednesday** You need to complete the 5 question **reading quiz** on ED.
+]
+
+---
+
+# Grading Example: Lab Exercise
+
+.huge[
+There is time at the end of class to complete **lab exercise on ED**:
+
+* Before 5pm Today, you need to complete the 10 question **Lab Exercise** on ED
+* Before 10am **This Friday** you need to complete the 10 question **Lab Exercise** on ED.
+]
+
+---
+# Grading
+
+.huge[
+```{r grade0remain}
+grade_remainder <- data.frame(
+  Assessment = c("Assignment", "Mid-Sem Theory + Concept exam", "Data Analysis Exam","Project", "Final Exam"),
+  Weight = c("12%", "8%", "10%", "10%", "50%"),
+  Task = c("Teamwork, data analysis challenge, due in weeks 3, 5, 9",
+           "Due week 6",
+           "Due week 11",
+           "Due week 11",
+           "TBA")
+)
+
+kable(grade_remainder,
+      format = "html")
+```
+]
+
+---
+class: bg-main1
+
+.center[
+# Textbook
+]
+
+.pull-left[
+```{r r4ds-img, out.width = "80%"}
+include_graphics("https://raw.githubusercontent.com/hadley/r4ds/master/cover.png")
+```
+]
+
+.pull-right.vhuge[
+* Free
+* Written by authors of Tidyverse R packages
+]
+
+
+---
+class: bg-main1 center
+
+.vhuge[
+Remember:
+]
+
+--
+
+.vhuge[
+All information is on the website `r emo::ji("smile")`
+]
+
+--
+
+.vhuge[
+Post questions on ED over email
+
+]
+
+
 
 ---
 
@@ -446,42 +607,87 @@ Access to R from a MoVe computer is through a server.  This was a slow way to wo
 
 .huge[
 - Do the reading prior to each class period.
+]
+
+--
+
+.huge[
 - Participate actively in this class. 
+]
+
+--
+
+.huge[
 - Ask questions on the **ed**.
-- Come to consultation if you have questions.
-- Practice the materials taught in each lectorial by doing more exercises from the textbook.
-- Be curious, be positive, be engaged. 
 ]
 
 ---
-background-image: url(https://njtierney.updog.co/img/edstem.png)
-background-size: contain
-class: center, bottom, bg-indigo
+
+# How do you do well in this class
+
+.huge[
+- Come to consultation if you have questions.
+]
+
+--
+
+.huge[
+- Practice the materials taught in each lectorial by doing more exercises from the textbook.
+]
+
+--
+
+.huge[ 
+- Be curious, be positive, be engaged. 
+]
 
 ---
 
 # Ed System
 
 .huge[
-The ED system for doing online quizzes, conduct discussions, ask questions about the course material and exercises, and turn in assignments and project. *Only your name and email address are recorded in the ED systems.*
+* Online quizzes
+* Conduct discussions
+* Ask questions about the course material and exercises, and turn in assignments and project. *Only your name and email address are recorded in the ED systems.*
 ]
+
+---
+class: bg-indigo center middle
+
+.vvhuge.white[
+Ed System
+
+DEMO
+]
+
+
+---
+background-image: url(https://njtierney.updog.co/img/edstem.png)
+background-size: contain
+class: center, bottom, bg-indigo
 
 
 ---
 
 ## Tips for asking questions
 
-.large[
+.huge[
 - First search existing discussion for answers. If the question has already been answered, you're done! If it has already been asked but you're not satisfied with the answer, add to the thread. 
-- Give your question context from course concepts not couse assignments.
+- Give your question context from course concepts not course assignments.
     - Good context: "I have a question on filtering"
     - Bad context: "I have a question on Assignment 1"
+]
+
+---
+
+## Tips for asking questions
+
+.huge[
 - Be precise in your description:
     - Good description: "I am getting the following error and I'm not sure how to resolve it - `Error: could not find function "ggplot"`"
     - Bad description: "R giving errors, help me! Aaaarrrrrgh!" 
-- Note that you can edit a question after posting it.
+- Remember: you can edit a question after posting it.
 ]
-
 
 ---
 
@@ -498,29 +704,44 @@ The ED system for doing online quizzes, conduct discussions, ask questions about
 # Diversity & Inclusiveness:
 
 .vlarge[
-- If you feel like your performance in the class is being impacted by your experiences outside of class, please don't hesitate to come and talk with me. I want to be a resource for you. If you prefer to speak with someone outside of the course, talk to Di Cook, or ... . 
+- If you feel like your performance in the class is being impacted by your experiences outside of class, please don't hesitate to come and talk with me. I want to be a resource for you. If you prefer to speak with someone outside of the course, talk to Di Cook, or look at the services available to you in the [Monash student support services](https://www.monash.edu/students/support). 
 
 - I (like many people) am still in the process of learning about diverse perspectives and identities. If something was said in class (by anyone) that made you feel uncomfortable, please talk to me about it.
 ]
 
 ---
 
-## Sharing/reusing code
+# Sharing / Reusing code
 
-.vlarge[
+.huge[
 - I am well aware that a huge volume of code is available on the web to solve any number of problems.
-- Unless I explicitly tell you not to use something the course's policy is that you may make use of any online resources (e.g. StackOverflow) but you must explicitly cite where you obtained any code you directly use (or use as inspiration). 
+- Unless I explicitly tell you not to use something the course's policy is that you may make use of any online resources (e.g. StackOverflow) but you must explicitly cite where you obtained any code you directly use (or use as inspiration). This can be as simple as pasting the link in a references section.
+]
+
+---
+
+# Sharing / Reusing code
+
+.huge[
 - Any recycled code not explicitly cited will be treated as plagiarism. 
 - Assignment groups may not directly share code with another group. 
 - You are welcome to discuss the problems together and ask for advice, but you may not make direct use of code from another team.
 ]
 
 ---
+class: bg-main1
+# Group Assignments
 
-# Group assignments
+.vvhuge.center[
+Assignment 1 will be announced this Friday.
+]
 
-.vlarge[
-Group assignments will be conducted according to the [Monash policies](https://www.monash.edu/__data/assets/pdf_file/0011/1098659/Team-Assessment-Guidelines.pdf). 
+---
+
+# Group Assignments
+
+.huge[
+Conducted according to the [Monash policies](https://www.monash.edu/__data/assets/pdf_file/0011/1098659/Team-Assessment-Guidelines.pdf). 
 
 What we expect:
 
@@ -532,7 +753,7 @@ What we expect:
 
 # Group Assignments
 
-.vlarge[
+.huge[
 
 * 25% of the assignment grade will come from peer evaluation. 
 * Peer evaluation is an important learning tool. 
@@ -548,53 +769,22 @@ Each student will be randomly assigned another team's submission to provide feed
 
 # Group Assignments
 
-.vlarge[
-
+.huge[
 * Conflicts can arise in group work. 
 * They can be both productive and destructive. 
 * Teams need to work on managing conflicts and building on the strengths of all team members. 
+]
+
+---
+
+# Group Assignments
+
+.huge[
 * For each assignment, you will be given the option to comment on the efforts of your other group members. 
 * If a team member has not contributed to an assignment submission, they might score a 0. 
 * In this situation the team will need to discuss team function and dysfunction with the instructor.
 
 ]
----
-class: bg-indigo
-
-.vhuge.white[
-Your Turn: Making the groups
-]
-
-.huge.white[
-We are going to set up the groups for doing assignment work.
-
-1. Choose a quote from the bag. 
-2. Find the other people in the class with the same quote as you
-3. Grab your gear and claim a table to work together at. 
-
-]
-
----
-class: bg-indigo
-
-.huge.white[
-Your Turn: Ask your team mates these questions:
-
-1. What is one food you'd never want to taste again?
-2. If you were a comic strip character, who would you be and why?
-
-LASTLY, come up with a name for your team and tell this to a tutor, along with the names of members of the team.
-]
-
-```{r countdown-two}
-countdown(minutes = 5,
-          left = 0, 
-          right = 0,
-          padding = "15px",
-          margin = "3%",
-          font_size = "4em",
-          play_sound = TRUE)
-```
 
 ---
 class: center, middle, bg-black
@@ -640,19 +830,20 @@ DEMO
 ]
 
 ---
-class: bg-blue
+class: bg-main1
+background-image: url(https://njtierney.updog.co/img/rstudio-screenshot.png)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, white
 
-.huge.white[
+???
 
-Concepts introduced:
+- __Source code editor__: This is where you edit your script! Experiment with writing your data analysis pipeline, ... You can have multiple files open, there are useful shortcuts (eg "Run", "Knit"), code is highlighted usefully and there is tab-completion when you start typing. *Also, if you want to look at any of the data you have read or created, it can be viewed in a tab on this pane.*
+- __Console window__: This is where the code is executed. There is a prompt ">" which says *R is waiting for your command*. You don't actually need to type anything in this pane, you can run code directly from the Editor pane. The functions will show up in this window, and the results will be here. (Although, if you use an R notebook the result will show up in that notebook.)
+- __Help__: *?function* will show the help pages for the function here.
+- __Plot__: Plots you ask R to make will show up here, and you can zoom to make them bigger in a separate window if you want.
+- __Environment__: Data that you have read into R, or data or functions that you create will be listed here. **When you quit R, you will be asked if you want to save the environment. I suggest that you always answer NO.** Because we are scripting everything it is always easy to re-create the objects in the environment. The only time it can be useful is if you have created something that took a while, but a better option is to save this object to a file, and read it in at the start of the next R session.
 
-- Console
-- Using R as a calculator
-- Environment
-- Loading and viewing a data frame
-- Accessing a variable in a data frame
-- R functions
-]
 
 ---
 class: bg-main1
@@ -688,10 +879,34 @@ install.packages("package_name")
 library(package_name)
 ```
 
+
+---
+class: bg-blue
+
+.huge.white[Concepts introduced:]
+
+.huge.white.pull-left[
+
+- How to edit R code
+- Creating Data Visualisations
+- R
+- RStudio
+
+]
+
+.huge.white.pull-right[
+- Console
+- Using R as a calculator
+- Environment
+- Loading and viewing a data frame
+- Accessing a variable in a data frame
+- R functions
+]
+
 ---
 class: bg-main1
 
-# Recap
+# Lab Exercise
 
 
 .huge.white[
@@ -699,8 +914,9 @@ Check your knowledge and comprehension by taking your first lab quiz on Ed
 
 Go to the ED page, and complete the lab quiz.
 
-*NOTE: Reading assignment on web site due before Friday's class*
+*NOTE: Reading assignment on ED site due by 8am before Class on Friday*
 ]
+
 ---
 
 ## Share and share alike
