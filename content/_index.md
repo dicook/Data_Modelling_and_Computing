@@ -37,15 +37,14 @@ Unless your question is a personal issue or an administrative matter, please do 
 If you are enrolled in a MoVE unit and forget your laptop, or do not own one as yet, please visit the locations below to borrow a laptop for an activity or part of a day:
 Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required to provide proof of ID (student card or personal ID) in order to borrow a laptop. This service is open from 7.45am - 7.00pm on Monday to Friday.
 
-*Access to R is through a server. We have found that this was a slow way to work. The most successful approach is to have a USB stick, attach to the borrowed laptop, and install R, RStudio and all your packages on this. Use this as your working environment, with the borrowed laptop simply as the computing engine.*
+*You can use the rstudio cloud server. In the future we will have R and Rstudio installed locally. When this happens, you can use USB stick, attach to the borrowed laptop, and install R, RStudio and all your packages on this. Use can then use the USB stick as your working environment, with the borrowed laptop simply as the computing engine.*
 
 ## Lecture notes
 
 - Week 1: Introduction to the language of data analysis. 
     - Wednesday Reading: [Chapter 2 (very short)](https://r4ds.had.co.nz/explore-intro.html), [Chapter 3](https://r4ds.had.co.nz/data-visualisation.html#the-layered-grammar-of-graphics), [Chapter 4 (very short)](https://r4ds.had.co.nz/workflow-basics.html)
-    - Wednesday Lecture
-    - Wednesday Slides
-    - Wednesday Exercises
+    - Wednesday Slides: [PDF](https://dmac.dicook.org/lectures/lecture-1a-slides.pdf); [Rmd](https://dmac.dicook.org/lectures/lecture-1a-slides.Rmd)
+    - Remember to do Ed quiz!
     - Friday Reading: [Chapter 27](https://r4ds.had.co.nz/r-markdown.html), [Chapters 1 - 4 in Rmarkdown for Scientists](https://rmd4sci.njtierney.com/why-rmarkdown.html)
     - Friday Reading Quiz: Go to ED and complete the reading quiz before Friday's class.
 - Week 2: Tidy data principles, reshaping your data into tidy form, and basic data wrangling
