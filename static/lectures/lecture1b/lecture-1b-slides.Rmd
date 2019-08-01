@@ -291,9 +291,9 @@ Long-term goals:
 .huge[
 * Literate programming shines some light on this dark area of science. 
 
-* This is an idea from [Donald Knuth](https://en.wikipedia.org/wiki/Donald_Knuth) where you combine your text with your code output to create a document. 
+* An idea from [Donald Knuth](https://en.wikipedia.org/wiki/Donald_Knuth) where you combine your text with your code output to create a document. 
 
-* This is a _blend_ of your literature (**text**), and your programming (**code**), to create something that you can read from top to bottom. 
+* A _blend_ of your literature (**text**), and your programming (**code**), to create something you can read from top to bottom. 
 ]
 
 ---
@@ -457,7 +457,7 @@ include_graphics("https://njtierney.updog.co/img/unvotes-oz-usa.png")
 - Every assignment + project /  is an R Markdown document
 - You'll always have a template R Markdown document to start with
 - The amount of scaffolding in the template will decrease over the semester
-- These lecture notes are created using R Markdown
+- These lecture notes are created using R Markdown (!)
 ]
 
 ---
@@ -479,12 +479,12 @@ There are three parts to an rmarkdown document.
 ---
 class: bg-main1
 
-# Metadata: YAML
+# Metadata: YAML  (YAML Ain't Markup Language) 
 
 .huge[
 * The metadata of the document tells you how it is formed - what the **title** is, what **date** to put, and other control information.  
 
-* If you're familiar with $\LaTeX$, this is kind of like how you specify the many options, what sort of document it is, what styles to use, etc in the front matter.
+* If you're familiar with $\LaTeX$, this is ksimilar to how you specify document type, styles, fonts, options, etc in the front matter / preamble.
 
 ]
 
@@ -494,7 +494,7 @@ class: bg-main1
 # Metadata: YAML
 
 .huge[
-* Rmarkdown documents use YAML (YAML Ain't Markup Language) to provide the metadata. It looks like this:
+* Rmarkdown documents use YAML to provide the metadata. It looks like this:
 
 ```YAML
 ---
@@ -580,11 +580,16 @@ knitr::include_graphics("https://njtierney.updog.co/img/ansi-keyboard.png")
 # Code: Inline code
 
 .huge[
-Sometimes you want to run the code inside a sentence. When the code is run inside the sentence, it is called running the code "inline".
+Sometimes you want to run the code inside a sentence. This is called running the code "inline".
+]
 
+--
+
+.huge[
 You might want to run the code inline to name the number of variables or rows in a dataset in a sentence like:
 
 > There are XXX observations in the airquality dataset, and XXX variables.
+
 ]
 
 ---
@@ -597,7 +602,7 @@ You can call code "inline"  like so:
 ````markdown
 
 There are `r "\u0060r nrow(airquality) \u0060"` observations in the airquality dataset, 
-and `r "\u0060r 'ncol(airquality) \u0060"` variables.
+and `r "\u0060r ncol(airquality) \u0060"` variables.
 
 ````
 
@@ -610,6 +615,15 @@ Which gives you the following sentence
 
 > There are `r nrow(airquality)` observations in the airquality dataset, and `r ncol(airquality)` variables.
 
+]
+
+---
+
+
+# Code: Inline code
+
+
+.huge[
 What's great about this is that if your data changes upstream, then you don't need to work out where you mentioned your data, you just update the document.
 ]
  
@@ -624,7 +638,7 @@ Go to `rstudio.cloud` and
 * knit the document 
 * Change the data section at the top to be from a different state instead of "New South Wales"
 * knit the document again
-* How does the text, and the figures in the document change?
+* How do the text and figures in the document change?
 ]
 
 ```{r cdown-rmd-inline}
@@ -632,10 +646,42 @@ countdown(minutes = 5)
 ```
 
 ---
+class: bg-main1 center middle
+
+.gigantic[
+break
+]
+
+---
+background-image: url(https://imgs.xkcd.com/comics/art_project.png)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, black
+
+---
+class: bg-main1
+
 # Code: Chunk names
 
 .huge[
-Straight after the ` ```{r ` you can use a text string to name the chunk. This has three advantages:
+Straight after the ` ```{r ` you can use a text string to name the chunk:
+
+` ```{r read-crime-data} `
+]
+
+````markdown
+```{r read-crime-data}`r ''`
+crime <- read_csv("data/crime-data.csv")
+```
+````
+
+---
+class: bg-main1
+
+# Code: Chunk Names
+
+.huge[
+Naming code chunks has three advantages:
 
 1. Navigate to specific chunks using the drop-down code navigator in the bottom-left of the script editor.
 2. Graphics produced by chunks now have useful names.
@@ -649,9 +695,9 @@ Straight after the ` ```{r ` you can use a text string to name the chunk. This h
 - Every chunk should ideally have a name.
 - Naming things is hard, but follow these rules and you'll be fine:
 
-* one word that describes the action (e.g., "read")
-* one word that describes the thing inside the code (e.g, "gapminder")
-* separate words with "-" (e.g., `read-gapminder`)
+1. One word that describes the action (e.g., "read")
+2. One word that describes the thing inside the code (e.g, "gapminder")
+3. Separate words with "-" (e.g., `read-gapminder`)
 ]
 
 ---
@@ -667,8 +713,6 @@ gap <- read_csv("gapminder.csv")
 ```
 ````
 
--- 
-
 .huge[
 What do you think this does?
 ]
@@ -679,6 +723,8 @@ countdown(minutes = 0, seconds = 30)
 
 
 ---
+class: bg-main1
+
 # Code: Chunk options
 
 .vlarge[
@@ -698,7 +744,8 @@ You can read more about the options at the official documentation: https://yihui
 # Your turn
 
 .huge[
-* go to `rstudio.cloud`, open document `01-oz-atlas.Rmd` and change the document so that the code output is hidden, the graphics are shown, 
+* go to `rstudio.cloud`, open document `01-oz-atlas.Rmd` and change the document so that the code output is hidden, but the graphics are shown. (Hint: Google "rstudio rmarkdown cheatsheet" for some tips!)
+* Re-Knit the document.
 * Take a look at the [R Markdown Gallery](https://rmarkdown.rstudio.com/gallery.html).
 ]
 
@@ -724,16 +771,30 @@ knitr::opts_chunk$set(
 then you will only need to add chunk options when you have the occasional one that you'd like to behave differently.
 ]
 ---
+class: bg-main1
 
 # Your turn
 
 .huge[
-Go to `rstudio.cloud` and change the global settings at the top of the rmarkdown document to `echo = FALSE`, and `cache = TRUE`, and update the other code chunks.
+* Go to your `01-oz-atlas.Rmd` document on `rstudio.cloud` and change the global settings at the top of the rmarkdown document to `echo = FALSE`, and `cache = TRUE`
+* Update the other code chunks by removing the code chunk options.
 ]
 
 ```{r countdown-cloud}
 countdown(minutes = 3)
 ```
+
+---
+class: bg-indigo
+
+.vvhuge.white.center[
+
+DEMO
+
+The many different outputs of rmarkdown
+
+]
+
 
 ---
 class: bg-main1
@@ -746,16 +807,6 @@ class: bg-main1
 3. Create a flexdashboard document - see this option in the `File > New R Markdown > From template` list.
 ]
 
----
-class: bg-black
-
-.gigantic.white[break]
-
----
-background-image: url(https://imgs.xkcd.com/comics/art_project.png)
-background-size: contain
-background-position: 50% 50%
-class: center, bottom, black
 
 ---
 class: bg-indigo
@@ -796,14 +847,25 @@ countdown(minutes = 5,
 ```
 
 ---
+class: bg-main1
+
+# Your Turn
+
+.vhuge.white[
+* Go to rstudio.cloud to `oz-atlas-final.Rmd`
+* Read through the document and add text where prompted to learn more about the Australian native platypus!
+]
+
+---
 
 # Recap:
 
 .huge[
-- rmarkdown runs code from the start to finish in a new environment
+- There is a Reproducibility Crisis
 - rmarkdown = YAML + text + code
 - rmarkdown has many different output types
 - Platypus are interesting!
+- Assignment will be announced later today
 ]
 
 ---
@@ -816,15 +878,13 @@ countdown(minutes = 5,
 
 ---
 
-## Lab quiz
+# Lab quiz
 
+.huge[
 Take the quiz for today from ED.
+]
 
 ---
-
-## References
-
-- Amazing Twitter image on rstudio panes from @...
 
 ## Share and share alike
 
@@ -836,5 +896,7 @@ Take the quiz for today from ED.
 *Note on ethics:* When you use someone else's work, you need to (1) check if it's allowed, that it has a [creative commons license](http://creativecommons.org/licenses/by/4.0/), (2) reference them as the source.
 
 - If you have a big document, build it up in pieces. You can run just one code chunk at a time, or the past several, or even one line of code. The "Run" button has a menu of options of doing the coding in pieces.
-
+ 
 - The workspace of your R Markdown document is separate from the Console
+
+- rmarkdown runs code from the start to finish in a new environment
