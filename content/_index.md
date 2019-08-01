@@ -91,6 +91,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 ## Data
 
 - [platypus.rda](http://dmac.dicook.org/lectures/data/platypus.rda) Platypus data from the Living Atlas of Australia
+- [platypus_meta.csv](http://dmac.dicook.org/lectures/data/platypus_meta.csv) Platypus meta information data from the Living Atlas of Australia
 
 ## Useful resources
 
