@@ -90,6 +90,8 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 ## Data
 
+- [platypus.rda](http://dmac.dicook.org/lectures/data/platypus.rda) Platypus data from the Living Atlas of Australia
+
 ## Useful resources
 
 - [Amazing new book on data visualisation by Kieran Healy](http://socviz.co/index.html#preface)
