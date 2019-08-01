@@ -26,18 +26,23 @@ Unless your question is a personal issue or an administrative matter, please do 
 ## Consultation times
 
 - Nick: Thurs 10:30-11:30 **Menzies E762A (Prof. Di Cook's office for first week)**
-- Steph: Wed 1300 - 1400
+- Steph: Wed 1300 - 1400 **Menzies W1105**
 - Sayani: Wed 1700 - 1800 **Menzies W1105**
 - Sherry: Thurs 1530 - 1630 **Menzies W1105**
-- Mitch: Fri 1130 - 1230
+- Mitch: Fri 1130 - 1230 **Menzies W1105**
 - Nick: Fri 12:30-1:30 **Menzies E762A (Prof. Di Cook's office for first week)**
 
 ## MoVE
 
-If you are enrolled in a MoVE unit and forget your laptop, or do not own one as yet, please visit the locations below to borrow a laptop for an activity or part of a day:
-Clayton: Room 2.24 - Level 2, Learning and Teaching Building. You’re required to provide proof of ID (student card or personal ID) in order to borrow a laptop. This service is open from 7.45am - 7.00pm on Monday to Friday.
+Borrow a laptop:
+If you are enrolled in a MoVE unit and forget your laptop, or do not own one as yet, please visit **Monash Connect** to borrow a laptop for an activity or part of a day:
 
-*You can use the rstudio cloud server. In the future we will have R and Rstudio installed locally. When this happens, you can use USB stick, attach to the borrowed laptop, and install R, RStudio and all your packages on this. Use can then use the USB stick as your working environment, with the borrowed laptop simply as the computing engine.*
+**Clayton: 7.45AM - 5PM**
+
+You may be required to provide proof of ID (student card or personal ID) in order to borrow a laptop. 
+We have a limited amount of laptops available for students to borrow (during semester only). Collect an IT Services ticket when you go to Monash Connect.
+
+*We will use the rstudio cloud server. In the future we may have R and Rstudio installed locally. When this happens, you can use USB stick, attach to the borrowed laptop, and install R, RStudio and all your packages on this. Use can then use the USB stick as your working environment, with the borrowed laptop simply as the computing engine.*
 
 ## Lecture notes
 
