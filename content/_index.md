@@ -86,6 +86,9 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 		 
 ## Assignments
 
+- Assignment 1: [Instructions](http://dmac.dicook.org/assignments/assignment-1-2019-s2/instructions.html) [Rmd](http://dmac.dicook.org/assignments/assignment-1-2019-s2/assignment-1-2019-s2.Rmd)
+  - [Data](http://dmac.dicook.org/assignments/assignment-1-2019-s2/data-raw/Data_tables_spotlight_burglary_break_and_enter_visualisation_year_ending_December_2018_v3.xlsx)
+
 ## Project
 
 ## Data

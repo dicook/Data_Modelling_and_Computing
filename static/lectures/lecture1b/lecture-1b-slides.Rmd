@@ -777,6 +777,15 @@ class: bg-main1
 
 .huge[
 * Go to your `01-oz-atlas.Rmd` document on `rstudio.cloud` and change the global settings at the top of the rmarkdown document to `echo = FALSE`, and `cache = TRUE`
+
+```r
+knitr::opts_chunk$set(
+  echo = FALSE,
+  cache = TRUE
+)
+```
+
+
 * Update the other code chunks by removing the code chunk options.
 ]
 

@@ -1,0 +1,99 @@
+---
+title: "Instructions for Assignment 1, Semester 2, 2019"
+subtitle: "Victorian Crime Sales"
+author: "Nicholas Tierney"
+date: "`r format(Sys.Date(), '%A, %B %e %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Instructions to Students
+
+This assignment is designed to simulate a scenario where you are taking over someone's existing work, and continuing with it to draw some further insights.
+ 
+This is a real world dataset taken from the Crime Statistics Agency Victoria.  https://www.crimestatistics.vic.gov.au/download-data, specifically the data called "Data tables - Spotlight: Burglary/Break and Enter Offences Recorded in Victoria visualisation - year ending December 2018 (XLSX, 4.4 MB)". The raw data is used for this assignment, with no changes made.
+
+You are writing a quick summary of the data, following along from guidance from Amelia, and some of the questions your manager has. This is not a formal report, but rather something you are giving to your manager that describes the data, and some interesting insights. We have written example text for the first section on Monash, and would like you to explore another area. Our example writings are a good example of how to get full marks.
+
+Your "colleague", Amelia (in the text treatment below) has written some helpful hints throughout the assignment to help guide you.
+
+Questions that are work marks are indicated with `**` at the start and end of the question, as well as a number of marks in parenthesis.
+
+## Marking + Grades
+
+This assignment will be worth 4% of your total grade, and will be marked out of 16 marks total.
+
+* 3 Marks for grammar and clarity. You must write in complete sentences and do a spell check.
+* 3 Marks for overall presentation of the data visualisations
+* 10 marks for the questions
+
+* Your marks will then be weighted according to peer evaluation.
+
+* Sections that contain marks are indicated with `**`, and will have the number of marks indicated in parentheses. For example:
+
+```
+# `**` What are the types of item divisions? How many are there? (0.5 Mark) `**`
+```
+
+
+## A Note on skills
+
+As of week 1, you have seen some of the code used here, but I do not expect you to know immediately what the code below does. This is a challenge for you! We will be covering skills on data summary and data visualisation in the next two weeks, but this assignment is designed to simulate a real life work situation - this means that there are some things where you need to "learn on the job". But the vast majority of the assignment will cover things that you will have seen in class, or the readings.
+
+Remember, you can look up the help file for functions by typing `?function_name`. For example, `?mean`. Feel free to google questions you have about how to do other kinds of plots, and post on the ED if you have any questions about the assignment.
+
+## How to complete this assignment.
+
+To complete the assignment you will need to fill in the blanks for function names, arguments, or other names. These sections are marked with `***` or `___`. At a minimum, your assignment should be able to be "knitted" using the `knit` button for your Rmarkdown document. 
+
+If you want to look at what the assignment looks like in progress, but you do not have valid R code in all the R code chunks, remember that you can set the chunk options to `eval = FALSE`. If you do this, please remember to ensure that you remove this chunk option or set it to `eval = TRUE` when you submit the assignment, to ensure all your R code runs.
+
+You will be completing this assignment in your assigned groups. A reminder regarding our recommendations for completing group assignments:
+
+ * Each member of the group completes the entire assignment, as best they can.
+ * Group members compare answers and combine it into one document for the final submission. 
+
+Your assignments will be peer reviewed, and results checked for reproducibility. This means:
+
+* 25% of the assignment grade will come from peer evaluation. 
+* Peer evaluation is an important learning tool. 
+
+Each student will be randomly assigned another team's submission to provide feedback on three things: 
+
+  1. Could you reproduce the analysis? 
+  2. Did you learn something new from the other team's approach?
+  3. What would you suggest to improve their work?
+
+
+## Due Date
+
+This assignment is due in by close of business (5pm) on Friday 16th August. You will submit the assignment via ED. Please change the file name to include your teams name. For example, if you are team `dplyr`, your assignment file name could read: "assignment-1-2019-s2-team-dplyr.Rmd"
+
+# Treatment
+
+You work as a data scientist in the well named company, "The Security Company", that sells security products: alarms, surveillance cameras, locks, screen doors, big doors, and so on.
+
+It's your second day at the company, and you're taken to your desk. Your boss says to you:
+
+> Amelia has managed to find this treasure trove of data - get this: crime statistics on breaking and entering around Victoria for the past years! Unfortunately, Amelia just left on holiday to New Zealand. They discovered this dataset the afternoon before they left on holiday, and got started on doing some data analysis.
+
+> We've got a meeting coming up soon where we need to discuss some new directions for the company, and we want you to tell us about this dataset and what we can do with it. We want to focus on **Monash**, since we have a few big customers in that area, and then we want you to help us compare that whatever area has the highest burglary.
+
+> You're in with the new hires of data scientists here. We'd like you to take a look at the data and tell me what the spreadsheet tells us. I've written some questions on the report for you to answer, and there are also some questions from Amelia I would like you to look at as well.
+
+> Most Importantly, can you get this to me by **COB Friday 16th August** (COB = Close of Business at 5pm).
+
+> I've given this dataset to some of the other new hire data scientists as well, you'll all be working as a team on this dataset. I'd like you to all try and work on the questions separately, and then combine your answers together to provide the best results.
+
+From here, you are handed a USB stick. You load this into your computer, and you see a folder called "vic-crime". In it is a folder called "data-raw", and an Rmarkdown file. It contains the start of a data analysis. Your job is to explore the data and answer the questions in the document.
+
+Note that the text that is written was originally written by Amelia, and you need to make sure that their name is kept up top, and to pay attention to what they have to say in the document!
+
+# Assignment location
+
+* You can find the assignment on the `rstudio.cloud` workspace, under the name: ""
+* It is also on the website as well, [here](http://dmac.dicook.org/assignments/assignment-1-2019-s2/assignment-1-2019-s2.Rmd) if you would like to run it locally. 
+* To run it locally, you will need to install R and Rstudio on your laptop, I would recommend following instructions from here: https://r4ds.had.co.nz/introduction.html#prerequisites

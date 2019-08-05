@@ -1,0 +1,399 @@
+---
+title: "Assignment 1, Semester 2, 2019"
+subtitle: "Victorian Crime Sales"
+author: "Amelia Forcat & YOUR NAME & YOUR TEAM MEMBERS NAMES & YOUR TEAM NAME"
+date: "`r format(Sys.Date(), '%A, %B %e %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Instructions to Students
+
+This assignment is designed to simulate a scenario where you are taking over someone's existing work, and continuing with it to draw some further insights.
+ 
+This is a real world dataset taken from the Crime Statistics Agency Victoria.  https://www.crimestatistics.vic.gov.au/download-data, specifically the data called "Data tables - Spotlight: Burglary/Break and Enter Offences Recorded in Victoria visualisation - year ending December 2018 (XLSX, 4.4 MB)". The raw data is used for this assignment, with no changes made.
+
+You are writing a quick summary of the data, following along from guidance from Amelia, and some of the questions your manager has. This is not a formal report, but rather something you are giving to your manager that describes the data, and some interesting insights. We have written example text for the first section on Monash, and would like you to explore another area. Our example writings are a good example of how to get full marks.
+
+Your "colleague", Amelia (in the text treatment below) has written some helpful hints throughout the assignment to help guide you.
+
+Questions that are work marks are indicated with `**` at the start and end of the question, as well as a number of marks in parenthesis.
+
+## Marking + Grades
+
+This assignment will be worth 4% of your total grade, and will be marked out of 16 marks total.
+
+* 3 Marks for grammar and clarity. You must write in complete sentences and do a spell check.
+* 3 Marks for overall presentation of the data visualisations
+* 10 marks for the questions
+
+* Your marks will then be weighted according to peer evaluation.
+
+* Sections that contain marks are indicated with `**`, and will have the number of marks indicated in parentheses. For example:
+
+```
+# `**` What are the types of item divisions? How many are there? (0.5 Mark) `**`
+```
+
+
+## A Note on skills
+
+As of week 1, you have seen some of the code used here, but I do not expect you to know immediately what the code below does. This is a challenge for you! We will be covering skills on data summary and data visualisation in the next two weeks, but this assignment is designed to simulate a real life work situation - this means that there are some things where you need to "learn on the job". But the vast majority of the assignment will cover things that you will have seen in class, or the readings.
+
+Remember, you can look up the help file for functions by typing `?function_name`. For example, `?mean`. Feel free to google questions you have about how to do other kinds of plots, and post on the ED if you have any questions about the assignment.
+
+## How to complete this assignment.
+
+To complete the assignment you will need to fill in the blanks for function names, arguments, or other names. These sections are marked with `***` or `___`. At a minimum, your assignment should be able to be "knitted" using the `knit` button for your Rmarkdown document. 
+
+If you want to look at what the assignment looks like in progress, but you do not have valid R code in all the R code chunks, remember that you can set the chunk options to `eval = FALSE`. If you do this, please remember to ensure that you remove this chunk option or set it to `eval = TRUE` when you submit the assignment, to ensure all your R code runs.
+
+You will be completing this assignment in your assigned groups. A reminder regarding our recommendations for completing group assignments:
+
+ * Each member of the group completes the entire assignment, as best they can.
+ * Group members compare answers and combine it into one document for the final submission. 
+
+Your assignments will be peer reviewed, and results checked for reproducibility. This means:
+
+* 25% of the assignment grade will come from peer evaluation. 
+* Peer evaluation is an important learning tool. 
+
+Each student will be randomly assigned another team's submission to provide feedback on three things: 
+
+  1. Could you reproduce the analysis? 
+  2. Did you learn something new from the other team's approach?
+  3. What would you suggest to improve their work?
+
+
+## Due Date
+
+This assignment is due in by close of business (5pm) on Friday 16th August. You will submit the assignment via ED. Please change the file name to include your teams name. For example, if you are team `dplyr`, your assignment file name could read: "assignment-1-2019-s2-team-dplyr.Rmd"
+
+# Treatment
+
+You work as a data scientist in the well named company, "The Security Company", that sells security products: alarms, surveillance cameras, locks, screen doors, big doors, and so on.
+
+It's your second day at the company, and you're taken to your desk. Your boss says to you:
+
+> Amelia has managed to find this treasure trove of data - get this: crime statistics on breaking and entering around Victoria for the past years! Unfortunately, Amelia just left on holiday to New Zealand. They discovered this dataset the afternoon before they left on holiday, and got started on doing some data analysis.
+
+> We've got a meeting coming up soon where we need to discuss some new directions for the company, and we want you to tell us about this dataset and what we can do with it. We want to focus on **Monash**, since we have a few big customers in that area, and then we want you to help us compare that whatever area has the highest burglary.
+
+> You're in with the new hires of data scientists here. We'd like you to take a look at the data and tell me what the spreadsheet tells us. I've written some questions on the report for you to answer, and there are also some questions from Amelia I would like you to look at as well.
+
+> Most Importantly, can you get this to me by **COB Friday 16th August** (COB = Close of Business at 5pm).
+
+> I've given this dataset to some of the other new hire data scientists as well, you'll all be working as a team on this dataset. I'd like you to all try and work on the questions separately, and then combine your answers together to provide the best results.
+
+From here, you are handed a USB stick. You load this into your computer, and you see a folder called "vic-crime". In it is a folder called "data-raw", and an Rmarkdown file. It contains the start of a data analysis. Your job is to explore the data and answer the questions in the document.
+
+Note that the text that is written was originally written by Amelia, and you need to make sure that their name is kept up top, and to pay attention to what they have to say in the document!
+
+# Data read in.
+
+> Amelia: First, let's read in the data using the function `read_excel()` from the `readxl` package, and clean up the names, using the `rename` function from `dplyr`.
+
+```{r read-in-data}
+library(readxl)
+crime_raw <- read_excel("data-raw/Data_tables_spotlight_burglary_break_and_enter_visualisation_year_ending_December_2018_v3.xlsx",
+                    sheet = 6)
+
+library(dplyr)
+crime <- crime_raw %>%
+  rename(year = `Year ending December`,
+         local_gov_area = `Local Government Area`,
+         offence_subgroup = `Offence Subgroup`,
+         item_division = `Property Item Division`,
+         item_subdivision = `Property Item Subdivision`,
+         n_property_items = `Number of Property Items`)
+```
+
+> Amelia:  Let's print the data and look at the first few rows.
+
+```{r print-crime}
+crime
+```
+
+> Amelia: And what are the names of the columns in the dataset?
+
+```{r crime-names}
+names(crime)
+```
+
+> Amelia: How many years of data are there?
+
+```{r crime-year-summary}
+summary(crime$year)
+```
+
+> Amelia: We have data that goes from 2009 until 2018, that's nine years of data!
+
+How many Local Government Areas (LGAs) are there?
+And what are the LGAs called?
+
+```{r crime-lga-summary}
+n_distinct(crime$local_gov_area)
+unique(crime$local_gov_area)
+```
+
+> Amelia: That's a lot of areas - about 80!
+
+What are the types of offence subgroups? How many are there?
+
+```{r crime-offence-subgroups}
+unique(crime$offence_subgroup)
+n_distinct(crime$offence_subgroup)
+```
+
+> Amelia: Remember that you can learn more about what these functions do by typing `?unique` or `?n_distinct` into the console.
+
+# `**` What are the types of item divisions? How many are there? (0.5 Mark) `**`
+
+```{r crime-item-division}
+unique(crime$___)
+n_distinct(crime$___)
+```
+
+# `**` What are the types of item subdivisions?  (0.5 Mark) `**`
+
+```{r crime-item-subdivision}
+unique(___$___)
+n_distinct(___$___)
+```
+
+# `**` What is the summary of the number of property items? (0.5 Mark) `**`
+
+```{r crime-property-items}
+summary(___)
+```
+
+# `**` Can you tell me what each row represents, and what each of the columns measure? (1 Mark) `**`
+
+> Amelia: We need to describe what each row of the data represents, and take our best guess at what we think  each column measures. It might be worthwhile looking through the excel sheet in the `data` folder, or on the website where the data was extracted.
+
+# Is there a yearly trend in the total number of items stolen per year?
+
+> Amelia: Let's  group by year and then sum up the number of property items. Then we can take this information and use `ggplot` to plot the year on the x axis, and `n_items` on the y axis, and number of items as a column with `geom_col()`.
+
+```{r vis-crime-per-year}
+crime_year_n_items <- crime %>%
+  group_by(year) %>%
+  summarise(n_items = sum(n_property_items))
+
+library(ggplot2)
+ggplot(crime_year_n_items,
+       aes(x = year,
+           y = n_items)) + 
+  geom_col()
+```
+
+> Amelia: I try and write three sentences complete about what I learn in a graphic. You should start with a quick summary of what the graphic shows you. Then, describe what is on the x axis, the y axis, and any other colours used to separate the data. You then need to describe what you learn. So, I would say:
+
+> "A summary of the number of items stolen from burglaries for each year from 2009 until 2018. On the x axis is each year, and the y axis is the number of items stolen. We learn that the number of items stolen stays around 300,000 (3e+05 means the number 3 with 5 zeros after it), but from 201, the number of items stolen has decreased each year."
+
+# Look at burglary around Monash and tell me about it?
+
+> Amelia: Let's filter the data down to the 'Monash' LGAs.
+
+```{r crime-monash}
+crime_monash <- crime %>% filter(local_gov_area == "Monash")
+```
+
+## Is crime in Monash increasing?
+
+> Amelia: Let's count the number of crimes per year.
+
+```{r vis-monash-crime}
+crime_count_monash <- crime_monash %>% count(year) 
+
+ggplot(crime_count_monash,
+       aes(x = year,
+           y = n)) + 
+  geom_col()
+```
+
+> Amelia: This plot shows the number of burglary crimes per year across Victoria. The x axis shows the year, and the y axis shows the number of crimes scored for that year. There appears to be a slight upwards trend, but it looks variable for each year.
+
+## What are the most common offences in Monash across all years?
+
+> Amelia: We count the number of observations in each `offence_subgroup` to tell us which are the most common.
+
+```{r crime-monash-count-offences}
+crime_monash %>% count(offence_subgroup)
+```
+
+> Amelia: The top subgroups are "B321 Residential non-aggravated burglary", at 273, followed by "B322 Non-residential non-aggravated burglary" at 248.
+
+## Are any of these offences increasing over time?
+
+> Amelia: We take the crime data, then group by year, and count the number of offences in each year. We then plot this data. On the x axis we have year. On the y axis we have n, the number of crimes that take place in a subgroup in a year, and we are colouring according to the offence subgroup, and drawing this with a line, then making sure that the limits go from 0 to 30.
+
+```{r crime-sungroup-monash}
+crime_year_offence_monash <- crime_monash %>%
+  group_by(year) %>%
+  count(offence_subgroup)
+
+ggplot(crime_year_offence_monash,
+       aes(x = year,
+           y = n,
+           colour = offence_subgroup)) + 
+  geom_line() + 
+  lims(y = c(0, 35)) # Makes sure the y axis goes to zero
+```
+
+> Amelia: This shows us that the most common offence is "residential non-aggravated burglary", 
+
+# What are the most common items stolen in Monash?
+
+> Amelia: We count up the item subdivisions, which is the smallest category on items. We then plot number of times an item is stolen, and reorder the y axis so that the items are in order of most to least.
+
+```{r crime-items-monash}
+crime_items_monash <- crime_monash %>% 
+  count(item_subdivision)
+
+ggplot(crime_items_monash,
+       aes(x = n,
+           y = reorder(item_subdivision, n))) + 
+  geom_point()
+```
+
+> Amelia:
+
+# Using all the crime data, what are the top 5 local government areas for total burglaries?
+
+> Amelia: This could be where we focus our next marketing campaign! Let's take the crime data, then count the number of rows in each local_cov_area, and take the top 5 results using `top_n`, and arrange in descending order by the column "n"
+
+```{r crime-top}
+crime %>%
+  count(local_gov_area) %>%
+  top_n(n = 5) %>%
+  arrange(desc(n))
+```
+
+# (`**`) Which LGA had the most crime? (0.5 Mark) (`**`)
+
+___
+
+#  `**` Subset the data to be the LGA with the most crime. (0.5 Mark) `**`
+
+```{r crime-}
+crime_*** <- crime %>% 
+  filter(local_gov_area == ___)
+```
+
+#  Repeat the previous analysis, but compare Monash with the rest of the data.
+
+## `**` Is crime in ___ increasing? (1 Mark) `**`
+
+```{r vis-crime-}
+crime_count_*** <- crime_*** %>% count(year) 
+
+ggplot(crime_count_***,
+       aes(x = ***,
+           y = ***)) + 
+  geom_col()
+```
+
+# `**` What are the most common offences at ___ across all years? (1 Marks) `**`
+
+```{r crime-count-offences-}
+crime_*** %>%
+  count(offence_subgroup)
+```
+
+## `**` Are any of these offences increasing over time? (1 Mark) `**`
+
+```{r crime-subgroup-}
+crime_year_offence_*** <- crime_*** %>%
+  group_by(year) %>%
+  count(***)
+
+ggplot(crime_year_offence_***,
+       aes(x = ***,
+           y = ***,
+           colour = offence_subgroup)) + 
+  geom_line() + 
+  lims(y = c(0, 35)) # Makes sure the y axis goes to zero
+```
+
+> Amelia: I would write three sentences complete about what I learn in this graphic. You should start with a quick summary of what the graphic shows you. Then, describe what is on the x axis, the y axis, and any other colours used to separate the data. You then need to describe what you learn.
+
+
+# What are the most common subdivision items stolen in ---?
+
+```{r crime-monash-items}
+crime_items_*** <- crime_** %>% 
+  count(***)
+
+ggplot(crime_items_***,
+       aes(x = n,
+           y = reorder(item_subdivision, n))) + 
+  geom_point()
+```
+
+# Combine Monash with the top crime LGA area into one data set using `bind_rows()`
+
+> Amelia: You can stack the data together using `bind_rows()`.
+
+```{r bind-data}
+crime_top_monash <- bind_rows(crime_***,
+                              crime_***)
+```
+
+> Amelia: Use ggplot to create two separate plots for each local government area using `facet_wrap()` on local government area.
+
+```{r crime-year-offence}
+crime_year_offence_both <- crime_top_monash %>%
+  group_by(year, local_gov_area) %>%
+  count(offence_subgroup)
+
+gg_crime_offence <- ggplot(***,
+       aes(x = ***,
+           y = ***,
+           colour = offence_subgroup)) + 
+  geom_line() + 
+  facet_wrap(~ ***)
+```
+
+
+```{r crime-year-offence-lga}
+crime_items_both <- crime_top_monash %>% 
+  group_by(local_gov_area) %>%
+  count(item_subdivision)
+
+ggplot(crime_items_both,
+       aes(x = n,
+           y = item_subdivision,
+           colour = local_gov_area)) + 
+  geom_point()
+```
+
+# `**` Do you have any recommendations about future directions with this dataset? Is there anything else in the excel spreadsheet we could look at? (2 Mark) `**`
+
+> Amelia: I was planning on looking at the other tabs in the spreadsheet to help us use information on the tool used to break in. How could we use what is in there? And what is in there that looks useful?
+
+#  `**` For our presentation to stake holders, you get to pick one figure to show them, which of the ones above would you choose? Why? Recreate the figure below here and write 3 sentences about it (2.5 Marks) `**`
+
+I would include the following figure:
+
+```{r reprint-crime-offence}
+***
+```
+
+> Amelia: Remember, when you are describing data visualisation, You should start with a quick summary of what the graphic shows you. Then, describe what is on the x axis, the y axis, and any other colours used to separate the data. You then need to describe what you learn.
+
+> Amelia: Remeber to include the graphic again below.
+
+# References
+
+> Amelia: I have got to remember to cite all the R packages that I have used, and any Stack Overflow questions, blog posts, text books, from online that I have used to help me answer questions.
+
+Data downloaded from https://www.crimestatistics.vic.gov.au/download-data
+
+Packages used (look for things which were loaded with `library()`):
+* ggplot2
+* dplyr
+* ...
