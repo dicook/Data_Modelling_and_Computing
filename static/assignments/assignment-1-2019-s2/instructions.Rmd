@@ -94,6 +94,6 @@ Note that the text that is written was originally written by Amelia, and you nee
 
 # Assignment location
 
-* You can find the assignment on the `rstudio.cloud` workspace, under the name: ""
+* You can find the assignment on the `rstudio.cloud` workspace, under the name: "assignment-1-2019-s2"
 * It is also on the website as well, [here](http://dmac.dicook.org/assignments/assignment-1-2019-s2/assignment-1-2019-s2.Rmd) if you would like to run it locally. 
 * To run it locally, you will need to install R and Rstudio on your laptop, I would recommend following instructions from here: https://r4ds.had.co.nz/introduction.html#prerequisites
