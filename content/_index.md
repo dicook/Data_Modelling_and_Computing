@@ -86,7 +86,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 		 
 ## Assignments
 
-- Assignment 1 **Due 5pm, Friday, August 16th**: [Instructions](http://dmac.dicook.org/assignments/assignment-1-2019-s2/instructions.html) [zip](http://dmac.dicook.org/assignments/assignment-1-2019-s2-zip.zip) (Unzip the file and double click on the rstudio project, "assignment-1-2019-s2.Rproj" This contains the data and Rmd file)
+- Assignment 1 **Due 5pm, Friday, August 16th**: [Instructions](http://dmac.dicook.org/assignments/assignment-1-2019-s2/instructions.html) [zip](http://dmac.dicook.org/assignments/assignment-1-2019-s2.zip) (Unzip the file and double click on the rstudio project, "assignment-1-2019-s2.Rproj" This contains the data and Rmd file)
 
 ## Project
 

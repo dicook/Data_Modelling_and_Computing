@@ -10,6 +10,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
 # Instructions to Students
 
 This assignment is designed to simulate a scenario where you are taking over someone's existing work, and continuing with it to draw some further insights.
@@ -91,7 +92,6 @@ It's your second day at the company, and you're taken to your desk. Your boss sa
 From here, you are handed a USB stick. You load this into your computer, and you see a folder called "vic-crime". In it is a folder called "data-raw", and an Rmarkdown file. It contains the start of a data analysis. Your job is to explore the data and answer the questions in the document.
 
 Note that the text that is written was originally written by Amelia, and you need to make sure that their name is kept up top, and to pay attention to what they have to say in the document!
-
 # Data read in.
 
 > Amelia: First, let's read in the data using the function `read_excel()` from the `readxl` package, and clean up the names, using the `rename` function from `dplyr`.
@@ -254,10 +254,15 @@ ggplot(crime_year_offence_monash,
 crime_items_monash <- crime_monash %>% 
   count(item_subdivision)
 
+# save an object of the maximum number of items stolen
+# to help construct the plot below.
+max_items_stolen <- max(crime_items_monash$n)
+
 ggplot(crime_items_monash,
        aes(x = n,
            y = reorder(item_subdivision, n))) + 
-  geom_point()
+  geom_point() + 
+  lims(x = c(0, max_items_stolen)) # make sure x axis goes from 0
 ```
 
 > Amelia:
@@ -366,8 +371,8 @@ crime_items_both <- crime_top_monash %>%
 
 ggplot(crime_items_both,
        aes(x = n,
-           y = item_subdivision,
-           colour = local_gov_area)) + 
+           y = reorder(item_subdivision, n), # reorder the points
+           colour = local_gov_area)) +
   geom_point()
 ```
 
