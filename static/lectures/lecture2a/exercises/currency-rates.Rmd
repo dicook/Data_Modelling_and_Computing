@@ -1,0 +1,24 @@
+---
+title:
+author: 
+output: html_document
+---
+
+```{r}
+rates <- read_csv("data/rates.csv")
+head(rates)
+```
+
+```{r echo=FALSE, results='hide', fig.show='hide'}
+library(tidyverse)
+rates <- read_csv("data/rates.csv")
+ggplot(rates, aes(x=date, y=AUD)) + geom_line()
+```
+
+```{r echo=FALSE, results='hide', fig.width=6, fig.height=10}
+rates_long <- rates %>% select(date, AUD, GBP, JPY, CNY, CAD) %>%
+  gather(currency, rate, -date)
+ggplot(rates_long, aes(x=date, y=rate)) + 
+  geom_line() +
+  facet_wrap(~currency, ncol=1, scales="free_y")
+```

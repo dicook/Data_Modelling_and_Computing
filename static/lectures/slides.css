@@ -2,7 +2,6 @@
 @import url(https://fonts.googleapis.com/css?family=Josefin+Sans);
 @import url(https://cdn.rawgit.com/tonsky/FiraCode/1.204/distr/fira_code.css);
 
-
 .blockquote {
   /*background: #474863;*/
   border-left: 10px solid #ccc;
@@ -36,9 +35,9 @@
 
 .pull-left {
   float: left;
-  width: 45%;
+  width: 47%;
 }
 .pull-right {
   float: right;
-  width: 45%;
+  width: 47%;
 }

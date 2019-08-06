@@ -1,0 +1,18 @@
+---
+title:
+author:
+output: html_document
+---
+
+```{r}
+tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>%
+  select(country, year, starts_with("new_sp_")) %>%
+  filter(year>1996, year<2012)
+tb %>% top_n(20)
+tb_tidy <- tb %>% 
+  gather(stuff, count, starts_with("new_sp_")) %>%
+  separate(stuff, c("stuff1", "stuff2", "genderage")) %>%
+  separate(genderage, c("gender", "age"), sep=1) %>%
+  select(-stuff1, -stuff2)
+tb_tidy
+```
