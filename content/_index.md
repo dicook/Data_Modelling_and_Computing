@@ -55,7 +55,7 @@ We have a limited amount of laptops available for students to borrow (during sem
     - Friday Reading Quiz: Go to ED and complete the reading quiz before Friday's class.
 - Week 2: Tidy data principles, reshaping your data into tidy form, and basic data wrangling
     - Wednesday Reading:[Chapter 12: Tidy Data](http://r4ds.had.co.nz/tidy-data.html) 
-    - Wednesday Slides: - [HTML](https://dmac.dicook.org/lectures/lecture2a/lecture-2a-tidydata-slides.html); [Rmd](https://dmac.dicook.org/lectures/lecture2a/lecture-2a-tidydata-slides.Rmd)
+    - Wednesday Slides: - [HTML](https://dmac.dicook.org/lectures/lecture2a/lecture-2a-tidydata-slides.html); [PDF](https://dmac.dicook.org/lectures/lecture2a/lecture-2a-tidydata-slides.pdf); [Rmd](https://dmac.dicook.org/lectures/lecture2a/lecture-2a-tidydata-slides.Rmd)
     - Friday Reading: [Chapter 5: Data Transformation](https://r4ds.had.co.nz/transform.html)
     - Friday Slides:
 - Week 3: Plotting your data, and wrangling temporal data
