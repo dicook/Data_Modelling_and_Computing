@@ -4,15 +4,73 @@ author:
 output: html_document
 ---
 
-```{r}
-tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>%
-  select(country, year, starts_with("new_sp_")) %>%
-  filter(year>1996, year<2012)
-tb %>% top_n(20)
-tb_tidy <- tb %>% 
-  gather(stuff, count, starts_with("new_sp_")) %>%
-  separate(stuff, c("stuff1", "stuff2", "genderage")) %>%
-  separate(genderage, c("gender", "age"), sep=1) %>%
-  select(-stuff1, -stuff2)
+- Write down the steps that will be needed go from raw data to tidy
+- Save a new copy of the data called `tb_raw`, which contains the read in data.
+- Print the data
+
+First, load `library(tidyverse)`, and read in the data
+
+```{r tb-read}
+library(tidyverse)
+tb_raw <- read_csv("data/TB_notifications_2018-03-18.csv")
+tb_raw
+```
+
+- select the variables `country`, `year`, and those that start with `new_sp_`. See `?select` for more information
+- then filter the observations to be between 1996 and 2012.
+- Save this shorterned dataset as `tb_short`.
+
+
+```{r tb-short}
+tb_short <-  tb_raw %>%
+  select(country, # select variables country and year
+         year, 
+         starts_with("new_sp_")) %>%
+  filter(year > 1996, 
+         year < 2012) # before 2012
+```
+
+- Identify the top 20 observations using `top_n`
+
+```{r tb-top}
+tb_short %>% top_n(20) # place 20 inside top_n
+```
+
+`gather` the data into columns into columns named `stuff` and `count`
+
+```{r tb-gather}
+tb_gather <- tb_short %>% 
+  gather(key = stuff, 
+         value = count, 
+         starts_with("new_sp_"))
+
+tb_gather
+```
+
+- Separate the column `stuff`,  `into` three columns named "stuff1", "stuff2", and "genderage"
+
+```{r tb-sep1}
+tb_sep_step1 <- tb_gather %>%
+  separate(col = stuff, 
+           into = c("stuff1", "stuff2", "genderage"))
+
+tb_sep_step1
+```
+
+- Separate `genderage` into two columns named "gender" and "age", separating on the first position.
+
+```{r tb-sep2}
+tb_sep_step2 <- tb_sep_step1 %>%
+  separate(col = genderage, 
+           into = c(__, ___), 
+           sep = 1)
+```
+
+Drop the columns named stuff1 and stuff2
+
+```{r tb-tidy}
+tb_tidy <- tb_step2 %>%
+  select(- ___, - ___) # drop stuff1 and stuff2
+
 tb_tidy
 ```

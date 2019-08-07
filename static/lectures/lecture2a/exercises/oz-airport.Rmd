@@ -5,11 +5,12 @@ date:
 output: html_document
 ---
 
-```{r}
+First we read in the data from the excel sheet
+```{r read-passengers}
 library(readxl)
-passengers <- read_xls("data/WebAirport_FY_1986-2017.xls", 
-                       sheet=3, 
-                       skip=6)
+passengers <- read_xls(path = "data/WebAirport_FY_1986-2017.xls", 
+                       sheet = 3, 
+                       skip = 6)
 passengers
 ```
 
@@ -18,12 +19,25 @@ Tidy the data, to produce a data set with these columns
     - year 
     - type_of_flight: DOMESTIC, INTERNATIONAL
     - bound: IN or OUT
+    
 
-```{r eval=FALSE, echo=FALSE}
-passengers <- passengers %>% 
-  select(-X__1, -X__2, -Rank, -starts_with("TOTAL")) %>%
-  rename(INBOUND_DOM=INBOUND, INBOUND_INTL=INBOUND__1, 
-         OUTBOUND_DOM=OUTBOUND, OUTBOUND_INTL=OUTBOUND__1,
-         INBOUND_TOTL=INBOUND__2, OUTBOUND_TOTL=OUTBOUND__2) %>%
-  gather(where, amount, starts_with("IN"), starts_with("OUT")) 
+
+```{r extension exercise}
+tidy_passengers <- passengers %>%
+  select(-...1, 
+         -...14, 
+         -Rank, 
+         -starts_with("TOTAL")) %>%
+  rename(
+    INBOUND_DOM = ___,
+    INBOUND_INTL = ___,
+    OUTBOUND_DOM = ___,
+    OUTBOUND_INTL = ___,
+    INBOUND_TOTL = ___,
+    OUTBOUND_TOTL =___
+  ) %>%
+  gather(key = where, 
+         value = amount, 
+         starts_with("IN"), 
+         starts_with("OUT"))
 ```

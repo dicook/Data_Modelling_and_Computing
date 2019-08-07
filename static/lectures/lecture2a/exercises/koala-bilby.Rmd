@@ -1,0 +1,63 @@
+# Demonstrate with koala bilby data (write this as live code)
+
+Here is a little data set to practice gather, spread and separate on.
+
+First we load the library `tidyverse` to load up all of our functions.
+
+```{r library}
+library(tidyverse)
+```
+
+
+```{r koala-bilby}
+kb <- read_csv("data/koala_bilby.csv")
+kb
+```
+
+---
+
+### Exercise 1
+
+Gather the data into long form, naming the two new variables, `label` and `count`
+
+```{r kb-long}
+kb_long <- kb %>% 
+  gather(key = label, 
+         value = count, 
+         -ID)
+
+kb_long
+```
+
+### Exercise 2
+
+Separate the labels into two new variables, `animal`, `state`
+
+```{r kb-separate}
+kb_long_sep <- kb_long %>%
+  separate(col = label, 
+           into = c(__, ___))
+
+kb_long_sep
+```
+
+### Exercise 3
+
+Spread the long form data into wide form, where the columns are `state`s. 
+```{r kb-wide-state}
+kb_long_sep %>% 
+  spread(key = ___, 
+         value = count)
+```
+
+### Exercise 4
+
+Spread the long form data into wide form, where the columns are the `animal`s. 
+
+```{r kb-spread-animal}
+kb_long_sep %>% 
+  spread(key = ___, 
+         value = count)
+```
+
+---

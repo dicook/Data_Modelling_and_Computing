@@ -4,21 +4,83 @@ author:
 output: html_document
 ---
 
-```{r}
-rates <- read_csv("data/rates.csv")
+First load up the tidyverse
+
+```{r library}
+library(tidyverse)
+```
+
+Then read in the data, `rates.csv` and name it `rates`
+```{r read-rates}
+___ <- read_csv("data/___")
+
 head(rates)
 ```
 
-```{r echo=FALSE, results='hide', fig.show='hide'}
-library(tidyverse)
-rates <- read_csv("data/rates.csv")
-ggplot(rates, aes(x=date, y=AUD)) + geom_line()
+Now plot the data:
+
+- on the x axis put `date`
+- on the y azis put `AUD`
+
+```{r plot-rates}
+ggplot(rates, 
+       aes(x = ___, 
+           y = ___)) + 
+  geom_line()
 ```
 
-```{r echo=FALSE, results='hide', fig.width=6, fig.height=10}
-rates_long <- rates %>% select(date, AUD, GBP, JPY, CNY, CAD) %>%
-  gather(currency, rate, -date)
-ggplot(rates_long, aes(x=date, y=rate)) + 
-  geom_line() +
-  facet_wrap(~currency, ncol=1, scales="free_y")
+Make a subset of the data that includes the following columns:
+
+
+- `date`
+- `AUD`
+- `GBP`
+- `JPY`
+- `CNY`
+- `CAD`
+
+```{r subset-rates}
+rates_sub <- rates %>% 
+  select(___, 
+         ___, 
+         ___, 
+         ___, 
+         ___, 
+         ___)
+
+rates_sub
 ```
+
+
+Now put the data into long form, where:
+
+* `key` is `currency`
+* `value` is `rate`
+
+```{r rates-long}
+rates_long <- rates_sub %>%
+  gather(key = ___, 
+         value = ___, 
+         -date)
+```
+
+Now plot the currency rates
+
+* with `date` on the x axis
+* with `rate` on the y axis
+* And faceted by each currency
+
+```{r plot-all-currencies, fig.width=6, fig.height=10}
+
+ggplot(rates_long, 
+       aes(x = ___, 
+           y = ___)) + 
+  geom_line() +
+  facet_wrap(~currency, # facetted by currency
+             ncol = 1, 
+             scales = "free_y")
+```
+
+* What do you learn?
+
+Describe the similarities and differences between the currencies. 
