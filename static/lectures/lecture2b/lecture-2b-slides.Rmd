@@ -90,7 +90,6 @@ class: bg-main3
 - `group_by()`
 - `summarise()`
 - `count()`
-- `top_n()`
 ]
 
 ---
@@ -99,7 +98,7 @@ background-size: contain
 background-position: 50% 50%
 class: center, bottom, bg-black
 
-.left.white[
+.left.white.large[
 Artwork by @allison_horst
 ]
 
@@ -116,8 +115,8 @@ dim(avail_pkg)
 ```
 ]
 
-.huge.white[
-That means that at this moment there are `r nrow(avail_pkg)` R packages available as of `r Sys.Date()`
+.vhuge.white[
+As of `r Sys.Date()` there are `r nrow(avail_pkg)` R packages available
 ]
 
 ---
@@ -186,7 +185,7 @@ This data set was brought to R by Hadley Wickham, and was one of the problems th
 .huge[
 * Experiment in Food Sciences at Iowa State University. 
 * Aim: find if cheaper oil could be used to make hot chips
-* Question: Could people distinguish  between chips fried in the new oils relative to those current market leader oil.
+* Question: Can people distinguish between chips fried in the new oils relative to those current market leader oil.
 * 12 tasters recruited 
 * Each sampled two chips from each batch
 * Over a period of ten weeks.
@@ -598,7 +597,7 @@ But what if we want to get a summary for each `type`?
 --
 
 .vvhuge[
-`group_by()`
+use `group_by()`
 ]
 
 ---
@@ -617,6 +616,7 @@ fries_long %>%
 ```
 
 ---
+class: bg-main1
 
 # Your turn: Back to french-fries.Rmd
 
@@ -681,6 +681,7 @@ fries_long %>%
 ```
 
 ---
+class: bg-main1
 
 # Your turn: french-fries.Rmd - arrange
 
@@ -732,7 +733,7 @@ class: bg-main1
 
 .huge[
 - count the number of subjects
-- cound the number of types
+- count the number of types
 ]
 
 ```{r cd-count, echo = FALSE}
@@ -809,6 +810,16 @@ summarise(fries_spread,
 ---
 
 ```{r fries-spread-plot, out.width= "80%"}
+  ggplot(fries_spread,
+         aes(x = `1`, 
+             y = `2`)) + 
+  geom_point() + 
+  labs(title = "Data is poor quality: the replicates do not look like each other!")
+```
+
+---
+
+```{r fries-spread-plot-out, echo = FALSE, out.width= "0%"}
   ggplot(fries_spread,
          aes(x = `1`, 
              y = `2`)) + 

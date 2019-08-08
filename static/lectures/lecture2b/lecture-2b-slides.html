@@ -4,7 +4,7 @@
     <title>ETC1010: Data Modelling and Computing</title>
     <meta charset="utf-8" />
     <meta name="author" content="Dr. Nicholas Tierney &amp; Professor Di Cook" />
-    <meta name="date" content="2019-08-08" />
+    <meta name="date" content="2019-08-09" />
     <link href="libs/remark-css-0.0.1/shinobi.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
     <link href="libs/countdown-0.3.3/countdown.css" rel="stylesheet" />
@@ -19,7 +19,7 @@ class: center, middle, inverse, title-slide
 ## Week of Tidy Data: Lecture 2
 ### Dr. Nicholas Tierney &amp; Professor Di Cook
 ### EBS, Monash U.
-### 2019-08-08
+### 2019-08-09
 
 ---
 
@@ -86,7 +86,6 @@ class: bg-main3
 - `group_by()`
 - `summarise()`
 - `count()`
-- `top_n()`
 ]
 
 ---
@@ -95,7 +94,7 @@ background-size: contain
 background-position: 50% 50%
 class: center, bottom, bg-black
 
-.left.white[
+.left.white.large[
 Artwork by @allison_horst
 ]
 
@@ -113,12 +112,12 @@ dim(avail_pkg)
 ```
 
 ```
-## [1] 14730    17
+## [1] 14738    17
 ```
 ]
 
-.huge.white[
-That means that at this moment there are 14730 R packages available as of 2019-08-08
+.vhuge.white[
+As of 2019-08-09 there are 14738 R packages available
 ]
 
 ---
@@ -128,25 +127,6 @@ That means that at this moment there are 14730 R packages available as of 2019-0
 
 ```r
 library(tidyverse)
-```
-
-```
-## ── Attaching packages ────────────────────────────────────────────── tidyverse 1.2.1 ──
-```
-
-```
-## ✔ ggplot2 3.2.0     ✔ purrr   0.3.2
-## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
-## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
-## ✔ readr   1.3.1     ✔ forcats 0.4.0
-```
-
-```
-## ── Conflicts ───────────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter()  masks stats::filter()
-## ✖ purrr::is_null() masks testthat::is_null()
-## ✖ dplyr::lag()     masks stats::lag()
-## ✖ dplyr::matches() masks testthat::matches()
 ```
 
 ---
@@ -207,7 +187,7 @@ This data set was brought to R by Hadley Wickham, and was one of the problems th
 .huge[
 * Experiment in Food Sciences at Iowa State University. 
 * Aim: find if cheaper oil could be used to make hot chips
-* Question: Could people distinguish  between chips fried in the new oils relative to those current market leader oil.
+* Question: Can people distinguish between chips fried in the new oils relative to those current market leader oil.
 * 12 tasters recruited 
 * Each sampled two chips from each batch
 * Over a period of ten weeks.
@@ -348,7 +328,7 @@ Filtering requires comparison to find the subset of observations of interest.  W
 countdown(minutes = 3, play_sound = TRUE)
 ```
 
-<div class="countdown" id="timer_5d4c276d" style="right:0;bottom:0;" data-audio="true" data-warnwhen="0">
+<div class="countdown" id="timer_5d4c98e3" style="right:0;bottom:0;" data-audio="true" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -712,7 +692,7 @@ class: bg-main5
 - drop subject
 ]
 
-<div class="countdown" id="timer_5d4c2778" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_5d4c96db" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -795,7 +775,7 @@ Compute a new variable called `lrating` by taking a log of the rating
 
 
 
-<div class="countdown" id="timer_5d4c2a1b" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_5d4c9a02" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">02</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -848,7 +828,7 @@ But what if we want to get a summary for each `type`?
 --
 
 .vvhuge[
-`group_by()`
+use `group_by()`
 ]
 
 ---
@@ -879,6 +859,7 @@ fries_long %&gt;%
 ```
 
 ---
+class: bg-main1
 
 # Your turn: Back to french-fries.Rmd
 
@@ -887,7 +868,7 @@ fries_long %&gt;%
 - Compute the average rancid rating per week
 ]
 
-<div class="countdown" id="timer_5d4c2916" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_5d4c9a00" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">03</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -1003,6 +984,7 @@ fries_long %&gt;%
 ```
 
 ---
+class: bg-main1
 
 # Your turn: french-fries.Rmd - arrange
 
@@ -1011,7 +993,7 @@ fries_long %&gt;%
 - Arrange the average subject rating in order lowest to highest.
 ]
 
-<div class="countdown" id="timer_5d4c2800" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_5d4c99b6" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">02</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -1097,10 +1079,10 @@ class: bg-main1
 
 .huge[
 - count the number of subjects
-- cound the number of types
+- count the number of types
 ]
 
-<div class="countdown" id="timer_5d4c28cc" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_5d4c995f" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">02</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -1224,6 +1206,10 @@ summarise(fries_spread,
 ```
 
 &lt;img src="lecture-2b-slides_files/figure-html/fries-spread-plot-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="lecture-2b-slides_files/figure-html/fries-spread-plot-out-1.png" width="0%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: bg-main1

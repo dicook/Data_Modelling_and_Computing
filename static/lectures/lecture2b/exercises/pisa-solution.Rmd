@@ -8,9 +8,14 @@ This lab exercise is about the 2015 PISA results.
 
 # What is PISA?
 
-PISA stands for the **P**rogramme for **I**nternational **S**tudent **A**ssessment.
+PISA stands for the:
 
-There is a great video that explains how PISA works, here: https://www.youtube.com/watch?v=i4RGqzaNEtg
+- **P**rogramme for 
+- **I**nternational 
+- **S**tudent 
+- **A**ssessment.
+
+There is a great video that explains how the PISA study works, here: https://www.youtube.com/watch?v=i4RGqzaNEtg
 
 # The Data
 
@@ -18,24 +23,22 @@ The data is downloaded from [http://www.oecd.org/pisa/data/2015database/](http:/
 
 **We have already extracted and saved the data for you**
 
-The code below shows how we collected the data.
+If you are interested, the code below shows how we collected the data.
 
 > The SPSS format "Student questionnaire data file (419MB)" is downloaded and processed using this code, to extract results for Australia:
 
 ```{r dl-pisa-data, eval = FALSE}
-library(haven)
+library(haven) # library for processing data formats from different software
 pisa_2015 <- read_sav(file.choose())
 pisa_au <- pisa_2015 %>% filter(CNT == "AUS")
 save(pisa_au, file="pisa_au.rda")
 ```
 
-# The task
+# The task: Answer some questions about Australia's results from the PISA data.
 
-Answer some questions about Australia's results from the PISA data.
+At times it may be helpful to examine the data dictionary, which is provided as an excel file - (see "Codebook_CMB.xlsx" in the `data` folder - found from the [OECD PISA site](https://www.oecd.org/pisa/data/2015database/)).
 
-At times it may be helpful to examine the data dictionary, which is provided as an excel file - (see thefile "Codebook_CMB.xlsx" in the `data` folder - found in the [OECD PISA site](https://www.oecd.org/pisa/data/2015database/))
-
-First we load the tidyverse, then read in the data using `read_rds`.
+First we load the tidyverse, then read in the data using `read_rds` (rds is an R data file object that can be compressed well.)
 
 ```{r load-read}
 library(tidyverse)
@@ -50,7 +53,7 @@ head(pisa_au_raw)
 
 The data is pretty messy! I mean, what even are these variables? 
 
-We have done a large amount of pre-processing on the data, as this is a pretty intense amount of data cleaning. Using information from the codebook (in data/Codebook_CMB.xlsx), we have 
+We have done a large amount of pre-processing on the data for you, as the data cleaning requires for this contains some code that you haven't seen before, and it is a pretty intense amount of data cleaning. 
 
 You can see the code we have used here:
 
@@ -289,9 +292,11 @@ pisa_au_tidy %>%
 
 Which state does best, on average, on math? 
 
+Which state does best, on average, on math? 
+
 A note on the `weighted.mean` function. This computes a _weighted average_. 
 
-A weighted average is where you control the individual contribution of each value when averaging. This means that if some demographics are not matching across samples, they can help control for this by controlling the _weight_ of that sample when calculating the mean. So, for our example with survey data, the weights indicate how representative an individual is of the population.
+A weighted average is where you control the individual contribution of each value when averaging. This means that if some demographics are not matching across samples, they can help control for this by controlling the _weight_ of that sample when calculating the mean. So, for our example with survey data, the weights indicate how representative an individual is of the population. You can think of taking the normal average as a special case of a weighted average where each weight is 1, and equally contributes.
 
 
 ## Calculate averages
