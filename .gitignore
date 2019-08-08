@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+public/assignments/
+.DS_Store

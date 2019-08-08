@@ -48,14 +48,14 @@ We have a limited amount of laptops available for students to borrow (during sem
 
 - Week 1: Introduction to the language of data analysis. 
     - Wednesday Reading: [Chapter 2 (very short)](https://r4ds.had.co.nz/explore-intro.html), [Chapter 3](https://r4ds.had.co.nz/data-visualisation.html#the-layered-grammar-of-graphics), [Chapter 4 (very short)](https://r4ds.had.co.nz/workflow-basics.html)
-    - Wednesday Slides: [HTML](https://dmac.dicook.org/lectures/lecture1a/lecture-1a-slides.html); [PDF](https://dmac.dicook.org/lectures/lecture1a/lecture-1a-slides.pdf); [Rmd](https://dmac.dicook.org/lectures/lecture1a/lecture-1a-slides.Rmd)
+    - Wednesday Slides: [HTML](lectures/lecture1a/lecture-1a-slides.html); [PDF](lectures/lecture1a/lecture-1a-slides.pdf); [Rmd](lectures/lecture1a/lecture-1a-slides.Rmd)
     - Remember to do Ed quiz!
-    - Friday Slides: [HTML](https://dmac.dicook.org/lectures/lecture1b/lecture-1b-slides.html); [PDF](https://dmac.dicook.org/lectures/lecture1b/lecture-1b-slides.pdf); [Rmd](https://dmac.dicook.org/lectures/lecture1b/lecture-1b-slides.Rmd)
+    - Friday Slides: [HTML](lectures/lecture1b/lecture-1b-slides.html); [PDF](lectures/lecture1b/lecture-1b-slides.pdf); [Rmd](lectures/lecture1b/lecture-1b-slides.Rmd)
     - Friday Reading: [Chapter 27](https://r4ds.had.co.nz/r-markdown.html), [Chapters 1 - 4 in Rmarkdown for Scientists](https://rmd4sci.njtierney.com/why-rmarkdown.html)
     - Friday Reading Quiz: Go to ED and complete the reading quiz before Friday's class.
 - Week 2: Tidy data principles, reshaping your data into tidy form, and basic data wrangling
     - Wednesday Reading:[Chapter 12: Tidy Data](http://r4ds.had.co.nz/tidy-data.html) 
-    - Wednesday Slides: - [HTML](https://dmac.dicook.org/lectures/lecture2a/lecture-2a-tidydata-slides.html); [PDF](https://dmac.dicook.org/lectures/lecture2a/lecture-2a-tidydata-slides.pdf); [Rmd](https://dmac.dicook.org/lectures/lecture2a/lecture-2a-tidydata-slides.Rmd)
+    - Wednesday Slides: - [HTML](lectures/lecture2a/lecture-2a-tidydata-slides.html); [PDF](lecture2a/lecture-2a-tidydata-slides.pdf); [Rmd](lectures/lecture2a/lecture-2a-tidydata-slides.Rmd)
     - Friday Reading: [Chapter 5: Data Transformation](https://r4ds.had.co.nz/transform.html)
     - Friday Slides:
 - Week 3: Plotting your data, and wrangling temporal data
@@ -94,6 +94,15 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 - [platypus.rda](http://dmac.dicook.org/lectures/data/platypus.rda) Platypus data from the Living Atlas of Australia
 - [platypus_meta.csv](http://dmac.dicook.org/lectures/data/platypus_meta.csv) Platypus meta information data from the Living Atlas of Australia
+
+## Exam information
+
+- [Midterm 2019](exam/midterm2019.pdf) [(solution)](exam/midterm2019_solution.pdf)
+
+- [Formula sheet](exam/formula_sheet.pdf)
+
+- [Final Exam for 2018 Semester 1](exam/exam2018.pdf) [(solution)](exam/exam2018_solution.pdf)
+- [Final Exam for 2018 Semester 2](exam/exam2018_S2.pdf) [(solution)](exam/exam2018_S2_solution.pdf)
 
 ## Useful resources
 
