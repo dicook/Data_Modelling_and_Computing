@@ -360,7 +360,13 @@ genes <- read_csv("data/genes.csv")
 genes 
 ```
 
+```{r cd-genes}
+countdown(minutes = 3, play_sound = TRUE)
+```
+
+
 ---
+
 
 # Melbourne weather `r ji("scared")`
 
