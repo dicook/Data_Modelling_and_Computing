@@ -1,0 +1,886 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+subtitle: "Week of Tidy Data: Lecture 2"
+author: "Dr. Nicholas Tierney & Professor Di Cook"
+institute: "EBS, Monash U."
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["shinobi", "ninjutsu", "../slides.css"]
+    seal: true
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+library(emo)
+library(knitr)
+library(countdown)
+opts_chunk$set(echo = TRUE,   
+               message = FALSE,
+               warning = FALSE,
+               fig.height = 4,
+               fig.width = 8,
+               fig.align = "center",
+               cache = FALSE)
+```
+
+class: bg-blue
+
+.vvvhuge.white.center.middle[
+What is this song?
+]
+
+.huge.white.center.middle[
+(you can use your phone!)
+]
+
+
+---
+
+# recap: from ED survey
+
+.large.pull-left[
+- Traffic Light System: .green[Green = "good!"] ; .red[Red = "Help!"]
+- R + Rstudio
+- Tower of babel analogy for writing R code
+- We are using ___, not ___ for ETC1010?
+- Functions are  ___
+- columns in data frames are accessed with ___ ?
+]
+
+.large.pull-right[
+- packages are installed with ___ ?
+- packages are loaded with ___ ?
+- Why do we care about Reproducibility?
+- Output + input of rmarkdown
+- I have an assignment group
+- If I have an assignment group, have recorded my assignment group in the ED survey
+]
+
+---
+background-image: url(https://njtierney.updog.co/img/allison-horst-dplyr-wrangling.png)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, white
+
+.black.large[
+Source: Artwork by @allison_horst
+]
+
+---
+class: bg-main3
+
+# Overview
+
+.vhuge.pull-left[
+- `filter()`
+- `select()`
+- `mutate()`
+- `arrange()`
+
+]
+
+.vhuge.pull-right[
+- `group_by()`
+- `summarise()`
+- `count()`
+- `top_n()`
+]
+
+---
+background-image: url(https://njtierney.updog.co/img/allison-horst-tidyverse-celestial.png)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, bg-black
+
+.left.white[
+Artwork by @allison_horst
+]
+
+---
+class: bg-black
+.huge.white[
+R Packages
+]
+
+.huge[
+```{r avail-pkg}
+avail_pkg <- available.packages()
+dim(avail_pkg)
+```
+]
+
+.huge.white[
+That means that at this moment there are `r nrow(avail_pkg)` R packages available as of `r Sys.Date()`
+]
+
+---
+
+# Name clashes
+
+```{r print-tidyverse, message = TRUE, include = TRUE}
+library(tidyverse)
+```
+
+---
+class: bg-main3
+
+# Many R packages
+
+.huge[
+- A blessing & a curse! 
+- So many packages available, it can make it hard to choose!
+- Many of the packages are designed to solve a specific problem
+- The tidyverse is designed to work with many other packages following a consistent philosophy
+- What this means is that you shouldn't notice it!
+]
+
+
+???
+
+Extra reading:
+
+We have been loading the `tidyverse` package. Its actually a suite of packages, and you can learn more about the individual packages at https://www.tidyverse.org. You could load each individually.
+
+Because so many people contribute packages to R, it is a blessing and a curse. 
+
+???
+
+The best techniques are available, but there can be conflicts between function names. When you load tidyverse it prints a great summary of conflicts that it knows about, between its functions and others.
+
+
+For example, there is a `filter` function in the `stats` package that comes with the R distribution. This can cause confusion when you want to use the filter function in `dplyr` (part of tidyverse). To be sure the function you use is the one you want to use, you can prefix it with the package name, `dplyr::filter()`.
+
+---
+class: bg-main3 center middle
+
+.vvhuge[
+Let's talk about data
+]
+
+---
+background-image: url(https://njtierney.updog.co/img/french-fries.png)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, white
+
+???
+
+This was an actual experiment in Food Sciences at Iowa State University. The goal was to find out if some cheaper oil options could be used to make hot chips: that people would not be able to distinguish the difference between chips fried in the new oils relative to those fried in the current market leader.
+
+Twelve tasters were recruited to sample two chips from each batch, over a period of ten weeks. The same oil was kept for a period of 10 weeks! May be a bit gross by the end!
+
+This data set was brought to R by Hadley Wickham, and was one of the problems that inspired the thinking about tidy data and the plyr tools. 
+
+
+---
+
+# Example: french fries
+
+.huge[
+* Experiment in Food Sciences at Iowa State University. 
+* Aim: find if cheaper oil could be used to make hot chips
+* Question: Could people distinguish  between chips fried in the new oils relative to those current market leader oil.
+* 12 tasters recruited 
+* Each sampled two chips from each batch
+* Over a period of ten weeks.
+
+Same oil kept for a period of 10 weeks! May be a bit gross!
+
+]
+
+---
+class: bg-main1
+
+# Example: french-fries - gathering into long form
+
+```{r ff-echo, echo = TRUE, eval = FALSE}
+french_fries <- read_csv("data/french_fries.csv")
+french_fries
+```
+
+```{r ff-print, echo = FALSE, eval = TRUE}
+french_fries <- read_csv("data/french_fries.csv")
+head(french_fries)
+```
+
+--
+
+.huge[
+This data set was brought to R by Hadley Wickham, and was one of the problems that inspired the thinking about tidy data and the plyr tools. 
+]
+
+---
+class: bg-main2
+
+# French fries - gathering into long form
+
+```{r create-ff-long, echo = FALSE}
+fries_long <- french_fries %>% 
+  gather(key = type, 
+         value = rating, 
+         -time, 
+         -treatment, 
+         -subject, 
+         -rep) %>%
+  mutate(type = as.factor(type))
+```
+
+
+.left-code[
+```{r ff-long, eval = FALSE}
+fries_long <- french_fries %>% 
+  gather(key = type, 
+         value = rating, 
+         -time, 
+         -treatment, 
+         -subject, 
+         -rep) 
+```
+]
+
+--
+
+.right-plot[
+```{r print-ff-long}
+fries_long
+```
+
+]
+
+---
+class: bg-main3
+
+# `filter()`: choose observations from your data
+
+---
+class: bg-main5
+
+# `filter()`: example
+
+```{r ff-filter-subj}
+fries_long %>%
+  filter(subject == 10)
+```
+
+
+---
+class: bg-main5
+
+# `filter()`: details
+
+.huge[
+Filtering requires comparison to find the subset of observations of interest.  What do you think the following mean?
+
+- `subject != 10` 
+- `x > 10` 
+- `x >= 10` 
+- `class %in% c("A", "B")` 
+- `!is.na(y)`
+]
+
+```{r cd}
+countdown(minutes = 3, play_sound = TRUE)
+```
+
+
+---
+class: bg-main5
+# `filter()`: details
+
+.huge[
+`subject != 10`
+]
+
+--
+
+.huge[
+Find rows corresponding to all subjects except subject 10
+]
+
+```{r}
+
+```
+
+
+---
+class: bg-main5
+# `filter()`: details
+
+.huge[
+ `x > 10` 
+]
+
+--
+
+.huge[
+find all rows where variable `x` has values bigger than 10
+]
+
+---
+class: bg-main5
+# `filter()`: details
+
+.huge[
+`x >= 10` 
+]
+
+--
+
+.huge[
+ finds all rows variable `x` is greater than or equal to 10.
+]
+
+---
+class: bg-main5
+# `filter()`: details
+
+.huge[
+`class %in% c("A", "B")`
+]
+
+--
+
+.huge[
+ finds all rows where variable `class` is either A or B
+]
+
+
+---
+class: bg-main5
+# `filter()`: details
+
+.huge[
+`!is.na(y)` 
+]
+
+--
+
+.huge[
+finds all rows that *DO NOT* have a missing value for variable `y`
+]
+
+---
+class: bg-main1
+# Your turn: open french-fries.Rmd
+
+.huge[
+Filter the french fries data to have:
+
+- only week 1
+- oil type 1 (oil type is called treatment)
+- oil types 1 and 3 but not 2
+- weeks 1-4 only
+]
+
+---
+class: bg-main2
+# French Fries Filter: only week 1
+
+```{r french-fries-filter-t1}
+fries_long %>% filter(time == 1)
+```
+
+
+---
+class: bg-main2
+# French Fries Filter: oil type 1
+
+```{r french-fries-filter-treatment-eq}
+fries_long %>% filter(treatment == 1)
+```
+
+---
+class: bg-main2
+
+# French Fries Filter: oil types 1 and 3 but not 2
+
+```{r french-fries-filter-treatment-neq}
+fries_long %>% filter(treatment != 2)
+```
+
+---
+class: bg-main2
+# French Fries Filter: weeks 1-4 only
+
+```{r french-fries-filter-time-in}
+fries_long %>% filter(time %in% c("1", "2", "3", "4"))
+```
+
+---
+class: bg-main1
+
+# about  `%in%`
+
+.gigantic[
+[demo]
+]
+
+---
+class: bg-main2
+
+# `select()`
+
+--
+
+.huge[
+- Chooses which variables to keep in the data set. 
+- Useful when there are many variables but you only need some of them for an analysis. 
+]
+
+---
+class: bg-main2
+
+# `select()`: a comma separated list of variables, by name. 
+
+
+```{r ff-select-many}
+french_fries %>% 
+  select(time, 
+         treatment, 
+         subject)
+```
+
+---
+class: bg-main2
+
+# `select()`: **drop** selected variables by prefixing with `-`
+
+--
+
+```{r ff-un-select-many}
+french_fries %>% 
+  select(-time, 
+         -treatment, 
+         -subject)
+```
+
+---
+class: bg-main2
+
+# `select()`: Using it
+
+.vlarge.left-code[
+Inside `select()` you can use text-matching of the names like `starts_with()`, `ends_with()`, `contains()`, `matches()`, or `everything()`
+]
+
+--
+
+.right-plot[
+```{r ff-select-contains}
+french_fries %>% 
+  select(contains("e"))
+```
+]
+
+---
+class: bg-main2
+# `select()`: Using it
+
+.huge.left-code[
+You can use `:` to choose variables in order of the columns
+]
+
+--
+
+.right-plot[
+```{r ff-select-order}
+french_fries %>% 
+  select(time:subject)
+```
+]
+
+---
+class: bg-main5
+
+# Your turn: back to the french fries data
+
+.huge[
+- `select()` time, treatment and rep
+- `select()` subject through to rating
+- drop subject
+]
+
+```{r cd-select, echo = FALSE}
+countdown(minutes = 3, play_sounds = TRUE)
+```
+
+
+```{r ff-example-select, eval=FALSE, echo=FALSE}
+fries_long %>% select(time, treatment, rep)
+fries_long %>%
+  select(subject:rating)
+fries_long %>%
+  select(-subject)
+```
+
+---
+background-image: url(https://njtierney.updog.co/img/allison-horst-dplyr-mutate.png)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, white
+
+.purple.large.right[
+Artwork by @allison_horst
+]
+
+---
+class: bg-main4
+
+# `mutate()`: create a new variable; keep existing ones
+
+```{r ff-mutate}
+french_fries 
+```
+
+---
+class: bg-main4
+
+# `mutate()`: create a new variable; keep existing ones
+
+```{r ff-mutate-show}
+french_fries %>% 
+  mutate(rainty = rancid + painty) #<<
+```
+
+---
+class: bg-main3
+
+# Your turn: french fries
+
+.huge[
+Compute a new variable called `lrating` by taking a log of the rating
+]
+
+```{r ff-mutate-log, eval=FALSE, echo=FALSE}
+fries_long %>%
+  mutate(lrating=log10(rating))
+```
+
+```{r cd-mutate, echo = FALSE}
+countdown(minutes = 2, play_sounds = TRUE)
+```
+
+
+---
+class: bg-main2
+
+# `summarise()`: boil data down to one row observation 
+
+```{r fries-print-it, eval = FALSE}
+fries_long
+```
+
+```{r fries-print-head, echo = FALSE}
+head(fries_long)
+```
+
+--
+
+```{r fries-summarise}
+fries_long %>% 
+  summarise(rating = mean(rating, na.rm = TRUE))
+```
+
+---
+class: bg-main1
+
+.vhuge[
+But what if we want to get a summary for each `type`?
+]
+
+--
+
+.vvhuge[
+`group_by()`
+]
+
+---
+class: bg-main1
+
+# Using `summarise()` + `group_by()`
+
+.huge[
+Produce summaries for every group:
+]
+
+```{r fries-group-type-summary}
+fries_long %>% 
+  group_by(type) %>%
+  summarise(rating = mean(rating, na.rm=TRUE))
+```
+
+---
+
+# Your turn: Back to french-fries.Rmd
+
+.huge[
+- Compute the average rating by subject
+- Compute the average rancid rating per week
+]
+
+```{r cd-summarise, echo = FALSE}
+countdown(minutes = 3, play_sounds = TRUE)
+```
+
+
+---
+class: bg-main1
+# french fries answers
+
+```{r ff-grouped-summary}
+fries_long %>% 
+  group_by(subject) %>%
+  summarise(rating = mean(rating, na.rm=TRUE))
+```
+
+---
+class: bg-main1
+
+# french fries answers
+
+```{r ff-grouped-summary-time}
+fries_long %>% 
+  filter(type == "rancid") %>%
+  group_by(time) %>%
+  summarise(rating = mean(rating, na.rm=TRUE))
+```
+
+---
+class: bg-main1
+
+# `arrange()`: orders data by a given variable. 
+
+--
+
+.huge[
+Useful for display of results (but there are other uses!)
+]
+
+```{r fries-group-summary}
+fries_long %>% 
+  group_by(type) %>%
+  summarise(rating = mean(rating, na.rm=TRUE)) 
+```
+
+---
+class: bg-main1
+# `arrange()`
+
+```{r fries-group-arrange}
+fries_long %>% 
+  group_by(type) %>%
+  summarise(rating = mean(rating, na.rm=TRUE)) %>%
+  arrange(rating)
+```
+
+---
+
+# Your turn: french-fries.Rmd - arrange
+
+.huge[
+- Arrange the average rating by type in decreasing order
+- Arrange the average subject rating in order lowest to highest.
+]
+
+```{r cd-arrange, echo = FALSE}
+countdown(minutes = 2, play_sounds = TRUE)
+```
+
+
+---
+class: bg-main1
+# `arrange()` answers
+
+```{r fries-arrange-summarise}
+fries_long %>% 
+  group_by(type) %>%
+  summarise(rating = mean(rating, na.rm=TRUE)) %>%
+  arrange(desc(rating))
+```
+
+---
+class: bg-main1
+# `arrange()` answers
+
+```{r fries-arrange-summarise-subject}
+fries_long %>% 
+  group_by(subject) %>%
+  summarise(rating = mean(rating, na.rm=TRUE)) %>%
+  arrange(rating)
+```
+
+---
+class: bg-main2
+
+# `count()` the number of things in a given column
+
+```{r count-sort}
+fries_long %>% 
+  count(type, sort = TRUE)
+```
+
+---
+class: bg-main1
+# Your turn: `count()`
+
+.huge[
+- count the number of subjects
+- cound the number of types
+]
+
+```{r cd-count, echo = FALSE}
+countdown(minutes = 2, play_sounds = TRUE)
+```
+
+
+---
+class: middle center bg-black
+
+.vvhuge.white[
+French Fries: Putting it together to problem solve
+]
+
+---
+class: bg-main1
+
+# French Fries: Are ratings similar?
+
+.pull-left[
+```{r fries-similar-ratings}
+fries_long %>% 
+  group_by(type) %>%
+  summarise(m = mean(rating, 
+                     na.rm = TRUE), 
+            sd = sd(rating, 
+                    na.rm = TRUE)) %>%
+  arrange(-m)
+```
+]
+
+--
+
+.pull-right.huge[
+
+The scales of the ratings are quite different. Mostly the chips are rated highly on potato'y, but low on grassy. 
+
+]
+
+---
+
+# French Fries: Are ratings similar?
+
+```{r plot-fries-type-rating}
+ggplot(fries_long,
+       aes(x = type, 
+           y = rating)) +
+  geom_boxplot()
+```
+
+---
+class: bg-main1
+
+# French Fries: Are reps like each other?
+
+```{r fries-spread}
+fries_spread <- fries_long %>% 
+  spread(key = rep, 
+         value = rating)
+  
+fries_spread
+```
+
+---
+class: bg-main1
+
+# French Fries: Are reps like each other?
+
+```{r fries-spread-summarise}
+summarise(fries_spread,
+          r = cor(`1`, `2`, use = "complete.obs"))
+```
+
+---
+
+```{r fries-spread-plot, out.width= "80%"}
+  ggplot(fries_spread,
+         aes(x = `1`, 
+             y = `2`)) + 
+  geom_point() + 
+  labs(title = "Data is poor quality: the replicates do not look like each other!")
+```
+
+---
+class: bg-main1
+
+# French Fries: Replicates by rating type
+
+.large[
+```{r fries-group-summarise-cor}
+fries_spread %>%
+  group_by(type) %>%
+  summarise(r = cor(x = `1`, 
+                    y = `2`, 
+                    use = "complete.obs"))
+```
+]
+
+---
+
+# French Fries: Replicates by rating type
+
+```{r plot-fries-facet-type, out.width = "90%"}
+ggplot(fries_spread, aes(x=`1`, y=`2`)) + 
+  geom_point() + facet_wrap(~type, ncol = 5)
+```
+
+--
+
+.huge[
+Potato'y and buttery have better replication than the other scales, but there is still a lot of variation from rep 1 to 2.
+]
+
+
+
+---
+<iframe width="1040" height="650" src="https://www.youtube.com/embed/i4RGqzaNEtg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+---
+class: bg-main1
+# Lab exercise: Exploring data PISA data
+
+
+.vhuge[
+Open `pisa.Rmd` on rstudio cloud.
+]
+
+---
+
+## Lab Quiz
+
+.vhuge[
+Time to take the lab quiz.
+]
+
+---
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+
+???
+
+# `select()` example
+
+```{r select-tb-example}
+tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>%
+  select(country, year, starts_with("new_sp_")) 
+tb %>% top_n(20)
+```
+
