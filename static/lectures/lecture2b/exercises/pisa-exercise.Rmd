@@ -1,0 +1,344 @@
+---
+title: "Exploring Pisa Data"
+author: "YOUR NAME"
+output: html_document
+---
+
+This lab exercise is about the 2015 PISA results. 
+
+# What is PISA?
+
+PISA stands for the **P**rogramme for **I**nternational **S**tudent **A**ssessment.
+
+There is a great video that explains how PISA works, here: https://www.youtube.com/watch?v=i4RGqzaNEtg
+
+# The Data
+
+The data is downloaded from [http://www.oecd.org/pisa/data/2015database/](http://www.oecd.org/pisa/data/2015database/). 
+
+**We have already extracted and saved the data for you**
+
+The code below shows how we collected the data.
+
+> The SPSS format "Student questionnaire data file (419MB)" is downloaded and processed using this code, to extract results for Australia:
+
+```{r dl-pisa-data, eval = FALSE}
+library(haven)
+pisa_2015 <- read_sav(file.choose())
+pisa_au <- pisa_2015 %>% filter(CNT == "AUS")
+save(pisa_au, file="pisa_au.rda")
+```
+
+# The task
+
+Answer some questions about Australia's results from the PISA data.
+
+At times it may be helpful to examine the data dictionary, which is provided as an excel file - (see thefile "Codebook_CMB.xlsx" in the `data` folder - found in the [OECD PISA site](https://www.oecd.org/pisa/data/2015database/))
+
+First we load the tidyverse, then read in the data using `read_csv`.
+
+```{r load-read}
+library(tidyverse)
+pisa_au_raw <- read_csv("data/pisa_au.csv")
+```
+
+Let's take a look at the head of the data using the `head()` function, which shows the first 6 rows:
+
+```{r print-pisa}
+head(pisa_au_raw)
+```
+
+The data is pretty messy! I mean, what even are these variables? 
+
+We have done a large amount of pre-processing on the data, as this is a pretty intense amount of data cleaning. Using information from the codebook (in data/Codebook_CMB.xlsx), we have 
+
+You can see the code we have used here:
+
+```{r clean-pisa}
+pisa_au_tidy <- pisa_au_raw %>%
+  mutate(state = str_sub(string = STRATUM, 
+                         start = 4, 
+                         end = 5),
+         schtype_yr = str_sub(string = STRATUM, 
+                              start = 6,
+                              end = 7)) %>%
+  mutate(state = recode(state,
+                        "01" = "ACT", 
+                        "02" = "NSW", 
+                        "03" = "VIC",
+                        "04" = "QLD", 
+                        "05" = "SA", 
+                        "06" = "WA", 
+                        "07" = "TAS", 
+                        "08" = "NT")) %>%
+  mutate(schtype_yr = recode(schtype_yr,
+                             "01" = "Catholic_Y10",
+      "02" = "Catholic_noY10",
+      "03" = "Gov_Y10",
+      "04" = "Gov_noY10",
+      "05" = "Ind_Y10",
+      "06" = "Ind_noY10",
+      "07" = "Catholic_Y10",
+      "08" = "Catholic_noY10",
+      "09" = "Gov_Y10",
+      "10" = "Gov_noY10",
+      "11" = "Ind_Y10",
+      "12" = "Ind_noY10",
+      "13" = "Catholic_Y10",
+      "14" = "Catholic_noY10",
+      "15" = "Gov_Y10",
+      "16" = "Gov_noY10",
+      "17" = "Ind_Y10",
+      "18" = "Ind_noY10",
+      "19" = "Catholic_Y10",
+      "20" = "Catholic_noY10",
+      "21" = "Gov_Y10",
+      "22" = "Gov_noY10",
+      "23" = "Ind_Y10",
+      "24" = "Ind_noY10",
+      "25" = "Catholic_Y10",
+      "26" = "Catholic_noY10",
+      "27" = "Gov_Y10",
+      "28" = "Gov_noY10",
+      "29" = "Ind_Y10",
+      "30" = "Ind_noY10",
+      "31" = "Catholic_Y10",
+      "32" = "Catholic_noY10",
+      "33" = "Gov_Y10",
+      "34" = "Gov_noY10",
+      "35" = "Ind_Y10",
+      "36" = "Ind_noY10",
+      "37" = "Catholic_Y10",
+      "38" = "Catholic_noY10",
+      "39" = "Gov_Y10",
+      "40" = "Gov_noY10",
+      "41" = "Ind_Y10",
+      "42" = "Ind_noY10",
+      "43" = "Catholic_Y10",
+      "44" = "Catholic_noY10",
+      "45" = "Gov_Y10",
+      "46" = "Gov_noY10",
+      "47" = "Ind_Y10",
+      "48" = "Ind_noY10")) %>% 
+  separate(col = schtype_yr, 
+           into = c("schtype", "yr")) %>%
+  rename(
+    birthmonth = ST003D02T,
+    birthyr = ST003D03T,
+    gender = ST004D01T,
+    desk = ST011Q01TA,
+    room = ST011Q02TA,
+    computer = ST011Q04TA,
+    internet = ST011Q06TA,
+    solarpanels = ST011D17TA,
+    tvs = ST012Q01TA,
+    cars = ST012Q02TA,
+    music_instr = ST012Q09NA,
+    books = ST013Q01TA,
+    birthcnt = ST019AQ01T,
+    mother_birthcnt = ST019BQ01T,
+    father_birthcnt = ST019CQ01T,
+    test_anxiety = ST118Q01NA,
+    ambitious = ST119Q04NA,
+    prefer_team = ST082Q01NA,
+    make_friends_easy = ST034Q02TA,
+    tardy = ST062Q03TA,
+    science_fun = ST094Q01NA,
+    breakfast = ST076Q01NA,
+    work_pay = ST078Q10NA,
+    sport = ST078Q11NA,
+    internet_use = IC006Q01TA,
+    install_software = IC015Q02NA,
+    outhours_study = OUTHOURS,
+    math_time = MMINS,
+    read_time = LMINS,
+    science_time = SMINS,
+    belong = BELONG,
+    anxtest = ANXTEST,
+    motivat = MOTIVAT,
+    language = LANGN,
+    home_edres = HEDRES,
+    home_poss = HOMEPOS,
+    wealth = WEALTH,
+    stuweight = W_FSTUWT
+  ) %>% 
+  mutate(
+    math = (PV1MATH + PV2MATH + PV3MATH + PV4MATH + PV5MATH +
+            PV6MATH + PV7MATH + PV8MATH + PV9MATH + PV10MATH) / 10,
+    science = (PV1SCIE + PV2SCIE + PV3SCIE + PV4SCIE + PV5SCIE +
+               PV6SCIE + PV7SCIE + PV8SCIE + PV9SCIE + PV10SCIE) / 10,
+    read = (PV1READ + PV2READ + PV3READ + PV4READ + PV5READ +
+            PV6READ + PV7READ + PV8READ + PV9READ + PV10READ) / 10
+  ) %>% 
+  select(
+    state,
+    schtype,
+    yr,
+    birthmonth,
+    birthyr,
+    gender,
+    desk,
+    room,
+    computer,
+    internet,
+    solarpanels,
+    tvs,
+    cars,
+    music_instr,
+    books,
+    birthcnt,
+    mother_birthcnt,
+    father_birthcnt,
+    test_anxiety,
+    ambitious,
+    prefer_team,
+    make_friends_easy,
+    tardy,
+    science_fun,
+    breakfast,
+    work_pay,
+    sport,
+    internet_use,
+    install_software,
+    outhours_study,
+    math_time,
+    read_time,
+    science_time,
+    belong,
+    anxtest,
+    motivat,
+    language,
+    home_edres,
+    home_poss,
+    wealth,
+    stuweight,
+    math,
+    science,
+    read
+  ) %>%
+  mutate(gender = factor(gender,
+                         levels = 1:2,
+                         labels = c("female", "male")),
+         birthmonth = factor(birthmonth,
+                             levels = 1:12,
+                             labels = c("jan",
+                                        "feb",
+                                        "mar",
+                                        "apr",
+                                        "may",
+                                        "jun",
+                                        "jul",
+                                        "aug",
+                                        "sep",
+                                        "oct",
+                                        "nov",
+                                        "dec")))
+```
+
+Let's look at `pisa_au_tidy`:
+
+```{r pisa-top}
+head(pisa_au_tidy)
+```
+
+# Explaining some of the data cleaning.
+
+Now we would like you to explain how the STRATUM variable is processed to create three new variables: `state`, `schtype` and `yr`.
+
+To help you understand how this works, we have provided a small example below, by taking a sample of the stratum, in the object `strat_slice`.
+
+```{r strat-slice}
+# this code takes 5 samples to help explain how this works
+library(vctrs)
+strat_slice <- vec_slice(pisa_au_raw$STRATUM, 1:5)
+
+strat_slice
+```
+
+Now compare what the results of `strat_slice` are compare to using `str_sub` below:
+
+```{r strat-slice-sub}
+str_sub(strat_slice, 
+        start = 4, 
+        end = 5)
+```
+
+Looking at this, write below what you think `str_sub` does, and what the `start` and `end` arguments represent. 
+
+> 
+
+(If you aren't sure, you can get more helpful from R by typing `?str_sub`. If you cannot bring up the result of this, make sure you have loaded the tidyverse library.)
+
+Coming back to the question: "How the STRATUM variable is processed to create three new variables: `state`, `schtype` and `yr`?" (around lines 59-64)
+
+> 
+
+## Explain what the `rename` operation is doing (around line 125)
+
+# Performing Summaries
+
+## Compute the average of math scores by state. 
+
+```{r pisa-summary}
+pisa_au_tidy %>%
+  group_by(state) %>%
+  summarise(mean_wt = weighted.mean(x = math, 
+                                          w = stuweight)) %>%
+  arrange(-mean_wt)
+```
+
+Which state does best, on average, on math? 
+
+A note on the `weighted.mean` function. This computes a _weighted average_. 
+
+A weighted average is where you control the individual contribution of each value when averaging. This means that if some demographics are not matching across samples, they can help control for this by controlling the _weight_ of that sample when calculating the mean. So, for our example with survey data, the weights indicate how representative an individual is of the population.
+
+
+## Calculate averages
+
+## Compute the difference in average male and female math scores by state. Which state has the smallest average gender difference?
+
+Let's separate this out into a few steps.
+
+First, let's calcualte the mean for math by state and gender
+
+```{r pisa-summarise}
+pisa_state_gender_math <- pisa_au_tidy %>%
+  group_by(state, 
+           gender) %>%
+  summarise(weighted_mean = weighted.mean(x = math, 
+                                          w = stuweight))
+
+pisa_state_gender_math
+```
+
+Next, let's `spread` one of the columns:
+
+```{r pisa-spread}
+pisa_math_wide <- pisa_state_gender_math %>%
+  spread(key = gender,
+         value = weighted_mean)
+```
+
+Now, we need to calcluate the difference between male and female scores and arrange:
+```{r male-female-diff}
+pisa_math_wide %>%
+mutate(math_diff = abs(female - male)) %>%
+  arrange(math_diff)
+```
+
+# Does test anxiety have an effect on math score? (Use the variable `anxtest`, and a simple regression model to answer this question.)
+
+```{r pisa-lm}
+pisa_lm <- lm(math ~ anxtest,
+              data = pisa_au_tidy)
+library(broom)
+tidy(pisa_lm)
+```
+
+# Come up with two more questions as a group, based on the data description. Do the wrangling to answer these questions. Discuss these with a tutor.
+
+## Question 1 is ...
+
+
+## Question 2 is ...

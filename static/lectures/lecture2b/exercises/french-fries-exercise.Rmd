@@ -1,0 +1,197 @@
+---
+title: "Exploring French Fries"
+author: "YOUR NAME"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+First we load the tidyverse
+
+```{r setup}
+library(tidyverse)
+```
+
+Then, we read in the french fries data using `read_csv()`:
+
+```{r read-fries}
+french_fries <- read_csv("data/french_fries.csv")
+```
+
+Now we get the data into long form:
+
+```{r fries-gather}
+fries_long <- french_fries %>% 
+  gather(key = type, 
+         value = rating, 
+         -time, 
+         -treatment, 
+         -subject, 
+         -rep) %>%
+  mutate(type = as.factor(type))
+```
+
+
+Filter the french fries data to have:
+
+- only week 1
+
+```{r}
+fries_long %>% filter(time == 1)
+```
+
+- weeks 1-4 only
+
+```{r}
+fries_long %>% filter(time %in% c("1", "2", "3", "4"))
+```
+
+- oil type 1 (oil type is called treatment)
+
+```{r}
+fries_long %>% filter(treatment == 1)
+```
+
+- oil types 1 and 3 but not 2
+
+```{r}
+fries_long %>% filter(treatment != 2)
+```
+
+# End of first example - wait until the next section.
+
+# Using `select()`
+
+- choose time, treatment and rep
+
+```{r}
+fries_long %>% select(time, treatment, rep)
+```
+
+- choose subject through to rating
+
+```{r}
+fries_long %>% select(subject:rating)
+```
+
+- drop subject
+
+
+```{r}
+fries_long %>% select(-subject)
+```
+
+# Wait until next example
+
+
+# Learn to use `mutate()`
+
+- For the french fries data compute a new variable called lrating by taking a log of the rating
+
+```{r}
+fries_long %>%
+  mutate(lrating=log10(rating))
+```
+
+# Wait until next example
+
+# group by and summarise
+
+- Compute the average rating by subject
+
+```{r}
+fries_long %>% 
+  group_by(subject) %>%
+  summarise(rating = mean(rating, na.rm=TRUE))
+```
+
+- Compute the average rancid rating per week
+```{r}
+fries_long %>% 
+  filter(type == "rancid") %>%
+  group_by(time) %>%
+  summarise(rating = mean(rating, na.rm=TRUE))
+```
+
+# `count()`
+
+- count the number of subjects
+
+```{r fries-count-subject}
+fries_long %>% count(subject, sort=TRUE)
+```
+
+- cound the number of types
+
+```{r fries-count-type}
+fries_long %>% count(type)
+```
+
+# Using the skills we have learned to problem solve:
+
+## Are ratings similar?
+
+```{r fries-similar-ratings}
+fries_long %>% 
+  group_by(type) %>%
+  summarise(m = mean(rating, 
+                     na.rm = TRUE), 
+            sd = sd(rating, 
+                    na.rm = TRUE)) %>%
+  arrange(-m)
+```
+
+
+The scales of the ratings are quite different. Mostly the chips are rated highly on potato'y, but low on grassy. 
+
+
+```{r plot-fries-type-rating}
+ggplot(fries_long,
+       aes(x = type, 
+           y = rating)) +
+  geom_boxplot()
+```
+
+## Are reps like each other?
+
+```{r fries-spread}
+fries_spread <- fries_long %>% 
+  spread(key = rep, 
+         value = rating)
+  
+fries_spread
+```
+
+
+```{r fries-spread-summarise}
+summarise(fries_spread,
+          r = cor(`1`, `2`, use = "complete.obs"))
+```
+
+
+```{r fries-spread-plot, out.width= "80%"}
+  ggplot(fries_spread,
+         aes(x = `1`, 
+             y = `2`)) + 
+  geom_point() + 
+  labs(title = "Data is poor quality: the replicates do not look like each other!")
+```
+
+
+## Replicates by rating type
+
+```{r fries-group-summarise-cor}
+fries_spread %>%
+  group_by(type) %>%
+  summarise(r = cor(x = `1`, 
+                    y = `2`, 
+                    use = "complete.obs"))
+```
+
+
+```{r plot-fries-facet-type, out.width = "90%"}
+ggplot(fries_spread, aes(x=`1`, y=`2`)) + 
+  geom_point() + facet_wrap(~type, ncol = 5)
+```
+
+Potato'y and buttery have better replication than the other scales, but there is still a lot of variation from rep 1 to 2.
+
