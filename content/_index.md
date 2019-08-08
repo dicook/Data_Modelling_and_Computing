@@ -57,7 +57,7 @@ We have a limited amount of laptops available for students to borrow (during sem
     - Wednesday Reading:[Chapter 12: Tidy Data](http://r4ds.had.co.nz/tidy-data.html) 
     - Wednesday Slides: - [HTML](lectures/lecture2a/lecture-2a-tidydata-slides.html); [PDF](lecture2a/lecture-2a-tidydata-slides.pdf); [Rmd](lectures/lecture2a/lecture-2a-tidydata-slides.Rmd)
     - Friday Reading: [Chapter 5: Data Transformation](https://r4ds.had.co.nz/transform.html)
-    - Friday Slides: [HTML](lectures/lecture2b/lecture-2b-slides.html); [PDF](lecture2a/lecture-2b-slides.pdf);  [RMD](lectures/lecture2b/lecture-2b-slides.Rmd)
+    - Friday Slides: [HTML](lectures/lecture2b/lecture-2b-slides.html); [PDF](lectures/lecture2a/lecture-2b-slides.pdf);  [RMD](lectures/lecture2b/lecture-2b-slides.Rmd)
 - Week 3: Plotting your data, and wrangling temporal data
      - Wednesday reading: [Chapter 3: Data visualisation (again!)](http://r4ds.had.co.nz/data-visualisation.html)
      - Wednesday Slides:
