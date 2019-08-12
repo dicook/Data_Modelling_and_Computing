@@ -35,26 +35,26 @@ Filter the french fries data to have:
 
 - only week 1
 
-```{r}
-fries_long %>% filter(time == 1)
+```{r fries-week1}
+fries_long %>% filter(time == ___)
 ```
 
 - weeks 1-4 only
 
-```{r}
-fries_long %>% filter(time %in% c("1", "2", "3", "4"))
+```{r fries-week-1-4}
+fries_long %>% filter(___ %in% c("1", "2", "3", "4"))
 ```
 
-- oil type 1 (oil type is called treatment)
+- oil type 1 (oil type is called `treatment`)
 
-```{r}
-fries_long %>% filter(treatment == 1)
+```{r fries-treatment-1}
+fries_long %>% filter(___ == 1)
 ```
 
 - oil types 1 and 3 but not 2
 
-```{r}
-fries_long %>% filter(treatment != 2)
+```{r fries-treatment-not-2}
+fries_long %>% filter(___ != ___)
 ```
 
 # End of first example - wait until the next section.
@@ -63,53 +63,53 @@ fries_long %>% filter(treatment != 2)
 
 - choose time, treatment and rep
 
-```{r}
-fries_long %>% select(time, treatment, rep)
+```{r fries-select}
+fries_long %>% select(time, 
+                      ___, 
+                      ___)
 ```
 
 - choose subject through to rating
 
-```{r}
-fries_long %>% select(subject:rating)
+```{r fries-thru}
+fries_long %>% select(subject:___)
 ```
 
 - drop subject
 
-
-```{r}
-fries_long %>% select(-subject)
+```{r fries-drop-subject}
+fries_long %>% select(-___)
 ```
 
 # Wait until next example
-
 
 # Learn to use `mutate()`
 
-- For the french fries data compute a new variable called lrating by taking a log of the rating
+- Compute a new variable called lrating by taking a log of the rating
 
-```{r}
-fries_long %>%
-  mutate(lrating=log10(rating))
+```{r fries-log-rating}
+fries_long %>% mutate(lrating = ___(rating))
 ```
 
 # Wait until next example
 
-# group by and summarise
+# `group_by()` and `summarise()`
 
 - Compute the average rating by subject
 
-```{r}
+```{r rating-by-subj}
 fries_long %>% 
-  group_by(subject) %>%
-  summarise(rating = mean(rating, na.rm=TRUE))
+  group_by(___) %>%
+  summarise(rating = mean(___, na.rm=TRUE))
 ```
 
 - Compute the average rancid rating per week
-```{r}
+
+```{r rancid-time-rating}
 fries_long %>% 
-  filter(type == "rancid") %>%
-  group_by(time) %>%
-  summarise(rating = mean(rating, na.rm=TRUE))
+  filter(type == ___) %>%
+  group_by(___) %>%
+  summarise(rating = ___(___, na.rm=TRUE))
 ```
 
 # `count()`
@@ -117,25 +117,25 @@ fries_long %>%
 - count the number of subjects
 
 ```{r fries-count-subject}
-fries_long %>% count(subject, sort=TRUE)
+fries_long %>% count(___, sort=TRUE)
 ```
 
-- cound the number of types
+- count the number of types
 
 ```{r fries-count-type}
-fries_long %>% count(type)
+fries_long %>% ___(___)
 ```
 
 # Using the skills we have learned to problem solve:
 
-## Are ratings similar?
+## Are ratings similar for each type?
 
 ```{r fries-similar-ratings}
 fries_long %>% 
   group_by(type) %>%
-  summarise(m = mean(rating, 
+  summarise(m = mean(___, 
                      na.rm = TRUE), 
-            sd = sd(rating, 
+            sd = sd(___, 
                     na.rm = TRUE)) %>%
   arrange(-m)
 ```

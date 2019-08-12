@@ -43,6 +43,7 @@ First we load the tidyverse, then read in the data using `read_rds` (rds is an R
 ```{r load-read}
 library(tidyverse)
 pisa_au_raw <- read_rds("data/pisa_au.rds")
+
 ```
 
 Let's take a look at the head of the data using the `head()` function, which shows the first 6 rows:
