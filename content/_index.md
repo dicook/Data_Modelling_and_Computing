@@ -69,13 +69,13 @@ We have a limited amount of laptops available for students to borrow (during sem
 - Week 4: Advanced wrangling, joining tables, and advanced data visualisation
      - Wednesday reading: [Chapter 13: Relational Data](http://r4ds.had.co.nz/relational-data.html)
      - Wednesday Slides:
-     - Friday Reading:
+     - Friday Reading: [Chapter 1 of Data Visualisation: A Practical Introduction](http://socviz.co/lookatdata.html#lookatdata)
      - Friday Slides:
      
 - Week 5: Handling missing values and scraping data  
-     - Wednesday reading:
-     - Wednesday Slides:
-     - Friday Reading:
+     - Wednesday reading: [Getting Started with Missing values](https://cran.r-project.org/web/packages/naniar/vignettes/getting-started-w-naniar.html)
+     - Wednesday Slides: 
+     - Friday Reading: 
      - Friday Slides:
      
 - Week 6: Introduction to modeling, and building many models
