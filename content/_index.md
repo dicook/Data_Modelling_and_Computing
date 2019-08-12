@@ -25,12 +25,12 @@ Unless your question is a personal issue or an administrative matter, please do 
   
 ## Consultation times
 
-- Nick: Thurs 10:30-11:30 **Menzies E762A (Prof. Di Cook's office for first week)**
+- Nick: Thurs 10:30-11:30 **Menzies E762A (Prof. Di Cook's office until week 4)**
 - Steph: Wed 1300 - 1400 **Menzies W1105**
 - Sayani: Wed 1700 - 1800 **Menzies W1105**
 - Sherry: Thurs 1530 - 1630 **Menzies W1105**
 - Mitch: Tues 1230 - 1330 **Menzies W1105**
-- Nick: Fri 12:30-1:30 **Menzies E762A (Prof. Di Cook's office for first week)**
+- Nick: Fri 12:30-1:30 **Menzies E762A (Prof. Di Cook's office until week 4)**
 
 ## MoVE
 
