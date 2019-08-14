@@ -1,0 +1,687 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+subtitle: "Week of Data Visualisation: Lecture 3"
+author: "Dr. Nicholas Tierney & Professor Di Cook"
+institute: "EBS, Monash U."
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["shinobi", "ninjutsu", "../slides.css"]
+    seal: true
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+library(emo) 
+library(tidyverse)
+library(knitr)
+
+knitr::opts_chunk$set(fig.width=4.25, 
+                      fig.height=3.5, 
+                      fig.retina=3,
+                      out.width = "100%",
+                      message=FALSE, 
+                      warning=FALSE, 
+                      cache = TRUE, 
+                      autodep = TRUE, 
+                      hiline=TRUE)
+
+knitr::opts_hooks$set(fig.callout = function(options) {
+  if (options$fig.callout) {
+    options$echo <- FALSE
+    options$out.height <- "99%"
+    options$fig.width <- 16
+    options$fig.height <- 8
+  }
+  options
+})
+
+options(
+  htmltools.dir.version = FALSE, 
+  width = 90,
+  max.print = 9999,
+  knitr.table.format = "html"
+)
+
+as_table <- function(...) knitr::kable(..., format='html', digits = 3)
+```
+
+```{r read-tb, echo = FALSE}
+tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>% 
+  select(country, 
+         iso3, 
+         year, 
+         new_sp_m04:new_sp_fu) %>%
+  gather(key = stuff, 
+         value = count, 
+         new_sp_m04:new_sp_fu) %>%
+  separate(col = stuff, 
+           into = c("stuff1", 
+                    "stuff2", 
+                    "genderage")) %>%
+  select(-stuff1, 
+         -stuff2) %>%
+  mutate(gender = str_sub(genderage, 1, 1), 
+         age = str_sub(genderage, 2, length(genderage))) %>%
+  select(-genderage) %>%
+  filter(!(age %in% c("04", "014", "514", "u"))) %>%
+  filter(year > 1996, 
+         year < 2013)
+  
+tb_au <- tb %>% 
+  filter(country == "Australia")  
+
+# mutate(ages = 
+#   case_when(ages == "1524" ~ "15-24",
+#             ages == "2534" ~ "25-34",
+#             ages == "3544" ~ "35-44",
+#             ages == "4554" ~ "45-54",
+#             ages == "5564" ~ "55-64",
+#             ages == "65" ~ "65+")
+```
+
+
+# recap:
+
+
+---
+
+# Overview for today
+
+.huge[
+- Going from tidy data to a data plot, using a grammar
+- Mapping of variables from the data to graphical elements
+- Using different geoms
+]
+
+---
+class: bg-main1
+
+# Example: Tuberculosis data
+
+.huge.left-code[
+The case notifications table From [WHO](http://www.who.int/tb/country/data/download/en/).
+
+Data is tidied here, with only counts for Australia.
+]
+
+.right-plot[
+```{r print-tb-au}
+tb_au
+```
+]
+
+---
+
+## The "100% charts"
+
+```{r show-100-pct, echo=TRUE, fig.width=8, fig.height=2, out.width = "100%"}
+ggplot(tb_au, aes(x = year, y = count, fill = gender)) +
+  geom_bar(stat = "identity", position = "fill") +
+  facet_grid(~ age) +
+  scale_fill_brewer(palette="Dark2")
+```
+
+???
+
+100% charts, is what excel names these beasts. What do we learn?
+
+---
+class: middle center bg-main5
+
+# Let's unpack a bit.
+
+---
+class: bg-main1
+
+# Data Visualisation
+
+.blockquote.huge[
+"The simple graph has brought more information to the data analyst’s mind than any other device." — John Tukey
+]
+
+---
+class: bg-main1
+
+# Data Visualisation
+
+.huge[
+- The creation and study of the visual representation of data.
+- Many tools for visualizing data (R is one of them)
+- Many approaches/systems within R for making data visualizations (**ggplot2** is one of them, and that's what we're going to use).
+]
+
+---
+class: bg-main1
+
+# ggplot2 $\in$ tidyverse
+
+.left-code[
+```{r ggplot-in-tidyverse, echo = FALSE}
+include_graphics("img/ggplot2-part-of-tidyverse.png")
+```
+]
+
+.right-plot.vlarge[
+- **ggplot2** is tidyverse's data visualization package
+- The `gg` in "ggplot2" stands for Grammar of Graphics
+- It is inspired by the book **Grammar of Graphics** by Leland Wilkinson <sup>†</sup>
+- A grammar of graphics is a tool that enables us to concisely describe the components of a graphic
+]
+
+.footnote[ 
+<sup>†</sup> Source: [BloggoType](http://bloggotype.blogspot.com/2016/08/holiday-notes2-grammar-of-graphics.html)
+]
+
+---
+```{r show-latered-grammar-graphhics, echo = FALSE}
+include_graphics("img/grammar-of-graphics.png")
+```
+
+[From BloggoType](http://bloggotype.blogspot.com/2016/08/holiday-notes2-grammar-of-graphics.html)
+
+---
+# Our first ggplot!
+
+.left-code[
+```{r first-gg-1, eval = FALSE}
+library(ggplot2)
+ggplot(tb_au)
+```
+
+]
+
+.right-plot[
+```{r first-gg-1-out, ref.label = 'first-gg-1', echo = FALSE, out.width = "100%"}
+
+```
+
+]
+
+---
+# Our first ggplot!
+
+.left-code[
+```{r first-gg-2, eval = FALSE}
+library(ggplot2)
+ggplot(tb_au,
+       aes(x = year, #<<
+           y = count)) #<<
+```
+
+]
+
+.right-plot[
+```{r first-gg-2-out, ref.label = 'first-gg-2', echo = FALSE, out.width = "100%"}
+
+```
+
+]
+
+---
+# Our first ggplot!
+
+.left-code[
+```{r first-gg-3, eval = FALSE}
+library(ggplot2)
+ggplot(tb_au,
+       aes(x = year, 
+           y = count))  +
+  geom_point() #<<
+```
+
+]
+
+.right-plot[
+```{r first-gg-3-out, ref.label = 'first-gg-3', echo = FALSE, out.width = "100%"}
+
+```
+
+]
+
+---
+# Our first ggplot! (what's the data again?)
+
+.vlarge.center.middle[
+```{r show-tb-au-table, echo = FALSE}
+tb_au %>% slice(1:10) %>% as_table()
+```
+]
+
+
+---
+# Our first ggplot!
+
+.left-code[
+```{r first-gg-4, eval = FALSE}
+library(ggplot2)
+ggplot(tb_au,
+       aes(x = year, 
+           y = count))  +
+  geom_col() #<<
+```
+
+]
+
+.right-plot[
+```{r first-gg-4-out, ref.label = 'first-gg-4', echo = FALSE, out.width = "100%"}
+
+```
+
+]
+
+---
+# Our first ggplot!
+
+.left-code[
+```{r first-gg-5, eval = FALSE}
+library(ggplot2)
+ggplot(tb_au,
+       aes(x = year, 
+           y = count,
+           fill = gender))  + #<<
+  geom_col() 
+```
+
+]
+
+.right-plot[
+```{r first-gg-5-out, ref.label = 'first-gg-5', echo = FALSE, out.width = "100%"}
+
+```
+
+]
+
+---
+# Our first ggplot!
+
+.left-code[
+```{r first-gg-6, eval = FALSE}
+library(ggplot2)
+ggplot(tb_au,
+       aes(x = year, 
+           y = count,
+           fill = gender))  + 
+  geom_col(position = "fill")  #<<
+```
+
+]
+
+.right-plot[
+```{r first-gg-6-out, ref.label = 'first-gg-6', echo = FALSE, out.width = "100%"}
+
+```
+
+]
+
+---
+# Our first ggplot!
+
+.left-code[
+```{r first-gg-7, eval = FALSE}
+library(ggplot2)
+ggplot(tb_au,
+       aes(x = year, 
+           y = count,
+           fill = gender))  + 
+  geom_col(position = "fill") +
+  scale_fill_brewer( #<<
+    palette = "Dark2" #<<
+    ) #<<
+```
+
+]
+
+.right-plot[
+```{r first-gg-7-out, ref.label = 'first-gg-7', echo = FALSE, out.width = "100%"}
+
+```
+
+]
+
+
+
+---
+# Our first ggplot!
+
+.left-code[
+```{r first-gg-8, eval = FALSE}
+library(ggplot2)
+ggplot(tb_au,
+       aes(x = year, 
+           y = count,
+           fill = gender))  + 
+  geom_col(position = "fill") +
+  scale_fill_brewer( 
+    palette = "Dark2"
+    ) +
+  facet_wrap(~ age) #<<
+```
+
+]
+
+.right-plot[
+```{r first-gg-8-out, ref.label = 'first-gg-8', echo = FALSE, out.width = "100%"}
+
+```
+
+]
+
+???
+
+- First argument provided is the name of the data, `tb_au`
+- Variable mapping: year is mapped to x, count is mapped to y, gender is mapped to colour, and age is used to subset the data and make separate plots
+- The column geom is used, `geom_col`
+- We are mostly interested in proportions between gender, over years, separately by age. The `position = "fill"` option in `geom_bar` sets the heights of the bars to be all at 100%. It ignores counts, and emphasizes the proportion of males and females.
+
+
+---
+
+## The "100% charts"
+
+```{r gg-show-100pct, echo=TRUE, fig.width=8, fig.height=2}
+ggplot(tb_au, aes(x = year, y = count, fill = gender)) +
+  geom_bar(stat = "identity", position = "fill") +
+  facet_grid(~ age) +
+  scale_fill_brewer(palette="Dark2")
+```
+
+--
+
+.huge[
+What do we learn
+]
+
+???
+
+100% charts, is what excel names these beasts. What do we learn?
+
+---
+
+# What do we learn?
+
+.huge[
+- Focus is on **proportion** in each category. 
+- Across (almost) all ages, and years, the proportion of males having TB is higher than females
+- These proportions tend to be higher in the older age groups, for all years.
+]
+
+---
+
+# Code structure of ggplot
+
+.huge[
+- `ggplot()` is the main function
+- Plots are constructed in layers
+- Structure of code for plots can often be summarised as
+
+```r
+ggplot(data = [dataset], 
+       mapping = aes(x = [x-variable], 
+                     y = [y-variable])) +
+   geom_xxx() +
+   other options
+```
+]
+
+---
+
+# How to use ggplot
+
+.huge[
+
+- To use ggplot2 functions, first load tidyverse
+
+```{r example-load}
+library(tidyverse)
+```
+
+- For help with the ggplot2, see [ggplot2.tidyverse.org](http://ggplot2.tidyverse.org/)
+
+]
+
+---
+class: bg-main1
+
+.vvhuge[
+Let's look at some more options to emphasise different features
+]
+
+---
+# 
+
+.left-code[
+```{r first-gg-9, eval = FALSE}
+ggplot(tb_au,
+       aes(x = year, 
+           y = count,
+           fill = gender))  + 
+  geom_col(position = "fill") +
+  scale_fill_brewer( 
+    palette = "Dark2"
+    ) +
+  facet_wrap(~ age) #<<
+```
+
+]
+
+.right-plot[
+```{r first-gg-9-out, ref.label = 'first-gg-9', echo = FALSE, out.width = "100%"}
+
+```
+
+]
+
+---
+# Emphasizing different features with ggplot2
+
+```{r first-gg-10, fig.height = 2, fig.width = 8, out.width = "100%"}
+ggplot(tb_au, 
+       aes(x = year, 
+           y = count, 
+           fill = gender))  + 
+  geom_col(position = "fill") +
+  scale_fill_brewer( palette = "Dark2") +
+  facet_grid(~ age) #<<
+```
+
+---
+# Emphasise ... ?
+
+```{r first-gg-11, fig.height = 2, fig.width = 8, out.width = "100%"}
+ggplot(tb_au, 
+       aes(x = year, 
+           y = count, 
+           fill = gender))  + 
+  geom_col() + #<<
+  scale_fill_brewer( palette = "Dark2") +
+  facet_grid(~ age)
+```
+
+???
+
+---
+
+What is different in the code description?
+
+`, position = "fill"` was removed
+
+What do we learn?
+
+- Focus is on **counts** in each category. 
+- Different across ages, and years, counts tend to be lower in middle age (45-64)
+- 1999 saw a bit of an outbreak, in most age groups, with numbers doubling or tripling other years.
+- Incidence has been increasing among younger age groups in recent years.
+
+---
+# Emphasise ... ?
+
+```{r gg-side-by-side,  fig.height = 2, fig.width = 8, out.width = "100%"}
+ggplot(tb_au, 
+       aes(x = year, 
+           y = count, 
+           fill = gender)) +
+  geom_col(position = "dodge") + #<<
+  scale_fill_brewer(palette = "Dark2") +
+  facet_grid(~ age)
+```  
+
+???
+
+What is different in the code description?
+
+`, position="dodge"` is used in `geom_bar`
+
+What do we learn?
+
+- Focus is on counts by gender, predominantly male incidence.
+- Incidence among males relative to females is from middle age on. 
+- There is similar incidence between males and females in younger age groups.
+
+---
+
+# Separate bar charts
+
+```{r gg-separate, echo=TRUE, fig.width=8, fig.height=3}
+ggplot(tb_au, 
+       aes(x = year, y = count, fill = gender)) +
+  geom_col() +
+  scale_fill_brewer(palette = "Dark2") +
+  facet_grid(gender ~ age) #<<
+```
+
+???
+
+What is different in the code description?
+
+`facet_grid(gender ~ age) +` faceted by gender as well as age, note `facet_grid` vs `facet_wrap`
+
+What do we learn?
+
+- Its easier to focus separately on males and females.
+- The 1999 outbreak mostly affected males.
+- The growing incidence in the 25-34 age group is still affecting females but seems to be have stablised for males.
+
+---
+## Pie charts?
+
+```{r gg-rose, echo=TRUE, fig.width=8, fig.height=3}
+ggplot(tb_au, 
+       aes(x = year, y = count, fill = gender)) +
+  geom_col() +
+  scale_fill_brewer(palette="Dark2") + 
+  facet_grid(gender ~ age) +
+  coord_polar() + #<<
+  theme(axis.text = element_blank())
+```
+
+???
+
+Nope! That's a rose chart. Bar charts in polar coordinates produce rose charts. 
+
+What is different in the code description?
+
+`coord_polar() +` plot is made in polar coordinates, rather than the default Cartesian coordinates
+
+hat do we learn?
+
+- Emphasizes the middle years as low incidence. 
+
+---
+
+## Rainbow charts?
+
+```{r gg-rainbow, echo=TRUE, fig.width=8, fig.height=3}
+ggplot(tb_au, aes(x = 1, 
+                  y = count, 
+                  fill = factor(year))) + #<<
+  geom_col(position = "fill") +
+  facet_grid(gender ~ age) 
+```
+
+
+???
+
+A single stacked bar, in each facet. Year is mapped to colour. 
+
+What is the code doing?
+
+- Notice how the mappings are different. A single number is mapped to x, that makes a single stacked bar chart.
+- year is now mapped to colour (that's what gives us the rainbow charts!)
+
+What do we learn?
+
+- Pretty chart but not easy to interpret. 
+
+---
+
+## (Actual) Pie charts
+
+```{r gg-pie2, echo=TRUE, fig.width=8, fig.height=3}
+ggplot(tb_au, aes(x = 1, y = count, fill = factor(year))) +
+  geom_col(position = "fill") +
+  facet_grid(gender ~ age) + #<<
+  coord_polar(theta = "y") + #<<
+  theme(axis.text = element_blank())
+```
+
+???
+
+What is different in the code description?
+
+`coord_polar(theta="y")`  is using the y variable to do the angles for the polar coordinates to give a pie chart.
+
+What do we learn?
+
+- Pretty chart but not easy to interpret, or make comparisons across age groups. 
+
+---
+
+## Why?
+
+[The various looks of David Bowie](https://www.wired.com/wp-content/uploads/2016/01/DB-Transformation-Colour.gif)
+
+.left-code.large[
+- Using named plots, eg pie chart, bar chart, scatterplot, is like seeing animals in the zoo. 
+- The grammar of graphics allows you to define the mapping between variables in the data, with elements of the plot. 
+- It allows us to see and understand how plots are similar or different. 
+- And you can see how variations in the definition create variations in the plot.
+]
+
+.right-plot[
+<img src="https://www.wired.com/wp-content/uploads/2016/01/DB-Transformation-Colour.gif" style="width:50%" />
+
+]
+
+---
+# Your Turn: 
+
+.huge[
+
+- Do the lab exercises
+- Take the lab quiz
+- Use the rest of the lab time to coordinate with your group on the first assignment.
+
+]
+
+---
+
+# References
+
+.huge[
+- [Chapter 3 of R for Data Science](https://r4ds.had.co.nz/data-visualisation.html)
+- [Data made available from WHO](https://www.who.int/tb/country/data/download/en/)
+- [Garret Aden Buie's gentle introduction to ggplot2](https://pkg.garrickadenbuie.com/gentle-ggplot2/#1)
+- [Mine Çetinkaya-Rundel's introduction to ggplot using star wars.](https://github.com/rstudio-education/datascience-box/tree/master/slides/u1_d02-data-and-viz)
+]
+---
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
