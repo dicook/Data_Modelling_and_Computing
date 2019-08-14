@@ -506,8 +506,6 @@ ggplot(tb_au,
 
 ???
 
----
-
 What is different in the code description?
 
 `, position = "fill"` was removed
