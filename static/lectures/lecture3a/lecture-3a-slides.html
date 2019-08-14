@@ -26,8 +26,59 @@ class: center, middle, inverse, title-slide
 
 
 
+class: bg-main5
 
-# recap:
+# Learning Tips
+
+---
+class: bg-main5
+
+# Understanding learning
+
+.huge[
+- Growth and fixed mindsets
+- Reframe success + failure as opportunities for growth
+- Growing area of research by [Carol Dweck of Stanford](https://www.youtube.com/watch?v=hiiEeMN7vbQ)
+]
+
+---
+class: bg-main5
+
+.center[
+# Reframing
+]
+
+.pull-left[
+# From
+
+.huge[
+
+&gt; "I'll never understand"
+
+&gt; "I just don't get programming"
+
+&gt; "I'm not a maths person"
+
+]
+
+]
+
+--
+
+.pull-right[
+# To
+
+.vlarge[
+&gt; "I understand more than I did yesterday"
+
+&gt; "I can learn how to program"
+
+&gt; "Compared to this last week, I've learnt quite a bit!"
+
+]
+
+]
+
 
 
 ---
@@ -456,7 +507,7 @@ What do we learn
 ]
 
 ---
-
+class: bg-main1
 # Code structure of ggplot
 
 .huge[
@@ -474,7 +525,7 @@ ggplot(data = [dataset],
 ]
 
 ---
-
+class: bg-main1
 # How to use ggplot
 
 .huge[
@@ -553,18 +604,18 @@ ggplot(tb_au,
 
 &lt;img src="lecture-3a-slides_files/figure-html/first-gg-11-1.png" width="100%" /&gt;
 
-???
+---
+class: bg-main1
+# What do we learn?
 
-What is different in the code description?
-
-`, position = "fill"` was removed
-
-What do we learn?
-
+.huge[
+- `, position = "fill"` was removed
 - Focus is on **counts** in each category. 
 - Different across ages, and years, counts tend to be lower in middle age (45-64)
 - 1999 saw a bit of an outbreak, in most age groups, with numbers doubling or tripling other years.
 - Incidence has been increasing among younger age groups in recent years.
+
+]
 
 ---
 # Emphasise ... ?
@@ -582,17 +633,17 @@ ggplot(tb_au,
 
 &lt;img src="lecture-3a-slides_files/figure-html/gg-side-by-side-1.png" width="100%" /&gt;
 
-???
+---
+class: bg-main1
+# What do we learn?
 
-What is different in the code description?
+.huge[
 
-`, position="dodge"` is used in `geom_bar`
-
-What do we learn?
-
-- Focus is on counts by gender, predominantly male incidence.
+- `, position="dodge"` is used in `geom_col`
+- Focus is on **counts by gender**, predominantly male incidence.
 - Incidence among males relative to females is from middle age on. 
 - There is similar incidence between males and females in younger age groups.
+]
 
 ---
 
@@ -609,20 +660,20 @@ ggplot(tb_au,
 
 &lt;img src="lecture-3a-slides_files/figure-html/gg-separate-1.png" width="100%" /&gt;
 
-???
+---
+class: bg-main1
+# What do we learn?
 
-What is different in the code description?
-
-`facet_grid(gender ~ age) +` faceted by gender as well as age, note `facet_grid` vs `facet_wrap`
-
-What do we learn?
-
-- Its easier to focus separately on males and females.
-- The 1999 outbreak mostly affected males.
-- The growing incidence in the 25-34 age group is still affecting females but seems to be have stablised for males.
+.huge[
+- `facet_grid(gender ~ age) +` faceted by gender as well as age
+- note `facet_grid` vs `facet_wrap`
+- Easier to focus separately on males and females.
+- 1999 outbreak mostly affected males.
+- Growing incidence in the 25-34 age group is still affecting females but seems to be have stablised for males.
+]
 
 ---
-## Pie charts?
+# ~~Pie charts?~~ Rose Charts
 
 
 ```r
@@ -637,21 +688,19 @@ ggplot(tb_au,
 
 &lt;img src="lecture-3a-slides_files/figure-html/gg-rose-1.png" width="100%" /&gt;
 
-???
+---
+class: bg-main1
+# What do we learn?
 
-Nope! That's a rose chart. Bar charts in polar coordinates produce rose charts. 
-
-What is different in the code description?
-
-`coord_polar() +` plot is made in polar coordinates, rather than the default Cartesian coordinates
-
-hat do we learn?
-
+.huge[
+- Bar charts in polar coordinates produce rose charts. 
+- `coord_polar() +` plot is made in polar coordinates, rather than the default Cartesian coordinates
 - Emphasizes the middle years as low incidence. 
+]
 
 ---
 
-## Rainbow charts?
+# Rainbow charts?
 
 
 ```r
@@ -664,19 +713,24 @@ ggplot(tb_au, aes(x = 1,
 
 &lt;img src="lecture-3a-slides_files/figure-html/gg-rainbow-1.png" width="100%" /&gt;
 
+---
 
-???
+# What do we see in the code??
 
-A single stacked bar, in each facet. Year is mapped to colour. 
-
-What is the code doing?
-
+.huge[
+- A single stacked bar, in each facet. 
+- Year is mapped to colour. 
 - Notice how the mappings are different. A single number is mapped to x, that makes a single stacked bar chart.
 - year is now mapped to colour (that's what gives us the rainbow charts!)
+]
 
-What do we learn?
+---
 
+# What do we learn?
+
+.vhuge[
 - Pretty chart but not easy to interpret. 
+]
 
 ---
 
@@ -693,15 +747,22 @@ ggplot(tb_au, aes(x = 1, y = count, fill = factor(year))) +
 
 &lt;img src="lecture-3a-slides_files/figure-html/gg-pie2-1.png" width="100%" /&gt;
 
-???
+---
+class: bg-main1
+# What is different in the code?
 
-What is different in the code description?
+.vhuge[
 
-`coord_polar(theta="y")`  is using the y variable to do the angles for the polar coordinates to give a pie chart.
+- `coord_polar(theta="y")`  is using the y variable to do the angles for the polar coordinates to give a pie chart.
+]
 
-What do we learn?
+---
 
+# What do we learn?
+
+.vhuge[
 - Pretty chart but not easy to interpret, or make comparisons across age groups. 
+]
 
 ---
 

@@ -75,19 +75,69 @@ tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>%
          year < 2013)
   
 tb_au <- tb %>% 
-  filter(country == "Australia")  
-
-# mutate(ages = 
-#   case_when(ages == "1524" ~ "15-24",
-#             ages == "2534" ~ "25-34",
-#             ages == "3544" ~ "35-44",
-#             ages == "4554" ~ "45-54",
-#             ages == "5564" ~ "55-64",
-#             ages == "65" ~ "65+")
+  filter(country == "Australia")  %>%
+mutate(age =
+  case_when(age == "1524" ~ "15-24",
+            age == "2534" ~ "25-34",
+            age == "3544" ~ "35-44",
+            age == "4554" ~ "45-54",
+            age == "5564" ~ "55-64",
+            age == "65" ~ "65+"))
 ```
 
+class: bg-main5
 
-# recap:
+# Learning Tips
+
+---
+class: bg-main5
+
+# Understanding learning
+
+.huge[
+- Growth and fixed mindsets
+- Reframe success + failure as opportunities for growth
+- Growing area of research by [Carol Dweck of Stanford](https://www.youtube.com/watch?v=hiiEeMN7vbQ)
+]
+
+---
+class: bg-main5
+
+.center[
+# Reframing
+]
+
+.pull-left[
+# From
+
+.huge[
+
+> "I'll never understand"
+
+> "I just don't get programming"
+
+> "I'm not a maths person"
+
+]
+
+]
+
+--
+
+.pull-right[
+# To
+
+.vlarge[
+> "I understand more than I did yesterday"
+
+> "I can learn how to program"
+
+> "Compared to this last week, I've learnt quite a bit!"
+
+]
+
+]
+
 
 
 ---
@@ -413,7 +463,7 @@ What do we learn
 ]
 
 ---
-
+class: bg-main1
 # Code structure of ggplot
 
 .huge[
@@ -431,7 +481,7 @@ ggplot(data = [dataset],
 ]
 
 ---
-
+class: bg-main1
 # How to use ggplot
 
 .huge[
@@ -504,18 +554,18 @@ ggplot(tb_au,
   facet_grid(~ age)
 ```
 
-???
+---
+class: bg-main1
+# What do we learn?
 
-What is different in the code description?
-
-`, position = "fill"` was removed
-
-What do we learn?
-
+.huge[
+- `, position = "fill"` was removed
 - Focus is on **counts** in each category. 
 - Different across ages, and years, counts tend to be lower in middle age (45-64)
 - 1999 saw a bit of an outbreak, in most age groups, with numbers doubling or tripling other years.
 - Incidence has been increasing among younger age groups in recent years.
+
+]
 
 ---
 # Emphasise ... ?
@@ -530,17 +580,17 @@ ggplot(tb_au,
   facet_grid(~ age)
 ```  
 
-???
+---
+class: bg-main1
+# What do we learn?
 
-What is different in the code description?
+.huge[
 
-`, position="dodge"` is used in `geom_bar`
-
-What do we learn?
-
-- Focus is on counts by gender, predominantly male incidence.
+- `, position="dodge"` is used in `geom_col`
+- Focus is on **counts by gender**, predominantly male incidence.
 - Incidence among males relative to females is from middle age on. 
 - There is similar incidence between males and females in younger age groups.
+]
 
 ---
 
@@ -554,20 +604,20 @@ ggplot(tb_au,
   facet_grid(gender ~ age) #<<
 ```
 
-???
+---
+class: bg-main1
+# What do we learn?
 
-What is different in the code description?
-
-`facet_grid(gender ~ age) +` faceted by gender as well as age, note `facet_grid` vs `facet_wrap`
-
-What do we learn?
-
-- Its easier to focus separately on males and females.
-- The 1999 outbreak mostly affected males.
-- The growing incidence in the 25-34 age group is still affecting females but seems to be have stablised for males.
+.huge[
+- `facet_grid(gender ~ age) +` faceted by gender as well as age
+- note `facet_grid` vs `facet_wrap`
+- Easier to focus separately on males and females.
+- 1999 outbreak mostly affected males.
+- Growing incidence in the 25-34 age group is still affecting females but seems to be have stablised for males.
+]
 
 ---
-## Pie charts?
+# ~~Pie charts?~~ Rose Charts
 
 ```{r gg-rose, echo=TRUE, fig.width=8, fig.height=3}
 ggplot(tb_au, 
@@ -579,21 +629,19 @@ ggplot(tb_au,
   theme(axis.text = element_blank())
 ```
 
-???
+---
+class: bg-main1
+# What do we learn?
 
-Nope! That's a rose chart. Bar charts in polar coordinates produce rose charts. 
-
-What is different in the code description?
-
-`coord_polar() +` plot is made in polar coordinates, rather than the default Cartesian coordinates
-
-hat do we learn?
-
+.huge[
+- Bar charts in polar coordinates produce rose charts. 
+- `coord_polar() +` plot is made in polar coordinates, rather than the default Cartesian coordinates
 - Emphasizes the middle years as low incidence. 
+]
 
 ---
 
-## Rainbow charts?
+# Rainbow charts?
 
 ```{r gg-rainbow, echo=TRUE, fig.width=8, fig.height=3}
 ggplot(tb_au, aes(x = 1, 
@@ -603,19 +651,24 @@ ggplot(tb_au, aes(x = 1,
   facet_grid(gender ~ age) 
 ```
 
+---
 
-???
+# What do we see in the code??
 
-A single stacked bar, in each facet. Year is mapped to colour. 
-
-What is the code doing?
-
+.huge[
+- A single stacked bar, in each facet. 
+- Year is mapped to colour. 
 - Notice how the mappings are different. A single number is mapped to x, that makes a single stacked bar chart.
 - year is now mapped to colour (that's what gives us the rainbow charts!)
+]
 
-What do we learn?
+---
 
+# What do we learn?
+
+.vhuge[
 - Pretty chart but not easy to interpret. 
+]
 
 ---
 
@@ -629,15 +682,22 @@ ggplot(tb_au, aes(x = 1, y = count, fill = factor(year))) +
   theme(axis.text = element_blank())
 ```
 
-???
+---
+class: bg-main1
+# What is different in the code?
 
-What is different in the code description?
+.vhuge[
 
-`coord_polar(theta="y")`  is using the y variable to do the angles for the polar coordinates to give a pie chart.
+- `coord_polar(theta="y")`  is using the y variable to do the angles for the polar coordinates to give a pie chart.
+]
 
-What do we learn?
+---
 
+# What do we learn?
+
+.vhuge[
 - Pretty chart but not easy to interpret, or make comparisons across age groups. 
+]
 
 ---
 
