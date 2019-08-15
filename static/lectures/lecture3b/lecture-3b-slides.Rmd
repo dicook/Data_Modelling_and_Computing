@@ -1,0 +1,819 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+subtitle: "Lecture 3B: Dates and Times"
+author: "Dr. Nicholas Tierney & Professor Di Cook"
+institute: "EBS, Monash U."
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["shinobi", "ninjutsu", "slides.css"]
+    seal: true
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+library(emo) 
+library(tidyverse)
+library(knitr)
+library(lubridate)
+knitr::opts_chunk$set(fig.width=4.25, 
+                      fig.height=3.5, 
+                      fig.retina=3,
+                      out.width = "100%",
+                      message=FALSE, 
+                      warning=FALSE, 
+                      cache = FALSE, 
+                      autodep = TRUE, 
+                      hiline=TRUE)
+
+knitr::opts_hooks$set(fig.callout = function(options) {
+  if (options$fig.callout) {
+    options$echo <- FALSE
+    options$out.height <- "99%"
+    options$fig.width <- 16
+    options$fig.height <- 8
+  }
+  options
+})
+
+options(
+  htmltools.dir.version = FALSE, 
+  width = 90,
+  max.print = 9999,
+  knitr.table.format = "html"
+)
+
+as_table <- function(...) knitr::kable(..., format='html', digits = 3)
+```
+
+background-image: url(https://njtierney.updog.co/img/allison-horst-lubridate.png)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, white
+right.purple.large[Art by Allison Horst]
+
+---
+class: bg-main1
+
+## Overview
+
+.huge[
+- Working with dates
+- Constructing graphics
+]
+
+---
+class: bg-main1
+
+# Reminder re the assignment:
+
+.huge[
+- Due 5pm **today**
+- Submit by one person in the assignment group
+- ED > assessments > upload your `Rmd`, and `html`, files. 
+- **One per group**
+- **Remember to name your files as described in the submission**
+]
+
+---
+class: bg-main1
+
+# The challenges of working with dates and times
+
+.huge[
+- Conventional order of day, month, year is different across location
+  - Australia: DD-MM-YYYY
+  - America: MM-DD-YYYY
+  - [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601): YYYY-MM-DD
+]
+
+---
+background-image: url(https://imgs.xkcd.com/comics/iso_8601.png)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, white
+
+
+---
+class: bg-main1
+
+# The challenges of working with dates and times
+
+.huge[
+- Number of units change:
+    - Years do not have the same number of days (leap years)
+    - Months have differing numbers of days. (January vs February vs September)
+    - Not every minute has 60 seconds (leap seconds!)
+- Times are local, for us. Where are you?
+- Timezones!!!
+]
+
+
+---
+class: bg-main1
+
+# The challenges of working with dates and times
+
+.huge[
+- Representing time relative to it's type:
+   - What day of the week is it? 
+   - Day of the month? 
+   - Week in the year?
+- Years start on different days (Monday, Sunday, ...)
+]
+
+---
+class: bg-main1
+
+# The challenges of working with dates and times
+
+.huge[
+- Representing time relative to it's type:
+  - Months could be numbers or names. (1st month, January)
+  - Days could be numbers of names. (1st day....Sunday? Monday?)
+  - Days and Months have abbreviations. (Mon, Tue, Jan, Feb)
+]
+
+---
+class: bg-main1
+
+# The challenges of working with dates and times
+
+.huge[
+- Time can be relative: 
+  - How many days until we go on holidays?
+  - How many working days?
+]
+
+---
+background-image: url(https://njtierney.updog.co/img/allison-horst-lubridate.png)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, white
+
+
+---
+class: bg-main1
+
+# Lubridate
+
+.left-code.huge[
+
+- Simplifies date/time by helping you:
+  - Parse values
+  - Create new variables based on components like month, day, year
+  - Do algebra on time
+  
+]
+
+.right-plot[
+
+```{r show-lubridate, echo = FALSE}
+include_graphics("images/lubridate.jpg")
+```
+]
+
+---
+
+background-image: url(https://njtierney.updog.co/img/allison-horst-lubridate-ymd.png)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, white
+
+---
+class: bg-main1
+
+.vvvhuge[
+Parsing dates & time zones using `ymd()`
+]
+
+---
+class: bg-main1
+
+# `ymd()` can take a character input
+
+```{r show-ymd}
+ymd("20190810")
+```
+
+---
+class: bg-main1
+
+# `ymd()` can also take other kinds of separators
+
+```{r moar-ymd}
+ymd("2019-08-10")
+ymd("2019/08/10")
+```
+
+--
+
+# yeah, wow, I was actually surprised this worked
+
+```{r even-moar-ymd}
+ymd("??2019-.-08//10---")
+```
+
+
+---
+class: bg-main1
+
+# Change the letters, change the output
+
+```{r show-mdy}
+mdy("10/15/2019")
+```
+
+--
+# `mdy()` expects month, day, year. 
+
+--
+
+# `dmy()` expects day, month, year.
+
+```{r show-dmy}
+dmy("10/08/2019")
+```
+
+---
+class: bg-main1
+
+# Add a timezone
+
+.huge[
+If you add a time zone, what changes?
+]
+
+```{r add-tz}
+ymd("2019-08-10", tz = "Australia/Melbourne")
+```
+
+---
+class: bg-main1
+
+# What happens if you try to specify different time zones?
+
+.pull-left[
+
+```{r add-tz-ymd}
+ymd("2019-08-10", 
+    tz = "Africa/Abidjan")
+
+ymd("2019-08-10", 
+    tz = "America/Los_Angeles")
+```
+
+]
+
+.pull-right.huge[
+
+A list of acceptable time zones can be found [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) (google wiki timezone database)
+
+]
+
+---
+class: bg-main1
+
+# Timezones another way:
+
+```{r show-today}
+today()
+```
+
+--
+
+```{r today-la}
+today(tz = "America/Los_Angeles")
+```
+
+--
+
+```{r now}
+now()
+```
+
+--
+
+```{r now-la}
+now(tz = "America/Los_Angeles")
+```
+
+---
+class: bg-main1
+
+# date and time: `ymd_hms()`
+
+```{r ymd-hms}
+ymd_hms("2019-08-10 10:05:30", 
+        tz = "Australia/Melbourne")
+```
+
+
+```{r ymd-hms-la}
+ymd_hms("2019-08-10 10:05:30", 
+        tz = "America/Los_Angeles")
+```
+
+---
+class: bg-main1
+
+# Extracting temporal elements
+
+.huge[
+- Very often we want to know what day of the week it is
+- Trends and patterns in data can be quite different depending on the type of day:
+  - week day vs. weekend
+  - weekday vs. holiday
+  - regular saturday night vs. new years eve 
+]
+
+---
+class: bg-main1
+
+# Many ways of saying similar things
+
+.huge[
+- Many ways to specify day of the week:
+  - A number. Does 1 mean... Sunday, Monday or even Saturday???
+  - Or text or or abbreviated text. (Mon vs. Monday)
+]
+
+---
+class: bg-main1
+
+# Many ways of saying similar things
+  
+.huge[
+- Talking with people we generally use day name:
+  - Today is Friday, tomorrow is Saturday vs Today is 5 and tomorrow is 6.
+- But, doing data analysis on days might be useful to have it represented as a number:
+  - e.g., Saturday - Thursday is 2 days (6 - 4)
+]
+
+---
+class: bg-main1
+
+# The Many ways to say Monday (Pt 1)
+
+```{r wday-and-options}
+wday("2019-08-12")
+wday("2019-08-12", label = TRUE)
+```
+
+---
+class: bg-main1
+
+# The Many ways to say Monday (Pt 2)
+
+```{r}
+wday("2019-08-12", label = TRUE, abbr = FALSE)
+wday("2019-08-12", label = TRUE, week_start = 1)
+```
+
+
+---
+class: bg-main1
+
+# Similarly, we can extract what month the day is in.
+
+```{r month-label-abbr}
+month("2019-08-10")
+month("2019-08-10", label = TRUE)
+month("2019-08-10", label = TRUE, abbr = FALSE)
+```
+
+---
+class: bg-main1
+
+# Fiscally, it is useful to know what quarter the day is in.
+
+```{r quarter-semester}
+quarter("2019-08-10")
+semester("2019-08-10")
+```
+
+---
+class: bg-main1
+
+# Similarly, we can select days within a year. 
+
+```{r yday}
+yday("2019-08-10")
+```
+
+---
+# Our Turn:
+
+.huge[
+- Open rstudio.cloud and check out Lecture 3B and follow along.
+]
+
+---
+class: bg-main1
+
+## Example: pedestrian sensor
+
+```{r show-pedestrian-sensor, echo = FALSE, out.width = "100%"}
+include_graphics("images/sensors.png")
+```
+
+---
+class: bg-main1
+
+# [Melbourne pedestrian sensor portal](http://www.pedestrian.melbourne.vic.gov.au/):
+
+.huge[
+
+- Contains hourly counts of people walking around the city. 
+- Extract records for 2018 for the sensor at Melbourne Central
+- Use lubridate to extract different temporal components, so we can study the pedestrian patterns at this location. 
+
+]
+
+---
+class: bg-main1
+
+```{r rwalkr-load, eval = FALSE}
+library(rwalkr)
+walk_all <- melb_walk_fast(year = 2018)
+library(dplyr)
+
+walk <- walk_all %>% filter(Sensor == "Melbourne Central")
+
+write_csv(walk, path = "data/walk_2018.csv")
+```
+
+
+```{r read-walk}
+walk <- readr::read_csv("data/walk_2018.csv")
+walk
+```
+
+---
+class: bg-main1
+
+# Let's think about the data structure.
+
+.left-code.vlarge[
+
+- The basic time unit is hour of the day. 
+- Date can be decomposed into 
+    - month
+    - week day vs weekend
+    - week of the year
+    - day of the month
+    - holiday or work day
+    
+]
+
+.right-plot[
+
+![](images/Time.png)
+]
+
+
+---
+class: bg-main1
+
+# What format is walk in?
+
+```{r print-walk}
+walk
+```
+
+---
+class: bg-main1
+
+# Create variables with these different temporal components. 
+
+```{r walk-tidy}
+walk_tidy <- walk %>%
+  mutate(month = month(Date,  label = TRUE, abbr = TRUE), 
+         wday = wday(Date, label = TRUE, abbr = TRUE, week_start = 1))
+walk_tidy
+```
+
+---
+class: bg-main1
+
+# Pedestrian count per month
+
+.left-code[
+```{r gg-walk-month-count, eval = FALSE}
+ggplot(walk_tidy,
+       aes(x = month, 
+           y = Count)) + 
+  geom_col()
+```  
+]
+
+.right-plot[
+
+```{r gg-walk-month-count-out, ref.label = 'gg-walk-month-count', echo = FALSE, out.width = "100%"}
+
+```
+]
+
+???
+
+- January has a very low count relative to the other months. Something can't be right with this number, because it is much lower than expected.
+- The remaining months have roughly the same counts.
+
+---
+class: bg-main1
+
+# Pedestrian count per weekday
+
+.left-code[
+```{r gg-wday-count, eval = FALSE}
+ggplot(walk_tidy,
+       aes(x = wday,
+           y = Count)) + 
+  geom_col()
+```  
+]
+
+.right-plot[
+```{r gg-wday-count-out, ref.label = 'gg-wday-count', echo = FALSE, out.width = "100%"}
+
+```
+]
+
+???
+
+How would you describe the pattern?
+
+- Friday and Saturday tend to have a few more people walking around than other days.
+
+---
+class: bg-main1
+
+# What might be wrong with these interpretations?
+
+.huge[
+- There might be a different number of days of the week over the year.
+- This means that simply summing the counts might lead to a misinterpretation of pedestrian patterns. 
+- Similarly, months have different numbers of days.
+]
+
+---
+class: bg-main1
+
+# Your Turn: Brainstorm with your table a solution, to answer these questions:
+
+.huge[
+1. Are pedestrian counts different depending on the month?
+2. Are pedestrian counts different depending on the day of the week?
+]
+
+---
+class: bg-main1
+
+# What are the number of pedestrians per day?
+
+```{r walk-day}
+walk_day <- walk_tidy %>% 
+  group_by(Date) %>%
+  summarise(day_count = sum(Count, na.rm = TRUE))
+
+walk_day
+```
+
+---
+class: bg-main1
+
+# What are the mean number of people per weekday?
+
+```{r walk-day-summarise}
+walk_week_day <- walk_day %>%
+  mutate(wday = wday(Date, label = TRUE, abbr = TRUE, week_start = 1)) %>% 
+  group_by(wday) %>%
+  summarise(m = mean(day_count, na.rm = TRUE),
+            s = sd(day_count, na.rm = TRUE))
+
+walk_week_day
+```
+
+---
+class: bg-main1
+
+```{r gg-walk-day, fig.width = 8, fig.height = 3}
+ggplot(walk_week_day) + 
+  geom_errorbar(aes(x = wday, ymin = m - s, ymax = m + s)) +
+  ylim(c(0, 45000)) +
+  labs(x = "Day of week", 
+       y = "Average number of predestrians")
+```  
+
+---
+class: bg-main1
+
+# Distribution of counts
+
+.huge[
+Side-by-side boxplots show the distribution of counts over different temporal elements.
+]
+
+---
+class: bg-main1
+
+# Hour of the day
+
+```{r gg-time-count, fig.width = 8, fig.height = 3}
+ggplot(walk_tidy,
+       aes(x = as.factor(Time), y = Count)) + 
+  geom_boxplot()
+```
+
+---
+class: bg-main1
+
+# Day of the week
+
+```{r gg-walk-weekday-count, fig.width = 8, fig.height = 3}
+ggplot(walk_tidy,
+       aes(x = wday,
+           y = Count)) +
+  geom_boxplot()
+```
+
+---
+class: bg-main1
+
+# Month
+
+```{r gg-month-count-boxplot, cache = TRUE, , fig.width = 8, fig.height = 3}
+ggplot(walk_tidy,
+       aes(x = month, 
+           y = Count)) + 
+  geom_boxplot()
+```
+
+---
+class: bg-main1
+
+# Time series plots: Lines show consecutive hours of the day.
+
+```{r gg-time-count-line, cache = TRUE, , fig.width = 8, fig.height = 3}
+ggplot(walk_tidy, aes(x = Time, y = Count, group = Date)) + 
+  geom_line()
+```
+
+---
+class: bg-main1
+
+# By month
+
+```{r gg-time-count-by-date, fig.height=3, fig.width = 8}
+ggplot(walk_tidy, aes(x = Time, y = Count, group = Date)) +
+  geom_line() +
+  facet_wrap( ~ month)
+```
+
+---
+class: bg-main1
+
+# By week day
+
+```{r gg-time-count-line-facet-grid, fig.width = 8, fig.height = 3, cache = TRUE}
+ggplot(walk_tidy, aes(x = Time, y = Count, group = Date)) +
+  geom_line() +
+  facet_grid(month ~ wday)
+```
+
+---
+class: bg-main1
+
+# Calendar plots
+
+.left-code[
+```{r calendar-plot, eval = FALSE}
+library(sugrrants)
+
+walk_tidy_calendar <- 
+  frame_calendar(walk_tidy,
+                 x = Time, 
+                 y = Count, 
+                 date = Date, 
+                 nrow = 4)
+
+p1 <- ggplot(walk_tidy_calendar,
+       aes(x = .Time, 
+           y = .Count, 
+           group = Date)) +
+  geom_line()
+
+prettify(p1)
+```  
+]
+
+.right-plot[
+```{r calendar-plot-out, ref.label = 'calendar-plot', echo = FALSE, out.width = "100%"}
+
+```
+]
+
+---
+class: bg-main1
+
+# Holidays
+
+.pull-left[
+```{r vic-hols}
+library(tsibble)
+library(sugrrants)
+library(timeDate)
+vic_holidays <- holiday_aus(2018, state = "VIC")
+vic_holidays
+```
+]
+
+pull-right[
+
+![](images/tsibble.png)
+
+]
+
+---
+class: bg-main1
+
+# Holidays
+
+```{r holiday-plot-id-hols, fig.height=6, cache = TRUE}
+walk_holiday <- walk_tidy %>%
+  mutate(holiday = if_else(condition = Date %in% vic_holidays$date, 
+                          true = "yes", 
+                          false = "no")) %>%
+  mutate(holiday = if_else(condition = wday %in% c("Sat", "Sun"), 
+                          true = "yes", 
+                          false = holiday)) 
+walk_holiday
+```
+
+---
+class: bg-main1
+
+# Holidays
+
+```{r holiday-plot-create, fig.height=6, cache = TRUE}
+walk_holiday_calendar <- frame_calendar(data = walk_holiday,
+                                        x = Time, 
+                                        y = Count, 
+                                        date = Date, 
+                                        nrow = 6)
+
+p2 <- ggplot(walk_holiday_calendar,
+       aes(x = .Time, 
+           y = .Count, 
+           group = Date, 
+           colour = holiday)) +
+  geom_line() + 
+  scale_colour_brewer(palette = "Dark2")
+```
+
+---
+class: bg-main1
+
+# Holidays
+
+```{r show-calendar-plot-p2, echo = FALSE, fig.height = 4, fig.width = 8}
+prettify(p2)
+```
+
+
+---
+
+# References
+
+.huge[
+- suggrants
+- tsibble
+- lubridate
+- dplyr
+- timeDate
+- rwalkr
+]
+
+---
+
+# Your Turn: 
+
+.huge[
+
+- Do the lab exercises
+- Take the lab quiz
+- Use the rest of the lab time to coordinate with your group on the first assignment.
+
+]
+
+---
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.

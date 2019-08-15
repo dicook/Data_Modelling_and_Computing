@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>ETC1010: Data Modelling and Computing</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Nicholas Tierney &amp; Professor Di Cook" />
+    <meta name="date" content="2019-08-16" />
+    <link href="libs/remark-css/shinobi.css" rel="stylesheet" />
+    <link href="libs/remark-css/ninjutsu.css" rel="stylesheet" />
+    <link rel="stylesheet" href="slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# ETC1010: Data Modelling and Computing
+## Lecture 3B: Dates and Times
+### Dr. Nicholas Tierney &amp; Professor Di Cook
+### EBS, Monash U.
+### 2019-08-16
+
+---
+
+
+
+
+background-image: url(https://njtierney.updog.co/img/allison-horst-lubridate.png)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, white
+right.purple.large[Art by Allison Horst]
+
+---
+class: bg-main1
+
+## Overview
+
+.huge[
+- Working with dates
+- Constructing graphics
+]
+
+---
+class: bg-main1
+
+# Reminder re the assignment:
+
+.huge[
+- Due 5pm **today**
+- Submit by one person in the assignment group
+- ED &gt; assessments &gt; upload your `Rmd`, and `html`, files. 
+- **One per group**
+- **Remember to name your files as described in the submission**
+]
+
+---
+class: bg-main1
+
+# The challenges of working with dates and times
+
+.huge[
+- Conventional order of day, month, year is different across location
+  - Australia: DD-MM-YYYY
+  - America: MM-DD-YYYY
+  - [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601): YYYY-MM-DD
+]
+
+---
+background-image: url(https://imgs.xkcd.com/comics/iso_8601.png)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, white
+
+
+---
+class: bg-main1
+
+# The challenges of working with dates and times
+
+.huge[
+- Number of units change:
+    - Years do not have the same number of days (leap years)
+    - Months have differing numbers of days. (January vs February vs September)
+    - Not every minute has 60 seconds (leap seconds!)
+- Times are local, for us. Where are you?
+- Timezones!!!
+]
+
+
+---
+class: bg-main1
+
+# The challenges of working with dates and times
+
+.huge[
+- Representing time relative to it's type:
+   - What day of the week is it? 
+   - Day of the month? 
+   - Week in the year?
+- Years start on different days (Monday, Sunday, ...)
+]
+
+---
+class: bg-main1
+
+# The challenges of working with dates and times
+
+.huge[
+- Representing time relative to it's type:
+  - Months could be numbers or names. (1st month, January)
+  - Days could be numbers of names. (1st day....Sunday? Monday?)
+  - Days and Months have abbreviations. (Mon, Tue, Jan, Feb)
+]
+
+---
+class: bg-main1
+
+# The challenges of working with dates and times
+
+.huge[
+- Time can be relative: 
+  - How many days until we go on holidays?
+  - How many working days?
+]
+
+---
+background-image: url(https://njtierney.updog.co/img/allison-horst-lubridate.png)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, white
+
+
+---
+class: bg-main1
+
+# Lubridate
+
+.left-code.huge[
+
+- Simplifies date/time by helping you:
+  - Parse values
+  - Create new variables based on components like month, day, year
+  - Do algebra on time
+  
+]
+
+.right-plot[
+
+&lt;img src="images/lubridate.jpg" width="100%" /&gt;
+]
+
+---
+
+background-image: url(https://njtierney.updog.co/img/allison-horst-lubridate-ymd.png)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, white
+
+---
+class: bg-main1
+
+.vvvhuge[
+Parsing dates &amp; time zones using `ymd()`
+]
+
+---
+class: bg-main1
+
+# `ymd()` can take a character input
+
+
+```r
+ymd("20190810")
+```
+
+```
+## [1] "2019-08-10"
+```
+
+---
+class: bg-main1
+
+# `ymd()` can also take other kinds of separators
+
+
+```r
+ymd("2019-08-10")
+```
+
+```
+## [1] "2019-08-10"
+```
+
+```r
+ymd("2019/08/10")
+```
+
+```
+## [1] "2019-08-10"
+```
+
+--
+
+# yeah, wow, I was actually surprised this worked
+
+
+```r
+ymd("??2019-.-08//10---")
+```
+
+```
+## [1] "2019-08-10"
+```
+
+
+---
+class: bg-main1
+
+# Change the letters, change the output
+
+
+```r
+mdy("10/15/2019")
+```
+
+```
+## [1] "2019-10-15"
+```
+
+--
+# `mdy()` expects month, day, year. 
+
+--
+
+# `dmy()` expects day, month, year.
+
+
+```r
+dmy("10/08/2019")
+```
+
+```
+## [1] "2019-08-10"
+```
+
+---
+class: bg-main1
+
+# Add a timezone
+
+.huge[
+If you add a time zone, what changes?
+]
+
+
+```r
+ymd("2019-08-10", tz = "Australia/Melbourne")
+```
+
+```
+## [1] "2019-08-10 AEST"
+```
+
+---
+class: bg-main1
+
+# What happens if you try to specify different time zones?
+
+.pull-left[
+
+
+```r
+ymd("2019-08-10", 
+    tz = "Africa/Abidjan")
+```
+
+```
+## [1] "2019-08-10 GMT"
+```
+
+```r
+ymd("2019-08-10", 
+    tz = "America/Los_Angeles")
+```
+
+```
+## [1] "2019-08-10 PDT"
+```
+
+]
+
+.pull-right.huge[
+
+A list of acceptable time zones can be found [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) (google wiki timezone database)
+
+]
+
+---
+class: bg-main1
+
+# Timezones another way:
+
+
+```r
+today()
+```
+
+```
+## [1] "2019-08-16"
+```
+
+--
+
+
+```r
+today(tz = "America/Los_Angeles")
+```
+
+```
+## [1] "2019-08-15"
+```
+
+--
+
+
+```r
+now()
+```
+
+```
+## [1] "2019-08-16 07:02:57 AEST"
+```
+
+--
+
+
+```r
+now(tz = "America/Los_Angeles")
+```
+
+```
+## [1] "2019-08-15 14:02:57 PDT"
+```
+
+---
+class: bg-main1
+
+# date and time: `ymd_hms()`
+
+
+```r
+ymd_hms("2019-08-10 10:05:30", 
+        tz = "Australia/Melbourne")
+```
+
+```
+## [1] "2019-08-10 10:05:30 AEST"
+```
+
+
+
+```r
+ymd_hms("2019-08-10 10:05:30", 
+        tz = "America/Los_Angeles")
+```
+
+```
+## [1] "2019-08-10 10:05:30 PDT"
+```
+
+---
+class: bg-main1
+
+# Extracting temporal elements
+
+.huge[
+- Very often we want to know what day of the week it is
+- Trends and patterns in data can be quite different depending on the type of day:
+  - week day vs. weekend
+  - weekday vs. holiday
+  - regular saturday night vs. new years eve 
+]
+
+---
+class: bg-main1
+
+# Many ways of saying similar things
+
+.huge[
+- Many ways to specify day of the week:
+  - A number. Does 1 mean... Sunday, Monday or even Saturday???
+  - Or text or or abbreviated text. (Mon vs. Monday)
+]
+
+---
+class: bg-main1
+
+# Many ways of saying similar things
+  
+.huge[
+- Talking with people we generally use day name:
+  - Today is Friday, tomorrow is Saturday vs Today is 5 and tomorrow is 6.
+- But, doing data analysis on days might be useful to have it represented as a number:
+  - e.g., Saturday - Thursday is 2 days (6 - 4)
+]
+
+---
+class: bg-main1
+
+# The Many ways to say Monday (Pt 1)
+
+
+```r
+wday("2019-08-12")
+```
+
+```
+## [1] 2
+```
+
+```r
+wday("2019-08-12", label = TRUE)
+```
+
+```
+## [1] Mon
+## Levels: Sun &lt; Mon &lt; Tue &lt; Wed &lt; Thu &lt; Fri &lt; Sat
+```
+
+---
+class: bg-main1
+
+# The Many ways to say Monday (Pt 2)
+
+
+```r
+wday("2019-08-12", label = TRUE, abbr = FALSE)
+```
+
+```
+## [1] Monday
+## Levels: Sunday &lt; Monday &lt; Tuesday &lt; Wednesday &lt; Thursday &lt; Friday &lt; Saturday
+```
+
+```r
+wday("2019-08-12", label = TRUE, week_start = 1)
+```
+
+```
+## [1] Mon
+## Levels: Mon &lt; Tue &lt; Wed &lt; Thu &lt; Fri &lt; Sat &lt; Sun
+```
+
+
+---
+class: bg-main1
+
+# Similarly, we can extract what month the day is in.
+
+
+```r
+month("2019-08-10")
+```
+
+```
+## [1] 8
+```
+
+```r
+month("2019-08-10", label = TRUE)
+```
+
+```
+## [1] Aug
+## Levels: Jan &lt; Feb &lt; Mar &lt; Apr &lt; May &lt; Jun &lt; Jul &lt; Aug &lt; Sep &lt; Oct &lt; Nov &lt; Dec
+```
+
+```r
+month("2019-08-10", label = TRUE, abbr = FALSE)
+```
+
+```
+## [1] August
+## 12 Levels: January &lt; February &lt; March &lt; April &lt; May &lt; June &lt; July &lt; ... &lt; December
+```
+
+---
+class: bg-main1
+
+# Fiscally, it is useful to know what quarter the day is in.
+
+
+```r
+quarter("2019-08-10")
+```
+
+```
+## [1] 3
+```
+
+```r
+semester("2019-08-10")
+```
+
+```
+## [1] 2
+```
+
+---
+class: bg-main1
+
+# Similarly, we can select days within a year. 
+
+
+```r
+yday("2019-08-10")
+```
+
+```
+## [1] 222
+```
+
+---
+# Our Turn:
+
+.huge[
+- Open rstudio.cloud and check out Lecture 3B and follow along.
+]
+
+---
+class: bg-main1
+
+## Example: pedestrian sensor
+
+&lt;img src="images/sensors.png" width="100%" /&gt;
+
+---
+class: bg-main1
+
+# [Melbourne pedestrian sensor portal](http://www.pedestrian.melbourne.vic.gov.au/):
+
+.huge[
+
+- Contains hourly counts of people walking around the city. 
+- Extract records for 2018 for the sensor at Melbourne Central
+- Use lubridate to extract different temporal components, so we can study the pedestrian patterns at this location. 
+
+]
+
+---
+class: bg-main1
+
+
+```r
+library(rwalkr)
+walk_all &lt;- melb_walk_fast(year = 2018)
+library(dplyr)
+
+walk &lt;- walk_all %&gt;% filter(Sensor == "Melbourne Central")
+
+write_csv(walk, path = "data/walk_2018.csv")
+```
+
+
+
+```r
+walk &lt;- readr::read_csv("data/walk_2018.csv")
+walk
+```
+
+```
+## # A tibble: 8,760 x 5
+##    Sensor            Date_Time           Date        Time Count
+##    &lt;chr&gt;             &lt;dttm&gt;              &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;
+##  1 Melbourne Central 2017-12-31 13:00:00 2018-01-01     0  2996
+##  2 Melbourne Central 2017-12-31 14:00:00 2018-01-01     1  3481
+##  3 Melbourne Central 2017-12-31 15:00:00 2018-01-01     2  1721
+##  4 Melbourne Central 2017-12-31 16:00:00 2018-01-01     3  1056
+##  5 Melbourne Central 2017-12-31 17:00:00 2018-01-01     4   417
+##  6 Melbourne Central 2017-12-31 18:00:00 2018-01-01     5   222
+##  7 Melbourne Central 2017-12-31 19:00:00 2018-01-01     6   110
+##  8 Melbourne Central 2017-12-31 20:00:00 2018-01-01     7   180
+##  9 Melbourne Central 2017-12-31 21:00:00 2018-01-01     8   205
+## 10 Melbourne Central 2017-12-31 22:00:00 2018-01-01     9   326
+## # … with 8,750 more rows
+```
+
+---
+class: bg-main1
+
+# Let's think about the data structure.
+
+.left-code.vlarge[
+
+- The basic time unit is hour of the day. 
+- Date can be decomposed into 
+    - month
+    - week day vs weekend
+    - week of the year
+    - day of the month
+    - holiday or work day
+    
+]
+
+.right-plot[
+
+![](images/Time.png)
+]
+
+
+---
+class: bg-main1
+
+# What format is walk in?
+
+
+```r
+walk
+```
+
+```
+## # A tibble: 8,760 x 5
+##    Sensor            Date_Time           Date        Time Count
+##    &lt;chr&gt;             &lt;dttm&gt;              &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;
+##  1 Melbourne Central 2017-12-31 13:00:00 2018-01-01     0  2996
+##  2 Melbourne Central 2017-12-31 14:00:00 2018-01-01     1  3481
+##  3 Melbourne Central 2017-12-31 15:00:00 2018-01-01     2  1721
+##  4 Melbourne Central 2017-12-31 16:00:00 2018-01-01     3  1056
+##  5 Melbourne Central 2017-12-31 17:00:00 2018-01-01     4   417
+##  6 Melbourne Central 2017-12-31 18:00:00 2018-01-01     5   222
+##  7 Melbourne Central 2017-12-31 19:00:00 2018-01-01     6   110
+##  8 Melbourne Central 2017-12-31 20:00:00 2018-01-01     7   180
+##  9 Melbourne Central 2017-12-31 21:00:00 2018-01-01     8   205
+## 10 Melbourne Central 2017-12-31 22:00:00 2018-01-01     9   326
+## # … with 8,750 more rows
+```
+
+---
+class: bg-main1
+
+# Create variables with these different temporal components. 
+
+
+```r
+walk_tidy &lt;- walk %&gt;%
+  mutate(month = month(Date,  label = TRUE, abbr = TRUE), 
+         wday = wday(Date, label = TRUE, abbr = TRUE, week_start = 1))
+walk_tidy
+```
+
+```
+## # A tibble: 8,760 x 7
+##    Sensor            Date_Time           Date        Time Count month wday 
+##    &lt;chr&gt;             &lt;dttm&gt;              &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;ord&gt; &lt;ord&gt;
+##  1 Melbourne Central 2017-12-31 13:00:00 2018-01-01     0  2996 Jan   Mon  
+##  2 Melbourne Central 2017-12-31 14:00:00 2018-01-01     1  3481 Jan   Mon  
+##  3 Melbourne Central 2017-12-31 15:00:00 2018-01-01     2  1721 Jan   Mon  
+##  4 Melbourne Central 2017-12-31 16:00:00 2018-01-01     3  1056 Jan   Mon  
+##  5 Melbourne Central 2017-12-31 17:00:00 2018-01-01     4   417 Jan   Mon  
+##  6 Melbourne Central 2017-12-31 18:00:00 2018-01-01     5   222 Jan   Mon  
+##  7 Melbourne Central 2017-12-31 19:00:00 2018-01-01     6   110 Jan   Mon  
+##  8 Melbourne Central 2017-12-31 20:00:00 2018-01-01     7   180 Jan   Mon  
+##  9 Melbourne Central 2017-12-31 21:00:00 2018-01-01     8   205 Jan   Mon  
+## 10 Melbourne Central 2017-12-31 22:00:00 2018-01-01     9   326 Jan   Mon  
+## # … with 8,750 more rows
+```
+
+---
+class: bg-main1
+
+# Pedestrian count per month
+
+.left-code[
+
+```r
+ggplot(walk_tidy,
+       aes(x = month, 
+           y = Count)) + 
+  geom_col()
+```
+]
+
+.right-plot[
+
+&lt;img src="lecture-3b-slides_files/figure-html/gg-walk-month-count-out-1.png" width="100%" /&gt;
+]
+
+???
+
+- January has a very low count relative to the other months. Something can't be right with this number, because it is much lower than expected.
+- The remaining months have roughly the same counts.
+
+---
+class: bg-main1
+
+# Pedestrian count per weekday
+
+.left-code[
+
+```r
+ggplot(walk_tidy,
+       aes(x = wday,
+           y = Count)) + 
+  geom_col()
+```
+]
+
+.right-plot[
+&lt;img src="lecture-3b-slides_files/figure-html/gg-wday-count-out-1.png" width="100%" /&gt;
+]
+
+???
+
+How would you describe the pattern?
+
+- Friday and Saturday tend to have a few more people walking around than other days.
+
+---
+class: bg-main1
+
+# What might be wrong with these interpretations?
+
+.huge[
+- There might be a different number of days of the week over the year.
+- This means that simply summing the counts might lead to a misinterpretation of pedestrian patterns. 
+- Similarly, months have different numbers of days.
+]
+
+---
+class: bg-main1
+
+# Your Turn: Brainstorm with your table a solution, to answer these questions:
+
+.huge[
+1. Are pedestrian counts different depending on the month?
+2. Are pedestrian counts different depending on the day of the week?
+]
+
+---
+class: bg-main1
+
+# What are the number of pedestrians per day?
+
+
+```r
+walk_day &lt;- walk_tidy %&gt;% 
+  group_by(Date) %&gt;%
+  summarise(day_count = sum(Count, na.rm = TRUE))
+
+walk_day
+```
+
+```
+## # A tibble: 365 x 2
+##    Date       day_count
+##    &lt;date&gt;         &lt;dbl&gt;
+##  1 2018-01-01     30832
+##  2 2018-01-02     26136
+##  3 2018-01-03     26567
+##  4 2018-01-04     26532
+##  5 2018-01-05     28203
+##  6 2018-01-06     20845
+##  7 2018-01-07     24052
+##  8 2018-01-08     26530
+##  9 2018-01-09     27116
+## 10 2018-01-10     28203
+## # … with 355 more rows
+```
+
+---
+class: bg-main1
+
+# What are the mean number of people per weekday?
+
+
+```r
+walk_week_day &lt;- walk_day %&gt;%
+  mutate(wday = wday(Date, label = TRUE, abbr = TRUE, week_start = 1)) %&gt;% 
+  group_by(wday) %&gt;%
+  summarise(m = mean(day_count, na.rm = TRUE),
+            s = sd(day_count, na.rm = TRUE))
+
+walk_week_day
+```
+
+```
+## # A tibble: 7 x 3
+##   wday       m      s
+##   &lt;ord&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Mon   25590.  8995.
+## 2 Tue   26242.  8989.
+## 3 Wed   27627.  9535.
+## 4 Thu   27887.  8744.
+## 5 Fri   31544. 10239.
+## 6 Sat   30470.  9823.
+## 7 Sun   25296.  9024.
+```
+
+---
+class: bg-main1
+
+
+```r
+ggplot(walk_week_day) + 
+  geom_errorbar(aes(x = wday, ymin = m - s, ymax = m + s)) +
+  ylim(c(0, 45000)) +
+  labs(x = "Day of week", 
+       y = "Average number of predestrians")
+```
+
+&lt;img src="lecture-3b-slides_files/figure-html/gg-walk-day-1.png" width="100%" /&gt;
+
+---
+class: bg-main1
+
+# Distribution of counts
+
+.huge[
+Side-by-side boxplots show the distribution of counts over different temporal elements.
+]
+
+---
+class: bg-main1
+
+# Hour of the day
+
+
+```r
+ggplot(walk_tidy,
+       aes(x = as.factor(Time), y = Count)) + 
+  geom_boxplot()
+```
+
+&lt;img src="lecture-3b-slides_files/figure-html/gg-time-count-1.png" width="100%" /&gt;
+
+---
+class: bg-main1
+
+# Day of the week
+
+
+```r
+ggplot(walk_tidy,
+       aes(x = wday,
+           y = Count)) +
+  geom_boxplot()
+```
+
+&lt;img src="lecture-3b-slides_files/figure-html/gg-walk-weekday-count-1.png" width="100%" /&gt;
+
+---
+class: bg-main1
+
+# Month
+
+
+```r
+ggplot(walk_tidy,
+       aes(x = month, 
+           y = Count)) + 
+  geom_boxplot()
+```
+
+&lt;img src="lecture-3b-slides_files/figure-html/gg-month-count-boxplot-1.png" width="100%" /&gt;
+
+---
+class: bg-main1
+
+# Time series plots: Lines show consecutive hours of the day.
+
+
+```r
+ggplot(walk_tidy, aes(x = Time, y = Count, group = Date)) + 
+  geom_line()
+```
+
+&lt;img src="lecture-3b-slides_files/figure-html/gg-time-count-line-1.png" width="100%" /&gt;
+
+---
+class: bg-main1
+
+# By month
+
+
+```r
+ggplot(walk_tidy, aes(x = Time, y = Count, group = Date)) +
+  geom_line() +
+  facet_wrap( ~ month)
+```
+
+&lt;img src="lecture-3b-slides_files/figure-html/gg-time-count-by-date-1.png" width="100%" /&gt;
+
+---
+class: bg-main1
+
+# By week day
+
+
+```r
+ggplot(walk_tidy, aes(x = Time, y = Count, group = Date)) +
+  geom_line() +
+  facet_grid(month ~ wday)
+```
+
+&lt;img src="lecture-3b-slides_files/figure-html/gg-time-count-line-facet-grid-1.png" width="100%" /&gt;
+
+---
+class: bg-main1
+
+# Calendar plots
+
+.left-code[
+
+```r
+library(sugrrants)
+
+walk_tidy_calendar &lt;- 
+  frame_calendar(walk_tidy,
+                 x = Time, 
+                 y = Count, 
+                 date = Date, 
+                 nrow = 4)
+
+p1 &lt;- ggplot(walk_tidy_calendar,
+       aes(x = .Time, 
+           y = .Count, 
+           group = Date)) +
+  geom_line()
+
+prettify(p1)
+```
+]
+
+.right-plot[
+&lt;img src="lecture-3b-slides_files/figure-html/calendar-plot-out-1.png" width="100%" /&gt;
+]
+
+---
+class: bg-main1
+
+# Holidays
+
+.pull-left[
+
+```r
+library(tsibble)
+library(sugrrants)
+library(timeDate)
+vic_holidays &lt;- holiday_aus(2018, state = "VIC")
+vic_holidays
+```
+
+```
+## # A tibble: 12 x 2
+##    holiday          date      
+##    &lt;chr&gt;            &lt;date&gt;    
+##  1 New Year's Day   2018-01-01
+##  2 Australia Day    2018-01-26
+##  3 Labour Day       2018-03-12
+##  4 Good Friday      2018-03-30
+##  5 Easter Saturday  2018-03-31
+##  6 Easter Sunday    2018-04-01
+##  7 Easter Monday    2018-04-02
+##  8 ANZAC Day        2018-04-25
+##  9 Queen's Birthday 2018-06-11
+## 10 Melbourne Cup    2018-11-06
+## 11 Christmas Day    2018-12-25
+## 12 Boxing Day       2018-12-26
+```
+]
+
+pull-right[
+
+![](images/tsibble.png)
+
+]
+
+---
+class: bg-main1
+
+# Holidays
+
+
+```r
+walk_holiday &lt;- walk_tidy %&gt;%
+  mutate(holiday = if_else(condition = Date %in% vic_holidays$date, 
+                          true = "yes", 
+                          false = "no")) %&gt;%
+  mutate(holiday = if_else(condition = wday %in% c("Sat", "Sun"), 
+                          true = "yes", 
+                          false = holiday)) 
+walk_holiday
+```
+
+```
+## # A tibble: 8,760 x 8
+##    Sensor            Date_Time           Date        Time Count month wday  holiday
+##    &lt;chr&gt;             &lt;dttm&gt;              &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;ord&gt; &lt;ord&gt; &lt;chr&gt;  
+##  1 Melbourne Central 2017-12-31 13:00:00 2018-01-01     0  2996 Jan   Mon   yes    
+##  2 Melbourne Central 2017-12-31 14:00:00 2018-01-01     1  3481 Jan   Mon   yes    
+##  3 Melbourne Central 2017-12-31 15:00:00 2018-01-01     2  1721 Jan   Mon   yes    
+##  4 Melbourne Central 2017-12-31 16:00:00 2018-01-01     3  1056 Jan   Mon   yes    
+##  5 Melbourne Central 2017-12-31 17:00:00 2018-01-01     4   417 Jan   Mon   yes    
+##  6 Melbourne Central 2017-12-31 18:00:00 2018-01-01     5   222 Jan   Mon   yes    
+##  7 Melbourne Central 2017-12-31 19:00:00 2018-01-01     6   110 Jan   Mon   yes    
+##  8 Melbourne Central 2017-12-31 20:00:00 2018-01-01     7   180 Jan   Mon   yes    
+##  9 Melbourne Central 2017-12-31 21:00:00 2018-01-01     8   205 Jan   Mon   yes    
+## 10 Melbourne Central 2017-12-31 22:00:00 2018-01-01     9   326 Jan   Mon   yes    
+## # … with 8,750 more rows
+```
+
+---
+class: bg-main1
+
+# Holidays
+
+
+```r
+walk_holiday_calendar &lt;- frame_calendar(data = walk_holiday,
+                                        x = Time, 
+                                        y = Count, 
+                                        date = Date, 
+                                        nrow = 6)
+
+p2 &lt;- ggplot(walk_holiday_calendar,
+       aes(x = .Time, 
+           y = .Count, 
+           group = Date, 
+           colour = holiday)) +
+  geom_line() + 
+  scale_colour_brewer(palette = "Dark2")
+```
+
+---
+class: bg-main1
+
+# Holidays
+
+&lt;img src="lecture-3b-slides_files/figure-html/show-calendar-plot-p2-1.png" width="100%" /&gt;
+
+
+---
+
+# References
+
+.huge[
+- suggrants
+- tsibble
+- lubridate
+- dplyr
+- timeDate
+- rwalkr
+]
+
+---
+
+# Your Turn: 
+
+.huge[
+
+- Do the lab exercises
+- Take the lab quiz
+- Use the rest of the lab time to coordinate with your group on the first assignment.
+
+]
+
+---
+
+## Share and share alike
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License&lt;/a&gt;.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
