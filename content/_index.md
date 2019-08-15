@@ -62,13 +62,13 @@ We have a limited amount of laptops available for students to borrow (during sem
 
 - Week 3: Plotting your data, and wrangling temporal data
      - Wednesday reading: [Chapter 3: Data visualisation (again!)](http://r4ds.had.co.nz/data-visualisation.html)
-     - Wednesday Slides:
+     - Wednesday Slides: [HTML](lectures/lecture3a/lecture-3a-slides.html); [PDF](lectures/lecture3a/lecture-3a-slides.pdf); [RMD](lectures/lecture3a/lecture-3a-slides.Rmd)
      - Friday Reading: [Chapter 16: Dates and Times](http://r4ds.had.co.nz/dates-and-times.html)
      - Friday Slides:
 
 - Week 4: Advanced wrangling, joining tables, and advanced data visualisation
      - Wednesday reading: [Chapter 13: Relational Data](http://r4ds.had.co.nz/relational-data.html)
-     - Wednesday Slides: [HTML](lectures/lecture3a/lecture-3a-slides.html); [PDF](lectures/lecture3a/lecture-3a-slides.pdf); [RMD](lectures/lecture3a/lecture-3a-slides.Rmd)
+     - Wednesday Slides: 
      - Friday Reading: [Chapter 1 of Data Visualisation: A Practical Introduction](http://socviz.co/lookatdata.html#lookatdata)
      - Friday Slides: [HTML](lectures/lecture3b/lecture-3b-slides.html); [RMD](lectures/lecture3b/lecture-3b-slides.Rmd)
      
