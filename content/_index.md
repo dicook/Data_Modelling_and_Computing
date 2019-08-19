@@ -73,9 +73,9 @@ We have a limited amount of laptops available for students to borrow (during sem
      - Friday Slides: 
      
 - Week 5: Handling missing values and scraping data  
-     - Wednesday reading: [Getting Started with Missing values](https://cran.r-project.org/web/packages/naniar/vignettes/getting-started-w-naniar.html)
+     - Wednesday reading: [Getting Started with Missing values](http://naniar.njtierney.com/articles/getting-started-w-naniar.html), [Exploring Imputed Values](http://naniar.njtierney.com/articles/exploring-imputed-values.html) [Gallery of Missing Data Visualisations](http://naniar.njtierney.com/articles/naniar-visualisation.html)
      - Wednesday Slides: 
-     - Friday Reading: 
+     - Friday Reading: [rvest R package for web scraping README](https://rvest.tidyverse.org/index.html) [rvest description of selectorGadget](https://rvest.tidyverse.org/articles/selectorgadget.html)
      - Friday Slides:
      
 - Week 6: Introduction to modeling, and building many models

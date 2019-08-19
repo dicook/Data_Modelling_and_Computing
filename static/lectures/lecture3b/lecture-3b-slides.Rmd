@@ -52,11 +52,25 @@ options(
 as_table <- function(...) knitr::kable(..., format='html', digits = 3)
 ```
 
+background-image: url(https://njtierney.updog.co/img/allison-horst-ggplot2-masterpiece.png)
+background-size: contain
+background-position: 50% 50%
+class: center, bottom, white
+.right.purple.large[Art by Allison Horst]
+
+---
+class: bg-main5
+
+.vvhuge[
+Try drawing a mental model of last lecture's material on ggplot2
+]
+
+---
 background-image: url(https://njtierney.updog.co/img/allison-horst-lubridate.png)
 background-size: contain
 background-position: 50% 50%
 class: center, bottom, white
-right.purple.large[Art by Allison Horst]
+.right.purple.large[Art by Allison Horst]
 
 ---
 class: bg-main1
@@ -157,7 +171,7 @@ background-size: contain
 background-position: 50% 50%
 class: center, bottom, white
 
-
+.right.purple.large[Art by Allison Horst]
 ---
 class: bg-main1
 
@@ -185,7 +199,7 @@ background-image: url(https://njtierney.updog.co/img/allison-horst-lubridate-ymd
 background-size: contain
 background-position: 50% 50%
 class: center, bottom, white
-
+.right.purple.large[Art by Allison Horst]
 ---
 class: bg-main1
 
