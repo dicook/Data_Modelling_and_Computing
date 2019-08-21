@@ -67,10 +67,20 @@ Draw a mental model / concept map of last weeks lecture content
 ---
 class: bg-main1
 
+# First - go to ED and mark another person's assignment
+
+.vvhuge[
+- dmac.netlify.com
+]
+
+---
+class: bg-main1
+
 
 # Recap
 
 .huge[
+- consultation hours
 - ggplot
 - tidy data
 - drawing mental models
