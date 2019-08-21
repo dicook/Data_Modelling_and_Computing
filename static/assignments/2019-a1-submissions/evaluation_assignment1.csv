@@ -1,0 +1,97 @@
+STUDENT_CODE,GROUP,Evaluation Group
+29741319,ara,garfield
+30171636,ara,sf
+30445299,ara,wesanderson
+29666449,bobcats,garfield
+29681944,bobcats,nullabor
+28993845,bobcats,gravitas
+29656923,bobcats,vapour
+27846822,bomrang,drake
+29662621,bomrang,golem
+30620430,bomrang,chocolate
+27724557,bomrang,smurfs
+27839443,bowerbird,fable
+30614139,bowerbird,bobcats
+30635217,bowerbird,purrr
+27263908,bowerbird,wesanderson
+28335988,chocolate,rude recliners
+28744837,chocolate,sugarbag
+29742919,chocolate,taipan
+27798224,dataspice,purrr
+30509270,dataspice,ara
+29263042,dataspice,sugarbag
+29621585,dataspice,bomrang
+27821056,drake,team dplyr
+30254264,drake,suggrants
+29969875,drake,bomrang
+29302951,drake,garfield
+27822222,fable,sf
+28766628,fable,gravitas
+29026342,fable,drake
+28782100,garfield,wesanderson
+28092538,garfield,skda
+30275598,garfield,taipan
+29668522,garfield,vapour
+29441404,geodist,garfield
+27931277,geodist,ara
+29714931,gganimate,nullabor
+29550483,gganimate,dataspice
+25114433,gganimate,nullabor
+29692539,golem,rude recliners
+30923611,golem,smurfs
+27724018,golem,geodist
+30592100,gravitas,team dplyr
+29678269,gravitas,wesanderson
+28051009,gravitas,chocolate
+29683440,icon,taipan
+30577349,icon,sf
+29687713,icon,reprex
+26004003,magick,smurfs
+30284635,magick,gganimate
+29584280,magick,dataspice
+29671590,nullabor,bomrang
+30368871,nullabor,drake
+29623375,nullabor,golem
+29226295,purrr,visdat
+29262720,purrr,ara
+29928729,purrr,gganimate
+30141648,reprex,team dplyr
+30100259,reprex,suggrants
+28797159,rude recliners,chocolate
+25968696,rude recliners,gravitas
+28780655,rude recliners,smurfs
+30210429,sf,vapour
+28753321,sf,magick
+27926842,sf,drake
+29889626,ahvcds,bobcats
+28766393,skda,rude recliners
+28657578,skda,icon
+27849686,skda,icon
+27819760,smurfs,sugarbag
+26141167,smurfs,fable
+25179705,smurfs,visdat
+27823369,smurfs,dataspice
+29665000,sugarbag,team dplyr
+30616816,sugarbag,suggrants
+28729498,sugarbag,bowerbird
+28777255,suggrants,skda
+29909732,suggrants,wesanderson
+29909902,suggrants,bowerbird
+30599504,taipan,bowerbird
+28791576,taipan,purrr
+30630827,taipan,bowerbird
+30009545,taipan,dataspice
+29686431,team dplyr,bobcats
+30564778,team dplyr,taipan
+28068696,team dplyr,magick
+30597889,team dplyr,magick
+27803813,vapour,skda
+29685680,vapour,golem
+29132649,vapour,gganimate
+30713013,visdat,bomrang
+27788857,visdat,fable
+29930847,wesanderson,geodist
+29646952,wesanderson,reprex
+28305329,wesanderson,icon
+27811530,wesanderson,bobcats
+27813320,wesanderson,ahvcds
