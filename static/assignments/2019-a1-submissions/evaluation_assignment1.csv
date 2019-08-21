@@ -36,8 +36,8 @@ STUDENT_CODE,GROUP,Evaluation Group
 27931277,geodist,ara
 29714931,gganimate,nullabor
 29550483,gganimate,dataspice
-25114433,gganimate,nullabor
-29692539,golem,rude recliners
+25114433,gganimate,rude recliners
+29692539,golem,nullabor
 30923611,golem,smurfs
 27724018,golem,geodist
 30592100,gravitas,team dplyr
@@ -65,7 +65,7 @@ STUDENT_CODE,GROUP,Evaluation Group
 27926842,sf,drake
 29889626,ahvcds,bobcats
 28766393,skda,rude recliners
-28657578,skda,icon
+28657578,skda,bowerbird
 27849686,skda,icon
 27819760,smurfs,sugarbag
 26141167,smurfs,fable
@@ -77,15 +77,15 @@ STUDENT_CODE,GROUP,Evaluation Group
 28777255,suggrants,skda
 29909732,suggrants,wesanderson
 29909902,suggrants,bowerbird
-30599504,taipan,bowerbird
+30599504,taipan,icon
 28791576,taipan,purrr
 30630827,taipan,bowerbird
 30009545,taipan,dataspice
 29686431,team dplyr,bobcats
 30564778,team dplyr,taipan
 28068696,team dplyr,magick
-30597889,team dplyr,magick
-27803813,vapour,skda
+30597889,team dplyr,skda
+27803813,vapour,magick
 29685680,vapour,golem
 29132649,vapour,gganimate
 30713013,visdat,bomrang
