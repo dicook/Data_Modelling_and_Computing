@@ -1,0 +1,71 @@
+---
+title: "Exploring Nycflights"
+author: "YOUR NAME"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+library(nycflights13)
+```
+
+Complete these exercises about the `nycflights13` data using wrangling operations, an appropriate join, and a plot. Use the examples from the "flight-movement.Rmd" file to provide guidance.
+
+# 1 Make a map that shows the origin to destinations made by Delta flights, from La Guardia airport, for the month of August.
+
+## 1a. Filter the flights data to contain just Delta flights, for August
+
+## 1b. Add the airport locations (lat, long) of the origin and destination to the flights data 
+
+## 1c. Pull a google map, and plot it
+
+
+## 1d. Draw lines connecting origin to destination airports on the map
+
+
+# 2. Does wind direction, when windspeed is stronger, affect the operations at the airport? Generally cross winds affect airport operations. If the wind is reasonably strong and blowing across the runway, there are likely to be more delays. It could be helpful if you can find maps of the three airports in NYC to check how many runways they have, and the orientation of them.
+
+
+## 2a. Join the weather data to the flights data
+
+## 2b. Filter by airport and higher wind speeds
+
+## 2c. Plot delay against wind direction, perhaps focusing a restricted range of delay or using only a smoother instead of all the points
+
+Here is some example code:
+
+```{r}
+map <- read_rds("data/map.rds")
+
+airports %>% filter(faa == "LGA")
+
+delta <- flights %>%
+  filter(carrier == "DL", origin == "LGA", month == 8) %>%
+  left_join(airports, by = c("dest" = "faa")) %>%
+  mutate(orig_lon = -73.9, orig_lat = 40.8)
+```
+
+
+```{r}
+# map <- get_map(c(lon = -92.20562, lat = 36.20259), zoom = 4)
+library(ggmap)
+ggmap(map) +
+  geom_segment(data = delta,
+    aes(x = orig_lon,
+        xend = lon,
+        y = orig_lat,
+        yend = lat),
+    color = "navyblue",
+    alpha = 0.2)
+```
+
+
+```{r}
+flgt_weath <- flights %>%
+  filter(origin == "LGA") %>%
+  left_join(weather, by = c("origin", "time_hour")) %>%
+  filter(wind_speed > 25)
+ggplot(flgt_weath, aes(x = wind_dir, y = dep_delay)) +
+  # geom_point(alpha=0.1) +
+  geom_smooth(se = FALSE)
+```

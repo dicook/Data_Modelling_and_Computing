@@ -1,0 +1,171 @@
+---
+title: "Mapping flight movements"
+author: "YOUR NAME"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+```
+
+# Aim: Show flight movement on the map
+
+# First: load in the plane and airline data
+
+```{r load-plane}
+plane_N4YRAA <- read_csv("data/plane_N4YRAA.csv")
+glimpse(plane_N4YRAA)
+```
+
+# Load Airline travel, airport location
+
+```{r read-airports}
+airport_raw <- read_csv("data/airports.csv")
+airport_raw %>%
+  select(AIRPORT, 
+         LATITUDE, 
+         LONGITUDE, 
+         AIRPORT_STATE_NAME) %>%
+  glimpse()
+
+```
+
+The Key is the airport three letter code, 
+    - called ORIGIN or DEST in `plane_N4YRAA` table
+    - called AIRPORT in the `airport` table
+
+One table, plane_N4YRAA, has less airports than the other
+    - We only want to keep the rows of airport table, for those that appear in the plane_N4YRAA table
+
+```{r tidy-airport}
+airport <- airport_raw %>%
+  select(AIRPORT, 
+         LATITUDE, 
+         LONGITUDE, 
+         AIRPORT_IS_LATEST, 
+         DISPLAY_AIRPORT_NAME) %>%
+  filter(AIRPORT_IS_LATEST == 1) %>%
+  select(-AIRPORT_IS_LATEST)
+
+airport
+```
+
+
+```{r tidy-flight}
+N4YRAA_latlon <- left_join(plane_N4YRAA,
+                           airport,
+                           by = c("ORIGIN" = "AIRPORT")
+) %>%
+  rename(
+    "ORIGIN_LATITUDE" = "LATITUDE",
+    "ORIGIN_LONGITUDE" = "LONGITUDE"
+  )
+
+N4YRAA_latlon %>%
+  select(
+    ORIGIN,
+    ORIGIN_LATITUDE,
+    ORIGIN_LONGITUDE,
+    DISPLAY_AIRPORT_NAME
+  )
+```
+
+The variables ORIGIN_LATITUDE, ORIGIN_LONGITUDE, DISPLAY_AIRPORT_NAME are added to corresponding row in the plane_N4YRAA table.
+
+
+# Add destination locations
+
+- Added spatial coordinates (lat, lon) for the origin airport
+- Same needs to be done for the destination airport
+- Then the airports can be drawn over a map
+
+Now we combine the current data with some new data to add the destinations.
+
+```{r}
+N4YRAA_latlon <- left_join(
+  N4YRAA_latlon,
+  airport,
+  by = c("DEST" = "AIRPORT")
+) %>%
+  rename(
+    "DEST_LATITUDE" = "LATITUDE",
+    "DEST_LONGITUDE" = "LONGITUDE"
+  )
+
+N4YRAA_latlon <- N4YRAA_latlon %>% arrange(FL_DATE, DEP_TIME)
+```
+
+# Map it
+
+NOTE: THIS CODE DOES NOT NEED TO RUN. It is for illustrative purposes only, to show you how to get google maps info.
+
+```{r eval=FALSE}
+# Need to use a registered google account to get map
+register_google("XXX")
+map <- get_map(c(lon = -92.20562, lat = 36.20259), zoom = 5)
+write_rds(map, "data/map.rds")
+```
+
+
+```{r}
+library(ggmap)
+library(lubridate)
+library(ggthemes)
+
+map <- read_rds("data/map.rds")
+# load("data/map.rda")
+
+N4YRAA_latlon_2017_05_06 <- N4YRAA_latlon %>%
+  filter(FL_DATE == ymd("2017-05-06"))
+
+ggmap(map) +
+  geom_segment(data = N4YRAA_latlon_2017_05_06,
+    aes(x = ORIGIN_LONGITUDE,
+        xend = DEST_LONGITUDE,
+        y = ORIGIN_LATITUDE,
+        yend = DEST_LATITUDE),
+    color = "navyblue") +
+  geom_point(data = N4YRAA_latlon_2017_05_06,
+    aes(x = ORIGIN_LONGITUDE,
+        y = ORIGIN_LATITUDE),
+    color = "orange",
+    alpha = 0.3,
+    size = 3) +
+  geom_point(data = N4YRAA_latlon_2017_05_06,
+    aes(x = DEST_LONGITUDE,
+        y = DEST_LATITUDE),
+    color = "red",
+    alpha = 0.3,
+    size = 1) +
+  theme_map()
+```
+
+
+```{r}
+ggmap(map) +
+  geom_segment(data = N4YRAA_latlon,
+               aes(x = ORIGIN_LONGITUDE,
+                   xend = DEST_LONGITUDE,
+                   y = ORIGIN_LATITUDE,
+                   yend = DEST_LATITUDE),
+               color = "navyblue") +
+  geom_point(data = N4YRAA_latlon_2017_05_06,
+             aes(x = ORIGIN_LONGITUDE,
+                 y = ORIGIN_LATITUDE),
+             color = "orange",
+             alpha = 0.3,
+             size = 3) +
+  geom_point(data = N4YRAA_latlon_2017_05_06,
+             aes(x = DEST_LONGITUDE,
+                 y = DEST_LATITUDE),
+             color = "red",
+             alpha = 0.3,
+             size = 1) +
+  theme_map() + 
+  facet_wrap(~FL_DATE)
+```
+
+# Your Turn: Exercise
+
+- Go to rstudio.cloud
+- Open `nycflights.Rmd` and complete exercises

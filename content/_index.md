@@ -68,7 +68,7 @@ We have a limited amount of laptops available for students to borrow (during sem
 
 - Week 4: Advanced wrangling, joining tables, and advanced data visualisation
      - Wednesday reading: [Chapter 13: Relational Data](http://r4ds.had.co.nz/relational-data.html)
-     - Wednesday Slides: 
+     - Wednesday Slides:  [HTML](lectures/lecture4a/lecture-4a-slides.html); [RMD](lectures/lecture4a/lecture-4a-slides.Rmd)
      - Friday Reading: [Chapter 1 of Data Visualisation: A Practical Introduction](http://socviz.co/lookatdata.html#lookatdata)
      - Friday Slides: 
      

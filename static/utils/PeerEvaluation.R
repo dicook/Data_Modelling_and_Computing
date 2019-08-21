@@ -2,8 +2,13 @@ library(googlesheets)
 library(tidyverse)
 
 gs_ls()
-lss <- gs_key("1fpQO16KCB1aPyfM1LcaWySZuXia_S8UgeXP5kS9dgIU")
-assignments <- gs_read(lss, ws=2)
+# lss <- gs_key("1fpQO16KCB1aPyfM1LcaWySZuXia_S8UgeXP5kS9dgIU")
+lss <- gs_key("1Mfqs5tvXT6y3P7d3W_1MWXpTb1Me4_SkHluN5Q4Crt4")
+assignments <- gs_read(lss, ws = 1)
+
+assignments %>%
+  count(GROUP) %>%
+  count(n)
 
 # Match groups without self assignment
 sampleGroups <- function(groups){
@@ -21,8 +26,14 @@ sampleGroups <- function(groups){
   match
 }
 
+
+
+# tolower(assignments$GROUP) %>% clipr::write_clip()
+
 # Assign individuals to evaluate groups
 assignments %>%
+  # replace NAs...
+  # mutate(GROUP = str_replace_na(GROUP, replacement = "unallocated")) %>%
   filter(!is.na(GROUP)) %>%
   mutate(`Evaluation Group` = sampleGroups(GROUP)) %>%
   select(STUDENT_CODE, GROUP, `Evaluation Group`) %>%
@@ -30,15 +41,23 @@ assignments %>%
 
 # Check that all groups have at leat two evaluators
 s <- read_csv("evaluation_assignment.csv")
-s %>% count(`Evaluation Group`, sort=TRUE) %>% print(n=25)
-s %>% count(`GROUP`, sort=TRUE) %>% print(n=21)
+s %>% count(`Evaluation Group`, sort=TRUE) %>% print(n = 30)
+s %>% count(`GROUP`, sort=TRUE) %>% print(n=30)
 
 # Prepare submissions for peer evaluation (ZIP)
 
 ## Change to be where you would like your ZIPs to be placed
-zippath <- "a3_groups/"
+zippath <- here::here(
+  "static",
+  "utils",
+  "Assignment - ETC1010 Assignment 1, Semester 2 2019 submissions"
+  )
+
 ## List the directories that you'd like to ZIP
-submissions <- list.dirs("Assignment 3 group submissions/", recursive = FALSE)
+# submissions <- list.dirs("Assignment 1 group submissions/", 
+#                          recursive = FALSE)
+submissions <- list.dirs(zippath,
+                         recursive = FALSE)
 
 ## Check that all groups have submitted assignments
 assignments %>%

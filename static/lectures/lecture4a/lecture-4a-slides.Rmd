@@ -1,0 +1,446 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+subtitle: "Lecture 4A: Relational data, and joins"
+author: "Dr. Nicholas Tierney & Professor Di Cook"
+institute: "EBS, Monash U."
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["shinobi", "ninjutsu", "slides.css"]
+    seal: true
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+library(emo)
+library(tidyverse)
+library(knitr)
+library(lubridate)
+knitr::opts_chunk$set(
+  fig.width = 4.25,
+  fig.height = 3.5,
+  fig.retina = 3,
+  out.width = "100%",
+  message = FALSE,
+  warning = FALSE,
+  cache = FALSE,
+  autodep = TRUE,
+  hiline = TRUE
+)
+
+knitr::opts_hooks$set(fig.callout = function(options) {
+  if (options$fig.callout) {
+    options$echo <- FALSE
+    options$out.height <- "99%"
+    options$fig.width <- 16
+    options$fig.height <- 8
+  }
+  options
+})
+
+options(
+  htmltools.dir.version = FALSE,
+  width = 90,
+  max.print = 9999,
+  knitr.table.format = "html"
+)
+
+as_table <- function(...) knitr::kable(..., format = "html", digits = 3)
+```
+
+class: bg-blue center middle
+
+.vvhuge.white[
+While the song is playing...
+]
+
+.vhuge.white[
+Draw a mental model / concept map of last weeks lecture content
+]
+
+---
+class: bg-main1
+
+
+# Recap
+
+.huge[
+- ggplot
+- tidy data
+- drawing mental models
+]
+
+---
+class: bg-main1
+
+# Recap: ggplot mental model
+
+
+---
+class: bg-main1
+
+# Recap: Tidy data
+
+```{r print-tidy-data-og, out.width = "75%", echo = FALSE}
+include_graphics("images/join-images/static/png/original-dfs-tidy.png")
+```
+
+---
+class: bg-main1
+
+# Recap: Tidy data - animation
+
+```{r animate-wide-data, echo = FALSE, out.width = "50%"}
+include_graphics("images/join-images/tidyr-spread-gather.gif")
+```
+
+---
+class: bg-main1
+
+# Overview
+
+.huge[
+- What is relational data?
+- Keys
+- Different sorts of joins
+- Using joins to follow an aircraft flight path
+]
+
+---
+class: bg-main1
+
+## Relational data
+
+.huge[
+- Data analysis **rarely involves** only a single table of data. 
+- To answer questions you generally need to combine many tables of data
+]
+
+---
+class: bg-main1
+
+## Relational data
+
+.huge[
+- Multiple tables of data are called *relational data*
+- It is the **relations**, not just the individual datasets, that are important.
+]
+
+---
+class: bg-main1
+
+# `nycflights13`
+
+.huge[
+- Data set of flights that departed NYC in 2013 from https://www.transtats.bts.gov - a public database of all USA commercial airline flights. It has five tables:
+    1. flights
+    1. airlines
+    1. airports
+    1. planes
+    1. weather
+]
+
+---
+class: bg-main1
+
+# flights
+
+```{r print-flights}
+library(nycflights13)
+flights
+```
+
+---
+class: bg-main1
+
+# airlines
+
+```{r print-airlines}
+airlines
+```
+
+---
+class: bg-main1
+
+# airports
+
+```{r print-airports}
+airports
+```
+
+
+---
+class: bg-main1
+
+# print-planes
+```{r print-planes}
+planes
+```
+
+---
+class: bg-main1
+
+# weather
+
+```{r print-weather}
+weather
+```
+
+---
+class: bg-main1
+ 
+# Concept map of tables and joins from the text
+
+```{r show-nycflights-graphic, echo = FALSE, out.width = "80%"}
+include_graphics("images/relational-nycflights.png")
+```
+
+---
+class: bg-main1
+
+# Keys `r ji("key")`
+
+.vlarge[
+- Keys = variables used to connect records in one table to another. 
+- In the `nycflights13` data, 
+    - `flights` connects to `planes` by a single variable `tailnum`
+    - `flights` connects to `airlines` by a single variable `carrier`
+    - `flights` connects to `airports` by two variables, `origin` and `dest`
+    - `flights` connects to `weather` using multiple variables, `origin`, and `year`,     `month`, `day` and `hour`.
+]
+
+
+---
+class: bg-main1
+
+# Your turn: go to rstudio.cloud
+
+.huge[
+- Load the `Lahman` package, which contains multiple tables of baseball data.
+- What key(s) connect the batting table with the salary table?
+- Can you draw out a diagram of the connections amongst the tables?
+]
+
+```{r countdown-1, echo = FALSE}
+library(countdown)
+countdown(minutes = 4, play_sound = TRUE)
+```
+
+
+---
+class: bg-main1
+
+# Joins
+
+.huge[
+- "mutating joins", add variables from one table to another. 
+- There is always a decision on what observations are copied to the new table as well. 
+- Let's discuss how joins work using some [lovely animations](https://github.com/gadenbuie/tidyexplain) provided by [Garrick Aden-Buie](https://www.garrickadenbuie.com/).
+
+]
+
+
+---
+class: bg-main1
+
+# Example data
+
+```{r print-example-data, echo = FALSE, out.width = "75%"}
+include_graphics("images/join-images/static/png/original-dfs.png")
+```
+
+---
+class: bg-main1
+
+#  Left Join (Generally the one you want to use)
+
+.left-code.huge[
+All observations from the "left" table, but only the observations from the "right" table that match those in the left.
+
+]
+
+.right-plot[
+
+```{r animate-left-join, echo = FALSE, out.width = "100%"}
+include_graphics("images/join-images/left-join.gif")
+```
+]
+
+
+---
+class: bg-main1
+
+# Right Join
+
+.left-code.huge[
+Same as left join, but in reverse.
+]
+
+.right-plot[
+```{r animate-right-join, echo = FALSE, out.width = "100%"}
+include_graphics("images/join-images/right-join.gif")
+```
+]
+
+
+---
+class: bg-main1
+
+# Inner join
+
+.left-code.huge[
+Intersection between the two tables, only the observations that are in both
+]
+
+.right-plot[
+```{r animate-inner-join, echo = FALSE, out.width = "100%"}
+include_graphics("images/join-images/inner-join.gif")
+```
+
+]
+
+---
+class: bg-main1
+
+# Outer (full) join
+
+.left-code.pull.huge[
+Union of the two tables, all observations from both, and missing values might get added
+]
+
+.right-plot[
+```{r animate-full-join, echo = FALSE, out.width = "100%"}
+include_graphics("images/join-images/full-join.gif")
+```
+]
+
+---
+class: bg-main1
+
+# Example: What if you want to combine the full airline name to the flights data?
+
+```{r print-flights-again}
+flights
+```
+
+---
+class: bg-main1
+
+# Example: What if you want to combine the full airline name to the flights data?
+
+
+```{r print-airlines-again}
+airlines
+```
+
+
+---
+class: bg-main1
+
+# Example: Combine `airlines` and `flights` data frames with `left_join()`.
+
+.left-code[
+```{r join-flights-airlines, eval = FALSE}
+flights %>%
+  left_join(airlines, 
+            by = "carrier") %>%
+  glimpse()
+
+```  
+]
+
+.right-plot[
+```{r join-flights-airlines-out, ref.label = 'join-flights-airlines', echo = FALSE}
+
+```
+]
+
+---
+class: bg-main1
+
+# Example: flights joining to airports
+
+.left-code[
+```{r join-flights-airports, eval = FALSE}
+flights %>%
+  left_join(
+    airports, 
+    by = c("origin" = "faa")) %>%
+  glimpse()
+```  
+]
+
+.right-plot[
+```{r join-flights-airports-out, ref.label = 'join-flights-airports', echo = FALSE, out.width = "100%"}
+
+```
+]
+
+---
+class: bg-main1
+
+# Airline travel, ontime data
+
+```{r}
+
+plane_N4YRAA <- read_csv("data/plane_N4YRAA.csv")
+
+glimpse(plane_N4YRAA)
+
+```
+
+---
+class: bg-main1
+
+# Airline travel, airport location
+
+```{r read-airports}
+airport_raw <- read_csv("data/airports.csv")
+
+airport_raw %>%
+  select(AIRPORT, 
+         LATITUDE, 
+         LONGITUDE, 
+         AIRPORT_STATE_NAME) %>%
+  glimpse()
+```
+
+---
+class: bg-main1
+
+# Our Turn: Joining the two tables to show flight movements
+
+.huge[
+- Go to rstudio.cloud and open "flight-movements.Rmd" and complete exercise - the aim is to show flight movement on the map
+- Next: Open "nycflights.Rmd"
+]
+
+---
+class: bg-main1
+
+# Learning more
+
+- 
+- The coat explanation of joins: Different types of joins explained using a person and a coat, by [Leight Tami](https://twitter.com/leigh_tami18/status/1021471889309487105/photo/1)
+
+![](images/joins_using_coat.jpg)
+
+---
+
+# References
+
+- Chapter 13 of R4DS
+- 
+
+---
+class: bg-main1
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.

@@ -1,0 +1,26 @@
+---
+title: "Using other joining data"
+author: "YOUR NAME"
+output: html_document
+---
+
+Load the `Lahman` package, which contains multiple tables of baseball data.
+
+```{r lahman-load}
+library(tidyverse)
+library(Lahman)
+```
+
+# What key(s) connect the batting table with the salary table?
+
+```{r glimpse-batting}
+glimpse(Batting)
+```
+
+
+```{r glimpse-salaries}
+glimpse(Salaries)
+```
+
+
+# Can you draw out a diagram of the connections amongst the tables?
