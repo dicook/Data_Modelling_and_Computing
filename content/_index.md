@@ -146,7 +146,7 @@ You will **not** mark your own group, this gives you a chance to see how other s
 
 - [platypus.rda](http://dmac.dicook.org/lectures/data/platypus.rda) Platypus data from the Living Atlas of Australia
 - [platypus_meta.csv](http://dmac.dicook.org/lectures/data/platypus_meta.csv) Platypus meta information data from the Living Atlas of Australia
-- [map.rds](lectures/data/map.rds) Map of USA for ggmap() in lecture 4a material.
+- [map.rds](lectures/lecture4a/data/map.rds) Map of USA for ggmap() in lecture 4a material.
 
 ## Exam information
 
