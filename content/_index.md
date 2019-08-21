@@ -102,6 +102,44 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 - Assignment 1 **Due 5pm, Friday, August 16th**: [Instructions](http://dmac.dicook.org/assignments/assignment-1-2019-s2/instructions.html) [zip](http://dmac.dicook.org/assignments/assignment-1-2019-s2.zip) (Unzip the file and double click on the rstudio project, "assignment-1-2019-s2.Rproj" This contains the data and Rmd file)
 
+
+## Assignment 1 peer evaluation
+
+[Allocations for peer grading](assignments/2019-a1-submissions/evaluation_assignment1.csv)
+This csv contains your students numbers, the name of your group and the name of the group we would like to grade.
+You will **not** mark your own group, this gives you a chance to see how other students approached the assignment.
+
+- ahvcds [zip](assignments/2019-a1-submissions/ahvcds.zip) 
+- ara [zip](assignments/2019-a1-submissions/ara.zip)                     
+- bobcats [zip](assignments/2019-a1-submissions/bobcats.zip)              
+- bomrang [zip](assignments/2019-a1-submissions/bomrang.zip)              
+- bowerbird [zip](assignments/2019-a1-submissions/bowerbird.zip)     
+- broom [zip](assignments/2019-a1-submissions/broom.zip)            
+- chocolate [zip](assignments/2019-a1-submissions/chocolate.zip)          
+- dataspice [zip](assignments/2019-a1-submissions/dataspice.zip)          
+- drake [zip](assignments/2019-a1-submissions/drake.zip)                  
+- fable [zip](assignments/2019-a1-submissions/fable.zip)                  
+- garfield [zip](assignments/2019-a1-submissions/garfield.zip)            
+- gganimate [zip](assignments/2019-a1-submissions/gganimate.zip)          
+- golem [zip](assignments/2019-a1-submissions/golem.zip)                  
+- gravitas [zip](assignments/2019-a1-submissions/gravitas.zip)             
+- HDPLZ [zip](assignments/2019-a1-submissions/HDPLZ.zip)            
+- icon [zip](assignments/2019-a1-submissions/icon.zip)                  
+- magick [zip](assignments/2019-a1-submissions/magick.zip)                        
+- nullabor [zip](assignments/2019-a1-submissions/nullabor.zip)         
+- purrr [zip](assignments/2019-a1-submissions/purrr.zip)                  
+- rude recliners [zip](assignments/2019-a1-submissions/rude_recliners.zip)
+- sf [zip](assignments/2019-a1-submissions/sf.zip)                        
+- skda [zip](assignments/2019-a1-submissions/skda.zip)                    
+- smurfs [zip](assignments/2019-a1-submissions/smurfs.zip)                
+- sugarbag [zip](assignments/2019-a1-submissions/sugarbag.zip)            
+- suggrants [zip](assignments/2019-a1-submissions/suggrants.zip)          
+- taipan [zip](assignments/2019-a1-submissions/taipan.zip)                
+- team dplyr [zip](assignments/2019-a1-submissions/team_dplyr.zip)                 
+- visdat [zip](assignments/2019-a1-submissions/visdat.zip)               
+- wesanderson [zip](assignments/2019-a1-submissions/wesanderson.zip)
+
+
 ## Project
 
 ## Data
