@@ -64,7 +64,8 @@ assignments %>%
   mutate(match = Email %in% basename(submissions))%>%
   group_by(GROUP) %>%
   summarise(match = sum(match)) %>%
-  print(n=25)
+  filter(match != 1) %>%
+  arrange(match)
 
 ## Build the ZIPs
 submissions %>%

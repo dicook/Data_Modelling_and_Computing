@@ -1,0 +1,112 @@
+---
+title: "Instructions for the Advanced Analysis of crime data"
+author: "Nicholas Tierney"
+date: "`r format(Sys.Date(), '%A, %B %e %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Instructions to Students
+
+OK, so you have submitted your report, and it went down pretty well!
+
+This assignment is designed to simulate a real-life scenario where you have done some data analysis, and then you are asked to take it further by combining another dataset with the one you have used. 
+
+Linking datasets together is a skill very important in data analysis. It allows you to combine different pieces of information together to make new insights that are otherwise not possible. It can also be challenging, as many of these datasets were not initially designed to be combined!
+
+In this assignment you will be given two datasets to explore, and join. You will also be asked to find a third dataset, which you will need to import, tidy, and join to the data.
+
+The first dataset is the dataset you have already used, the dataset from the Crime Statistics Agency Victoria:
+
+> https://www.crimestatistics.vic.gov.au/download-data "Data tables - Spotlight: Burglary/Break and Enter Offences Recorded in Victoria visualisation - year ending December 2018 (XLSX, 4.4 MB)".
+
+As mentioned in the first assignment, there are actually a few tables in the crime excel sheet - these will be used together in this assignment, along with an additional dataset. This additional dataset is from the Australian Bureau of Statistics, and contains information on the ages of people in local government areas.
+
+You will be required to join together these datasets to answer questions from your manager. 
+
+There will be some helper code provided by your colleague, Amelia (who has returned from her trip  to New Zealand). Amelia will be providing less assistance with this project.
+
+The type of output expected from this assignment requires you to write some sentences or a paragraph or so about what you did, and how. Your manager will likely take figures and text directly out of the document you provide and put it into a report or presentation.
+
+We have written example text at the start, to give an example of the type of writing we are looking for.
+
+Like in the previous assignment, questions that are work marks are indicated with `**` at the start and end of the question, as well as a number of marks in parenthesis. You will be asked to write more in this assignment, make sure you pay attention to what sort of writing will answer the question.
+
+## Marking + Grades
+
+This assignment will be worth 4% of your total grade, and will be marked out of 22 marks total.
+
+* 3 Marks for grammar and clarity. You must write in complete sentences and do a spell check.
+* 3 Marks for overall presentation of the data visualisations
+* 16 marks for the questions
+
+* Your marks will then be weighted according to peer evaluation.
+
+* Sections that contain marks are indicated with `**`, and will have the number of marks indicated in parentheses. For example:
+
+```
+# `**` ... (XX Mark) `**`
+```
+
+Where `...` is the question text, and `XX` indicates the number of marks
+
+## A Note on skills
+
+As of week 4, you have seen most of the code used here. 
+
+I do not expect you to know immediately what every line of code below does. But I do expect that you can search through the helpfile to learn new parts of the code, or to turn to ED, the consults, or search engines like google to help clarify misunderstandings and errors.
+
+This is a challenge for you! 
+
+As mentioned earlier, this assignment is designed to simulate a real life work situation - this means that there are some things where you need to "learn on the job". 
+
+But the vast majority of the assignment will cover things that you will have seen in class, or the readings.
+
+Remember, you can look up the help file for functions by typing `?function_name`. For example, `?mean`. Feel free to google questions you have about how to do other kinds of plots, and post on the ED if you have any questions about the assignment.
+
+## How to complete this assignment.
+
+To complete the assignment you will need to fill in the blanks for function names, arguments, or other names. These sections are marked with `***` or `___`. At a minimum, your assignment should be able to be "knitted" using the `knit` button for your Rmarkdown document. 
+
+If you want to look at what the assignment looks like in progress, but you do not have valid R code in all the R code chunks, remember that you can set the chunk options to `eval = FALSE`. If you do set `eval = FALSE`, please remember to ensure that you remove this chunk option or set it to `eval = TRUE` when you submit the assignment, to ensure all your R code runs.
+
+You will be completing this assignment in your assigned groups. 
+
+A reminder regarding our recommendations for completing group assignments:
+
+ * Each member of the group completes the entire assignment, as best they can.
+ * Group members compare answers and combine it into one document for the final submission. 
+
+Your assignments will be peer reviewed, and results checked for reproducibility. 
+This means:
+
+* 25% of the assignment grade will come from peer evaluation. 
+* Peer evaluation is an important learning tool. 
+
+Each student will be randomly assigned another team's submission to provide feedback on three things: 
+
+  1. Could you reproduce the analysis? 
+  2. Did you learn something new from the other team's approach?
+  3. What would you suggest to improve their work?
+
+## Due Date
+
+This assignment is due before the start of class close of business (5pm) on Monday 2nd Septemer You will submit the assignment via ED. 
+
+Please change the file name to include your teams name. For example, if you are team `dplyr`, your assignment file name could read: "assignment-2-2019-s2-team-dplyr.Rmd"
+
+Please also note that you need to submit two files:
+
+1. The .Rmd file
+2. The .html file
+
+# Treatment
+
+Your manager read your report on the crime - they liked it! They then immediately had a few other questions and want to see more of what you can do.
+
+Amelia has returned from her holiday, and found a nice dataset on ages for each LGA from the ABS (Australian Bureau of Statistics) website, and has read it in for you, but hadn't really cleaned it up into tidy format. 
+
+Amelia thinks that this would be a good learning opportunity for you to describe how you tidy your data, so she can see how you are going with your data analysis skils.
