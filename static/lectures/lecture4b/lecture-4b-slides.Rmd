@@ -62,7 +62,7 @@ While the song is playing...
 ]
 
 .vhuge.white[
-Draw a mental model / concept map of last weeks lecture content on joins.
+Draw a mental model / concept map of last lectures content on joins.
 ]
 
 ---
@@ -77,10 +77,20 @@ Draw a mental model / concept map of last weeks lecture content on joins.
 
 ---
 
+# Joins with a person and a coat, by [Leight Tami](https://twitter.com/leigh_tami18/status/1021471889309487105/photo/1)
+
+```{r joins-coat, echo = FALSE}
+include_graphics("images/joins_using_coat.jpg")
+```
+
+
+
+---
+
 # Upcoming Due Dates
 
 .vhuge[
-- Assignment 2: Thursday 5th September, 5pm
+- Assignment 2: Thursday 5th September, 5pm 
 - Stay tuned on ED for the upcoming dates
 ]
 
@@ -104,7 +114,6 @@ class: bg-main1
   - change blindness
   - using proximity
   - hierarchy of mappings
-  - Common plots for variables (Mapping variables to graphical elements)
     ]
 
 ---
@@ -115,7 +124,6 @@ class: bg-main1
 .huge[
   - Layering statistical summaries
   - Themes
-  - co-ordinate systems
   - adding interactivity
 ]
 
@@ -264,14 +272,14 @@ class: bg-main1
 # Colour blindness
 
 .huge[
-- About 10% of the population have difficulty distonguishing between red and green. 
-- There are several colour blind tested palettes: RColorbrewer has an associated web site [colorbrewer.org](http://colorbrewer2.org) where the palettes are labelled.
-- We can explore different forms of colorblindness using the `dichromat` package. 
+- About 8% of men (about 1 in 12), and 0.5% women (about 1 in 200) population have difficulty distinguishing between red and green. 
+- Several colour blind tested palettes: RColorbrewer has an associated web site [colorbrewer.org](http://colorbrewer2.org) where the palettes are labelled. See also `viridis`, and `scico`.
 ]
 
 ---
 class: bg-main1
 
+# Plot of two coloured points: Normal Mode
 
 ```{r colour-blind, fig.show='hold', fig.width=8, fig.height=4, echo = FALSE}
 library(scales)
@@ -286,11 +294,51 @@ p
 ---
 class: bg-main1
 
+# Plot of two coloured points: dicromat mode
+
 ```{r colour-blind-2, fig.show='hold', fig.width=8, fig.height=4, echo = FALSE}
 clrs <- dichromat(hue_pal()(3))
 p + scale_colour_manual("", values = clrs)
 ```
 
+---
+class: bg-main1
+
+```{r colourblindr-show, echo = FALSE, out.width = "80%"}
+library(colorblindr)
+cvd_grid(p)
+```
+
+---
+class: bg-main1
+
+```{r colourblindr-brewer, echo = TRUE, out.width = "60%"}
+p2 <- p + scale_colour_brewer(palette = "Dark2")
+p2
+```
+
+---
+class: bg-main1
+
+```{r cb-grid, out.width = "80%", echo = FALSE}
+cvd_grid(p2)
+```
+
+
+---
+class: bg-main1
+
+```{r colourblindr-viridis, echo = TRUE, out.width = "60%"}
+p3 <- p + scale_colour_viridis_d()
+p3
+```
+
+---
+class: bg-main1
+
+```{r cb-grid-viridis, out.width = "80%", echo = FALSE}
+cvd_grid(p3)
+```
 
 ---
 class: bg-main1
@@ -378,6 +426,9 @@ Which plot answers which question?
 ---
 class: bg-main1
 
+## ...incidence similar for: (males and females) or (age groups, across gender) ?" 
+
+
 
 ```{r  print-many-tb, echo=FALSE, fig.width=8, fig.height=2}
 gg_fill_gender <- 
@@ -419,8 +470,8 @@ gg_fill_gender
 ```
 
 .vlarge[
-- Puts males and females right beside each other, so the relative heights of the bars can be seen quickly. 
-- The answer to the question would be "No, the numbers were similar in youth, but males are more affected with increasing age."
+- Males & females next to each other: relative heights of bars is seen quickly. 
+- Auestion answer: "No, the numbers were similar in youth, but males are more affected with increasing age."
 ]
 
 ---
@@ -450,7 +501,7 @@ gg_fill_age
 
 ---
 
-## Layering
+# Layering
 
 .huge[
 - *Statistical summaries:* It is common to layer plots, particularly by adding statistical summaries, like a model fit, or means and standard deviations. The purpose is to show the **trend** in relation to the **variation**. 
@@ -524,9 +575,125 @@ ggplot(df, aes(x = x, y = y2)) + geom_point() +
 class: bg-main1
 
 ```{r point-8, out.width = "60%"}
-ggplot(df, aes(x = x, y = y2)) + geom_point() +
+p1 <- ggplot(df, aes(x = x, y = y2)) + geom_point() +
   geom_smooth(se = FALSE, span = 0.2)
+p1
 ```
+
+---
+class: bg-main1
+
+# Interactivity with magic plotly
+
+```{r point-interactive}
+library(plotly)
+ggplotly(p1)
+```
+
+
+---
+
+# Themes: Add some style to your plot
+
+.left-code[
+```{r mtcars, eval = FALSE}
+p <- ggplot(mtcars) +
+  geom_point(aes(x = wt, 
+                 y = mpg, 
+                 colour = factor(gear))) +
+  facet_wrap(~am)
+p
+
+```  
+]
+
+.right-plot[
+```{r mtcars-out, ref.label = 'mtcars', echo = FALSE, out.width = "100%"}
+
+```
+]
+
+---
+
+# Theme: theme_minimal
+
+.left-code[
+```{r mtcars-minimal, eval = FALSE}
+p + 
+  theme_minimal()
+```  
+]
+
+.right-plot[
+```{r mtcars-minimal-out, ref.label = 'mtcars-minimal', echo = FALSE, out.width = "100%"}
+
+```
+]
+---
+
+# Theme: ggthemes `theme_few()`
+
+.left-code[
+```{r mtcars-theme-few, eval = FALSE}
+p + 
+  theme_few() + 
+  scale_colour_few()
+```  
+]
+
+.right-plot[
+```{r mtcars-theme-few-out, ref.label = 'mtcars-theme-few', echo = FALSE, out.width = "100%"}
+
+```
+
+]
+---
+
+# Theme: ggthemes `theme_excel()` `r ji("sick")`
+
+.left-code[
+```{r mtcars-theme-excel, eval = FALSE}
+p + 
+  theme_excel() + 
+  scale_colour_excel()
+```  
+]
+
+.right-plot[
+```{r mtcars-theme-excel-out, ref.label = 'mtcars-theme-excel', echo = FALSE, out.width = "100%"}
+
+```
+]
+---
+
+# Theme: for fun
+
+.left-code[
+```{r theme-wes, eval = FALSE}
+library(wesanderson)
+p + 
+  scale_colour_manual(
+    values = wes_palette("Royal1")
+    )
+
+```  
+]
+
+.right-plot[
+```{r theme-wes-out, ref.label = 'theme-wes', echo = FALSE, out.width = "100%"}
+
+```
+]
+
+---
+class: bg-main1
+
+# Summary: themes
+
+.huge[
+- The `ggthemes` package has many different styles for the plots. 
+- Other packages such as `xkcd`, `skittles`, `wesanderson`, `beyonce`, `ochre`, ....
+]
 
 ---
 
@@ -553,13 +720,13 @@ ggplot(df, aes(x = x, y = y2)) + geom_point() +
 - lab quiz open (requires answering questions from Lab exercise)
 - go to rstudio.cloud and check out exercise 4-B
 - If you want to use R / Rstudio on your laptop:
-  - Install R + Rstudio (see Ed posting)
+  - Install R + Rstudio (see )
   - open R
   - type the following:
   ```r
   # install.packages("usethis")
   library(usethis)
-  use_course("bit.ly/etc1010-ex-4b")
+  use_course("dmac.netlify.com/lectures/lecture4b/exercise/exercise-4b.zip")
   ```
 ]
 
@@ -628,29 +795,6 @@ ggplot(df, aes(x = x, y = y)) + geom_point() + coord_fixed(ratio = 0.2)
 ggplot(df, aes(x = x, y = y)) + geom_point() + theme(aspect.ratio = 1)
 ```
 
-
-
-# Themes: Add some style to your plot
-
-
-# Theme: theme_minimal
-
-
-# Theme: 
-
-```{r}
-
-```
-
-The `ggthemes` package has many different styles for the plots. Other packages such as `xkcd`, `skittles`, `wes anderson`, `beyonce`, `ochre`, ....
-
-```{r theme-xkcd, eval = FALSE}
-library(xkcd)
-ggplot(df, aes(x = x, y = y)) +
-  geom_point() +
-  theme_xkcd() +
-  xkcdaxis(c(0, 1), c(0, 1))
-```
 
 ## Adding interactivity to plots
 

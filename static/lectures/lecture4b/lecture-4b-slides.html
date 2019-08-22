@@ -39,7 +39,7 @@ While the song is playing...
 ]
 
 .vhuge.white[
-Draw a mental model / concept map of last weeks lecture content on joins.
+Draw a mental model / concept map of last lectures content on joins.
 ]
 
 ---
@@ -54,10 +54,18 @@ Draw a mental model / concept map of last weeks lecture content on joins.
 
 ---
 
+# Joins with a person and a coat, by [Leight Tami](https://twitter.com/leigh_tami18/status/1021471889309487105/photo/1)
+
+&lt;img src="images/joins_using_coat.jpg" width="100%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
 # Upcoming Due Dates
 
 .vhuge[
-- Assignment 2: Thursday 5th September, 5pm
+- Assignment 2: Thursday 5th September, 5pm 
 - Stay tuned on ED for the upcoming dates
 ]
 
@@ -81,7 +89,6 @@ class: bg-main1
   - change blindness
   - using proximity
   - hierarchy of mappings
-  - Common plots for variables (Mapping variables to graphical elements)
     ]
 
 ---
@@ -92,7 +99,6 @@ class: bg-main1
 .huge[
   - Layering statistical summaries
   - Themes
-  - co-ordinate systems
   - adding interactivity
 ]
 
@@ -232,22 +238,61 @@ class: bg-main1
 # Colour blindness
 
 .huge[
-- About 10% of the population have difficulty distonguishing between red and green. 
-- There are several colour blind tested palettes: RColorbrewer has an associated web site [colorbrewer.org](http://colorbrewer2.org) where the palettes are labelled.
-- We can explore different forms of colorblindness using the `dichromat` package. 
+- About 8% of men (about 1 in 12), and 0.5% women (about 1 in 200) population have difficulty distinguishing between red and green. 
+- Several colour blind tested palettes: RColorbrewer has an associated web site [colorbrewer.org](http://colorbrewer2.org) where the palettes are labelled. See also `viridis`, and `scico`.
 ]
 
 ---
 class: bg-main1
 
+# Plot of two coloured points: Normal Mode
 
 &lt;img src="lecture-4b-slides_files/figure-html/colour-blind-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: bg-main1
 
+# Plot of two coloured points: dicromat mode
+
 &lt;img src="lecture-4b-slides_files/figure-html/colour-blind-2-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
+---
+class: bg-main1
+
+&lt;img src="lecture-4b-slides_files/figure-html/colourblindr-show-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+class: bg-main1
+
+
+```r
+p2 &lt;- p + scale_colour_brewer(palette = "Dark2")
+p2
+```
+
+&lt;img src="lecture-4b-slides_files/figure-html/colourblindr-brewer-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+class: bg-main1
+
+&lt;img src="lecture-4b-slides_files/figure-html/cb-grid-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
+class: bg-main1
+
+
+```r
+p3 &lt;- p + scale_colour_viridis_d()
+p3
+```
+
+&lt;img src="lecture-4b-slides_files/figure-html/colourblindr-viridis-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+class: bg-main1
+
+&lt;img src="lecture-4b-slides_files/figure-html/cb-grid-viridis-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: bg-main1
@@ -301,6 +346,9 @@ Which plot answers which question?
 ---
 class: bg-main1
 
+## ...incidence similar for: (males and females) or (age groups, across gender) ?" 
+
+
 
 &lt;img src="lecture-4b-slides_files/figure-html/print-many-tb-1.png" width="100%" style="display: block; margin: auto;" /&gt;&lt;img src="lecture-4b-slides_files/figure-html/print-many-tb-2.png" width="100%" style="display: block; margin: auto;" /&gt;
 
@@ -319,8 +367,8 @@ class: bg-main1
 &lt;img src="lecture-4b-slides_files/figure-html/gg-fill-gender-print-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 .vlarge[
-- Puts males and females right beside each other, so the relative heights of the bars can be seen quickly. 
-- The answer to the question would be "No, the numbers were similar in youth, but males are more affected with increasing age."
+- Males &amp; females next to each other: relative heights of bars is seen quickly. 
+- Auestion answer: "No, the numbers were similar in youth, but males are more affected with increasing age."
 ]
 
 ---
@@ -348,7 +396,7 @@ class: bg-main1
 
 ---
 
-## Layering
+# Layering
 
 .huge[
 - *Statistical summaries:* It is common to layer plots, particularly by adding statistical summaries, like a model fit, or means and standard deviations. The purpose is to show the **trend** in relation to the **variation**. 
@@ -438,11 +486,124 @@ class: bg-main1
 
 
 ```r
-ggplot(df, aes(x = x, y = y2)) + geom_point() +
+p1 &lt;- ggplot(df, aes(x = x, y = y2)) + geom_point() +
   geom_smooth(se = FALSE, span = 0.2)
+p1
 ```
 
 &lt;img src="lecture-4b-slides_files/figure-html/point-8-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+class: bg-main1
+
+# Interactivity with magic plotly
+
+
+```r
+library(plotly)
+ggplotly(p1)
+```
+
+<div id="htmlwidget-22856873a6115a4866c1" style="width:100%;height:252px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-22856873a6115a4866c1">{"x":{"data":[{"x":[0.717227860353887,0.0841631481889635,0.0560459645930678,0.878229795023799,0.0900365537963808,0.526260976912454,0.0361657666508108,0.0522692278027534,0.504432184621692,0.749094540253282,0.818802561610937,0.776686701923609,0.147893257671967,0.499841199722141,0.626651706639677,0.317365030525252,0.574585755355656,0.351478821830824,0.660470219096169,0.0166831817477942,0.875293420394883,0.411015358287841,0.152815712848678,0.380645021097735,0.935042770812288,0.489256605273113,0.770649169804528,0.634023095713928,0.489993740571663,0.496182781644166,0.397753032390028,0.869069783715531,0.100731079932302,0.629169702995569,0.289258322911337,0.80744954617694,0.774149319389835,0.653434871695936,0.216061131330207,0.90895408578217,0.567568466765806,0.126249195309356,0.180435637244955,0.764659023610875,0.736494622658938,0.945218900917098,0.699325503315777,0.0732441644649953,0.995877150911838,0.333593882154673,0.0431862401310354,0.00974904000759125,0.259338437579572,0.959045411087573,0.449723439058289,0.388441470218822,0.809083215892315,0.155507863964885,0.507485377136618,0.898918239865452,0.0190054087433964,0.244891639100388,0.908100048312917,0.990132756531239,0.810904114507139,0.869703802512959,0.695557900937274,0.748053721385077,0.576926177134737,0.34559658751823,0.48045308352448,0.419518694747239,0.112122278660536,0.0419014734216034,0.506855558604002,0.072921171085909,0.215274988673627,0.88869192567654,0.844917361158878,0.0286537066567689,0.340212073875591,0.343444974627346,0.508751672226936,0.355948333162814,0.358791150618345,0.798248551087454,0.844945301767439,0.353840084047988,0.356251560617238,0.500592972384766,0.627311174990609,0.26275977678597,0.573356823530048,0.947770417667925,0.275013617705554,0.515320259844884,0.53718124399893,0.924468519864604,0.0369142254348844,0.21975736389868],"y":[0.51369993644211,1.81309970140432,2.39182031435154,0.653819097083789,-0.325505455765954,-0.461029822680986,3.2143614499313,3.50347040277397,-2.07372105788991,0.664945107790094,-0.269134809182185,1.18744814756744,1.86101843438731,-0.485205662619572,-1.05948285809952,0.107324833874689,-0.575471475220524,-2.32631774202178,0.995624618988515,2.37893259191896,-0.990453330780905,-1.52069007076498,2.11496067613114,-1.37591722628296,0.38808873893454,2.29394252284767,1.4858703449461,-0.826326785324231,-0.10583175996115,-0.209262705445743,0.552327332350004,0.208612508700233,2.67847823015176,0.821946769919506,-0.182723730569871,-1.58423371619062,-0.592226509511687,-1.5372356429576,0.301740993622629,0.513217529249758,-1.03227223956097,1.7215046819642,0.753944292729752,-1.6615645264279,-1.0675385615741,-0.603837472212523,1.1582729554288,0.792846391180628,1.8841268888066,-0.911527876948698,2.55103720518383,3.67277608176436,0.0659041447420522,1.65278949817773,-0.51584295336756,0.234603460794633,0.196697413264991,0.348283965683496,-1.94808537192955,1.00062106214342,2.98962275616679,0.703980946973426,0.980436983242369,1.82696861623072,-0.936636311287952,-0.126502505141754,-1.66501109297611,1.70242864699021,0.885982645031832,-1.68003281243728,-0.380589905864865,-0.186206241369864,0.552979457892123,3.20540640031033,-0.321352197068815,-0.132932405924944,0.493282523040073,1.7139470164379,0.599253740067249,2.46139614954083,0.718761252314462,-1.9082815485703,0.73116514421844,2.39177378887417,1.00867387613488,1.19048948547213,2.01412991725343,-0.639289125397636,0.80525371467216,-0.16881119153963,0.0620401322568048,-1.2815522479567,-1.37479064662876,1.04143375196031,0.752753770072882,-1.0617263514564,0.140861041679609,1.3543804618102,0.806637193334577,-0.326439588420768],"text":["x: 0.71722786<br />y2:  0.51369994","x: 0.08416315<br />y2:  1.81309970","x: 0.05604596<br />y2:  2.39182031","x: 0.87822980<br />y2:  0.65381910","x: 0.09003655<br />y2: -0.32550546","x: 0.52626098<br />y2: -0.46102982","x: 0.03616577<br />y2:  3.21436145","x: 0.05226923<br />y2:  3.50347040","x: 0.50443218<br />y2: -2.07372106","x: 0.74909454<br />y2:  0.66494511","x: 0.81880256<br />y2: -0.26913481","x: 0.77668670<br />y2:  1.18744815","x: 0.14789326<br />y2:  1.86101843","x: 0.49984120<br />y2: -0.48520566","x: 0.62665171<br />y2: -1.05948286","x: 0.31736503<br />y2:  0.10732483","x: 0.57458576<br />y2: -0.57547148","x: 0.35147882<br />y2: -2.32631774","x: 0.66047022<br />y2:  0.99562462","x: 0.01668318<br />y2:  2.37893259","x: 0.87529342<br />y2: -0.99045333","x: 0.41101536<br />y2: -1.52069007","x: 0.15281571<br />y2:  2.11496068","x: 0.38064502<br />y2: -1.37591723","x: 0.93504277<br />y2:  0.38808874","x: 0.48925661<br />y2:  2.29394252","x: 0.77064917<br />y2:  1.48587034","x: 0.63402310<br />y2: -0.82632679","x: 0.48999374<br />y2: -0.10583176","x: 0.49618278<br />y2: -0.20926271","x: 0.39775303<br />y2:  0.55232733","x: 0.86906978<br />y2:  0.20861251","x: 0.10073108<br />y2:  2.67847823","x: 0.62916970<br />y2:  0.82194677","x: 0.28925832<br />y2: -0.18272373","x: 0.80744955<br />y2: -1.58423372","x: 0.77414932<br />y2: -0.59222651","x: 0.65343487<br />y2: -1.53723564","x: 0.21606113<br />y2:  0.30174099","x: 0.90895409<br />y2:  0.51321753","x: 0.56756847<br />y2: -1.03227224","x: 0.12624920<br />y2:  1.72150468","x: 0.18043564<br />y2:  0.75394429","x: 0.76465902<br />y2: -1.66156453","x: 0.73649462<br />y2: -1.06753856","x: 0.94521890<br />y2: -0.60383747","x: 0.69932550<br />y2:  1.15827296","x: 0.07324416<br />y2:  0.79284639","x: 0.99587715<br />y2:  1.88412689","x: 0.33359388<br />y2: -0.91152788","x: 0.04318624<br />y2:  2.55103721","x: 0.00974904<br />y2:  3.67277608","x: 0.25933844<br />y2:  0.06590414","x: 0.95904541<br />y2:  1.65278950","x: 0.44972344<br />y2: -0.51584295","x: 0.38844147<br />y2:  0.23460346","x: 0.80908322<br />y2:  0.19669741","x: 0.15550786<br />y2:  0.34828397","x: 0.50748538<br />y2: -1.94808537","x: 0.89891824<br />y2:  1.00062106","x: 0.01900541<br />y2:  2.98962276","x: 0.24489164<br />y2:  0.70398095","x: 0.90810005<br />y2:  0.98043698","x: 0.99013276<br />y2:  1.82696862","x: 0.81090411<br />y2: -0.93663631","x: 0.86970380<br />y2: -0.12650251","x: 0.69555790<br />y2: -1.66501109","x: 0.74805372<br />y2:  1.70242865","x: 0.57692618<br />y2:  0.88598265","x: 0.34559659<br />y2: -1.68003281","x: 0.48045308<br />y2: -0.38058991","x: 0.41951869<br />y2: -0.18620624","x: 0.11212228<br />y2:  0.55297946","x: 0.04190147<br />y2:  3.20540640","x: 0.50685556<br />y2: -0.32135220","x: 0.07292117<br />y2: -0.13293241","x: 0.21527499<br />y2:  0.49328252","x: 0.88869193<br />y2:  1.71394702","x: 0.84491736<br />y2:  0.59925374","x: 0.02865371<br />y2:  2.46139615","x: 0.34021207<br />y2:  0.71876125","x: 0.34344497<br />y2: -1.90828155","x: 0.50875167<br />y2:  0.73116514","x: 0.35594833<br />y2:  2.39177379","x: 0.35879115<br />y2:  1.00867388","x: 0.79824855<br />y2:  1.19048949","x: 0.84494530<br />y2:  2.01412992","x: 0.35384008<br />y2: -0.63928913","x: 0.35625156<br />y2:  0.80525371","x: 0.50059297<br />y2: -0.16881119","x: 0.62731117<br />y2:  0.06204013","x: 0.26275978<br />y2: -1.28155225","x: 0.57335682<br />y2: -1.37479065","x: 0.94777042<br />y2:  1.04143375","x: 0.27501362<br />y2:  0.75275377","x: 0.51532026<br />y2: -1.06172635","x: 0.53718124<br />y2:  0.14086104","x: 0.92446852<br />y2:  1.35438046","x: 0.03691423<br />y2:  0.80663719","x: 0.21975736<br />y2: -0.32643959"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.00974904000759125,0.0222316743228349,0.0347143086380785,0.0471969429533221,0.0596795772685658,0.0721622115838094,0.084644845899053,0.0971274802142966,0.10961011452954,0.122092748844784,0.134575383160028,0.147058017475271,0.159540651790515,0.172023286105758,0.184505920421002,0.196988554736246,0.209471189051489,0.221953823366733,0.234436457681977,0.24691909199722,0.259401726312464,0.271884360627707,0.284366994942951,0.296849629258195,0.309332263573438,0.321814897888682,0.334297532203926,0.346780166519169,0.359262800834413,0.371745435149656,0.3842280694649,0.396710703780144,0.409193338095387,0.421675972410631,0.434158606725875,0.446641241041118,0.459123875356362,0.471606509671605,0.484089143986849,0.496571778302093,0.509054412617336,0.52153704693258,0.534019681247824,0.546502315563067,0.558984949878311,0.571467584193554,0.583950218508798,0.596432852824042,0.608915487139285,0.621398121454529,0.633880755769773,0.646363390085016,0.65884602440026,0.671328658715504,0.683811293030747,0.696293927345991,0.708776561661234,0.721259195976478,0.733741830291722,0.746224464606965,0.758707098922209,0.771189733237453,0.783672367552696,0.79615500186794,0.808637636183183,0.821120270498427,0.833602904813671,0.846085539128914,0.858568173444158,0.871050807759402,0.883533442074645,0.896016076389889,0.908498710705132,0.920981345020376,0.93346397933562,0.945946613650863,0.958429247966107,0.970911882281351,0.983394516596594,0.995877150911838],"y":[3.32516307549023,2.89916321100754,2.48143221896066,2.0900484026084,1.73780382460723,1.3426153226957,1.06721236343065,1.03260122576168,1.06919812830375,1.11646073612589,1.26978397772402,1.37409461244238,1.29456165746949,1.09790360102576,0.845951268176487,0.587241677653628,0.370311848189151,0.230418041237035,0.124631165311566,0.0373035894851227,-0.0447177580175125,-0.12327417776281,-0.194286446626946,-0.252321920960069,-0.29088875827227,-0.312107335613285,-0.318837501433724,-0.302917301886702,-0.273244609532192,-0.210624093574496,-0.159313108709536,-0.236390800806188,-0.444221172510867,-0.553130672036004,-0.515166789548626,-0.412401986934635,-0.291085056322316,-0.19746478983996,-0.177789979615852,-0.281379869137628,-0.3981195164043,-0.563041762818152,-0.627607138829166,-0.588829975612286,-0.507570520187037,-0.437670349653518,-0.406224364402081,-0.385528674985931,-0.367591441043191,-0.345037805874603,-0.308978133980796,-0.271848525170363,-0.230343528153256,-0.183838295938794,-0.131712044618654,-0.0731712737348317,0.0341121581632795,0.173257906890955,0.272746506494867,0.275583914249291,0.226260516433012,0.180466788763768,0.0671014310337739,-0.0164173010697012,0.0154000503335061,0.0575604597988807,0.150885676483392,0.264726734158567,0.41393027208806,0.56065353729509,0.615666210334291,0.602942704434923,0.624776922736464,0.666261568884074,0.775482685412944,0.922803951616293,1.10281107086406,1.31847977626156,1.57164918327127,1.8641118364937],"text":["x: 0.00974904<br />y2:  3.32516308","x: 0.02223167<br />y2:  2.89916321","x: 0.03471431<br />y2:  2.48143222","x: 0.04719694<br />y2:  2.09004840","x: 0.05967958<br />y2:  1.73780382","x: 0.07216221<br />y2:  1.34261532","x: 0.08464485<br />y2:  1.06721236","x: 0.09712748<br />y2:  1.03260123","x: 0.10961011<br />y2:  1.06919813","x: 0.12209275<br />y2:  1.11646074","x: 0.13457538<br />y2:  1.26978398","x: 0.14705802<br />y2:  1.37409461","x: 0.15954065<br />y2:  1.29456166","x: 0.17202329<br />y2:  1.09790360","x: 0.18450592<br />y2:  0.84595127","x: 0.19698855<br />y2:  0.58724168","x: 0.20947119<br />y2:  0.37031185","x: 0.22195382<br />y2:  0.23041804","x: 0.23443646<br />y2:  0.12463117","x: 0.24691909<br />y2:  0.03730359","x: 0.25940173<br />y2: -0.04471776","x: 0.27188436<br />y2: -0.12327418","x: 0.28436699<br />y2: -0.19428645","x: 0.29684963<br />y2: -0.25232192","x: 0.30933226<br />y2: -0.29088876","x: 0.32181490<br />y2: -0.31210734","x: 0.33429753<br />y2: -0.31883750","x: 0.34678017<br />y2: -0.30291730","x: 0.35926280<br />y2: -0.27324461","x: 0.37174544<br />y2: -0.21062409","x: 0.38422807<br />y2: -0.15931311","x: 0.39671070<br />y2: -0.23639080","x: 0.40919334<br />y2: -0.44422117","x: 0.42167597<br />y2: -0.55313067","x: 0.43415861<br />y2: -0.51516679","x: 0.44664124<br />y2: -0.41240199","x: 0.45912388<br />y2: -0.29108506","x: 0.47160651<br />y2: -0.19746479","x: 0.48408914<br />y2: -0.17778998","x: 0.49657178<br />y2: -0.28137987","x: 0.50905441<br />y2: -0.39811952","x: 0.52153705<br />y2: -0.56304176","x: 0.53401968<br />y2: -0.62760714","x: 0.54650232<br />y2: -0.58882998","x: 0.55898495<br />y2: -0.50757052","x: 0.57146758<br />y2: -0.43767035","x: 0.58395022<br />y2: -0.40622436","x: 0.59643285<br />y2: -0.38552867","x: 0.60891549<br />y2: -0.36759144","x: 0.62139812<br />y2: -0.34503781","x: 0.63388076<br />y2: -0.30897813","x: 0.64636339<br />y2: -0.27184853","x: 0.65884602<br />y2: -0.23034353","x: 0.67132866<br />y2: -0.18383830","x: 0.68381129<br />y2: -0.13171204","x: 0.69629393<br />y2: -0.07317127","x: 0.70877656<br />y2:  0.03411216","x: 0.72125920<br />y2:  0.17325791","x: 0.73374183<br />y2:  0.27274651","x: 0.74622446<br />y2:  0.27558391","x: 0.75870710<br />y2:  0.22626052","x: 0.77118973<br />y2:  0.18046679","x: 0.78367237<br />y2:  0.06710143","x: 0.79615500<br />y2: -0.01641730","x: 0.80863764<br />y2:  0.01540005","x: 0.82112027<br />y2:  0.05756046","x: 0.83360290<br />y2:  0.15088568","x: 0.84608554<br />y2:  0.26472673","x: 0.85856817<br />y2:  0.41393027","x: 0.87105081<br />y2:  0.56065354","x: 0.88353344<br />y2:  0.61566621","x: 0.89601608<br />y2:  0.60294270","x: 0.90849871<br />y2:  0.62477692","x: 0.92098135<br />y2:  0.66626157","x: 0.93346398<br />y2:  0.77548269","x: 0.94594661<br />y2:  0.92280395","x: 0.95842925<br />y2:  1.10281107","x: 0.97091188<br />y2:  1.31847978","x: 0.98339452<br />y2:  1.57164918","x: 0.99587715<br />y2:  1.86411184"],"type":"scatter","mode":"lines","name":"fitted values","line":{"width":3.77952755905512,"color":"rgba(51,102,255,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":24.8714938030007,"r":7.30593607305936,"b":38.825831702544,"l":37.2602739726027},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.0395573655376211,1.04518355645705],"tickmode":"array","ticktext":["0.00","0.25","0.50","0.75","1.00"],"tickvals":[0,0.25,0.5,0.75,1],"categoryorder":"array","categoryarray":["0.00","0.25","0.50","0.75","1.00"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"x","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-2.62627243321108,3.97273077295367],"tickmode":"array","ticktext":["-2","0","2"],"tickvals":[-2,0,2],"categoryorder":"array","categoryarray":["-2","0","2"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"y2","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"12ae94c9dde1c":{"x":{},"y":{},"type":"scatter"},"12ae910612790":{"x":{},"y":{}}},"cur_data":"12ae94c9dde1c","visdat":{"12ae94c9dde1c":["function (y) ","x"],"12ae910612790":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+
+
+---
+
+# Themes: Add some style to your plot
+
+.left-code[
+
+```r
+p &lt;- ggplot(mtcars) +
+  geom_point(aes(x = wt, 
+                 y = mpg, 
+                 colour = factor(gear))) +
+  facet_wrap(~am)
+p
+```
+]
+
+.right-plot[
+&lt;img src="lecture-4b-slides_files/figure-html/mtcars-out-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Theme: theme_minimal
+
+.left-code[
+
+```r
+p + 
+  theme_minimal()
+```
+]
+
+.right-plot[
+&lt;img src="lecture-4b-slides_files/figure-html/mtcars-minimal-out-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+---
+
+# Theme: ggthemes `theme_few()`
+
+.left-code[
+
+```r
+p + 
+  theme_few() + 
+  scale_colour_few()
+```
+]
+
+.right-plot[
+&lt;img src="lecture-4b-slides_files/figure-html/mtcars-theme-few-out-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+---
+
+# Theme: ggthemes `theme_excel()` 🤒
+
+.left-code[
+
+```r
+p + 
+  theme_excel() + 
+  scale_colour_excel()
+```
+]
+
+.right-plot[
+&lt;img src="lecture-4b-slides_files/figure-html/mtcars-theme-excel-out-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+---
+
+# Theme: for fun
+
+.left-code[
+
+```r
+library(wesanderson)
+p + 
+  scale_colour_manual(
+    values = wes_palette("Royal1")
+    )
+```
+]
+
+.right-plot[
+&lt;img src="lecture-4b-slides_files/figure-html/theme-wes-out-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+class: bg-main1
+
+# Summary: themes
+
+.huge[
+- The `ggthemes` package has many different styles for the plots. 
+- Other packages such as `xkcd`, `skittles`, `wesanderson`, `beyonce`, `ochre`, ....
+]
 
 ---
 
@@ -469,13 +630,13 @@ ggplot(df, aes(x = x, y = y2)) + geom_point() +
 - lab quiz open (requires answering questions from Lab exercise)
 - go to rstudio.cloud and check out exercise 4-B
 - If you want to use R / Rstudio on your laptop:
-  - Install R + Rstudio (see Ed posting)
+  - Install R + Rstudio (see )
   - open R
   - type the following:
   ```r
   # install.packages("usethis")
   library(usethis)
-  use_course("bit.ly/etc1010-ex-4b")
+  use_course("dmac.netlify.com/lectures/lecture4b/exercise/exercise-4b.zip")
   ```
 ]
 
@@ -544,28 +705,6 @@ ggplot(df, aes(x = x, y = y)) + geom_point() + theme(aspect.ratio = 1)
 
 &lt;img src="lecture-4b-slides_files/figure-html/coord-system-4.png" width="100%" style="display: block; margin: auto;" /&gt;
 
-
-
-# Themes: Add some style to your plot
-
-
-# Theme: theme_minimal
-
-
-# Theme: 
-
-
-
-The `ggthemes` package has many different styles for the plots. Other packages such as `xkcd`, `skittles`, `wes anderson`, `beyonce`, `ochre`, ....
-
-
-```r
-library(xkcd)
-ggplot(df, aes(x = x, y = y)) +
-  geom_point() +
-  theme_xkcd() +
-  xkcdaxis(c(0, 1), c(0, 1))
-```
 
 ## Adding interactivity to plots
 
