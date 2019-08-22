@@ -70,7 +70,7 @@ We have a limited amount of laptops available for students to borrow (during sem
      - Wednesday reading: [Chapter 13: Relational Data](http://r4ds.had.co.nz/relational-data.html)
      - Wednesday Slides:  [HTML](lectures/lecture4a/lecture-4a-slides.html); [RMD](lectures/lecture4a/lecture-4a-slides.Rmd)
      - Friday Reading: [Chapter 1 of Data Visualisation: A Practical Introduction](http://socviz.co/lookatdata.html#lookatdata)
-     - Friday Slides: 
+     - Friday Slides: [HTML](lectures/lecture4b/lecture-4b-slides.html); [RMD](lectures/lecture4b/lecture-4b-slides.Rmd)
      
 - Week 5: Handling missing values and scraping data  
      - Wednesday reading: [Getting Started with Missing values](http://naniar.njtierney.com/articles/getting-started-w-naniar.html), [Exploring Imputed Values](http://naniar.njtierney.com/articles/exploring-imputed-values.html) [Gallery of Missing Data Visualisations](http://naniar.njtierney.com/articles/naniar-visualisation.html)

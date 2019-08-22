@@ -80,7 +80,7 @@ Draw a mental model / concept map of last weeks lecture content on joins.
 # Upcoming Due Dates
 
 .vhuge[
-- Assignment 2: Thursday September
+- Assignment 2: Thursday 5th September, 5pm
 - Stay tuned on ED for the upcoming dates
 ]
 
@@ -216,7 +216,7 @@ tb_map <- left_join(world_map, tb_rel, by = c("region" = "country"))
 ```
 
 ---
-
+class: bg-main1
 # Example: Sequential colour with default palette
 
 ```{r map-default, out.width = "80%", fig.height = 4, fig.width = 8}
@@ -225,6 +225,7 @@ ggplot(tb_map) + geom_polygon(aes(x = long, y = lat, group = group, fill = reldi
 ```  
 
 ---
+class: bg-main1
 
 # Example: (improved) sequential colour with default palette
 
@@ -236,6 +237,7 @@ ggplot(tb_map) +
 ```
 
 ---
+class: bg-main1
 
 # Example:  Diverging colour with better palette
 
@@ -366,7 +368,7 @@ class: bg-main1
 
 
 .vhuge[
-Which answers which question?
+Which plot answers which question?
 
 - "Is the incidence similar for males and females in 2012 across age groups?"
 - "Is the incidence similar for age groups in 2012, across gender?" 
@@ -527,23 +529,59 @@ ggplot(df, aes(x = x, y = y2)) + geom_point() +
 ```
 
 ---
-class: bg-main1
 
-# Coordinate systems
+# Hierarchy of mappings
 
-- *Cartesian, polar:* most plots are made in Cartesian coordinates. Just a few are in polar coordinates, primarily the pie chart. Polar coordinates use radius and angle to describe position in 2D space. Occasionally measurements like wind (direction and speed) make sense to be plotted in polar coordinates.
-- *fixed, equal:* When variables are made on scales that should be comparable, it may be important to reflect this in the axes limits and page space that the plot takes. (This is different from `theme(aspect.ratio=1)` which sets the physical size of the plot to be the same, or in some ratio.)
-- *map:* Maps come in conventional formats, most often with a specific aspect ratio of vertical to horizontal axes, that depends on latitude. 
-- *flip:* Useful for generating a plot with a categorical variable on the x axis and then flipping it sideways to look at.
+.vlarge[
+1. Position - common scale (BEST): axis system
+2. Position - nonaligned scale: boxes in a side-by-side boxplot
+3. Length, direction, angle: pie charts, regression lines, wind maps
+4. Area: bubble charts
+5. Volume, curvature: 3D plots
+6. Shading, color (WORST): maps, points coloured by numeric variable
 
-```{r coord-system}
-df <- tibble(x = runif(100), y = runif(100) * 10)
-ggplot(df, aes(x = x, y = y)) + geom_point() + coord_fixed()
-ggplot(df, aes(x = x, y = y)) + geom_point() + coord_equal()
-ggplot(df, aes(x = x, y = y)) + geom_point() + coord_fixed(ratio = 0.2)
-ggplot(df, aes(x = x, y = y)) + geom_point() + theme(aspect.ratio = 1)
-```
+- [Di's crowd-sourcing expt](http://visiphilia.org/2016/08/03/CM-hierarchy)
+- Nice explanation by [Peter Aldous](http://paldhous.github.io/ucb/2016/dataviz/week2.html)
+- [General plotting advice and a book from Naomi Robbins](https://www.forbes.com/sites/naomirobbins/#2b1e20082a6a)
+]
 
+---
+
+# Your Turn:
+
+.huge[
+- lab quiz open (requires answering questions from Lab exercise)
+- go to rstudio.cloud and check out exercise 4-B
+- If you want to use R / Rstudio on your laptop:
+  - Install R + Rstudio (see Ed posting)
+  - open R
+  - type the following:
+  ```r
+  # install.packages("usethis")
+  library(usethis)
+  use_course("bit.ly/etc1010-ex-4b")
+  ```
+]
+
+
+---
+
+# Resources
+
+.huge[
+- Kieran Healy [Data Visualization](http://socviz.co/index.html)
+- Winston Chang (2012) [Cookbook for R](graphics cookbook)
+- Antony Unwin (2014) [Graphical Data Analysis](http://www.gradaanwr.net)
+- Naomi Robbins (2013) [Creating More Effective Charts](http://www.nbr-graphs.com)
+]
+
+---
+
+# Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+
+???
 
 ## Variable types and mapping
 
@@ -574,34 +612,29 @@ vartype <- hux(
 vartype
 ```
 
----
 
-# Hierarchy of mappings
+# Coordinate systems
 
-.vlarge[
-1. Position - common scale (BEST): axis system
-2. Position - nonaligned scale: boxes in a side-by-side boxplot
-3. Length, direction, angle: pie charts, regression lines, wind maps
-4. Area: bubble charts
-5. Volume, curvature: 3D plots
-6. Shading, color (WORST): maps, points coloured by numeric variable
+- *Cartesian, polar:* most plots are made in Cartesian coordinates. Just a few are in polar coordinates, primarily the pie chart. Polar coordinates use radius and angle to describe position in 2D space. Occasionally measurements like wind (direction and speed) make sense to be plotted in polar coordinates.
+- *fixed, equal:* When variables are made on scales that should be comparable, it may be important to reflect this in the axes limits and page space that the plot takes. (This is different from `theme(aspect.ratio=1)` which sets the physical size of the plot to be the same, or in some ratio.)
+- *map:* Maps come in conventional formats, most often with a specific aspect ratio of vertical to horizontal axes, that depends on latitude. 
+- *flip:* Useful for generating a plot with a categorical variable on the x axis and then flipping it sideways to look at.
 
-- [Di's crowd-sourcing expt](http://visiphilia.org/2016/08/03/CM-hierarchy)
-- Nice explanation by [Peter Aldous](http://paldhous.github.io/ucb/2016/dataviz/week2.html)
-- [General plotting advice and a book from Naomi Robbins](https://www.forbes.com/sites/naomirobbins/#2b1e20082a6a)
-]
+```{r coord-system}
+df <- tibble(x = runif(100), y = runif(100) * 10)
+ggplot(df, aes(x = x, y = y)) + geom_point() + coord_fixed()
+ggplot(df, aes(x = x, y = y)) + geom_point() + coord_equal()
+ggplot(df, aes(x = x, y = y)) + geom_point() + coord_fixed(ratio = 0.2)
+ggplot(df, aes(x = x, y = y)) + geom_point() + theme(aspect.ratio = 1)
+```
 
----
+
 
 # Themes: Add some style to your plot
 
----
-class: bg-main1
 
 # Theme: theme_minimal
 
----
-class: bg-main1
 
 # Theme: 
 
@@ -618,8 +651,6 @@ ggplot(df, aes(x = x, y = y)) +
   theme_xkcd() +
   xkcdaxis(c(0, 1), c(0, 1))
 ```
-
----
 
 ## Adding interactivity to plots
 
@@ -667,40 +698,3 @@ launchApp(
   other = c("NotOwned", "Indigenous", "Population")
 )
 ```
-
----
-
-# Your Turn:
-
-.huge[
-- lab quiz open (requires answering questions from Lab exercise)
-- go to rstudio.cloud and check out exercise 4-B
-- If you want to use R / Rstudio on your laptop:
-  - Install R + Rstudio (see Ed posting)
-  - open R
-  - type the following:
-  ```r
-  # install.packages("usethis")
-  library(usethis)
-  use_course()
-  ```
-]
-
-
----
-
-## Resources
-
-.huge[
-- Kieran Healy [Data Visualization](http://socviz.co/index.html)
-- Winston Chang (2012) [Cookbook for R](graphics cookbook)
-- Antony Unwin (2014) [Graphical Data Analysis](http://www.gradaanwr.net)
-- Naomi Robbins (2013) [Creating More Effective Charts](http://www.nbr-graphs.com)
-- more...
-]
-
----
-
-## Share and share alike
-
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.

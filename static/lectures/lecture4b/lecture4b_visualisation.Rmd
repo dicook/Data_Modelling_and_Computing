@@ -301,7 +301,7 @@ Nice explanation by [Peter Aldous](http://paldhous.github.io/ucb/2016/dataviz/we
 
 The `ggthemes` package has many different styles for the plots. Other packages such as `xkcd`, `skittles`, `wes anderson`, `beyonce`, `ochre`, ....
 
-```{r}
+```{r eval = FALSE}
 library(xkcd)
 ggplot(df, aes(x=x, y=y)) + 
   geom_point() + 

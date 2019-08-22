@@ -1,0 +1,158 @@
+---
+title: "Lab exercise: Exploring Women's AFL"
+author: "YOUR NAME"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+```
+
+# Read in the data
+
+We are looking at data for Women's AFL.
+
+There are two tables:
+
+- players.csv
+- teams.csv 
+
+The data was sourced from this website: https://github.com/ropenscilabs/ozwomensport/tree/master/AFLW/data
+
+Read them into R:
+
+```{r read-data}
+# to clean up the names of the data
+library(janitor)
+# clean_names is this nice function that makes nice variable names
+# so you don't have to refer to vars like `with spaces` --> with_spaces.
+players <- read_csv("data/players.csv") %>% clean_names() 
+teams <- read_csv("data/teams.csv") %>% clean_names()
+```
+
+# Have a look at the data with `View()` or `glimpse()`.
+
+```{r glimpse}
+glimpse(teams)
+glimpse(players)
+```
+
+
+# Using the teams dataset, make a barchart of the **total kicks** by **club**.  What do you learn?
+
+```{r barchart-total-kicks}
+ggplot(teams,
+       aes(x = ___,
+           y = ___)) + 
+  geom_col()
+```
+
+# Take that same barplot and reorder the club by `kicks_tot`, what changes?
+
+```{r barchart-total-kicks-reorder}
+ggplot(___,
+       aes(x = reorder(club, kicks_tot),
+           y = ___)) + 
+  geom_col()
+```
+
+
+## Now, make the plot again, but sort from highest to lowest, and flip the plot with `coord_flip()`. How did this help make it easier to see what was going on?
+
+
+```{r barchart-total-kicks-flip}
+ggplot(___,
+       aes(x = reorder(___, ___),
+           y = ___)) + 
+  geom_col() + 
+  coord_flip()
+```
+
+# To compare teams, should you use average or total numbers? Explain your thinking.
+
+> ...
+
+# Make a scatterplot of average kicks by average handballs. Use an aspect ratio of 1. What do you learn?
+
+```{r gg-kicks-handballs}
+ggplot(___,
+       aes(___,
+           ___)) + 
+  geom_point() + 
+  theme(aspect.ratio = 1)
+```
+
+##  Use the `plotly` package to make the plot interactive (with the `ggplotly` function). Report the name of the team(s) that has(ve) the highest on both variables.
+
+```{r plotly}
+library(plotly)
+ggplot(___,
+       aes(___,
+           ___,
+           # this label option gets passed to ggplotly
+           label = club)) + 
+  geom_point() + 
+  theme(aspect.ratio = 1)
+
+# ggplotly uses some programming magic and uses the last ggplot object you made
+# to make it interactive.
+ggplotly()
+```
+
+
+# Make a scatterplot of average frees for (frees_for_avg) by against (frees_agst_avg), for each season. Use an aspect ratio of 1. What do you learn? 
+
+```{r gg-avg-frees}
+ggplot(___,
+       aes(x = ___,
+           y = ___)) + 
+  geom_point() +
+  theme(aspect.ratio = 1)
+```
+
+
+## Make the plot interactive and report the name of the team that has the most frees against and fewest for.
+
+```{r gg-team-frees-for-against}
+# use the similar ggplotly code from before
+ggplot(___,
+       aes(___,
+           ___,
+           text = club)) + 
+  geom_point() + 
+  theme(aspect.ratio = 1)
+
+ggplotly()
+```
+
+
+# Using the players data, make a side-by-side boxplot of the average kicks by team. What do you learn? 
+
+```{r gg-players-club-avg-kicks}
+ggplot(___) + 
+  geom_boxplot()
+```
+
+# Which team had the player with the highest average kicks? Do some teams appear to have "star" players, and others have more even skills in this area?
+
+# Using the players data, make a scatterplot of average kicks against handballs, for each season. Overlay a linear model. 
+
+```{r gg-players}
+ggplot(___) + 
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+## Add interaction with plotly. Which players are more likely to kick vs hand ball? Also handball rather than kick?
+
+```{r gg-players-kicks-handballs}
+ggplot(___,
+       aes(___,
+           ___,
+           label = player)) + 
+  geom_point() +
+  geom_smooth(method = "lm")
+
+ggplotly()
+```
+
