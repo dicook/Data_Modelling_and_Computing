@@ -1,0 +1,64 @@
+---
+title: "ETC1010 Project"
+author: "Nicholas Tierney"
+date: "26/08/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(kableExtra)
+```
+
+The project is designed to give you experience collecting or finding your own dataset, determining the
+appropriate questions to answer about the data, and planning how to execute analysis of the data.  The project involves several parts. The project represents 10\% of your final grade for ETC1010.
+
+1. Locate a suitable data source and determine appropriate questions that could be answered using this data. It cannot be data set from kaggle. It needs to be from an original source. If it is is csv format, there need to be more than one file or multiple sheets. Challenge yourself to work with data addressing a problem in today's world.
+
+2. Cleaning of your data, in order to answer your questions. This is the important part to illustrate in your project, because we are expecting you to be able to demonstrate your ability to take a messy data set and organise it for later analysis.
+
+3. Simple analysis using methods covered in class; exploratory data analysis, numerical and visual summaries of the data, and the application of basic modeling strategies. The focus is on trying to answer some of the questions you posed. You are not expected to answer all, if you have a long lots of questions. 
+
+4. Describe your cleaning procedures and analytics in web story board, which can be done using any of these R packages:  `flexdashboard`, or a simple `shiny` app. You  should include why you chose the data and what learned about the problem by completing this project. We will upload these to the departmental shiny server for everyone to see, and so that you can show it off to future employers or your family members.
+
+5.  Present your data analysis in class,  10 minute oral presentation.
+
+This project will be conducted collaboratively, with team of your choices, and with  **a maximum team size of 4** To ensure correct marks are awarded, please carefully document, in detail, your individual contributions to the project. Each team member is expected to participate substantially in all aspects of the work, including the writing and oral presentation. The important deadlines are as follows: 
+
+```{r create-deadline-table, echo = FALSE}
+due_date <- c("Week 6 - end of class on Friday (6th September)",
+              "Week 7 - end of class on Friday (13th September)", 
+              "Week 9 - end of class on Friday (27th September)", 
+              "Week 11 - end of class on Friday (11th October)", 
+              "Week 12 - Wednesday and Friday (16th and 18th October)")
+
+turn_in <- c("Prospective team members and topics",
+             "Team members and team name, and paragraph de- scribing possible data sets, with links to the data sources.",
+             "Electronic copy of your data, and a page of data de- scription, and cleaning done, or needing to be done.",
+             "Final version of story board uploaded",
+             "Project presentations during class periods. All stu- dents are expected to attend, and points will be de- ducted for non-attendance.")
+
+points <- c(5,
+            5,
+            10,
+            40,
+            "30 (peer evaluation) 5 points will be deducted from your presenta- tion score if you do not attend for the entire class, and 5 points if you skip the class where you did not present.")
+
+library(tibble)
+df_project <- tibble(`Due date` = due_date,
+                     `Turn in` = turn_in,
+                     `Points` = points)
+
+```
+
+```{r display-table, echo = FALSE}
+kable(df_project) %>%
+  kable_styling(full_width = FALSE) %>%
+  column_spec(1, width = "15em", bold = T, border_right = T) %>%
+  column_spec(2, width = "20em") %>%
+  column_spec(3, width = "20em")
+```
+
+
+## No late turn-ins accepted
