@@ -78,10 +78,10 @@ We have a limited amount of laptops available for students to borrow (during sem
      - Friday Reading: [rvest R package for web scraping README](https://rvest.tidyverse.org/index.html) [rvest description of selectorGadget](https://rvest.tidyverse.org/articles/selectorgadget.html)
      - Friday Slides:
      
-- Week 6: Introduction to modeling, and building many models
-     - Wednesday reading:
+- Week 6: Introduction to modeling, and programming
+     - Wednesday reading: [Intro to Modelling](https://r4ds.had.co.nz/model-intro.html); [Modelling Basics](https://r4ds.had.co.nz/model-basics.html)
      - Wednesday Slides:
-     - Friday Reading:
+     - Friday Reading: [Introduction to programming](https://r4ds.had.co.nz/program-intro.html); [Pipes (`%>%`)](https://r4ds.had.co.nz/pipes.html); [Functions](https://r4ds.had.co.nz/functions.html)
      - Friday Slides:
      
 - Week 7: Intermediate models 
