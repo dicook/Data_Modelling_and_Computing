@@ -1,0 +1,108 @@
+---
+title: "Visualising missing values"
+---
+
+```{r setup}
+library(naniar)
+```
+
+## Your first missing data visualisations
+
+It can be difficult to get a handle on where the missing values are in your data, and here is where visualisation can really help.
+
+The function `vis_miss()` creates an overview visualisation of the missingness in the data. It also has options to cluster rows based on missingness, using `cluster = TRUE`; as well as options for sorting the columns, from most missing to least missing (`sort_miss = TRUE`).
+
+# Task
+
+Using the `riskfactors` dataset from `naniar`:
+
+- Use `vis_miss()` to visualise the missingness in the data.
+- Use `vis_miss()` with `cluster = TRUE` to explore some clusters of missingness.
+- Use `vis_miss()` and sort the missings with `sort_miss` to arrange the columns by missingness.
+
+## Hint
+Use the options `cluster = TRUE` and `sort_miss = TRUE` inside of `vis_miss` to cluster and sort missing values
+
+```{r}
+# Visualise all of the missingness in the `riskfactors`  dataset
+vis_miss(___)
+
+# Visualise and cluster all of the missingness in the `riskfactors` dataset
+vis_miss(___, ___ = TRUE)
+
+# visualise and sort the columns by missingness in the `riskfactors` dataset
+vis_miss(___, ___ = TRUE)
+```
+
+# Visualising missing cases and variables
+
+To get a clear picture of the missingness across variables and cases, use `gg_miss_var()` and `gg_miss_case()`. These are the visual counterpart to `miss_var_summary()` and `miss_case_summary()`.
+
+These can be split up into multiple plots with one for each category by choosing a variable to facet by.
+
+## Task
+Using the `riskfactors` dataset:
+
+- Visualise the number of missings in cases using `gg_miss_case()`.
+- Explore the number of missings in cases using `gg_miss_case()` and facet by the variable `education`.
+- Visualise the number of missings in variables using `gg_miss_var()`.
+- Explore the number of missings in variables using `gg_miss_var()` and facet by the variable `education`.
+
+What do you notice in the visualisations of the whole data compared to the faceting?
+
+### Hint
+
+Use `gg_miss_case(riskfactors)` to get started, and `gg_miss_case(riskfactors, facet = education)` to facet by education.
+
+```{r}
+# Visualise the number of missings in cases using `gg_miss_case()`
+gg_miss_case(___)
+
+# Explore the number of missings in cases using `gg_miss_case()` and facet by the variable `education`
+gg_miss_case(___, facet = ___)
+
+# Visualise the number of missings in variables using `gg_miss_var()`
+gg_miss_var(___)
+
+# Explore the number of missings in variables using `gg_miss_var()` and facet by the variable `education`
+___(___, facet = ___)
+```
+
+# Visualising missingness patterns
+
+Let's practice a few different ways to visualise patterns of missingness using:
+
+* `gg_miss_upset()` to give an overall pattern of missingness.
+* `gg_miss_fct()` for a dataset that has a factor of interest: marriage.
+* and `gg_miss_span()` to explore the missingness in a time series dataset.
+
+What do you notice with the missingness and the facetting in the data?
+
+## Task
+
+- Explore missingness pattern of the `airquality` dataset with `gg_miss_upset()`.
+- Explore how the missingness changes in the `riskfactors` dataset across the `marital` variable using `gg_miss_fct()`.
+
+Using the `pedestrian` dataset:
+
+- Explore how the missingness of the `hourly_counts` changes over a span of 3000 (you can also try different spans from 2000-5000).
+- Explore the impact of `month` by facetting by `month`, and explore how missingness changes for a span of 1000.
+
+### Hint
+
+You will use the arguments `var = hourly_counts`, `span_every = 1000`, and `facet = month` inside of the `gg_miss_span()` function.
+
+```{r}
+# Using the airquality dataset, explore the missingness pattern using gg_miss_upset()
+gg_miss_upset(airquality)
+
+# With the riskfactors dataset, explore how the missingness changes across the marital variable using gg_miss_fct()
+gg_miss_fct(x = riskfactors, fct = marital)
+
+# Using the pedestrian dataset, explore how the missingness of hourly_counts changes over a span of 3000 
+gg_miss_span(pedestrian, var = ___, span_every = ___)
+
+# Using the pedestrian dataset, explore the impact of month by facetting by month
+# and explore how missingness changes for a span of 1000
+____(___, var = ___ , span_every = ___, facet = ___)
+```

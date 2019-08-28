@@ -1,0 +1,103 @@
+---
+title: 'Introduction to missing values'
+---
+
+```{r setup}
+library(naniar)
+```
+
+
+# Using and finding missing values
+
+When working with missing data, there are a couple of commands that you should be familiar with - firstly, you should be able to identify if there are **any** missing values, and where these **are**.
+
+Using the `any_na()` and `are_na()` tools, identify which values are missing.
+
+- Create a vector, `x`, which has the values `NA`, `NaN`, `Inf`, `"."`, and `"missing"`.
+- Pass a vector `x` to `any_na()` and `are_na()` to find and explore which ones are missing.
+
+### Hints
+
+* Using `any_na(x)` will return `TRUE` if there are missing values, and `FALSE` if there are none.
+* Using `are_na(x)` will return `TRUE` or `FALSE` for each value in heights - if a value is missing, it will be `TRUE`, else, `FALSE`.
+
+```{r}
+# Create x, a vector, with values NA, NaN, Inf, ".", and "missing"
+x <- c(___, ___, ___, ___, ___)
+
+# Use any_na() and are_na() on to explore the missings
+any_na(___)
+are_na(___)
+```
+
+## How many missing values are there?
+
+One of the first things that you will want to check with a new dataset is if there are any missing missing values, and how many there are.
+
+You could use `are_na()` to and count up the missing values, but **the most efficient way** to count missings is to use the `n_miss()` function. This will tell you the **total number of missing values** in the data.
+
+You can then find the percent of missing values in the data with the `pct_miss` function. This will tell you the **percentage of missing values** in the data.
+
+You can also find the complement to these - how many complete values there are - using `n_complete` and `pct_complete`.
+
+## instructions
+
+Using the example dataframe of heights and weights `dat_hw`:
+
+- Use `n_miss()` on the dataframe `dat_hw` to count the total number of missing values the dataframe.
+- Use `n_miss()` on the variable `dat_hw$weight` to count the total number of missing values it.
+- Similarly, use `prop_miss()`, `n_complete()`, and `prop_complete()` to get the proportion of missings, and the number and proportion of complete values for the dataframe and the variables.
+
+### Hints:
+
+* Use `n_miss()` on data like so: `n_miss(dat_hw)` or `n_miss(dat_hw$weight)`.
+
+```{r setup-new-data}
+# need to make height and weight related to each other.
+dat_hw <- data.frame(weight = rnorm(100, mean = 85, sd = 15),
+                     height = rnorm(100, mean = 1.7, sd = 1))
+
+# add missingness
+dat_hw[sample(x = 1:100, size = 15), 1] <- NA
+dat_hw[sample(x = 1:100, size = 15), 2] <- NA
+```
+
+#### Exercise
+
+```{r exercise-n-miss}
+# Use n_miss() to count the total number of missing values in dat_hw
+n_miss(___)
+
+# Use n_miss() on dat_hw$weight to count the total number of missing values
+n_miss(___$___)
+
+# Use n_complete() on dat_hw to count the total number of complete values
+n_complete(___)
+
+# Use n_complete() on dat_hw$weight to count the total number of complete values
+___(___$___)
+
+# Use prop_miss() and prop_complete() on dat_hw to count the total number of missing values in each of the variables
+prop_miss(____)
+prop_complete(___)
+```
+
+# Working with missing values
+
+R stores missing values as `NA`, which have some special behavior. Now that you can define missing data and understand how R stores missing values, can  you **predict what will happen when we operate with some missing values**?
+
+What is the output of the following four commands in R? Try them out in the code console to test them before you submit your answer.
+
+```r
+1 + NA
+NA + NA
+NA | TRUE
+NA | FALSE
+```
+
+
+Remember that for the most part any calculation using `NA` returns `NA` - this is contrasted with a few cases:
+
+* `NA | TRUE` returns TRUE - this is one of the rare exceptions when working with NA values in R, it is a good one to be aware of.
+* `NA | FALSE` returns FALSE - this is one of the rare exceptions when working with NA values in R, it is a good one to be aware of.
+
