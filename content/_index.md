@@ -102,7 +102,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 - Assignment 1 **Due 5pm, Friday, August 16th**: [Instructions](http://dmac.dicook.org/assignments/assignment-1-2019-s2/instructions.html) [zip](http://dmac.dicook.org/assignments/assignment-1-2019-s2.zip) (Unzip the file and double click on the rstudio project, "assignment-1-2019-s2.Rproj" This contains the data and Rmd file)
 
-- Assignment 2 **Due 5pm, Thursday, September 5th**: [Instructions](assignments/assignment-2-2019-s2/instructions.html) [zip](assignments/assignment-2-2019-s2/assignment-2-2019-s2.zip) (Unzip the file and double click on the rstudio project, "assignment-2-2019-s2.Rproj" This contains the data and Rmd file). **Note that the assignment is also on rstudio.cloud as well under assignment-2-2019-s2**.
+- Assignment 2 **Due 5pm, Monday, September 5th**: [Instructions](assignments/assignment-2-2019-s2/instructions.html) [zip](assignments/assignment-2-2019-s2/assignment-2-2019-s2.zip) (Unzip the file and double click on the rstudio project, "assignment-2-2019-s2.Rproj" This contains the data and Rmd file). **Note that the assignment is also on rstudio.cloud as well under assignment-2-2019-s2**.
 
 ## Assignment 1 peer evaluation
 
