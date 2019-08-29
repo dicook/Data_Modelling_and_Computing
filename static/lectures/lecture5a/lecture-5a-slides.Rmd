@@ -156,7 +156,7 @@ ggplot(
   geom_miss_point()
 ```
 
-???
+???f
 
 So here we can create a graphic where we can see the data that are present are in blue, and the data that are missing are in red. What we see here then is that the data that are missing for air temperature are in red here, but are actually measured only beyond gust speeds of 8 kpmh
 

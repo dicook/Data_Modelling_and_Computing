@@ -91,7 +91,7 @@ While the song is playing...
 ]
 
 .vhuge[
-Draw a mental model / concept map of last lectures content on data visualisation.
+Draw a mental model / concept map of last lectures content on Missing Data.
 ]
 
 
@@ -112,13 +112,28 @@ class: bg-main1
 ]
 
 ---
+class: bg-main1
 
-# Assignment notes
+# Assignment 2 notes
 
 .huge[
 - Some questions might seem a bit strange - this is normal! 
-- Sometimes you can't answer the exact question with the data you have. - It might be frustrating, but **rest assured** that for the question about combining the crime data with income data, there is no "trick" - the data isn't perfect here. 
-- Describe how you think the solution you have provided helps answer the question, show us a plot, and describe what sort of other information you might like to try and have, or what you think we can learn.
+- Sometimes you can't answer the exact question with the data you have.
+- It might be frustrating - that's OK!
+- Steer away from the idea of "correct code" and reframe this as "code thta works". There is no one answer - remember the Tower of Babel example from the start of class, there are many ways to do the same thing in R.
+]
+
+---
+class: bg-main1
+
+# Assignment 2 notes
+
+.huge[
+- For the last two question about combining the crime data with income data, **Rest assured** there is no "trick" - the data isn't perfect here. 
+- Our marking advice: Describe how you think the solution you have provided helps answer the question.
+  - Show us a plot
+  - Explain what you see in the plot - what do you think we can learn from the information we have?
+  - Describe what other information you might like to have
 ]
 
 ---
@@ -129,10 +144,21 @@ class: bg-main5
 --
 
 .huge[
-1. Practice previous exam in exam conditions
-2. Think up exam questions, write them down
-3. Practice explaining concepts - either out aloud by yourself, in the mirror, to a friend, to an empty room. Saying things out aloud builds better connections.
+- Practice previous exam in exam conditions (last semester's exam is on dmac.netlify.com)
 ]
+
+--
+
+.huge[
+- Think up exam questions, write them down
+] 
+
+--
+
+.huge[
+- Practice explaining concepts - either out aloud by yourself, in the mirror, to a friend, to an empty room. Saying things out aloud builds better connections.
+
+] 
 
 ---
 class: bg-main5
@@ -142,14 +168,26 @@ class: bg-main5
 --
 
 .huge[
-1. Peruse the exam before starting
-2. Take off one shoe (If you like - my high school teacher claimed this worked, and I did it.)
-3. Number questions in order from easy-hard - start with the easiest one first
-4. Work out a marks : minutes ratio. (e.g., if there are 60 marks, and 60 minutes, then it's one mark per minute of time spent.)
+- Peruse the exam before starting
+] 
 
+--
+
+.huge[
+- Take off one shoe (My high school teacher claimed this worked)
 ]
 
+--
 
+.huge[
+- Number questions in order from easy-hard - start with the easiest one first
+] 
+
+--
+
+.huge[
+- Work out a marks : minutes ratio. (e.g.,60 marks with 60 minutes means one mark per minute)
+]
 
 ---
 class: bg-main1
@@ -219,8 +257,8 @@ foo_foo_3 <- bop(foo_foo_2, on = head)
 
 - Code is cluttered with unimportant names
 - Suffix has to be carefully incremented on each line.
-- I've done this. 99% of the time I mess a number somewhere and spend the rest
-of the night debugging my code.
+- I've done this! 
+- 99% of the time I miss a number somewhere, and there goes my evening ... debugging my code.
 ]
 
 ---
@@ -483,8 +521,6 @@ countdown(minutes =  1,
           seconds = 30)
 ```
 
-
-
 ---
 class: bg-main1
 
@@ -492,8 +528,9 @@ class: bg-main1
 
 .huge[
 - Data comes in many shapes and sizes
-- A lot of data is available in html tables on web sites. 
-- Extracting the data from these tables is called "web scraping". 
+- Audio data can be transformed ("rectangled") into a data.frame
+- Another type of data is data on the web.
+- Extracting data from websites is called "web scraping". 
 ]
 
 ---
@@ -521,7 +558,7 @@ a structured dataset.
 
 ---
 class: bg-main1
-# Web Scraping with rvest
+# Web Scraping with `rvest` and `polite`
 
 ---
 class: bg-main1
@@ -545,14 +582,14 @@ Most of the data on the web is still largely available as HTML - while it is str
 ---
 class: bg-main1
 
-# rvest: Simplifies processing and manipulating HTML data
+# rvest + polite: Simplify processing and manipulating HTML data
 
 .huge[
-- `read_html` - read HTML data from a url or character string.
-- `html_nodes` - select specified nodes from the HTML document using CSS selectors.
+- `bow()` - check if the data can be scraped appropriately
+- `scrape()` - scrape website data (with nice defaults)
+- `html_nodes()` - select specified nodes from the HTML document using CSS selectors.
 - `html_table` - parse an HTML table into a data frame.
 - `html_text` - extract tag pairs' content.
-- `paths_allowed()` - from `robotstxt`, tells you if you can scrape something, legally.
 
 ]
 
@@ -561,7 +598,7 @@ class: bg-main1
 
 # SelectorGadget: css selectors
 
-.vlarge[
+.large[
 - Using a tool called selector gadget to **help** identify the html elements of interest
 - Does this by constructing a css selector which can be used to subset the html document.
 
@@ -598,7 +635,7 @@ class: bg-main1
 
 ## Top 250 movies on IMDB
 
-.left-code[
+.left-code.huge[
 Take a look at the source code, look for the tag `table` tag:
 <br>
 http://www.imdb.com/chart/top
@@ -618,19 +655,16 @@ class: bg-main1
 ## First check to make sure you're allowed!
 
 ```{r show-robots-text, warning=FALSE}
-# install.packages("robotstxt")
-library(robotstxt)
-paths_allowed("http://www.imdb.com")
+# install.packages("remotes")
+# remotes::install_github("dmi3kno/polite")
+library(polite)
+bow("http://www.imdb.com")
 ```
-
-.huge[
-vs. e.g.
-]
 
 --
 
 ```{r show-paths-allowed, warning=FALSE}
-paths_allowed("http://www.facebook.com")
+bow("http://www.facebook.com")
 ```
 
 ---
@@ -645,50 +679,170 @@ Go to [rstudio.cloud](https://rstudio.cloud/) $\rightarrow$ Lecture 5B $\rightar
 ---
 class: bg-main1
 
-## Select and format pieces: titles
+# Demo
 
-```{r rvest-titles, message=FALSE}
-library(rvest)
+.huge[
+Let's go to http://www.imdb.com/chart/top
+]
 
-page <- read_html("http://www.imdb.com/chart/top")
+---
+class: bg-main1
 
-titles <- page %>%
-  html_nodes(".titleColumn a") %>%
-  html_text()
+# Bow and scrape
 
-titles
+```{r imdb-bow-scrape}
+imdb_session <- bow("http://www.imdb.com/chart/top")
+
+imdb_session 
+
+imdb_data <- scrape(imdb_session)
+
+imdb_data
 ```
 
 
 ---
 class: bg-main1
 
-# Select and format pieces: years
+# Select and format pieces: titles - `html_nodes()`
 
-```{r rvest-years, message=FALSE}
-years <- page %>%
+```{r rvest-titles-nodes, message=FALSE}
+library(rvest)
+imdb_data %>%
+  html_nodes(".titleColumn a")
+```
+
+
+---
+class: bg-main1
+
+# Select and format pieces: titles - `html_text() `
+
+```{r rvest-titles-text, message=FALSE}
+imdb_data %>%
+  html_nodes(".titleColumn a") %>%
+  html_text()
+```
+
+---
+class: bg-main1
+
+# Select and format pieces: save it
+
+```{r rvest-titles-text-save, message=FALSE}
+titles <- imdb_data %>%
+  html_nodes(".titleColumn a") %>%
+  html_text()
+```
+
+---
+class: bg-main1
+
+# Select and format pieces: years - nodes
+
+```{r rvest-year-nodes, message=FALSE}
+imdb_data %>%
+  html_nodes(".secondaryInfo")
+```
+---
+class: bg-main1
+
+# Select and format pieces: years - text
+
+```{r rvest-years-text, message=FALSE}
+imdb_data %>%
+  html_nodes(".secondaryInfo") %>%
+  html_text() 
+```
+
+---
+class: bg-main1
+
+# Select and format pieces: years - remove-brackets
+
+```{r rvest-years-str-years, message=FALSE}
+imdb_data %>%
   html_nodes(".secondaryInfo") %>%
   html_text() %>%
   str_replace("\\(", "") %>% # remove (
   str_replace("\\)", "") %>% # remove )
   as.numeric()
 
-years
 ```
 
 ---
 class: bg-main1
 
-# Select and format pieces: scores
+# Select and format pieces: years - `parse_number()`
 
+```{r rvest-years-str-yearsparse, message=FALSE}
+imdb_data %>%
+  html_nodes(".secondaryInfo") %>%
+  html_text() %>%
+  parse_number()
 
-```{r rvest-scores, message=FALSE}
-scores <- page %>%
-  html_nodes("#main strong") %>%
+```
+
+---
+class: bg-main1
+
+# Select and format pieces: years - remove-brackets
+
+```{r rvest-years-str-remove, message=FALSE}
+years <- imdb_data %>%
+  html_nodes(".secondaryInfo") %>%
+  html_text() %>%
+  str_replace("\\(", "") %>% # remove (
+  str_replace("\\)", "") %>% # remove )
+  as.numeric()
+
+```
+
+---
+class: bg-main1
+
+# Select and format pieces: scores - nodes
+
+```{r rvest-scores-nodes, message=FALSE}
+imdb_data %>%
+  html_nodes(".imdbRating strong")
+  
+```
+---
+class: bg-main1
+
+# Select and format pieces: scores - text
+
+```{r rvest-scores-nodes-text, message=FALSE}
+imdb_data %>%
+  html_nodes(".imdbRating strong") %>%
+  html_text()
+  
+```
+---
+class: bg-main1
+
+# Select and format pieces: scores - as-numeric
+
+```{r rvest-scores-nodes-as-numeric, message=FALSE}
+imdb_data %>%
+  html_nodes(".imdbRating strong") %>%
   html_text() %>%
   as.numeric()
   
-scores
+```
+
+---
+class: bg-main1
+
+# Select and format pieces: scores - save
+
+```{r rvest-scores-nodes-save, message=FALSE}
+scores <- imdb_data %>%
+  html_nodes(".imdbRating strong") %>%
+  html_text() %>%
+  as.numeric()
+  
 ```
 
 ---
@@ -703,12 +857,29 @@ imdb_top_250 <- tibble(title = titles,
 
 imdb_top_250
 ```
-]
+
 
 ---
 
 ```{r print-top-table, echo=FALSE, results='asis'}
 imdb_top_250 %>% head(15) %>% rbind(rep("...", 3)) %>% kable(format = "html")
+```
+
+---
+class: bg-main1
+
+# Aside: Yet another approach - pull the table with `html_table()`
+
+.vlarge[
+- requires notation we haven't used yet (e.g., what is `[[]]`)
+- requires substantial text cleaning
+- If there is time we can cover this at the end of class
+]
+
+```{r extract-table}
+imdb_table <- html_table(imdb_data)
+
+glimpse(imdb_table[[1]])
 ```
 
 ---
@@ -814,7 +985,7 @@ imdb_top_250 %>%
 class: bg-main1
 
 
-```{r visualise-score-year-print}
+```{r visualise-score-year-print, echo = FALSE}
 imdb_top_250 %>% 
   group_by(year) %>%
   summarise(avg_score = mean(score)) %>%
@@ -825,32 +996,51 @@ imdb_top_250 %>%
 ```
 
 ---
-
-# Briefly - other formats - JSON
-
----
 class: bg-main1
 
-# JSON format files
+# Other common formats: JSON
 
 .huge[
 - JavaScript Object Notation (JSON). 
 - A language-independent data format, and supplants extensible markup language (XML). 
-- Example JSON from [jsonlite](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-aaquickstart.html) describing Mario, Peach, and Bowser:
+- Data are sometimes stored as JSON, which requires special unpacking
 ]
 
+---
+class: bg-main1
+
+# Unpacking JSON: Example JSON from [jsonlite](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-aaquickstart.html)
+
+.pull-left[
 ```{r json-example}
 library(jsonlite)
-json_mario <-
-'[
-  {"Name" : "Mario", "Age" : 32, "Occupation" : "Plumber"}, 
-  {"Name" : "Peach", "Age" : 21, "Occupation" : "Princess"},
+json_mario <- '[
+  {
+    "Name": "Mario",
+    "Age": 32,
+    "Occupation": "Plumber"
+  },
+  {
+    "Name": "Peach",
+    "Age": 21,
+    "Occupation": "Princess"
+  },
   {},
-  {"Name" : "Bowser", "Occupation" : "Koopa"}
+  {
+    "Name": "Bowser",
+    "Occupation": "Koopa"
+  }
 ]'
+```
+]
+
+.pull-right[
+```{r example-convert-JSON}
 mydf <- fromJSON(json_mario)
 mydf
 ```
+
+]
 
 ---
 
@@ -860,12 +1050,11 @@ mydf
 - Unreliable formatting at the source
 - Data broken into many pages
 - Data arriving in multiple excel file formats
-- ...
+- ... We will come back to this when we learn about functions next week.
 
 
 > Compare the display of information at [gumtree melbourne](https://www.gumtree.com.au/s-monash/l3001600) to the list on the IMDB top 250 list. What challenges can you foresee in scraping a list of the available apartments?
 ]
-
 
 ---
 
@@ -874,9 +1063,9 @@ mydf
 People write R packages to access online data! Check out:
 
 .huge[
-- [cricinfo by Sayani Gupta and Rob Hyndman]()
-- [rwalkr by Earo Wang]()
-- [fitzRoy by ]()
+- [cricinfo by Sayani Gupta and Rob Hyndman](https://docs.ropensci.org/cricketdata/)
+- [rwalkr by Earo Wang](https://github.com/earowang/rwalkr)
+- [fitzRoy for AFL data](https://github.com/jimmyday12/fitzRoy/)
 - [Top 40 lists of R packages by Joe Rickert](https://rviews.rstudio.com/2019/07/24/june-2019-top-40-r-packages/) - they usually include a "data" section.
 ]
 
