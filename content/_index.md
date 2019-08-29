@@ -25,12 +25,12 @@ Unless your question is a personal issue or an administrative matter, please do 
   
 ## Consultation times
 
-- Nick: Thurs 10:30-11:30 **Menzies E762A (Prof. Di Cook's office until week 4)**
+- Nick: Thurs 10:30-11:30 **Menzies W1105**
 - Steph: Wed 1300 - 1400 **Menzies W1105**
 - Sayani: Wed 1700 - 1800 **Menzies W1105**
 - Sherry: Thurs 1530 - 1630 **Menzies W1105**
 - Mitch: Tues 1230 - 1330 **Menzies W1105**
-- Nick: Fri 12:30-1:30 **Menzies E762A (Prof. Di Cook's office until week 4)**
+- Nick: Fri 12:30-1:30 **Menzies W1105**
 
 ## MoVE
 
@@ -76,7 +76,7 @@ We have a limited amount of laptops available for students to borrow (during sem
      - Wednesday reading: [Getting Started with Missing values](http://naniar.njtierney.com/articles/getting-started-w-naniar.html), [Exploring Imputed Values](http://naniar.njtierney.com/articles/exploring-imputed-values.html) [Gallery of Missing Data Visualisations](http://naniar.njtierney.com/articles/naniar-visualisation.html)
      - Wednesday Slides: [HTML](lectures/lecture5a/lecture-5a-slides.html); [RMD](lectures/lecture5a/lecture-5a-slides.Rmd)
      - Friday Reading: [rvest R package for web scraping README](https://rvest.tidyverse.org/index.html) [rvest description of selectorGadget](https://rvest.tidyverse.org/articles/selectorgadget.html)
-     - Friday Slides:
+     - Friday Slides: [HTML](lectures/lecture5b/lecture-5b-slides.html); [RMD](lectures/lecture5b/lecture-5b-slides.Rmd)
      
 - Week 6: Introduction to modeling, and programming (Also an Exam for the first hour of Wednesday)
      - Wednesday reading: [Intro to Modelling](https://r4ds.had.co.nz/model-intro.html); [Modelling Basics](https://r4ds.had.co.nz/model-basics.html)
