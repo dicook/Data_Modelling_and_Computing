@@ -1,0 +1,887 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+subtitle: "Lecture 5B: Web Scraping"
+author: "Dr. Nicholas Tierney & Professor Di Cook"
+institute: "EBS, Monash U."
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["shinobi", "ninjutsu", "slides.css"]
+    seal: true
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+library(emo)
+library(tidyverse)
+library(countdown)
+library(knitr)
+library(lubridate)
+library(tuneR)
+library(gridExtra)
+library(plotly)
+knitr::opts_chunk$set(
+  fig.width = 8,
+  fig.height = 4.5,
+  fig.retina = 3,
+  fig.align = "center",
+  out.width = "90%",
+  message = FALSE,
+  warning = FALSE,
+  cache = FALSE,
+  autodep = TRUE,
+  hiline = TRUE
+)
+
+knitr::opts_hooks$set(fig.callout = function(options) {
+  if (options$fig.callout) {
+    options$echo <- FALSE
+    options$out.height <- "99%"
+    options$fig.width <- 16
+    options$fig.height <- 8
+  }
+  options
+})
+
+options(
+  htmltools.dir.version = FALSE,
+  width = 90,
+  max.print = 9999,
+  knitr.table.format = "html"
+)
+
+as_table <- function(...) knitr::kable(..., format = "html", digits = 3)
+```
+
+
+```{r read-data, echo = FALSE}
+wav_data <- readWave("data/data3.wav") %>% extractWave(from = 25000, 
+                                                       to = 75000)
+
+df_wav_data <- tibble(
+  t = 1:length(wav_data@left),
+  left = wav_data@left,
+  right = wav_data@right
+)
+
+wav_stats <- readWave("data/statistics1.wav") %>% 
+  extractWave(from = 25000, 
+              to = 75000)
+
+df_wav_stats <- tibble(
+  t = 1:length(wav_stats@left),
+  left = wav_stats@left,
+  right = wav_stats@right
+)
+```
+
+background-image: url(https://www.kdnuggets.com/images/cartoon-turkey-data-science.jpg)
+background-size: contain
+background-position: 50% 50%
+class: left, white
+
+.vvhuge[
+While the song is playing...
+]
+
+.vhuge[
+Draw a mental model / concept map of last lectures content on data visualisation.
+]
+
+
+---
+class: bg-main1
+
+# Overview
+
+.huge[
+- Assignment comments
+- Exam / study advice
+- Different file formats
+    - Audio / binary
+- Web data
+    - responsible scraping
+    - scraping
+    - JSON
+]
+
+---
+
+# Assignment notes
+
+.huge[
+- Some questions might seem a bit strange - this is normal! 
+- Sometimes you can't answer the exact question with the data you have. - It might be frustrating, but **rest assured** that for the question about combining the crime data with income data, there is no "trick" - the data isn't perfect here. 
+- Describe how you think the solution you have provided helps answer the question, show us a plot, and describe what sort of other information you might like to try and have, or what you think we can learn.
+]
+
+---
+class: bg-main5
+
+# Learning technique: study
+
+--
+
+.huge[
+1. Practice previous exam in exam conditions
+2. Think up exam questions, write them down
+3. Practice explaining concepts - either out aloud by yourself, in the mirror, to a friend, to an empty room. Saying things out aloud builds better connections.
+]
+
+---
+class: bg-main5
+
+# Learning technique: in exam
+
+--
+
+.huge[
+1. Peruse the exam before starting
+2. Take off one shoe (If you like - my high school teacher claimed this worked, and I did it.)
+3. Number questions in order from easy-hard - start with the easiest one first
+4. Work out a marks : minutes ratio. (e.g., if there are 60 marks, and 60 minutes, then it's one mark per minute of time spent.)
+
+]
+
+
+
+---
+class: bg-main1
+
+# Recap on some tricky topics
+
+.huge[
+- assignment ("gets" - `<-`)
+- pipes (from the textbook)
+]
+
+---
+class: bg-main1
+
+# The pipe operator: `%>%`
+
+.pull-left.huge[
+- Code to tell a story about a little bunny foo foo (borrowed from https://r4ds.had.co.nz/pipes.html):
+- Using functions for each verb: `hop()`, `scoop()`, `bop()`.
+
+]
+.pull-right.huge[
+> Little bunny Foo Foo
+Went hopping through the forest
+Scooping up the field mice
+And bopping them on the head
+]
+
+---
+class: bg-main1
+
+# Approach: Intermediate steps
+
+.huge[
+```r
+foo_foo_1 <- hop(foo_foo, through = forest)
+foo_foo_2 <- scoop(foo_foo_1, up = field_mice)
+foo_foo_3 <- bop(foo_foo_2, on = head)
+```
+]
+
+--
+
+.huge[
+- Main downside: forces you to name each intermediate element. 
+- Sometimes these steps form natural names. If this is the case - go ahead.
+- **But many times there are not natural names**
+- Adding number suffixes to make the names unique leads to problems. 
+]
+
+---
+class: bg-main1
+
+# Approach: Intermediate steps
+
+.huge[
+```r
+foo_foo_1 <- hop(foo_foo, through = forest)
+foo_foo_2 <- scoop(foo_foo_1, up = field_mice)
+foo_foo_3 <- bop(foo_foo_2, on = head)
+```
+]
+
+--
+
+.huge[
+
+- Code is cluttered with unimportant names
+- Suffix has to be carefully incremented on each line.
+- I've done this. 99% of the time I mess a number somewhere and spend the rest
+of the night debugging my code.
+]
+
+---
+class: bg-main1
+
+# Another Approach: Overwrite the original
+
+.huge[
+```r
+foo_foo <- hop(foo_foo, through = forest)
+foo_foo <- scoop(foo_foo, up = field_mice)
+foo_foo <- bop(foo_foo, on = head)
+```
+]
+
+--
+
+.huge[
+- Overwrite originals instead of creating intermediate objects 
+- Less typing (and less thinking). Less likely to make mistakes?
+- **Painful debugging**: need to re-run the code from the top.
+- Repitition of object - (`foo_foo` written 6 times!) Obscures what changes.
+]
+
+
+---
+class: bg-main1
+
+# (Yet) Another approach: function composition
+
+.huge[
+```r
+bop(
+  scoop(
+    hop(foo_foo, through = forest),
+    up = field_mice
+  ), 
+  on = head
+)
+```
+]
+
+--
+
+.huge[
+- You need to read inside-out, and right-to-left.
+- Arguments are spread far apart
+- Harder to read
+]
+
+---
+class: bg-main1
+
+# Pipe `%>%` can help!
+
+.huge.pull-left[
+`f(x)` 
+
+`g(f(x))`
+
+`h(g(f(x)))`
+]
+
+--
+
+.vlarge.pull-right[
+`x %>% f()`
+
+`x %>% f() %>% g()`
+
+`x %>% f() %>% g() %>% h()`
+]
+
+---
+class: bg-main1
+
+# Solution: Use the pipe - `%>%`
+
+.huge[
+
+```r
+foo_foo %>%
+  hop(through = forest) %>%
+  scoop(up = field_mice) %>%
+  bop(on = head)
+```
+
+]
+
+.huge[
+
+- focusses on verbs, not nouns. 
+- Can be read as a series of function compositions like actions. 
+
+> Foo Foo hops, then scoops, then bops. 
+
+- read more at: https://r4ds.had.co.nz/pipes.html 
+
+]
+
+---
+
+# Take 3 minutes to discuss these two concepts with your table
+
+.vhuge[
+- What are pipes
+- What is assignment?
+]
+
+```{r cd-three-pipes}
+
+```
+
+---
+class: bg-main1
+
+# The many shapes and sizes of data
+
+---
+class: bg-main1
+
+# Data as an audio file
+
+```{r print-audio-data, echo = FALSE}
+df_wav_data
+```
+
+
+---
+class: bg-main1
+
+# Plotting audio data?
+
+```{r show-audio, echo = FALSE}
+p1 <- ggplot(df_wav_data, 
+             aes(x = t, 
+                 y = left)) + 
+  geom_line() + 
+  labs(title = "Say `data`")
+
+p2 <- ggplot(df_wav_stats, 
+             aes(x = t, 
+                 y = left)) + 
+  geom_line() + 
+  labs(title = "Say `statistics`")
+
+grid.arrange(p1, p2, ncol = 2)
+
+```
+
+---
+
+# Compare left and right channels
+
+```{r gg-compare-left-and-right, echo = FALSE}
+p1 <- ggplot(df_wav_data, aes(x = left, y = right)) +
+  geom_point() + theme(aspect.ratio = 1)
+p2 <- ggplot(df_wav_stats, aes(x = left, y = right)) +
+  geom_point() + theme(aspect.ratio = 1)
+grid.arrange(p1, p2, ncol = 2)
+```
+
+
+???
+
+Oh, same sound is on both channels! A tad drab.
+
+---
+class: bg-main1
+
+# Compute statistics
+
+```{r summarise, echo = FALSE}
+df_wav_data_long <- df_wav_data %>%
+  gather(key = channel, 
+         value = value, 
+         left, 
+         right)
+
+df_wav_stats_long <- df_wav_stats %>%
+  gather(key = channel, 
+         value = value, 
+         left, 
+         right)
+
+df_wavs <- bind_rows(data = df_wav_data_long, 
+                     word = df_wav_stats_long,
+                     .id = "word")
+```
+
+
+```{r print-summary}
+df_wavs %>%
+  filter(channel == "left") %>%
+  group_by(word) %>%
+  summarise(
+    m = mean(value),
+    s = sd(value),
+    mx = max(value),
+    mn = min(value)
+  ) %>%
+  as_table()
+```
+
+---
+class: bg-main1
+
+# Di's music
+
+```{r dis-music, include = FALSE}
+music <- read.csv("data/music-sub.csv",
+                  row.names = 1,
+                  stringsAsFactors = FALSE)
+```
+
+
+```{r dis-music-print, echo = FALSE}
+music
+
+```
+
+---
+class: bg-main1
+
+# Plot Di's music
+
+```{r gg-di-music, echo = FALSE}
+ggplot(music, aes(x = artist, y = lave)) + geom_boxplot() +
+  xlab("") + ylab("Average amplitude")
+```
+
+---
+class: bg-main1
+
+# Plot Di's Music
+
+```{r gg-di-music-points, fig.height=4.5, fig.weight=7, echo = FALSE}
+ggplot(music, aes(x = lvar, y = lave, colour = artist)) +
+  geom_point(size = 5, alpha = 0.5) +
+  scale_colour_brewer(palette = "Dark2") +
+  xlab("Std amplitude") + ylab("Average amplitude") +
+  theme(aspect.ratio = 1)
+```
+
+Abba is just different from everyone else!
+
+---
+class: bg-main1
+
+# Question time:
+
+.huge[
+-   "How does `data` appear different than `statistics` in the time series?"
+-   "What format is the data in an audio file?"
+-   "How is Abba different from the other music clips?",
+]
+
+```{r q1, echo = FALSE}
+countdown(minutes =  1,
+          seconds = 30)
+```
+
+
+
+---
+class: bg-main1
+
+# Why look at audio data?
+
+.huge[
+- Data comes in many shapes and sizes
+- A lot of data is available in html tables on web sites. 
+- Extracting the data from these tables is called "web scraping". 
+]
+
+---
+
+
+# Scraping the web: what? why?
+
+.huge[
+- Increasing amount of data is available on the web.
+- These data are provided in an unstructured format: you can always copy&paste, but it's 
+time-consuming and prone to errors.
+- Web scraping is the process of extracting this information automatically and transform it into 
+a structured dataset.
+]
+
+---
+
+# Scraping the web: what? why?
+
+.huge[
+1. Screen scraping: extract data from source code of website, with html parser (easy) or regular expression matching (less easy).
+2. Web APIs (application programming interface): website offers a set of structured http  requests that return JSON or XML files.
+- Why R? It includes all tools necessary to do web scraping, familiarity, direct analysis of data... But python, perl, java are also efficient tools.
+]
+
+---
+class: bg-main1
+# Web Scraping with rvest
+
+---
+class: bg-main1
+# Hypertext Markup Language
+
+.huge[
+Most of the data on the web is still largely available as HTML - while it is structured (hierarchical / tree based) it often is not available in a form useful for analysis (flat / tidy).
+]
+
+```html
+<html>
+  <head>
+    <title>This is a title</title>
+  </head>
+  <body>
+    <p align="center">Hello world!</p>
+  </body>
+</html>
+```
+
+---
+class: bg-main1
+
+# rvest: Simplifies processing and manipulating HTML data
+
+.huge[
+- `read_html` - read HTML data from a url or character string.
+- `html_nodes` - select specified nodes from the HTML document using CSS selectors.
+- `html_table` - parse an HTML table into a data frame.
+- `html_text` - extract tag pairs' content.
+- `paths_allowed()` - from `robotstxt`, tells you if you can scrape something, legally.
+
+]
+
+---
+class: bg-main1
+
+# SelectorGadget: css selectors
+
+.vlarge[
+- Using a tool called selector gadget to **help** identify the html elements of interest
+- Does this by constructing a css selector which can be used to subset the html document.
+
+Selector          |  Example         |     Description
+------------      |------------------|      ------------------------------------------------
+element           |  `p`             |      Select all &lt;p&gt; elements
+element element   |  `div p`         |      Select all &lt;p&gt; elements inside a &lt;div&gt; element          
+element>element   |  `div > p`       |      Select all &lt;p&gt; elements with &lt;div&gt; as a parent
+.class            |  `.title`        |      Select all elements with class="title"
+\#id              |  `.name`         |      Select all elements with id="name"
+[attribute]       |  `[class]`       |      Select all elements with a class attribute
+[attribute=value] |  `[class=title]` |      Select all elements with class="title"
+]
+---
+class: bg-main1
+
+# SelectorGadget
+
+.vlarge[
+- SelectorGadget: Open source tool that eases CSS selector generation and discovery
+- Install the [Chrome Extension](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb) 
+- A box will open in the bottom right of the website. Click on a page element 
+that you would like your selector to match (it will turn green). SelectorGadget 
+will then generate a minimal CSS selector for that element, and will highlight 
+(yellow) everything that is 
+matched by the selector. 
+- Now click on a highlighted element to remove it from the selector (red), or 
+click on an unhighlighted element to add it to the selector. Through this process 
+of selection and rejection, SelectorGadget helps you come up with the appropriate 
+CSS selector for your needs.
+]
+---
+class: bg-main1
+
+## Top 250 movies on IMDB
+
+.left-code[
+Take a look at the source code, look for the tag `table` tag:
+<br>
+http://www.imdb.com/chart/top
+]
+
+
+.right-plot[
+```{r show-imdb-top-img, echo = FALSE}
+include_graphics("images/imdb_top_250.png")
+```
+]
+
+
+---
+class: bg-main1
+
+## First check to make sure you're allowed!
+
+```{r show-robots-text, warning=FALSE}
+# install.packages("robotstxt")
+library(robotstxt)
+paths_allowed("http://www.imdb.com")
+```
+
+.huge[
+vs. e.g.
+]
+
+--
+
+```{r show-paths-allowed, warning=FALSE}
+paths_allowed("http://www.facebook.com")
+```
+
+---
+class: bg-main1
+
+# Join in
+
+.vhuge[
+Go to [rstudio.cloud](https://rstudio.cloud/) $\rightarrow$ Lecture 5B $\rightarrow$ Make a copy $\rightarrow$ `lecture-5B.Rmd`
+]
+
+---
+class: bg-main1
+
+## Select and format pieces: titles
+
+```{r rvest-titles, message=FALSE}
+library(rvest)
+
+page <- read_html("http://www.imdb.com/chart/top")
+
+titles <- page %>%
+  html_nodes(".titleColumn a") %>%
+  html_text()
+
+titles
+```
+
+
+---
+class: bg-main1
+
+# Select and format pieces: years
+
+```{r rvest-years, message=FALSE}
+years <- page %>%
+  html_nodes(".secondaryInfo") %>%
+  html_text() %>%
+  str_replace("\\(", "") %>% # remove (
+  str_replace("\\)", "") %>% # remove )
+  as.numeric()
+
+years
+```
+
+---
+class: bg-main1
+
+# Select and format pieces: scores
+
+
+```{r rvest-scores, message=FALSE}
+scores <- page %>%
+  html_nodes("#main strong") %>%
+  html_text() %>%
+  as.numeric()
+  
+scores
+```
+
+---
+class: bg-main1
+
+# Select and format pieces: put it all together
+
+```{r rvest-all-together, message=FALSE}
+imdb_top_250 <- tibble(title = titles, 
+                       year = years, 
+                       score = scores)
+
+imdb_top_250
+```
+]
+
+---
+
+```{r print-top-table, echo=FALSE, results='asis'}
+imdb_top_250 %>% head(15) %>% rbind(rep("...", 3)) %>% kable(format = "html")
+```
+
+---
+class: bg-main1
+
+# Clean up / enhance
+
+.huge[
+May or may not be a lot of work depending on how messy the data are
+
+- See if you like what you got:
+]
+
+```{r glimpse-imdb}
+glimpse(imdb_top_250)
+```
+
+---
+class: bg-main1
+
+# Clean up / enhance
+
+.huge[
+- Add a variable for rank
+]
+
+```{r add-rank}
+imdb_top_250 %>%
+  mutate(
+    rank = 1:nrow(imdb_top_250)
+  )
+```
+
+---
+
+```{r show-table-again, echo=FALSE, results='asis'}
+imdb_top_250 %>%
+  mutate(
+    rank = 1:nrow(imdb_top_250)
+  ) %>% head(15) %>% rbind(rep("...", 3)) %>% kable(format = "html")
+```
+
+
+---
+class: bg-main5
+
+# Your Turn
+
+.huge[
+How would you go about answering this question: Which 1995 movies made the list?
+]
+
+---
+class: bg-main1
+
+```{r imdb-filter}
+imdb_top_250 %>% 
+  filter(year == 1995)
+```
+
+---
+class: bg-main1
+
+# Your turn
+
+.huge[
+How would you go about answering this question: Which years have the most movies on the list?
+]
+
+--
+
+```{r imdb-group-by-year}
+imdb_top_250 %>% 
+  group_by(year) %>%
+  summarise(total = n()) %>%
+  arrange(desc(total)) %>%
+  head(5)
+```
+
+---
+class: bg-main1
+
+# Your Turn
+
+.huge[
+
+How would you go about creating this visualization: Visualize the average yearly score for movies that made it on the top 250 list over time.
+]
+
+--
+
+```{r visualise-score-year, eval = FALSE}
+imdb_top_250 %>% 
+  group_by(year) %>%
+  summarise(avg_score = mean(score)) %>%
+  ggplot(aes(y = avg_score, x = year)) +
+    geom_point() +
+    geom_smooth(method = "lm") +
+    xlab("year")
+```
+
+---
+class: bg-main1
+
+
+```{r visualise-score-year-print}
+imdb_top_250 %>% 
+  group_by(year) %>%
+  summarise(avg_score = mean(score)) %>%
+  ggplot(aes(y = avg_score, x = year)) +
+    geom_point() +
+    geom_smooth(method = "lm") +
+    xlab("year")
+```
+
+---
+
+# Briefly - other formats - JSON
+
+---
+class: bg-main1
+
+# JSON format files
+
+.huge[
+- JavaScript Object Notation (JSON). 
+- A language-independent data format, and supplants extensible markup language (XML). 
+- Example JSON from [jsonlite](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-aaquickstart.html) describing Mario, Peach, and Bowser:
+]
+
+```{r json-example}
+library(jsonlite)
+json_mario <-
+'[
+  {"Name" : "Mario", "Age" : 32, "Occupation" : "Plumber"}, 
+  {"Name" : "Peach", "Age" : 21, "Occupation" : "Princess"},
+  {},
+  {"Name" : "Bowser", "Occupation" : "Koopa"}
+]'
+mydf <- fromJSON(json_mario)
+mydf
+```
+
+---
+
+# Potential challenges with web scraping
+
+.huge[
+- Unreliable formatting at the source
+- Data broken into many pages
+- Data arriving in multiple excel file formats
+- ...
+
+
+> Compare the display of information at [gumtree melbourne](https://www.gumtree.com.au/s-monash/l3001600) to the list on the IMDB top 250 list. What challenges can you foresee in scraping a list of the available apartments?
+]
+
+
+---
+
+# Further exploring
+
+People write R packages to access online data! Check out:
+
+.huge[
+- [cricinfo by Sayani Gupta and Rob Hyndman]()
+- [rwalkr by Earo Wang]()
+- [fitzRoy by ]()
+- [Top 40 lists of R packages by Joe Rickert](https://rviews.rstudio.com/2019/07/24/june-2019-top-40-r-packages/) - they usually include a "data" section.
+]
+
+---
+
+# Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.

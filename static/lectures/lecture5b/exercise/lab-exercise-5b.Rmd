@@ -1,0 +1,168 @@
+---
+title: ""
+author: ""
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+```
+
+
+# Continuing on from the lecture
+
+```{r message=FALSE}
+library(rvest)
+
+page <- read_html("http://www.imdb.com/chart/top")
+
+titles <- page %>%
+  html_nodes(".titleColumn a") %>%
+  html_text()
+
+years <- page %>%
+  html_nodes(".secondaryInfo") %>%
+  html_text() %>%
+  str_replace("\\(", "") %>% # remove (
+  str_replace("\\)", "") %>% # remove )
+  as.numeric()
+
+scores <- page %>%
+  html_nodes("#main strong") %>%
+  html_text() %>%
+  as.numeric()
+  
+imdb_top_250 <- tibble(
+  title = titles, 
+  year = years, 
+  score = scores
+  )
+
+imdb_top_250
+```
+
+
+# Clean up / enhance
+
+May or may not be a lot of work depending on how messy the data are
+
+- See if you like what you got:
+
+```{r}
+glimpse(imdb_top_250)
+```
+
+
+- Add a variable for rank
+
+```{r}
+imdb_top_250 <- imdb_top_250 %>%
+  mutate(
+    rank = 1:nrow(imdb_top_250)
+  )
+
+imdb_top_250
+```
+
+
+# Answer the question: Which 1995 movies made the list?
+
+```{r}
+# perhaps use filter?
+imdb_top_250 
+```
+
+
+# How would you go about answering this question: Which years have the most movies on the list?
+
+```{r}
+# perhaps group by year, then do some summaries on the data?
+imdb_top_250 %>% 
+  group_by(year) 
+# other things here
+```
+
+# Visualize
+
+How would you go about creating this visualization: Visualize the average yearly score for movies that made it on the top 250 list over time.
+
+```{r echo=FALSE}
+# Find the average score for each year
+# perhaps group by year and take the average score?
+imdb_yearly_avg_score <- imdb_top_250  %>%
+  group_by(year) %>%
+  summarise()
+# do some more data analysis here 
+
+# Then plot this with the year on x axis, and average score on the y axis
+ggplot(aes()) +
+    geom_point() +
+    geom_smooth(method = "lm")
+```
+
+
+# Try exploring another IMDB table
+
+- top TV shows: https://www.imdb.com/chart/toptv
+- boxoffice weekend: https://www.imdb.com/chart/boxoffice
+- worst films: https://www.imdb.com/chart/bottom
+- Or other genres - like Action films: https://www.imdb.com/search/title/?genres=action
+
+Choose one of these and get it into a similar format to the `imdb_top_250` data
+
+- try answering questions like:
+  - Which years have the most 
+  - Which films made the least amount of money from the box office?
+  - What is the oldest, worst film?
+- Have some fun with it - define your own questions and explore the data yourself!
+  
+
+```{r}
+
+```
+
+
+# Extension Example: Crossrates 
+
+An example we have seen is the cross rates data available at [https://openexchangerates.org/](https://openexchangerates.org/). To access this data you need to:
+
+1. Get a free plan from https://openexchangerates.org/signup/free
+2. Tell this function your API key -- `Sys.setenv("OER_KEY" = "your-key-here")`
+
+Then you can access the data using a command like:
+
+```
+u <- sprintf(
+    "https://openexchangerates.org/api/historical/%s.json?app_id=%s",
+    day, Sys.getenv("OER_KEY")
+  )
+res <- jsonlite::fromJSON(u)
+```
+
+There's a nice help page here: https://gist.github.com/njtierney/0fe2daa11292e046f83fec7d8e9a8164
+
+## Pull the crossrates for the month of August 2018
+
+```{r}
+
+```
+
+## Make a plot to compare the crossrates for AUD, EUR, GBP, NZD, JPY. Make a descriptive summary of what you learn.
+
+# Cricket data
+
+Using the information from this vignette here: https://docs.ropensci.org/cricketdata/
+
+## Use the cricketdata package to extract the T20 batting data of male players for your two favorite countries.
+
+```{r}
+library(cricketdata)
+
+```
+
+
+## Between 2010 and 2015, which country has the better record? Explain the reason for your answer, and your analysis choices.
+
+```{r}
+
+```
