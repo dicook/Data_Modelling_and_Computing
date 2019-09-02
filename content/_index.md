@@ -84,13 +84,22 @@ We have a limited amount of laptops available for students to borrow (during sem
      - Friday Reading: [Introduction to programming](https://r4ds.had.co.nz/program-intro.html); [Pipes (`%>%`)](https://r4ds.had.co.nz/pipes.html); [Functions](https://r4ds.had.co.nz/functions.html)
      - Friday Slides:
      
-- Week 7: Intermediate models 
+- Week 7: Intermediate models and programming
+     - Wednesday reading: [Vectors](https://r4ds.had.co.nz/vectors.html) ; [Iteration](https://r4ds.had.co.nz/iteration.html)
+     - Wednesday slides:
+     - Friday reading: [Building Models](https://r4ds.had.co.nz/model-building.html) ; [Many Models](http://r4ds.had.co.nz/many-models.html)
+     - Friday slides:
+     
 - Week 8: Analysing text data
+     - Wednesday reading: [Introduction to tidy text analysis](https://www.tidytextmining.com/tidytext.html); [Sentiment Analysis with tidy text](https://www.tidytextmining.com/sentiment.html)
+     - Wednesday slides:
+     - Friday reading: [Word and document frequency](https://www.tidytextmining.com/tfidf.html); [n-grams](https://www.tidytextmining.com/ngrams.html)
+     - Friday slides:
 - Week 9: Wrangling, plotting and modeling network data
 - Week 10: Computational modeling, and good data collection practices
 - Week 11: 
-   - Tue: Guest lecture. Final polishing of project story boards. 
-   - Thu: Practical exam. Turn in project.
+   - Wednesday slides: Guest lecture. Final polishing of project story boards. 
+   - Friday: Practical exam. Turn in project.
 - Practical Exam: 
 - Week 12: Project presentations
 
