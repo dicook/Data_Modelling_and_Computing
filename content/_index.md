@@ -156,32 +156,36 @@ You will **not** mark your own group, this gives you a chance to see how other s
 
 ## Project
 
-- [Project instructions](project/project-instructions.html) 
-    - **Deadline 1 (13th September)**:  Find team members, and potential topics to study (List of groups will be posted here)
-    - **Deadline 2 (20th September)**:  Team members and team name, data description. 
-    - **Deadline 3 **:  Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
-    - **Deadline 4 **:  Final version of story board uploaded. There are several ways to do the storyboard:
-        - `learnr` package that the lecture notes are written in. [Example files with css](project/lecture10b.zip)
-        - [flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) package, and there is an [example here](project/pisa_au_app.zip)
-		- or a basic [shiny](https://shiny.rstudio.com/gallery/) app
-    - Presentation in week 12
-	- Past Examples from ETC1010
-        - [Analysing Movie Data](https://ebsmonash.shinyapps.io/Thor/)
-        - []()
-	- Examples from different web sites
-        - [Blue Bikes Sharing in Boston](https://www.r-bloggers.com/blue-bikes-sharing-in-boston/)
-        - 	[What birds are observed near Radolfzell? Bird occurrence data in R](https://ropensci.org/blog/2018/08/21/birds-radolfzell/)
-		- [Who wrote the anti-Trump New York Times op-ed? Using tidytext to find document similarity](https://www.r-bloggers.com/who-wrote-the-anti-trump-new-york-times-op-ed-using-tidytext-to-find-document-similarity/)
-		- [Hotels vs Airbnb - Barcelona case study (proof of concept)](https://nycdatascience.com/blog/student-works/web-scraping/hotels-vs-airbnb-barcelona-case-study-proof-of-concept/)
-		- [Don't Worry: Google Only Checks Your Location Every 10 Minutes](http://www.sastibe.de/2018/04/don-t-worry-google-location/)
-		- [World Income, Inequality and Murder](http://staff.math.su.se/hoehle/blog/2018/07/09/gini.html)
-		- [Text analysis of Trump's tweets confirms he writes only the (angrier) Android half](http://varianceexplained.org/r/trump-tweets/)
-		- [What digits should you bet on in Super Bowl squares?](http://varianceexplained.org/r/super-bowl-squares/)
-		- [Exploring handwritten digit classification: a tidy analysis of the MNIST dataset](http://varianceexplained.org/r/digit-eda/)
-		- [Facebook advertising case-study: dog food and manhood](https://rickpackblog.wordpress.com/2018/08/20/facebook-advertising-case-study-dog-food-and-manhood/)
-		- [Analysis of Los Angeles Crime with R](https://datascienceplus.com/analysis-of-los-angeles-crime-with-r/)
-		- [Looking at Seinfeld dialogues using #tidytext](https://pradeepadhokshaja.wordpress.com/2018/08/06/looking-at-seinfeld-dialogues-using-tidytext/)
-		- [Twitter Coverage of the useR Conference 2018](https://github.com/neilfws/Twitter/blob/master/user2018/code/R/user2018.md)
+[Project instructions](project/project-instructions.html) 
+
+- **Deadline 1 (13th September)**:  Find team members, and potential topics to study (List of groups will be posted here)
+- **Deadline 2 (20th September)**:  Team members and team name, data description. - **Deadline 3 **:  Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
+- **Deadline 4 **:  Final version of story board uploaded. 
+- **Presentation in week 12**
+
+There are several ways to do the storyboard:
+  - `learnr` package that the lecture notes are written in. [Example files with css](project/lecture10b.zip)
+  - [flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) package, and there is an [example here](project/pisa_au_app.zip)
+	- or a basic [shiny](https://shiny.rstudio.com/gallery/) app
+  
+Past Example projects from ETC1010:
+
+- [Analysing Movie Data](https://ebsmonash.shinyapps.io/Thor/)
+
+- Examples from different web sites:
+  - [Blue Bikes Sharing in Boston](https://www.r-bloggers.com/blue-bikes-sharing-in-boston/)
+  - [What birds are observed near Radolfzell? Bird occurrence data in R](https://ropensci.org/blog/2018/08/21/birds-radolfzell/)
+	- [Who wrote the anti-Trump New York Times op-ed? Using tidytext to find document similarity](https://www.r-bloggers.com/who-wrote-the-anti-trump-new-york-times-op-ed-using-tidytext-to-find-document-similarity/)
+	- [Hotels vs Airbnb - Barcelona case study (proof of concept)](https://nycdatascience.com/blog/student-works/web-scraping/hotels-vs-airbnb-barcelona-case-study-proof-of-concept/)
+	- [Don't Worry: Google Only Checks Your Location Every 10 Minutes](http://www.sastibe.de/2018/04/don-t-worry-google-location/)
+	- [World Income, Inequality and Murder](http://staff.math.su.se/hoehle/blog/2018/07/09/gini.html)
+	- [Text analysis of Trump's tweets confirms he writes only the (angrier) Android half](http://varianceexplained.org/r/trump-tweets/)
+	- [What digits should you bet on in Super Bowl squares?](http://varianceexplained.org/r/super-bowl-squares/)
+	- [Exploring handwritten digit classification: a tidy analysis of the MNIST dataset](http://varianceexplained.org/r/digit-eda/)
+	- [Facebook advertising case-study: dog food and manhood](https://rickpackblog.wordpress.com/2018/08/20/facebook-advertising-case-study-dog-food-and-manhood/)
+	- [Analysis of Los Angeles Crime with R](https://datascienceplus.com/analysis-of-los-angeles-crime-with-r/)
+	- [Looking at Seinfeld dialogues using #tidytext](https://pradeepadhokshaja.wordpress.com/2018/08/06/looking-at-seinfeld-dialogues-using-tidytext/)
+	- [Twitter Coverage of the useR Conference 2018](https://github.com/neilfws/Twitter/blob/master/user2018/code/R/user2018.md)
 
 ## Data
 
