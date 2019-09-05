@@ -82,7 +82,7 @@ We have a limited amount of laptops available for students to borrow (during sem
      - Wednesday reading: [Intro to Modelling](https://r4ds.had.co.nz/model-intro.html); [Modelling Basics](https://r4ds.had.co.nz/model-basics.html)
      - Wednesday Slides: [HTML](lectures/lecture6a/lecture-6a-slides.html); [PDF](lectures/lecture6a/lecture-6a-slides.pdf); [RMD](lectures/lecture6a/lecture-6a-slides.Rmd)
      - Friday Reading: [Introduction to programming](https://r4ds.had.co.nz/program-intro.html); [Pipes (`%>%`)](https://r4ds.had.co.nz/pipes.html); [Functions](https://r4ds.had.co.nz/functions.html)
-     - Friday Slides:
+     - Friday Slides: [HTML](lectures/lecture6b/lecture-6b-slides.html); [PDF](lectures/lecture6b/lecture-6b-slides.pdf); [RMD](lectures/lecture6b/lecture-6b-slides.Rmd)
      
 - Week 7: Intermediate models and programming
      - Wednesday reading: [Vectors](https://r4ds.had.co.nz/vectors.html) ; [Iteration](https://r4ds.had.co.nz/iteration.html)

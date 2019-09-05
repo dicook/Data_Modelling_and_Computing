@@ -1,0 +1,167 @@
+---
+title: "Automating scraping with functions"
+author: "YOUR NAME"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+library(polite)
+library(rvest)
+```
+
+# Scrape the list of most popular TV shows on IMDB: http://www.imdb.com/chart/tvmeter
+
+```{r}
+tv_url <- "http://www.imdb.com/chart/tvmeter"
+tv_data <- bow(tv_url) %>% scrape()
+
+library(janitor)
+tv_tables <-tv_data %>%
+  html_table()
+
+# extract the first list
+tv_list <- tv_tables[[1]] %>%
+  clean_names() %>%
+  select(-x,
+         -x_2,
+         -your_rating) %>%
+  # extract out year
+  separate(rank_title,
+           into = c("title", "year"),
+           sep = "\n") %>%
+  # extract number from year
+  mutate(year = parse_number(year)) 
+```
+
+## get urls for each show
+
+```{r}
+tv_html <- bow("http://www.imdb.com/chart/tvmeter") %>% scrape()
+
+urls <- tv_html %>%
+  html_nodes(".titleColumn a") %>%
+  html_attr("href") %>%
+  paste("http://www.imdb.com/", ., "sep" = "")
+
+urls
+```
+
+## Examine each of the *first three* (or however many you can get through) tv show subpage to also obtain genre and runtime.
+
+
+## Put the scraped show information into one function
+
+```{r download-data}
+scrape_show_info <- function(url){
+  
+  tv_data <- bow(url) %>% scrape()
+  
+  title <- tv_data %>%
+    html_node("#title-overview-widget h1") %>%
+    html_text() %>%
+    str_trim()
+  
+  runtime <- tv_data %>%
+    html_node("time") %>%
+    html_text() %>%
+    str_replace("\\n", "") %>%
+    str_trim()
+  
+  genres <- tv_data %>%
+    html_nodes(".txt-block~ .canwrap a") %>%
+    html_text() %>%
+    str_trim() %>%
+    paste(collapse = ", ")
+  
+  tibble(title = title, runtime = runtime, genres = genres)
+
+  }
+```
+
+## decompose the steps of `scrape_show_info` into smaller steps, to make individual functions that scrape title, runtime, and genres
+
+```{r}
+scrape_title <- function(url){
+  
+  
+}
+
+scrape_runtime <- function(url){
+  
+  
+}
+
+scrape_genre <- function(url){
+  
+  
+}
+
+scrape_show_info <- function(url){
+ 
+  title <- scrape_title(url)
+  runtime <- scrape_runtime(url)
+  genre <- scrape_genre(url)
+  
+  tibble(title = title, 
+         runtime = runtime, 
+         genre = genre)
+   
+}
+
+```
+
+
+## Time permitting, also try to get the following:
+
+  - First five plot keywords
+  - Country
+  - Language
+  
+Add this information to the data frame created with `scrape_show_info()`
+
+```{r}
+scrape_show_info <- function(url){
+ 
+  title <- scrape_title(url)
+  runtime <- scrape_runtime(url)
+  genre <- scrape_genre(url)
+  
+  # extra show features
+  # plot
+  # country
+  # language
+  
+  tibble(title = title, 
+         runtime = runtime, 
+         # and extra objects here
+         genre = genre)
+   
+}
+```
+
+# Practice making functions
+
+Using the dataset, `mtcars` as an example, try the following:
+
+## Calculate the difference between the minimum and maximum value
+
+```{r}
+my_range <- function(x){
+  
+}
+
+```
+
+
+## calculate the range of every column in a dataset
+
+```{r}
+map(mtcars, ___)
+```
+
+
+## create your own mean function
+
+## calculate the mean of every column in a dataset
+
