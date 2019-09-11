@@ -28,6 +28,7 @@ library(lubridate)
 library(tuneR)
 library(gridExtra)
 library(plotly)
+library(broom)
 knitr::opts_chunk$set(
   fig.width = 8,
   fig.height = 4.5,
