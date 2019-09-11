@@ -86,7 +86,7 @@ We have a limited amount of laptops available for students to borrow (during sem
      
 - Week 7: Intermediate models and programming
      - Wednesday reading: [Vectors](https://r4ds.had.co.nz/vectors.html) ; [Iteration](https://r4ds.had.co.nz/iteration.html)
-     - Wednesday slides:
+     - Wednesday slides: [HTML](lectures/lecture7a/lecture-7a-slides.html); [PDF](lectures/lecture7a/lecture-7a-slides.pdf); [RMD](lectures/lecture7a/lecture-7a-slides.Rmd)
      - Friday reading: [Building Models](https://r4ds.had.co.nz/model-building.html) ; [Many Models](http://r4ds.had.co.nz/many-models.html)
      - Friday slides:
      
