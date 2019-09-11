@@ -90,33 +90,30 @@ pp
 
 ```
 ## # A tibble: 3,393 x 61
-##    name  sale  lot   position dealer  year origin_author origin_cat
-##    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;     
-##  1 L176… L1764 2       0.0328 L       1764 F             O         
-##  2 L176… L1764 3       0.0492 L       1764 I             O         
-##  3 L176… L1764 4       0.0656 L       1764 X             O         
-##  4 L176… L1764 5       0.0820 L       1764 F             O         
-##  5 L176… L1764 5       0.0820 L       1764 F             O         
-##  6 L176… L1764 6       0.0984 L       1764 X             O         
-##  7 L176… L1764 7       0.115  L       1764 F             O         
-##  8 L176… L1764 7       0.115  L       1764 F             O         
-##  9 L176… L1764 8       0.131  L       1764 X             O         
-## 10 L176… L1764 9       0.148  L       1764 D/FL          O         
-## # … with 3,383 more rows, and 53 more variables: school_pntg &lt;chr&gt;,
-## #   diff_origin &lt;dbl&gt;, logprice &lt;dbl&gt;, price &lt;dbl&gt;, count &lt;dbl&gt;,
-## #   subject &lt;chr&gt;, authorstandard &lt;chr&gt;, artistliving &lt;dbl&gt;,
-## #   authorstyle &lt;chr&gt;, author &lt;chr&gt;, winningbidder &lt;chr&gt;,
-## #   winningbiddertype &lt;chr&gt;, endbuyer &lt;chr&gt;, Interm &lt;dbl&gt;,
-## #   type_intermed &lt;chr&gt;, Height_in &lt;dbl&gt;, Width_in &lt;dbl&gt;,
-## #   Surface_Rect &lt;dbl&gt;, Diam_in &lt;dbl&gt;, Surface_Rnd &lt;dbl&gt;, Shape &lt;chr&gt;,
-## #   Surface &lt;dbl&gt;, material &lt;chr&gt;, mat &lt;chr&gt;, materialCat &lt;chr&gt;,
-## #   quantity &lt;dbl&gt;, nfigures &lt;dbl&gt;, engraved &lt;dbl&gt;, original &lt;dbl&gt;,
-## #   prevcoll &lt;dbl&gt;, othartist &lt;dbl&gt;, paired &lt;dbl&gt;, figures &lt;dbl&gt;,
-## #   finished &lt;dbl&gt;, lrgfont &lt;dbl&gt;, relig &lt;dbl&gt;, landsALL &lt;dbl&gt;,
-## #   lands_sc &lt;dbl&gt;, lands_elem &lt;dbl&gt;, lands_figs &lt;dbl&gt;, lands_ment &lt;dbl&gt;,
-## #   arch &lt;dbl&gt;, mytho &lt;dbl&gt;, peasant &lt;dbl&gt;, othgenre &lt;dbl&gt;,
-## #   singlefig &lt;dbl&gt;, portrait &lt;dbl&gt;, still_life &lt;dbl&gt;, discauth &lt;dbl&gt;,
-## #   history &lt;dbl&gt;, allegory &lt;dbl&gt;, pastorale &lt;dbl&gt;, other &lt;dbl&gt;
+##    name  sale  lot   position dealer  year origin_author origin_cat school_pntg
+##    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;      &lt;chr&gt;      
+##  1 L176… L1764 2       0.0328 L       1764 F             O          F          
+##  2 L176… L1764 3       0.0492 L       1764 I             O          I          
+##  3 L176… L1764 4       0.0656 L       1764 X             O          D/FL       
+##  4 L176… L1764 5       0.0820 L       1764 F             O          F          
+##  5 L176… L1764 5       0.0820 L       1764 F             O          F          
+##  6 L176… L1764 6       0.0984 L       1764 X             O          I          
+##  7 L176… L1764 7       0.115  L       1764 F             O          F          
+##  8 L176… L1764 7       0.115  L       1764 F             O          F          
+##  9 L176… L1764 8       0.131  L       1764 X             O          I          
+## 10 L176… L1764 9       0.148  L       1764 D/FL          O          D/FL       
+## # … with 3,383 more rows, and 52 more variables: diff_origin &lt;dbl&gt;, logprice &lt;dbl&gt;,
+## #   price &lt;dbl&gt;, count &lt;dbl&gt;, subject &lt;chr&gt;, authorstandard &lt;chr&gt;, artistliving &lt;dbl&gt;,
+## #   authorstyle &lt;chr&gt;, author &lt;chr&gt;, winningbidder &lt;chr&gt;, winningbiddertype &lt;chr&gt;,
+## #   endbuyer &lt;chr&gt;, Interm &lt;dbl&gt;, type_intermed &lt;chr&gt;, Height_in &lt;dbl&gt;, Width_in &lt;dbl&gt;,
+## #   Surface_Rect &lt;dbl&gt;, Diam_in &lt;dbl&gt;, Surface_Rnd &lt;dbl&gt;, Shape &lt;chr&gt;, Surface &lt;dbl&gt;,
+## #   material &lt;chr&gt;, mat &lt;chr&gt;, materialCat &lt;chr&gt;, quantity &lt;dbl&gt;, nfigures &lt;dbl&gt;,
+## #   engraved &lt;dbl&gt;, original &lt;dbl&gt;, prevcoll &lt;dbl&gt;, othartist &lt;dbl&gt;, paired &lt;dbl&gt;,
+## #   figures &lt;dbl&gt;, finished &lt;dbl&gt;, lrgfont &lt;dbl&gt;, relig &lt;dbl&gt;, landsALL &lt;dbl&gt;,
+## #   lands_sc &lt;dbl&gt;, lands_elem &lt;dbl&gt;, lands_figs &lt;dbl&gt;, lands_ment &lt;dbl&gt;, arch &lt;dbl&gt;,
+## #   mytho &lt;dbl&gt;, peasant &lt;dbl&gt;, othgenre &lt;dbl&gt;, singlefig &lt;dbl&gt;, portrait &lt;dbl&gt;,
+## #   still_life &lt;dbl&gt;, discauth &lt;dbl&gt;, history &lt;dbl&gt;, allegory &lt;dbl&gt;, pastorale &lt;dbl&gt;,
+## #   other &lt;dbl&gt;
 ```
 
 ---
@@ -426,9 +423,7 @@ the size of the scatter around the model. (We'll talk more about this later.)
 ---
 class: bg-main1
 
-# Your Turn:
-
-- go to rstudio.cloud
+# Your Turn: go to rstudio.cloud and start exercise 7a
 
 ---
 class: bg-main1
@@ -638,10 +633,10 @@ class: bg-main1
 ## lm(formula = Height_in ~ school_pntg, data = pp)
 ## 
 ## Coefficients:
-##     (Intercept)  school_pntgD/FL     school_pntgF     school_pntgG  
-##          14.000            2.329           10.197            1.650  
-##    school_pntgI     school_pntgS     school_pntgX  
-##          10.287           30.429            2.869
+##     (Intercept)  school_pntgD/FL     school_pntgF     school_pntgG     school_pntgI  
+##          14.000            2.329           10.197            1.650           10.287  
+##    school_pntgS     school_pntgX  
+##          30.429            2.869
 ```
  
 --
@@ -803,10 +798,10 @@ glance(m_ht_wt)
 
 ```
 ## # A tibble: 1 x 11
-##   r.squared adj.r.squared sigma statistic p.value    df  logLik    AIC
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;
-## 1     0.683         0.683  8.30     6749.       0     2 -11083. 22173.
-## # … with 3 more variables: BIC &lt;dbl&gt;, deviance &lt;dbl&gt;, df.residual &lt;int&gt;
+##   r.squared adj.r.squared sigma statistic p.value    df  logLik    AIC    BIC deviance
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+## 1     0.683         0.683  8.30     6749.       0     2 -11083. 22173. 22191.  216055.
+## # … with 1 more variable: df.residual &lt;int&gt;
 ```
 
 ```r
@@ -842,9 +837,16 @@ glance(m_ht_lands)$r.squared
 ---
 class: bg-main1
 
-# Your Turn
+# Your Turn: go to rstudio.cloud
 
-- go to rstudio.cloud
+---
+class: bg-main1
+
+# References
+
+.huge[
+- [data science in a box](https://datasciencebox.org/)
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

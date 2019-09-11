@@ -144,7 +144,7 @@ co2_spo
 
 ### Task: plot date against co2 with points
 
-```{r}
+```{r gg-co2-spo}
 ggplot(co2_spo, 
        aes(x = date, 
            y = co2)) + 
@@ -153,23 +153,23 @@ ggplot(co2_spo,
 
 ### Task: fit a linear model, using `day` variable as the explanatory variable. 
 
-## compare `day` against `day0`
+# calculate the summary of day0 and day to compare `day` against `day0`
 
 ```{r}
 summary(co2_spo$day)
 summary(co2_spo$day0)
-
 ```
 
 # question: "What is range of dates of this data?"
 
 ## Task: fit a linear model, predicting co2 using day0
 
-```{r}
+```{r fit-co2}
 co2_fit <- lm(co2 ~ day0, data = co2_spo)
 co2_fit
 ```
 
+Now we tidy up the output and store information on the intercept and slope so we can describe the fit
 
 ```{r}
 library(broom)
@@ -206,7 +206,7 @@ $$\widehat{co2}=$$ `r int` + `r slope`.
 
 We can use the `augment` function to extract residuals and fitted values, and pointwise diagnostics
 
-```{r augmented-model}
+```{r augmented-model2}
 co2_model <- augment(co2_fit, co2_spo)
 
 co2_model
@@ -225,6 +225,7 @@ ggplot(co2_model,
 ### Examine residuals
 
 - **Residuals** are calculated for each observed $y$ by computing the difference: $y_i-\widehat{y_i}$.
+
 - Plotting the residuals against fitted values (or x in simple linear models) can reveal problems with the fit.
 
 ```{r}
@@ -234,7 +235,7 @@ ggplot(co2_model,
   geom_point() 
 ```
 
-### Assessment of fit
+# Assessment of fit
 
 - The relationship between co2 and day0 is nonlinear!
 - The linear model does a reasonable job of explaining the increasing trend over time, but it especially mismatches the observed data at the ends, and middle of the time period.
@@ -242,26 +243,45 @@ ggplot(co2_model,
 ### Your turn
 
 - Try to add a quadratic term (in day0), or more, to the model to improve the fit. 
+- repeat a similar process to what you have seen earlier when exploring model fit
 - Hints: (1) you may want to centre the day0 values, or even standardise them, to get a nice quadratic form, (2) If the fit is good, your residual vs fitted plot should have values evenly spread above and below 0, and relatively even across the time span. 
 
-```{r eval=FALSE, echo=FALSE, results='hide', fig.show='hide'}
-co2_spo <- co2_spo %>%
-  ???(day0sq=(day0-median(day0))^2)
-co2_fit2 <- lm(co2~day0+???, data=co2_spo)
+```{r }
+co2_sq <- co2_spo %>%
+  mutate(day0sq = (day0-median(day0))^2)
+
+co2_fit2 <- lm(co2 ~ day0 + day0sq, data = co2_sq)
+
 tidy(co2_fit2)
-co2_model2 <- augment(co2_fit2, co2_spo)
-ggplot(co2_model2, aes(x=date, y=???)) + 
+
+co2_model2 <- augment(co2_fit2, co2_sq)
+```
+
+
+```{r}
+ggplot(co2_model2, 
+       aes(x = date, y = co2)) + 
   geom_point() + 
-  geom_line(aes(y=.fitted), colour="blue")
-ggplot(co2_model2, aes(x=???, y=.std.resid)) + 
-  geom_point() 
-co2_fit3 <- lm(co2~day0+I(day0^2), data=co2_spo)
+  geom_line(aes(y = .fitted), colour="blue")
+
+ggplot(co2_model2, 
+       aes(x = .fitted, y = .std.resid)) + 
+  geom_point()
+```
+
+
+```{r}
+co2_fit3 <- lm(co2~ day0 + I(day0^2), data = co2_sq)
+
 tidy(co2_fit3)
-co2_model3 <- ???(co2_fit3, co2_spo)
-ggplot(???, aes(x=date, y=co2)) + 
+
+co2_model3 <- augment(co2_fit3, co2_spo)
+
+ggplot(co2_model3, aes(x=date, y=co2)) + 
   geom_point() + 
   geom_line(aes(y=.fitted), colour="blue")
-ggplot(???, aes(x=date, y=.std.resid)) + 
+
+ggplot(co2_model3, aes(x=date, y=.std.resid)) + 
   geom_point() 
 ```
 
@@ -275,7 +295,7 @@ Using your model, built using values collected the south pole sensor, see how we
 2. The code below is a way to fit new data. It needs a bit of modification.
 
 ```
-co2_model_ptb <- augment(co2_fit2, newdata=CO2.ptb)
+co2_model_ptb <- augment(co2_fit2, newdata=co2_ptb)
 ```
 
 3. Plot the data, and overlay the fitted model. You can use code like this.
@@ -300,16 +320,18 @@ co2_ptb <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations
          lon = 0, 
          stn = "ptb") %>%
   filter(flg == 0) %>%
-  mutate(date = ymd(date))
+  mutate(date = ymd(date)) %>% 
+  mutate(day0 = day - min(co2_spo$day))
 
-CO2.ptb <- CO2.ptb %>% ???(day0 = day - min(co2_spo$day))
-co2_model_ptb <- ???(co2_fit3, newdata=CO2.ptb)
+co2_model_ptb <- ???(co2_fit3, newdata=co2_ptb)
+
 ggplot(co2_model_ptb, aes(x=date, y=co2)) + 
   geom_???() + 
   geom_line(aes(y=???), colour="blue")
+
 # This will give the wrong model fit because day is not calculated correctly
-CO2.ptb <- CO2.ptb %>% mutate(day0 = day - min(day))
-co2_model_ptb2 <- augment(co2_fit3, newdata=CO2.ptb)
+co2_ptb <- co2_ptb %>% mutate(day0 = day - min(day))
+co2_model_ptb2 <- augment(co2_fit3, newdata=co2_ptb)
 ggplot(co2_model_ptb2, aes(x=date, y=co2)) + 
   geom_point() + 
   geom_line(aes(y=.fitted), colour="blue")

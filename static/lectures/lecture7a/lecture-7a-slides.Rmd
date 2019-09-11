@@ -435,9 +435,7 @@ the size of the scatter around the model. (We'll talk more about this later.)
 ---
 class: bg-main1
 
-# Your Turn:
-
-- go to rstudio.cloud
+# Your Turn: go to rstudio.cloud and start exercise 7a
 
 ---
 class: bg-main1
@@ -817,6 +815,13 @@ glance(m_ht_lands)$r.squared
 ---
 class: bg-main1
 
-# Your Turn
+# Your Turn: go to rstudio.cloud
 
-- go to rstudio.cloud
+---
+class: bg-main1
+
+# References
+
+.huge[
+- [data science in a box](https://datasciencebox.org/)
+]
