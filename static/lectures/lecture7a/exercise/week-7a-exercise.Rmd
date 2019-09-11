@@ -1,0 +1,330 @@
+---
+title: Lecture 7A Exercises
+author: "your name"
+output: html_document
+---
+
+# Correlation vs linear model
+
+- Linear association between two variables can be described by correlation, but 
+- a multiple regression model can describe linear relationship between a response variable and many explanatory variables. 
+
+For two variables $X, Y$, correlation is:
+
+$$r=\frac{\sum_{i=1}^{n} (x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2}\sqrt{\sum_{i=1}^{n}(y_i-\bar{y})^2}} = \frac{cov(X,Y)}{s_xs_y}$$
+
+# Correlation
+
+```{r echo=FALSE}
+library(mvtnorm)
+library(tidyverse)
+df <- tibble(r = seq(-0.9, 0.9, 0.1))
+vfun <- function(df) {
+  vc <- matrix(c(1, df$r, df$r, 1), ncol=2, byrow=TRUE)
+  d <- as_tibble(rmvnorm(100, mean=c(0,0), vc))
+  return(d)
+}
+smp <- df %>%
+  split(.$r) %>%
+  map(vfun)
+
+smp_df <- bind_rows(smp) %>% mutate(r = rep(df$r, rep(100, 19)))
+
+ggplot(smp_df, aes(x=V1, y=V2)) + geom_point(alpha=0.5) +
+  facet_wrap(~r, ncol=5, labeller = "label_both") + 
+  theme(aspect.ratio=1) +
+  xlab("X") + ylab("Y")
+```
+
+# Simple regression
+
+$$y_i=\beta_0+\beta_1x_{i}+\varepsilon_i, ~~~ i=1, \dots, n$$
+
+where (least squares) estimates for $\beta_0, \beta_1$ are:
+
+$$b_1 = r\frac{s_y}{s_x}, ~~~~~~~~ b_0=\bar{y}-b_1\bar{x}$$
+
+Slope is related to correlation, but it also depends on the
+variation of observations, in both of the variables. 
+
+```{r echo=FALSE}
+b1 <- smp %>%
+  map_dbl(~ coefficients(lm(V2 ~ V1, data = .x))[2])
+
+sample_r <- smp %>%
+  map_dbl(~ cor(.x$V1, .x$V2))
+
+df2 <- tibble(b1 = b1, rs = sample_r, r = names(b1), V1 = 0, V2 = 4) %>%
+  mutate(r = fct_relevel(r, as.character(df$r)))
+
+smp_df$r <- fct_relevel(as.character(smp_df$r), as.character(df$r))
+
+ggplot(smp_df, 
+       aes(x = V1, y = V2)) + 
+  geom_point(alpha = 0.5) +
+  facet_wrap(~r, 
+             ncol = 5, 
+             labeller = "label_both") +
+  theme(aspect.ratio = 1) + 
+  geom_smooth(method = "lm") +
+  xlab("X") + ylab("Y") +
+  geom_text(data = df2,
+    aes(x = V1,
+        y = V2,
+        label = paste0("b1=", 
+                       b1 = round(b1, 2), 
+                       ", r=", 
+                       r = round(rs, 2))),
+    size = 3)
+```
+
+### Multiple regression model
+
+$$y_i=\beta_0+\beta_1x_{i1}+\dots +\beta_px_{ip}+\varepsilon_i, ~~~ i=1, \dots, n$$
+where $\varepsilon$ is a sample from a normal distribution, $N(0, \sigma^2)$.
+
+### What a model says
+
+- The fitted model allows us to predict a value for the response, e.g.
+    - Suppose $\widehat{y}=2+3x+x^2-2x^3$, then for $x=0.5, \widehat{y}=2+3*0.5+0.5^2-2*0.5^3=3.5$
+    - Suppose $\widehat{y}=3\exp(2x)$, then for $x=-1, \widehat{y}=3\exp(2*(-1))=0.406$
+- How useful the model prediction is depends on the residual error. If the model explains little of the relationship then the residual error will be large and predictions less useful.
+- Predictions within the domain of the explanatory variables used to fit the model will be more reliable than **extrapolating** outside the domain. Particularly this is true for nonlinear models. 
+
+```{r cor-quiz, echo=FALSE}
+library(mvtnorm)
+df1 <- rmvnorm(100, sigma=matrix(c(1,0.6,0.6,1),
+               ncol=2, byrow=TRUE))
+df2 <- rmvnorm(100, sigma=matrix(c(1,-0.7,-0.7,1),
+               ncol=2, byrow=TRUE))
+df3 <- rmvnorm(100, sigma=matrix(c(1,0.4,0.4,1),
+               ncol=2, byrow=TRUE))
+df <- data.frame(x1=c(df1[,1], df2[,1], df3[,1]), 
+                 x2=c(df1[,2], df2[,2], df3[,2]), 
+                 group=c(rep("A", 100), rep("B", 100), rep("C", 100)))
+ggplot(df, aes(x=x1, y=x2)) + geom_point() +
+  facet_wrap(~group) +
+  theme(aspect.ratio=1)
+
+```
+
+### Questions
+
+- Which plot has correlation about -0.7?
+- Which plot has correlation about 0.6?
+- Which plot has correlation about 0.4?
+
+# Part 1: modelling
+
+## Let's fit a model to CO2
+
+First we read in the data
+
+```{r data-read}
+library(lubridate)
+co2_spo <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", 
+                    col_names = c("date", 
+                                  "time", 
+                                  "day", 
+                                  "decdate", 
+                                  "n", 
+                                  "flg", 
+                                  "co2"), 
+                    skip = 69) %>%
+  mutate(lat = -90.0, 
+         lon = 0, 
+         stn = "spo") %>%
+  filter(flg == 0) %>%
+  mutate(date = ymd(date)) %>%
+#   First we re-scale to start from 1 until the number of days in the time frame. 
+  mutate(day0 = day - min(day))
+
+co2_spo
+```
+
+### Task: plot date against co2 with points
+
+```{r}
+ggplot(co2_spo, 
+       aes(x = date, 
+           y = co2)) + 
+  geom_point()
+```
+
+### Task: fit a linear model, using `day` variable as the explanatory variable. 
+
+## compare `day` against `day0`
+
+```{r}
+summary(co2_spo$day)
+summary(co2_spo$day0)
+
+```
+
+# question: "What is range of dates of this data?"
+
+## Task: fit a linear model, predicting co2 using day0
+
+```{r}
+co2_fit <- lm(co2 ~ day0, data = co2_spo)
+co2_fit
+```
+
+
+```{r}
+library(broom)
+tidy_co2_fit <- tidy(co2_fit)
+tidy_co2_fit
+int <- round(tidy_co2_fit$estimate[1], 4)
+slope <- round(tidy_co2_fit$estimate[2], 4)
+```
+
+Then the fitted model will be:
+
+$$\widehat{co2}=$$ `r int` + `r slope`.
+
+# Task: Predict from the model
+
+- For day0=10000 
+- the model predicts co2 to be `r int`+`r slope`*10000 = `r int + slope * 10000`. 
+
+## Question: What date is day0=10000? (Hint: use filter and select on the data to work it out)"
+
+# Model basics in R
+
+- Formula
+    - `response ~ explanatory` specifies the reponse variable and explanatory variable from the data
+    - e.g. `y ~ x1+x2+x3` three explanatory variables to be used to model response, main effects only
+    - `y ~ x1*x2*x3` include interaction terms
+    - `y ~ x - 1` specifies to force model to go through 0, that $b_0$ will be set to 0.
+- Extract components using the broom package
+    - `tidy` extracts the coefficients
+    - `augment` extracts residuals and fitted values, and pointwise diagnostics
+    - `glance` extracts model fit summaries
+
+# Plot the model
+
+We can use the `augment` function to extract residuals and fitted values, and pointwise diagnostics
+
+```{r augmented-model}
+co2_model <- augment(co2_fit, co2_spo)
+
+co2_model
+```
+
+plot the date and co2 with points and add in the line
+
+```{r augmented-model}
+ggplot(co2_model, 
+       aes(x = date, 
+           y = co2)) + 
+  geom_point() + 
+  geom_line(aes(y = .fitted), colour = "blue")
+```
+
+### Examine residuals
+
+- **Residuals** are calculated for each observed $y$ by computing the difference: $y_i-\widehat{y_i}$.
+- Plotting the residuals against fitted values (or x in simple linear models) can reveal problems with the fit.
+
+```{r}
+ggplot(co2_model, 
+       aes(x = date, 
+           y = .std.resid)) + 
+  geom_point() 
+```
+
+### Assessment of fit
+
+- The relationship between co2 and day0 is nonlinear!
+- The linear model does a reasonable job of explaining the increasing trend over time, but it especially mismatches the observed data at the ends, and middle of the time period.
+
+### Your turn
+
+- Try to add a quadratic term (in day0), or more, to the model to improve the fit. 
+- Hints: (1) you may want to centre the day0 values, or even standardise them, to get a nice quadratic form, (2) If the fit is good, your residual vs fitted plot should have values evenly spread above and below 0, and relatively even across the time span. 
+
+```{r eval=FALSE, echo=FALSE, results='hide', fig.show='hide'}
+co2_spo <- co2_spo %>%
+  ???(day0sq=(day0-median(day0))^2)
+co2_fit2 <- lm(co2~day0+???, data=co2_spo)
+tidy(co2_fit2)
+co2_model2 <- augment(co2_fit2, co2_spo)
+ggplot(co2_model2, aes(x=date, y=???)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+ggplot(co2_model2, aes(x=???, y=.std.resid)) + 
+  geom_point() 
+co2_fit3 <- lm(co2~day0+I(day0^2), data=co2_spo)
+tidy(co2_fit3)
+co2_model3 <- ???(co2_fit3, co2_spo)
+ggplot(???, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+ggplot(???, aes(x=date, y=.std.resid)) + 
+  geom_point() 
+```
+
+
+## Your Turn: Predict co2 at another location
+
+Using your model, built using values collected the south pole sensor, see how well it fits values from Point Barrow, Alaska. 
+
+1. Download the data. You can use almost the same code as for SPO but check the file name at http://scrippsco2.ucsd.edu/data/atmospheric_co2/ptb.
+
+2. The code below is a way to fit new data. It needs a bit of modification.
+
+```
+co2_model_ptb <- augment(co2_fit2, newdata=CO2.ptb)
+```
+
+3. Plot the data, and overlay the fitted model. You can use code like this.
+
+```
+ggplot(co2_model, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+```
+
+```{r eval=FALSE, echo=FALSE}
+co2_ptb <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/flask_co2/daily/daily_flask_co2_ptb.csv", 
+                    col_names = c("date", 
+                                  "time", 
+                                  "day", 
+                                  "decdate", 
+                                  "n",
+                                  "flg", 
+                                  "co2"), 
+                    skip = 69) %>%
+  mutate(lat = -90.0, 
+         lon = 0, 
+         stn = "ptb") %>%
+  filter(flg == 0) %>%
+  mutate(date = ymd(date))
+
+CO2.ptb <- CO2.ptb %>% ???(day0 = day - min(co2_spo$day))
+co2_model_ptb <- ???(co2_fit3, newdata=CO2.ptb)
+ggplot(co2_model_ptb, aes(x=date, y=co2)) + 
+  geom_???() + 
+  geom_line(aes(y=???), colour="blue")
+# This will give the wrong model fit because day is not calculated correctly
+CO2.ptb <- CO2.ptb %>% mutate(day0 = day - min(day))
+co2_model_ptb2 <- augment(co2_fit3, newdata=CO2.ptb)
+ggplot(co2_model_ptb2, aes(x=date, y=co2)) + 
+  geom_point() + 
+  geom_line(aes(y=.fitted), colour="blue")
+```
+
+## Extension exercise
+
+
+## Seasonality
+
+- If you plot the residuals on a short time frame, you can see that there is some seasonality. Values are high in spring, and low in autumn! 
+- Brainstorm with your table members - yes, please talk with each other - ideas on how to fit a model that takes seasonality into account. There are multiple solutions, and maybe some that we haven't thought of.
+
+```{r eval=FALSE, echo=FALSE}
+library(lubridate)
+ggplot(filter(co2_model2, year(date)>2002, year(date)<2005), aes(x=date, y=.std.resid)) + 
+  geom_point()
+```
