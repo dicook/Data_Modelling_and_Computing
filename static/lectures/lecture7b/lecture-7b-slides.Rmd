@@ -235,7 +235,7 @@ class: bg-main1
 
 # correlation: animated
 
-```{r gganim-cor, eval = FALSE, echo = FALSE}
+```{r gganim-cor, echo = FALSE}
 library(scico)
 p_cor <- ggplot(df_cor,
                 aes(x = V1, 
