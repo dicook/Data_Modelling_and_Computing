@@ -208,6 +208,7 @@ We can use the `augment` function to extract residuals and fitted values, and po
 
 ```{r augmented-model2}
 co2_model <- augment(co2_fit, co2_spo)
+augment(co2_fit)
 
 co2_model
 ```

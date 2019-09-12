@@ -1,0 +1,75 @@
+unnamed-chunk-1	
+create-cor	df	df_cor	smp	vfun
+fun-gg-xy-cor	gg_xy_cor
+plot-strong-pos-corr	
+plot-pos-corr	
+plot-meh-corr	
+plot-neg-corr	
+plot-strong-neg-corr	
+gganim-cor	
+read-paris	pp
+unnamed-chunk-2	m_wt_ht
+unnamed-chunk-3	
+unnamed-chunk-4	
+unnamed-chunk-5	
+unnamed-chunk-6	
+gg-gapminder-line	
+unnamed-chunk-7	oz
+unnamed-chunk-8	p1
+unnamed-chunk-9	oz_lm
+center-eyar	gap	oz
+unnamed-chunk-10	oz_lm
+unnamed-chunk-11	oz_mod
+unnamed-chunk-12	p2
+unnamed-chunk-13	p3
+unnamed-chunk-14	nz	nz_lm
+unnamed-chunk-15	japan	japan_lm
+unnamed-chunk-16	italy	italy_lm
+unnamed-chunk-17	by_country
+unnamed-chunk-18	
+unnamed-chunk-19	lm_afganistan	lm_albania	lm_algeria
+unnamed-chunk-20	by_country_model
+unnamed-chunk-21	
+unnamed-chunk-22	
+unnamed-chunk-23	
+unnamed-chunk-24	country_coefs
+unnamed-chunk-25	
+unnamed-chunk-26	tidy_country_coefs
+unnamed-chunk-27	
+unnamed-chunk-28	country_model
+unnamed-chunk-29	p1	p2
+unnamed-chunk-30	p	.lecture-7b-slides_cache/html/unnamed-chunk-30_8bc555c9af290fa8aeca7af9ca4fc46c_meta
+pkg-load	
+fit-paris	m_wt_ht
+tidy-paris	
+glance-paris	
+show-elephant	
+show-gapminder	
+gapminder-oz	oz
+plot-gapminder-oz	
+tidy-oz-gapminder	oz_lm
+oz-gapminder-centered-year	oz_lm
+oz-gapminder-augment	oz_aug
+oz-gap-aug	
+oz-gap-year-resid	
+lm-nz	nz	nz_lm
+lm-japan	japan	japan_lm
+lm-italy	italy	italy_lm
+nest	by_country
+show-nest	
+fit-many-model	lm_afganistan	lm_albania	lm_algeria
+map-country	country_model
+print-model	
+tidy-printed-model	
+tidy-many-printed-model	
+map-tidy-model	country_coefs
+unnest-coefs	
+tidy-unnested-coefs	tidy_country_coefs
+oz-unnested-coef	
+augmente-many-countries	country_aug
+plot-gapminder-data	p1	p2
+ggplotly-aug-coef	p	.lecture-7b-slides_cache/html/ggplotly-aug-coef_be080329c57712f27e7f1b8cdb95fc26_meta
+glance-country	country_glance
+country-fit	
+show-bad-fit	badfit	gap_bad
+variance	

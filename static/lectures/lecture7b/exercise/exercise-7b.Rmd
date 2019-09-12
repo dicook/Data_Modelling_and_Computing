@@ -1,0 +1,147 @@
+---
+title: "Exercise 7A"
+author: "YOUR NAME"
+output: html_document
+---
+
+For the co2 model fitting from yesterday, examine the model fit statistics for the linear model vs the one with a quadratic term. 
+
+What do they indicate is the better fit?
+
+Try fitting the seasonal pattern with one of the ideas you came up with yesterday. Use the model fit statistics, and residual plots, to determine if the model is better than the quadratic model.
+
+```{r eval=FALSE}
+library(lubridate)
+co2_spo <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", 
+                    col_names = c("date", 
+                                  "time", 
+                                  "day", 
+                                  "decdate", 
+                                  "n", 
+                                  "flg", 
+                                  "co2"), 
+                    skip = 69) %>%
+  mutate(lat = -90.0, 
+         lon = 0, 
+         stn = "spo") %>%
+  filter(flg == 0) %>%
+  mutate(date = ymd(date)) %>%
+#   First we re-scale to start from 1 until the number of days in the time frame. 
+  mutate(day0 = day - min(day)) %>%
+  mutate(month = month(date, label = TRUE, abbr = TRUE))
+```
+
+
+```{r eval=FALSE}
+co2_fit1 <- lm(co2 ~ day0, data = co2_spo)
+co2_fit2 <- lm(co2 ~ day0 + I(day0^2), data = co2_spo)
+glance(co2_fit1)
+glance(co2_fit2)
+
+# Plot both models
+co2_model2 <- augment(co2_fit2, co2_spo)
+
+ggplot(co2_spo, aes(x = day0, y = co2)) + geom_point() +
+  geom_line(data = co2_model1, aes(y = .fitted), colour = "blue") +
+  geom_line(data = co2_model2, aes(y = .fitted), colour = "red")
+```
+
+```{r eval=FALSE}
+# Fit the model and print fit statistics
+co2_fit3 <- lm(co2 ~ day0 + I(day0^2) + month, data = co2_spo)
+glance(co2_fit3)
+
+# Add the fitted values and residuals to data set
+co2_model3 <- augment(co2_fit3, co2_spo)
+
+# Plot all three models
+ggplot(co2_spo, 
+       aes(x = day0, 
+           y = co2)) + geom_point() +
+  geom_line(data = co2_model1, aes(y = .fitted), colour = "blue") +
+  geom_line(data = co2_model2, aes(y = .fitted), colour = "red") +
+  geom_line(data = co2_model3, aes(y = .fitted), colour = "orange")
+
+# Print out the model coefficients
+tidy(co2_fit3)
+
+# Zoom in and examine a small subset
+ggplot(
+  filter(co2_model3, year(date) > 1975, year(date) < 1987),
+  aes(x = date, y = co2)
+) +
+  geom_point() +
+  geom_line(aes(y = .fitted), colour = "blue")
+```
+
+```{r eval=FALSE}
+# Fit an interaction term, to allow the coefficients for the quadratic term to change for each month
+co2_fit4 <- lm(co2 ~ day0 * month + I(day0^2) * month, data = co2_spo)
+
+glance(co2_fit4)
+
+co2_model4 <- augment(co2_fit4, co2_spo)
+
+ggplot(co2_model4, aes(x = date, y = co2)) +
+  geom_point() +
+  geom_line(aes(y = .fitted), colour = "blue")
+
+ggplot(
+  filter(co2_model4, 
+         year(date) > 1965, year(date) < 1972),
+  aes(x = date, y = co2)) +
+  geom_point() +
+  geom_line(aes(y = .fitted), colour = "blue")
+# It makes too complex a model, which probably doesn't help us get any better understanding of CO2
+```
+
+- Fit the models to all countries
+- Pick your favourite country (not Australia), print the coefficients, and make a hand sketch of the the model fit.
+
+# Using the gapminder data
+
+
+## content / process from the lecture
+
+
+## Your turn: new data - fertility
+
+-Using the fertility data from the [gapminder web site](https://www.gapminder.org/data/) ()
+- Conduct the same analysis as previous, but for life expectancy.
+- Find unusual countries
+
+The code below will help you read in the data and process it, but you will need to make some changes to do the full analysis.
+
+```{r eval=FALSE}
+library(readxl)
+library(janitor)
+fertility_raw <- read_xlsx("~/Downloads/indicator undata total_fertility.xlsx") %>%
+  clean_names() %>%
+  rename(country = total_fertility_rate)
+```
+
+You will need to gather the data into longer form, use the `gather` function. 
+
+You should know how to do the rest from your experience with past assignments.
+
+```{r eval=FALSE}
+fertility <- fertility_raw %>% 
+  gather(key = year, 
+                value = fertility, 
+                -country) %>%
+  mutate(year = parse_number(year)) %>%
+  filter(year > 1950) %>%
+  mutate(year1950 = year - 1950)
+```
+
+
+plot the fertility data for each year
+
+```{r eval=FALSE}
+ggplot(fertility, 
+       aes(x = year, 
+           y = fertility, 
+           group = country)) +
+  geom_line(alpha=0.1)
+```
+
