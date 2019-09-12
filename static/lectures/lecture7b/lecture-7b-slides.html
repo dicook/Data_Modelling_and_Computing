@@ -22,7 +22,7 @@
 class: center, middle, inverse, title-slide
 
 # ETC1010: Data Modelling and Computing
-## Lecture 7A: Linear Models
+## Lecture 7B: Linear Models part II
 ### Dr. Nicholas Tierney &amp; Professor Di Cook
 ### EBS, Monash U.
 ### 2019-09-13
@@ -38,40 +38,35 @@ class: center, middle, inverse, title-slide
 
 
 
+---
+class: bg-main1
+
+# Recap
+
+---
+class: bg-main1
 
 # Overview
 
 - Feedback from the tests
-
-- What is correlation
 - What is r2
   - (pull examples from exercise)
 - short exercise in class to calculate correlation and r2 and answer questions
-  
-- unpacking lm and model objects
 - augment?
-- why are making day0
 - understanding residuals
 - components of variation?
-
-- understanding tidy, glance, and augment
-- using tidy, glance, and augment
-
-- Briefly show the examples of AIC, BIC, Deviance
-  - These are evidence to make a decision
-  - Just so they have notes on how to interpret these (higher/lower is better?)
   
 ---
 class: bg-main1
 
-# Feedback from assignment 1
+# Feedback from assignment 1 (from Sherry)
 
 .vlarge[
 - Some students forgot to answer some of the questions: "Is there anything else in the excel spreadsheet we could look at?".
 - Some groups need to follow Amelia's three-sentence interpretation to describe plots.
 - For the last questions, I (Sherry) expect people to also talks about how the analysis would help with the business.
-
-Presentation &amp; gramma:
+ 
+Presentation &amp; grammar:
 - Remember to do a spell check before submitting any of your files
 - Don't need install.package in your Rmd library() is enough
 ]
@@ -79,9 +74,19 @@ Presentation &amp; gramma:
 ---
 class: bg-main1
 
-# Mid-semester exam
+# Other Admin
 
+## Mid-semester exam
+
+.huge[
 - Marks will be released at the end of class
+]
+
+## Project deadline (today)
+
+.huge[
+Find team members, and potential topics to study (ed quiz will be posted soon)
+]
 
 ---
 class: bg-main1
@@ -96,45 +101,28 @@ class: bg-main1
 ---
 class: bg-main1
 
-# Strongest Positive correlation: As one variable increases, so does another variable
-
-
-```r
-gg_xy_cor(df_cor, 1)
-```
+## Strongest Positive correlation: As one variable increases, so does another variable
 
 &lt;img src="lecture-7b-slides_files/figure-html/plot-strong-pos-corr-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: bg-main1
 
-# strong Positive correlation: As one variable increases, so does another variable
-
-
-```r
-gg_xy_cor(df_cor, 0.75)
-```
+## strong Positive correlation: As one variable increases, so does another variable
 
 &lt;img src="lecture-7b-slides_files/figure-html/plot-pos-corr-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: bg-main1
 
-# zero correlation: neither variables are related linearly
-
-
-```r
-gg_xy_cor(df_cor, 0)
-```
+## zero correlation: neither variables are related linearly
 
 &lt;img src="lecture-7b-slides_files/figure-html/plot-meh-corr-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 
-# strong negative correlation: as one variable increases, another variable decreases
+---
+class: bg-main1
 
-
-```r
-gg_xy_cor(df_cor, -0.5)
-```
+## strong negative correlation: as one variable increases, another variable decreases
 
 &lt;img src="lecture-7b-slides_files/figure-html/plot-neg-corr-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 
@@ -142,12 +130,7 @@ gg_xy_cor(df_cor, -0.5)
 ---
 class: bg-main1
 
-# STRONG negative correlation: as one variable increases, another variable decreases
-
-
-```r
-gg_xy_cor(df_cor, -1)
-```
+## STRONG negative correlation: as one variable increases, another variable decreases
 
 &lt;img src="lecture-7b-slides_files/figure-html/plot-strong-neg-corr-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 
@@ -164,12 +147,13 @@ class: bg-main1
 
 # definition of correlation
 
+.huge[
 For two variables `\(X, Y\)`, correlation is:
+]
 
-$$
-r=\frac{\sum_{i=1}^{n} (x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2}\sqrt{\sum_{i=1}^{n}(y_i-\bar{y})^2}} = \frac{cov(X,Y)}{s_xs_y}
-$$
-
+.vlarge[
+`$$r=\frac{\sum_{i=1}^{n} (x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2}\sqrt{\sum_{i=1}^{n}(y_i-\bar{y})^2}} = \frac{cov(X,Y)}{s_xs_y}$$`
+]
 ---
 class: bg-main1
 
@@ -180,20 +164,31 @@ class: bg-main1
 ---
 class: bg-main1
 
-# Remember: Correlation does not equal causation
+# Remember! Correlation does not equal causation
 
 ---
 class: bg-main1
 
-# What is `\(R^2\)`
+# What is `\(R^2\)`?
+
+.huge[
+- (model variance)/(total variance), the amount of variance in response explained by the model. 
+- Always ranges between 0 and 1, with 1 indicating a perfect fit. 
+- Adding more variables to the model will always increase `\(R^2\)`, so what is important is how big an increase is gained. - Adjusted `\(R^2\)` reduces this for every additional variable added. 
+]
+
+---
+class: bg-main1
+
+# plots of rsquared
+
+
 
 
 ---
 class: bg-main1
 
 # unpacking lm and model objects
-
-- last class we fit a model that predicted the height from the width
 
 
 ```r
@@ -203,31 +198,49 @@ pp
 
 ```
 ## # A tibble: 3,393 x 61
-##    name  sale  lot   position dealer  year origin_author origin_cat school_pntg
-##    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;      &lt;chr&gt;      
-##  1 L176… L1764 2       0.0328 L       1764 F             O          F          
-##  2 L176… L1764 3       0.0492 L       1764 I             O          I          
-##  3 L176… L1764 4       0.0656 L       1764 X             O          D/FL       
-##  4 L176… L1764 5       0.0820 L       1764 F             O          F          
-##  5 L176… L1764 5       0.0820 L       1764 F             O          F          
-##  6 L176… L1764 6       0.0984 L       1764 X             O          I          
-##  7 L176… L1764 7       0.115  L       1764 F             O          F          
-##  8 L176… L1764 7       0.115  L       1764 F             O          F          
-##  9 L176… L1764 8       0.131  L       1764 X             O          I          
-## 10 L176… L1764 9       0.148  L       1764 D/FL          O          D/FL       
-## # … with 3,383 more rows, and 52 more variables: diff_origin &lt;dbl&gt;, logprice &lt;dbl&gt;,
-## #   price &lt;dbl&gt;, count &lt;dbl&gt;, subject &lt;chr&gt;, authorstandard &lt;chr&gt;, artistliving &lt;dbl&gt;,
-## #   authorstyle &lt;chr&gt;, author &lt;chr&gt;, winningbidder &lt;chr&gt;, winningbiddertype &lt;chr&gt;,
-## #   endbuyer &lt;chr&gt;, Interm &lt;dbl&gt;, type_intermed &lt;chr&gt;, Height_in &lt;dbl&gt;, Width_in &lt;dbl&gt;,
-## #   Surface_Rect &lt;dbl&gt;, Diam_in &lt;dbl&gt;, Surface_Rnd &lt;dbl&gt;, Shape &lt;chr&gt;, Surface &lt;dbl&gt;,
-## #   material &lt;chr&gt;, mat &lt;chr&gt;, materialCat &lt;chr&gt;, quantity &lt;dbl&gt;, nfigures &lt;dbl&gt;,
-## #   engraved &lt;dbl&gt;, original &lt;dbl&gt;, prevcoll &lt;dbl&gt;, othartist &lt;dbl&gt;, paired &lt;dbl&gt;,
-## #   figures &lt;dbl&gt;, finished &lt;dbl&gt;, lrgfont &lt;dbl&gt;, relig &lt;dbl&gt;, landsALL &lt;dbl&gt;,
-## #   lands_sc &lt;dbl&gt;, lands_elem &lt;dbl&gt;, lands_figs &lt;dbl&gt;, lands_ment &lt;dbl&gt;, arch &lt;dbl&gt;,
-## #   mytho &lt;dbl&gt;, peasant &lt;dbl&gt;, othgenre &lt;dbl&gt;, singlefig &lt;dbl&gt;, portrait &lt;dbl&gt;,
-## #   still_life &lt;dbl&gt;, discauth &lt;dbl&gt;, history &lt;dbl&gt;, allegory &lt;dbl&gt;, pastorale &lt;dbl&gt;,
-## #   other &lt;dbl&gt;
+##    name  sale  lot   position dealer  year origin_author origin_cat
+##    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;     
+##  1 L176… L1764 2       0.0328 L       1764 F             O         
+##  2 L176… L1764 3       0.0492 L       1764 I             O         
+##  3 L176… L1764 4       0.0656 L       1764 X             O         
+##  4 L176… L1764 5       0.0820 L       1764 F             O         
+##  5 L176… L1764 5       0.0820 L       1764 F             O         
+##  6 L176… L1764 6       0.0984 L       1764 X             O         
+##  7 L176… L1764 7       0.115  L       1764 F             O         
+##  8 L176… L1764 7       0.115  L       1764 F             O         
+##  9 L176… L1764 8       0.131  L       1764 X             O         
+## 10 L176… L1764 9       0.148  L       1764 D/FL          O         
+## # … with 3,383 more rows, and 53 more variables: school_pntg &lt;chr&gt;,
+## #   diff_origin &lt;dbl&gt;, logprice &lt;dbl&gt;, price &lt;dbl&gt;, count &lt;dbl&gt;,
+## #   subject &lt;chr&gt;, authorstandard &lt;chr&gt;, artistliving &lt;dbl&gt;,
+## #   authorstyle &lt;chr&gt;, author &lt;chr&gt;, winningbidder &lt;chr&gt;,
+## #   winningbiddertype &lt;chr&gt;, endbuyer &lt;chr&gt;, Interm &lt;dbl&gt;,
+## #   type_intermed &lt;chr&gt;, Height_in &lt;dbl&gt;, Width_in &lt;dbl&gt;,
+## #   Surface_Rect &lt;dbl&gt;, Diam_in &lt;dbl&gt;, Surface_Rnd &lt;dbl&gt;, Shape &lt;chr&gt;,
+## #   Surface &lt;dbl&gt;, material &lt;chr&gt;, mat &lt;chr&gt;, materialCat &lt;chr&gt;,
+## #   quantity &lt;dbl&gt;, nfigures &lt;dbl&gt;, engraved &lt;dbl&gt;, original &lt;dbl&gt;,
+## #   prevcoll &lt;dbl&gt;, othartist &lt;dbl&gt;, paired &lt;dbl&gt;, figures &lt;dbl&gt;,
+## #   finished &lt;dbl&gt;, lrgfont &lt;dbl&gt;, relig &lt;dbl&gt;, landsALL &lt;dbl&gt;,
+## #   lands_sc &lt;dbl&gt;, lands_elem &lt;dbl&gt;, lands_figs &lt;dbl&gt;, lands_ment &lt;dbl&gt;,
+## #   arch &lt;dbl&gt;, mytho &lt;dbl&gt;, peasant &lt;dbl&gt;, othgenre &lt;dbl&gt;,
+## #   singlefig &lt;dbl&gt;, portrait &lt;dbl&gt;, still_life &lt;dbl&gt;, discauth &lt;dbl&gt;,
+## #   history &lt;dbl&gt;, allegory &lt;dbl&gt;, pastorale &lt;dbl&gt;, other &lt;dbl&gt;
 ```
+
+---
+class: bg-main1
+
+# unpacking linear models
+
+
+```r
+ggplot(data = pp, aes(x = Width_in, y = Height_in)) +
+  geom_point() +
+  geom_smooth(method = "lm") # lm for linear model
+```
+
+&lt;img src="lecture-7b-slides_files/figure-html/gg-paris-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
 
 ---
 class: bg-main1
@@ -235,10 +248,11 @@ class: bg-main1
 # template for linear model
 
 .huge[
-`lm(&lt;FORMULA&gt;, &lt;DATA&gt;)
+`lm(&lt;FORMULA&gt;, &lt;DATA&gt;)`
 
-&lt;FORMULA&gt;
-RESPONSE ~ EXPLANATORY VARIABLES
+`&lt;FORMULA&gt;`
+
+`RESPONSE ~ EXPLANATORY VARIABLES`
 ]
 
 ---
@@ -248,9 +262,9 @@ class: bg-main1
 
 
 ```r
-m_wt_ht &lt;- lm(Height_in ~ Width_in, data = pp)
+m_ht_wt &lt;- lm(Height_in ~ Width_in, data = pp)
 
-m_wt_ht
+m_ht_wt
 ```
 
 ```
@@ -279,7 +293,7 @@ class: bg-main1
 
 
 ```r
-tidy(m_wt_ht)
+tidy(m_ht_wt)
 ```
 
 ```
@@ -289,6 +303,25 @@ tidy(m_wt_ht)
 ## 1 (Intercept)    3.62    0.254        14.3 8.82e-45
 ## 2 Width_in       0.781   0.00950      82.1 0.
 ```
+
+
+---
+
+# Visualizing residuals
+
+&lt;img src="lecture-7b-slides_files/figure-html/vis-resid-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Visualizing residuals (cont.)
+
+&lt;img src="lecture-7b-slides_files/figure-html/vis-resid-line-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Visualizing residuals (cont.)
+
+&lt;img src="lecture-7b-slides_files/figure-html/vis-redis-segment-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: bg-main1
@@ -301,15 +334,15 @@ class: bg-main1
 
 
 ```r
-glance(m_wt_ht)
+glance(m_ht_wt)
 ```
 
 ```
 ## # A tibble: 1 x 11
-##   r.squared adj.r.squared sigma statistic p.value    df  logLik    AIC    BIC deviance
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
-## 1     0.683         0.683  8.30     6749.       0     2 -11083. 22173. 22191.  216055.
-## # … with 1 more variable: df.residual &lt;int&gt;
+##   r.squared adj.r.squared sigma statistic p.value    df  logLik    AIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1     0.683         0.683  8.30     6749.       0     2 -11083. 22173.
+## # … with 3 more variables: BIC &lt;dbl&gt;, deviance &lt;dbl&gt;, df.residual &lt;int&gt;
 ```
 
 ---
@@ -317,24 +350,55 @@ class: bg-main1
 
 # AIC, BIC, Deviance
 
-  - AIC, BIC, and Deviance are evidence to make a decision
+.huge[
 
-- `\(R^2\)`: (model variance)/(total variance), the amount of variance in response explained by the model. Always ranges between 0 and 1, with 1 indicating a perfect fit. Adding more variables to the model will always increase `\(R^2\)`, so what is important is how big an increase is gained. Adjusted `\(R^2\)` reduces this for every additional variable added. 
+- **AIC**, **BIC**, and **Deviance** are evidence to make a decision
 - Deviance is the residual variation, how much variation in response that IS NOT explained by the model. The close to 0 the better, but it is not on a standard scale. In comparing two models if one has substantially lower deviance, then it is a better model.
-- Similarly BIC (Bayes Information Criterion) indicates how well the model fits, best used to compare two models. The lower is better.
-- df is the degrees of freedom left from the model fit. Starts at `\(n\)` (sample size) and drops for each additional parameter estimated by the model. 
+- Similarly BIC (Bayes Information Criterion) indicates how well the model fits, best used to compare two models. Lower is better.
 
-All of these statistics indicate the model 2 is substantially a better fit than model 1.
+]
 
 ---
 class: bg-main1
 
 # augment: get the data
 
+.huge[
+`augment&lt;MODEL&gt;&gt;`
+
+or
+
+`augment(&lt;MODEL&gt;, &lt;DATA&gt;)`
+]
+
 ---
 class: bg-main1
 
 # augment
+
+
+```r
+augment(m_ht_wt)
+```
+
+```
+## # A tibble: 3,135 x 10
+##    .rownames Height_in Width_in .fitted .se.fit  .resid    .hat .sigma
+##    &lt;chr&gt;         &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+##  1 1                37     29.5   26.7    0.166 10.3    3.99e-4   8.30
+##  2 2                18     14     14.6    0.165  3.45   3.96e-4   8.31
+##  3 3                13     16     16.1    0.158 -3.11   3.61e-4   8.31
+##  4 4                14     18     17.7    0.152 -3.68   3.37e-4   8.31
+##  5 5                14     18     17.7    0.152 -3.68   3.37e-4   8.31
+##  6 6                 7     10     11.4    0.185 -4.43   4.98e-4   8.31
+##  7 7                 6     13     13.8    0.170 -7.77   4.18e-4   8.30
+##  8 8                 6     13     13.8    0.170 -7.77   4.18e-4   8.30
+##  9 9                15     15     15.3    0.161 -0.333  3.77e-4   8.31
+## 10 10                9      7      9.09   0.204 -0.0870 6.01e-4   8.31
+## # … with 3,125 more rows, and 2 more variables: .cooksd &lt;dbl&gt;,
+## #   .std.resid &lt;dbl&gt;
+```
+
 
 ---
 class: bg-main1
@@ -363,7 +427,7 @@ include_graphics("images/blind-men-and-the-elephant.png")
 
 .huge[
 - Beyond a single model
-- Fitting many models
+- Fitting many models 
 ]
 
 Image source: https://balajiviswanathan.quora.com/Lessons-from-the-Blind-men-and-the-elephant
@@ -373,10 +437,16 @@ class: bg-main1
 
 # Gapminder
 
-- Hans Rosling was a Swedish doctor, academic and statistician, Professor of International Health at Karolinska Institute. Sadley he passed away in 2017. - He developed a keen interest in health and wealth across the globe, and the relationship with other factors like agriculture, education, energy. 
-- His presentations on data are amazing! A starting place is https://www.youtube.com/watch?v=jbkSRLYSojo. 
+.huge[
+- Hans Rosling was a Swedish doctor, academic and statistician, Professor of International Health at Karolinska Institute. Sadley he passed away in 2017. 
+- He developed a keen interest in health and wealth across the globe, and the relationship with other factors like agriculture, education, energy. 
+- You can play with the gapminder data using animations at https://www.gapminder.org/tools/. 
+]
 
-And you can play with the gapminder data using animations at https://www.gapminder.org/tools/. 
+---
+class: bg-main1
+
+&lt;iframe width="1008" height="567" src="https://www.youtube.com/embed/jbkSRLYSojo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;
 
 ---
 class: bg-main1
@@ -394,12 +464,12 @@ glimpse(gapminder)
 ```
 ## Observations: 1,704
 ## Variables: 6
-## $ country   &lt;fct&gt; Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afgh…
-## $ continent &lt;fct&gt; Asia, Asia, Asia, Asia, Asia, Asia, Asia, Asia, Asia, Asia, Asia, Asi…
-## $ year      &lt;int&gt; 1952, 1957, 1962, 1967, 1972, 1977, 1982, 1987, 1992, 1997, 2002, 200…
-## $ lifeExp   &lt;dbl&gt; 28.801, 30.332, 31.997, 34.020, 36.088, 38.438, 39.854, 40.822, 41.67…
-## $ pop       &lt;int&gt; 8425333, 9240934, 10267083, 11537966, 13079460, 14880372, 12881816, 1…
-## $ gdpPercap &lt;dbl&gt; 779.4453, 820.8530, 853.1007, 836.1971, 739.9811, 786.1134, 978.0114,…
+## $ country   &lt;fct&gt; Afghanistan, Afghanistan, Afghanistan, Afghanistan, Af…
+## $ continent &lt;fct&gt; Asia, Asia, Asia, Asia, Asia, Asia, Asia, Asia, Asia, …
+## $ year      &lt;int&gt; 1952, 1957, 1962, 1967, 1972, 1977, 1982, 1987, 1992, …
+## $ lifeExp   &lt;dbl&gt; 28.801, 30.332, 31.997, 34.020, 36.088, 38.438, 39.854…
+## $ pop       &lt;int&gt; 8425333, 9240934, 10267083, 11537966, 13079460, 148803…
+## $ gdpPercap &lt;dbl&gt; 779.4453, 820.8530, 853.1007, 836.1971, 739.9811, 786.…
 ```
 
 ---
@@ -407,19 +477,12 @@ class: bg-main1
 
 # "How has life expectancy changed over years, for each country?"
 
-.huge[
+&lt;img src="lecture-7b-slides_files/figure-html/gg-gapminder-line-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+???
+
 - Plot life expectancy by year, for each country.
 - What do you learn?
-]
-
-
-```r
-gapminder %&gt;% 
-  ggplot(aes(year, lifeExp, group = country)) +
-    geom_line(alpha = 1/3)
-```
-
-&lt;img src="lecture-7b-slides_files/figure-html/gg-gapminder-line-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
 class: bg-main1
@@ -437,7 +500,9 @@ class: bg-main1
 
 # Gapminder: Australia
 
+.huge[
 Australia was already had one of the top life expectancies in the 1950s.
+]
 
 
 ```r
@@ -501,6 +566,10 @@ oz_lm
 ##   -376.1163       0.2277
 ```
 
+---
+class: bg-main1
+
+
 ```r
 tidy(oz_lm)
 ```
@@ -513,36 +582,23 @@ tidy(oz_lm)
 ## 2 year           0.228    0.0104      21.9 8.67e-10
 ```
 
+.huge[
+`$$\widehat{lifeExp} = -376.1163 - 0.2277~year$$`
+]
+
 ---
 class: bg-main1
 
 # center year
 
-1950 is the first year, so for model fitting we are going to shift year to begin in 1950, makes interpretability easier.
+.huge[
+Let us treat 1950 is the first year, so for model fitting we are going to shift year to begin in 1950, makes interpretability easier.
+]
 
 
 ```r
 gap &lt;- gapminder %&gt;% mutate(year1950 = year - 1950)
 oz &lt;- gap %&gt;%  filter(country == "Australia")
-oz
-```
-
-```
-## # A tibble: 12 x 7
-##    country   continent  year lifeExp      pop gdpPercap year1950
-##    &lt;fct&gt;     &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-##  1 Australia Oceania    1952    69.1  8691212    10040.        2
-##  2 Australia Oceania    1957    70.3  9712569    10950.        7
-##  3 Australia Oceania    1962    70.9 10794968    12217.       12
-##  4 Australia Oceania    1967    71.1 11872264    14526.       17
-##  5 Australia Oceania    1972    71.9 13177000    16789.       22
-##  6 Australia Oceania    1977    73.5 14074100    18334.       27
-##  7 Australia Oceania    1982    74.7 15184200    19477.       32
-##  8 Australia Oceania    1987    76.3 16257249    21889.       37
-##  9 Australia Oceania    1992    77.6 17481977    23425.       42
-## 10 Australia Oceania    1997    78.8 18565243    26998.       47
-## 11 Australia Oceania    2002    80.4 19546792    30688.       52
-## 12 Australia Oceania    2007    81.2 20434176    34435.       57
 ```
 
 
@@ -568,6 +624,11 @@ oz_lm
 ##     67.9451       0.2277
 ```
 
+
+---
+class: bg-main1
+
+
 ```r
 tidy(oz_lm)
 ```
@@ -580,6 +641,9 @@ tidy(oz_lm)
 ## 2 year1950       0.228    0.0104      21.9 8.67e-10
 ```
 
+.huge[
+`$$\widehat{lifeExp} = 67.9 +  0.2277~year$$`
+]
 ---
 class: bg-main1
 
@@ -592,21 +656,22 @@ oz_aug
 
 ```
 ## # A tibble: 12 x 14
-##    country continent  year lifeExp    pop gdpPercap year1950 .fitted .se.fit  .resid
-##    &lt;fct&gt;   &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;  &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-##  1 Austra… Oceania    1952    69.1 8.69e6    10040.        2    68.4   0.337  0.719 
-##  2 Austra… Oceania    1957    70.3 9.71e6    10950.        7    69.5   0.294  0.791 
-##  3 Austra… Oceania    1962    70.9 1.08e7    12217.       12    70.7   0.255  0.252 
-##  4 Austra… Oceania    1967    71.1 1.19e7    14526.       17    71.8   0.221 -0.716 
-##  5 Austra… Oceania    1972    71.9 1.32e7    16789.       22    73.0   0.195 -1.02  
-##  6 Austra… Oceania    1977    73.5 1.41e7    18334.       27    74.1   0.181 -0.604 
-##  7 Austra… Oceania    1982    74.7 1.52e7    19477.       32    75.2   0.181 -0.492 
-##  8 Austra… Oceania    1987    76.3 1.63e7    21889.       37    76.4   0.195 -0.0508
-##  9 Austra… Oceania    1992    77.6 1.75e7    23425.       42    77.5   0.221  0.0505
-## 10 Austra… Oceania    1997    78.8 1.86e7    26998.       47    78.6   0.255  0.182 
-## 11 Austra… Oceania    2002    80.4 1.95e7    30688.       52    79.8   0.294  0.583 
-## 12 Austra… Oceania    2007    81.2 2.04e7    34435.       57    80.9   0.337  0.310 
-## # … with 4 more variables: .hat &lt;dbl&gt;, .sigma &lt;dbl&gt;, .cooksd &lt;dbl&gt;, .std.resid &lt;dbl&gt;
+##    country continent  year lifeExp    pop gdpPercap year1950 .fitted
+##    &lt;fct&gt;   &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;  &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Austra… Oceania    1952    69.1 8.69e6    10040.        2    68.4
+##  2 Austra… Oceania    1957    70.3 9.71e6    10950.        7    69.5
+##  3 Austra… Oceania    1962    70.9 1.08e7    12217.       12    70.7
+##  4 Austra… Oceania    1967    71.1 1.19e7    14526.       17    71.8
+##  5 Austra… Oceania    1972    71.9 1.32e7    16789.       22    73.0
+##  6 Austra… Oceania    1977    73.5 1.41e7    18334.       27    74.1
+##  7 Austra… Oceania    1982    74.7 1.52e7    19477.       32    75.2
+##  8 Austra… Oceania    1987    76.3 1.63e7    21889.       37    76.4
+##  9 Austra… Oceania    1992    77.6 1.75e7    23425.       42    77.5
+## 10 Austra… Oceania    1997    78.8 1.86e7    26998.       47    78.6
+## 11 Austra… Oceania    2002    80.4 1.95e7    30688.       52    79.8
+## 12 Austra… Oceania    2007    81.2 2.04e7    34435.       57    80.9
+## # … with 6 more variables: .se.fit &lt;dbl&gt;, .resid &lt;dbl&gt;, .hat &lt;dbl&gt;,
+## #   .sigma &lt;dbl&gt;, .cooksd &lt;dbl&gt;, .std.resid &lt;dbl&gt;
 ```
 
 ---
@@ -624,6 +689,8 @@ ggplot(data = oz_aug,
 
 &lt;img src="lecture-7b-slides_files/figure-html/oz-gap-aug-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 
+---
+class: bg-main1
 
 
 ```r
@@ -721,10 +788,18 @@ class: bg-main1
 # Is there a better way?
 
 
+--
+
+# Like, what if we wanted to fit a model for ALL countries?
+
+--
+
+# Let's tinker with the data.
+
 ---
 class: bg-main1
 
-# nest country level data
+# nest country level data (one row = one country)
 
 
 ```r
@@ -756,7 +831,7 @@ by_country
 ---
 class: bg-main1
 
-# What is in nest?
+# What is in `data`?
 
 
 ```r
@@ -781,6 +856,10 @@ by_country$data[[1]]
 ## 12       57    43.8
 ```
 
+--
+
+# It's a list!
+
 ---
 class: bg-main1
 
@@ -793,6 +872,18 @@ lm_albania &lt;- lm(lifeExp ~ year1950, data = by_country$data[[2]])
 lm_algeria &lt;- lm(lifeExp ~ year1950, data = by_country$data[[3]])
 ```
 
+--
+
+# But we are copying and pasting this code more than twice...is there a better way?
+
+---
+class: bg-main1
+
+# A case for map???
+
+.huge[
+`map(&lt;data object&gt;, &lt;function&gt;)`
+]
 
 ---
 class: bg-main1
@@ -801,13 +892,1478 @@ class: bg-main1
 
 
 ```r
+mapped_lm &lt;- 
+map(by_country$data, function(x){
+  lm(lifeExp ~ year1950, data = x) 
+  })
+
+mapped_lm
+```
+
+```
+## [[1]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     29.3566       0.2753  
+## 
+## 
+## [[2]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     58.5598       0.3347  
+## 
+## 
+## [[3]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     42.2364       0.5693  
+## 
+## 
+## [[4]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     31.7080       0.2093  
+## 
+## 
+## [[5]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     62.2250       0.2317  
+## 
+## 
+## [[6]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     67.9451       0.2277  
+## 
+## 
+## [[7]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##      65.964        0.242  
+## 
+## 
+## [[8]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     51.8142       0.4675  
+## 
+## 
+## [[9]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     35.1392       0.4981  
+## 
+## 
+## [[10]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     67.4738       0.2091  
+## 
+## 
+## [[11]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     38.9200       0.3342  
+## 
+## 
+## [[12]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     37.7566       0.4999  
+## 
+## 
+## [[13]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     57.3901       0.3498  
+## 
+## 
+## [[14]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##    52.80778      0.06067  
+## 
+## 
+## [[15]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     50.7319       0.3901  
+## 
+## 
+## [[16]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     65.4459       0.1457  
+## 
+## 
+## [[17]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##      33.957        0.364  
+## 
+## 
+## [[18]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     40.2704       0.1541  
+## 
+## 
+## [[19]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     36.2236       0.3959  
+## 
+## 
+## [[20]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     40.7492       0.2501  
+## 
+## 
+## [[21]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     68.4461       0.2189  
+## 
+## 
+## [[22]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     38.4417       0.1839  
+## 
+## 
+## [[23]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     39.3029       0.2532  
+## 
+## 
+## [[24]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     53.3640       0.4768  
+## 
+## 
+## [[25]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     46.1291       0.5307  
+## 
+## 
+## [[26]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     52.6656       0.3808  
+## 
+## 
+## [[27]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     39.0952       0.4504  
+## 
+## 
+## [[28]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##    41.77325      0.09392  
+## 
+## 
+## [[29]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     46.7466       0.1951  
+## 
+## 
+## [[30]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     58.2991       0.4028  
+## 
+## 
+## [[31]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     44.5847       0.1306  
+## 
+## 
+## [[32]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     63.4049       0.2255  
+## 
+## 
+## [[33]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     61.5711       0.3212  
+## 
+## 
+## [[34]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     67.2384       0.1448  
+## 
+## 
+## [[35]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     70.7909       0.1213  
+## 
+## 
+## [[36]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     35.5423       0.3674  
+## 
+## 
+## [[37]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     47.6555       0.4712  
+## 
+## 
+## [[38]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     48.0653       0.5001  
+## 
+## 
+## [[39]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     39.8571       0.5555  
+## 
+## 
+## [[40]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     45.5577       0.4771  
+## 
+## 
+## [[41]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     33.8100       0.3102  
+## 
+## 
+## [[42]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     34.9459       0.3747  
+## 
+## 
+## [[43]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     35.4138       0.3072  
+## 
+## 
+## [[44]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     65.9731       0.2379  
+## 
+## 
+## [[45]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     67.3131       0.2385  
+## 
+## 
+## [[46]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     38.0419       0.4467  
+## 
+## 
+## [[47]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     27.2367       0.5818  
+## 
+## 
+## [[48]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     67.1408       0.2137  
+## 
+## 
+## [[49]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     42.8493       0.3217  
+## 
+## 
+## [[50]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     66.5824       0.2424  
+## 
+## 
+## [[51]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     41.0569       0.5313  
+## 
+## 
+## [[52]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     30.7073       0.4248  
+## 
+## 
+## [[53]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     31.1935       0.2718  
+## 
+## 
+## [[54]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     38.4520       0.3971  
+## 
+## 
+## [[55]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     41.9067       0.5429  
+## 
+## 
+## [[56]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##      62.697        0.366  
+## 
+## 
+## [[57]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     65.7455       0.1236  
+## 
+## 
+## [[58]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     71.6328       0.1654  
+## 
+## 
+## [[59]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     38.2591       0.5053  
+## 
+## 
+## [[60]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     35.6138       0.6346  
+## 
+## 
+## [[61]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     43.9857       0.4966  
+## 
+## 
+## [[62]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     49.6430       0.2352  
+## 
+## 
+## [[63]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     67.1432       0.1991  
+## 
+## 
+## [[64]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     65.7662       0.2671  
+## 
+## 
+## [[65]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     66.0574       0.2697  
+## 
+## 
+## [[66]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     62.2182       0.2214  
+## 
+## 
+## [[67]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     64.4162       0.3529  
+## 
+## 
+## [[68]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     42.9204       0.5717  
+## 
+## 
+## [[69]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     46.5890       0.2065  
+## 
+## 
+## [[70]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     54.2727       0.3164  
+## 
+## 
+## [[71]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     48.6167       0.5554  
+## 
+## 
+## [[72]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     56.6257       0.4168  
+## 
+## 
+## [[73]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##      58.165        0.261  
+## 
+## 
+## [[74]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##    47.18789      0.09557  
+## 
+## 
+## [[75]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##    39.64444      0.09599  
+## 
+## 
+## [[76]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     40.8509       0.6255  
+## 
+## 
+## [[77]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     35.8606       0.4037  
+## 
+## 
+## [[78]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     36.4419       0.2342  
+## 
+## 
+## [[79]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     50.5762       0.4645  
+## 
+## 
+## [[80]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     32.2976       0.3768  
+## 
+## 
+## [[81]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     39.1328       0.4464  
+## 
+## 
+## [[82]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     54.6739       0.3485  
+## 
+## 
+## [[83]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##      52.103        0.451  
+## 
+## 
+## [[84]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     42.9490       0.4387  
+## 
+## 
+## [[85]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##      61.656        0.293  
+## 
+## 
+## [[86]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     41.6059       0.5425  
+## 
+## 
+## [[87]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     33.7572       0.2245  
+## 
+## 
+## [[88]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     40.5454       0.4331  
+## 
+## 
+## [[89]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     46.6720       0.2312  
+## 
+## 
+## [[90]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     33.3731       0.5293  
+## 
+## 
+## [[91]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     71.6162       0.1367  
+## 
+## 
+## [[92]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     68.3013       0.1928  
+## 
+## 
+## [[93]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     41.9321       0.5565  
+## 
+## 
+## [[94]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     34.4664       0.3421  
+## 
+## 
+## [[95]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     37.4434       0.2081  
+## 
+## 
+## [[96]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     71.9507       0.1319  
+## 
+## 
+## [[97]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     35.6634       0.7722  
+## 
+## 
+## [[98]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     42.9114       0.4058  
+## 
+## 
+## [[99]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     57.3526       0.3542  
+## 
+## 
+## [[100]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     62.1671       0.1574  
+## 
+## 
+## [[101]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     43.2922       0.5277  
+## 
+## 
+## [[102]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     48.5634       0.4205  
+## 
+## 
+## [[103]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     64.3885       0.1962  
+## 
+## 
+## [[104]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     60.4724       0.3372  
+## 
+## 
+## [[105]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     66.5274       0.2106  
+## 
+## 
+## [[106]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     53.0778       0.4599  
+## 
+## 
+## [[107]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     63.6473       0.1574  
+## 
+## 
+## [[108]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##    42.83361     -0.04583  
+## 
+## 
+## [[109]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     47.8462       0.3407  
+## 
+## 
+## [[110]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     39.5149       0.6496  
+## 
+## 
+## [[111]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     35.7373       0.5047  
+## 
+## 
+## [[112]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     61.0240       0.2552  
+## 
+## 
+## [[113]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##      30.455        0.214  
+## 
+## 
+## [[114]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     61.1641       0.3409  
+## 
+## 
+## [[115]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##      66.742        0.134  
+## 
+## 
+## [[116]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     65.6853       0.2005  
+## 
+## 
+## [[117]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     34.2163       0.2296  
+## 
+## 
+## [[118]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     49.0030       0.1692  
+## 
+## 
+## [[119]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     65.9160       0.2809  
+## 
+## 
+## [[120]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     59.3017       0.2449  
+## 
+## 
+## [[121]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     37.1086       0.3828  
+## 
+## 
+## [[122]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##    46.19771      0.09507  
+## 
+## 
+## [[123]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     71.2725       0.1663  
+## 
+## 
+## [[124]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     69.0093       0.2222  
+## 
+## 
+## [[125]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     44.9926       0.5544  
+## 
+## 
+## [[126]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     60.6829       0.3272  
+## 
+## 
+## [[127]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     42.7590       0.1747  
+## 
+## 
+## [[128]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##      51.962        0.347  
+## 
+## 
+## [[129]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     40.2123       0.3826  
+## 
+## 
+## [[130]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     61.7050       0.1737  
+## 
+## 
+## [[131]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     43.3796       0.5878  
+## 
+## 
+## [[132]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     45.0278       0.4972  
+## 
+## 
+## [[133]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     44.0320       0.1216  
+## 
+## 
+## [[134]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##      68.437        0.186  
+## 
+## 
+## [[135]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     68.0455       0.1842  
+## 
+## 
+## [[136]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     65.3751       0.1833  
+## 
+## 
+## [[137]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     56.8539       0.3297  
+## 
+## 
+## [[138]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     37.6668       0.6716  
+## 
+## 
+## [[139]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     42.5962       0.6011  
+## 
+## 
+## [[140]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##     28.9194       0.6055  
+## 
+## 
+## [[141]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##    47.77888     -0.06043  
+## 
+## 
+## [[142]]
+## 
+## Call:
+## lm(formula = lifeExp ~ year1950, data = x)
+## 
+## Coefficients:
+## (Intercept)     year1950  
+##    55.40729     -0.09302
+```
+
+
+---
+class: bg-main1
+
+# Map inside the data?
+
+
+```r
 country_model &lt;- by_country %&gt;% 
-  mutate(model = map(data, 
-                     function(x){
-                       lm(lifeExp ~ year1950, data = x)
-                       }
-                     )
-         )
+  mutate(model = map(data, function(x){
+    lm(lifeExp ~ year1950, data = x)
+    })
+    )
+
+country_model
+```
+
+```
+## # A tibble: 142 x 4
+##    country     continent data              model 
+##    &lt;fct&gt;       &lt;fct&gt;     &lt;list&gt;            &lt;list&gt;
+##  1 Afghanistan Asia      &lt;tibble [12 × 2]&gt; &lt;lm&gt;  
+##  2 Albania     Europe    &lt;tibble [12 × 2]&gt; &lt;lm&gt;  
+##  3 Algeria     Africa    &lt;tibble [12 × 2]&gt; &lt;lm&gt;  
+##  4 Angola      Africa    &lt;tibble [12 × 2]&gt; &lt;lm&gt;  
+##  5 Argentina   Americas  &lt;tibble [12 × 2]&gt; &lt;lm&gt;  
+##  6 Australia   Oceania   &lt;tibble [12 × 2]&gt; &lt;lm&gt;  
+##  7 Austria     Europe    &lt;tibble [12 × 2]&gt; &lt;lm&gt;  
+##  8 Bahrain     Asia      &lt;tibble [12 × 2]&gt; &lt;lm&gt;  
+##  9 Bangladesh  Asia      &lt;tibble [12 × 2]&gt; &lt;lm&gt;  
+## 10 Belgium     Europe    &lt;tibble [12 × 2]&gt; &lt;lm&gt;  
+## # … with 132 more rows
+```
+
+---
+class: bg-main1
+
+# A case for map (shorthand function)
+
+
+```r
+country_model &lt;- by_country %&gt;% 
+  mutate(model = map(data, ~lm(lifeExp ~ year1950, data = .)))
 
 country_model
 ```
@@ -842,7 +2398,7 @@ country_model$model[[1]]
 ```
 ## 
 ## Call:
-## lm(formula = lifeExp ~ year1950, data = x)
+## lm(formula = lifeExp ~ year1950, data = .)
 ## 
 ## Coefficients:
 ## (Intercept)     year1950  
@@ -914,9 +2470,32 @@ class: bg-main1
 
 # NO NICK, THERE's A BETTER WAY.
 
+
+```r
+country_model %&gt;%
+  mutate(tidy = map(model, tidy))
+```
+
+```
+## # A tibble: 142 x 5
+##    country     continent data              model  tidy            
+##    &lt;fct&gt;       &lt;fct&gt;     &lt;list&gt;            &lt;list&gt; &lt;list&gt;          
+##  1 Afghanistan Asia      &lt;tibble [12 × 2]&gt; &lt;lm&gt;   &lt;tibble [2 × 5]&gt;
+##  2 Albania     Europe    &lt;tibble [12 × 2]&gt; &lt;lm&gt;   &lt;tibble [2 × 5]&gt;
+##  3 Algeria     Africa    &lt;tibble [12 × 2]&gt; &lt;lm&gt;   &lt;tibble [2 × 5]&gt;
+##  4 Angola      Africa    &lt;tibble [12 × 2]&gt; &lt;lm&gt;   &lt;tibble [2 × 5]&gt;
+##  5 Argentina   Americas  &lt;tibble [12 × 2]&gt; &lt;lm&gt;   &lt;tibble [2 × 5]&gt;
+##  6 Australia   Oceania   &lt;tibble [12 × 2]&gt; &lt;lm&gt;   &lt;tibble [2 × 5]&gt;
+##  7 Austria     Europe    &lt;tibble [12 × 2]&gt; &lt;lm&gt;   &lt;tibble [2 × 5]&gt;
+##  8 Bahrain     Asia      &lt;tibble [12 × 2]&gt; &lt;lm&gt;   &lt;tibble [2 × 5]&gt;
+##  9 Bangladesh  Asia      &lt;tibble [12 × 2]&gt; &lt;lm&gt;   &lt;tibble [2 × 5]&gt;
+## 10 Belgium     Europe    &lt;tibble [12 × 2]&gt; &lt;lm&gt;   &lt;tibble [2 × 5]&gt;
+## # … with 132 more rows
+```
+
+
 ---
 class: bg-main1
-
 
 
 ```r
@@ -996,8 +2575,11 @@ class: bg-main1
 
 # Your turn: Five minute challenge
 
+.huge[
 - Fit the models to all countries
 - Pick your favourite country (not Australia), print the coefficients, and make a hand sketch of the the model fit.
+]
+
 
 ---
 class: bg-main1
@@ -1015,19 +2597,20 @@ country_aug
 
 ```
 ## # A tibble: 1,704 x 11
-##    country continent lifeExp year1950 .fitted .se.fit  .resid   .hat .sigma .cooksd
-##    &lt;fct&gt;   &lt;fct&gt;       &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
-##  1 Afghan… Asia         28.8        2    29.9   0.664 -1.11   0.295    1.21 2.43e-1
-##  2 Afghan… Asia         30.3        7    31.3   0.580 -0.952  0.225    1.24 1.13e-1
-##  3 Afghan… Asia         32.0       12    32.7   0.503 -0.664  0.169    1.27 3.60e-2
-##  4 Afghan… Asia         34.0       17    34.0   0.436 -0.0172 0.127    1.29 1.65e-5
-##  5 Afghan… Asia         36.1       22    35.4   0.385  0.674  0.0991   1.27 1.85e-2
-##  6 Afghan… Asia         38.4       27    36.8   0.357  1.65   0.0851   1.15 9.23e-2
-##  7 Afghan… Asia         39.9       32    38.2   0.357  1.69   0.0851   1.15 9.67e-2
-##  8 Afghan… Asia         40.8       37    39.5   0.385  1.28   0.0991   1.21 6.67e-2
-##  9 Afghan… Asia         41.7       42    40.9   0.436  0.754  0.127    1.26 3.17e-2
-## 10 Afghan… Asia         41.8       47    42.3   0.503 -0.534  0.169    1.27 2.33e-2
-## # … with 1,694 more rows, and 1 more variable: .std.resid &lt;dbl&gt;
+##    country continent lifeExp year1950 .fitted .se.fit  .resid   .hat .sigma
+##    &lt;fct&gt;   &lt;fct&gt;       &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Afghan… Asia         28.8        2    29.9   0.664 -1.11   0.295    1.21
+##  2 Afghan… Asia         30.3        7    31.3   0.580 -0.952  0.225    1.24
+##  3 Afghan… Asia         32.0       12    32.7   0.503 -0.664  0.169    1.27
+##  4 Afghan… Asia         34.0       17    34.0   0.436 -0.0172 0.127    1.29
+##  5 Afghan… Asia         36.1       22    35.4   0.385  0.674  0.0991   1.27
+##  6 Afghan… Asia         38.4       27    36.8   0.357  1.65   0.0851   1.15
+##  7 Afghan… Asia         39.9       32    38.2   0.357  1.69   0.0851   1.15
+##  8 Afghan… Asia         40.8       37    39.5   0.385  1.28   0.0991   1.21
+##  9 Afghan… Asia         41.7       42    40.9   0.436  0.754  0.127    1.26
+## 10 Afghan… Asia         41.8       47    42.3   0.503 -0.534  0.169    1.27
+## # … with 1,694 more rows, and 2 more variables: .cooksd &lt;dbl&gt;,
+## #   .std.resid &lt;dbl&gt;
 ```
 
 ---
@@ -1046,11 +2629,18 @@ p2 &lt;- ggplot(country_aug) +
             alpha = 1/3) +
   xlab("year") +
   ggtitle("Fitted models")
+```
 
+---
+class: bg-main1
+
+
+```r
 grid.arrange(p1, p2, ncol=2)
 ```
 
-&lt;img src="lecture-7b-slides_files/figure-html/plot-gapminder-data-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="lecture-7b-slides_files/figure-html/plot-print-gapminder-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
 
 ---
 class: bg-main1
@@ -1067,20 +2657,26 @@ p &lt;- ggplot(tidy_country_coefs,
   geom_point(alpha = 0.5, 
              size = 2) +
   scale_color_brewer(palette = "Dark2")
+```
 
+---
+class: bg-main1
+
+
+```r
 library(plotly)
 ggplotly(p)
 ```
 
-<div id="htmlwidget-f29b6f03af049da2440d" style="width:90%;height:324px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f29b6f03af049da2440d">{"x":{"data":[{"x":[42.2364149184149,31.7079741258741,38.9200470862471,52.8077783216784,33.9567426573427,40.2703724941725,40.7491678321679,38.4417016317017,39.3028836829837,39.0952181818182,41.7732461538462,46.7465904428905,44.5847456876457,35.5423468531469,39.8570909090909,33.8099664335664,34.9458888111888,35.4137832167832,38.0418804195804,27.2367200466201,42.8492582750583,30.7073256410257,31.1935321678322,46.5890230769231,47.1878941724942,39.6444356643357,40.8508645687646,35.8606081585082,36.4419200466201,32.2976111888112,39.1327675990676,54.6738615384616,41.6058878787879,33.7571832167832,46.6720060606061,34.4664484848485,37.4433941724942,53.0777776223777,42.8336116550117,47.8461990675991,35.7372666666667,30.4551351981352,34.2162505827506,49.0029631701632,37.1086426573426,46.1977093240093,42.759034032634,40.2122769230769,43.379620979021,44.0320459207459,47.778875990676,55.4072855477856],"y":[0.56927972027972,0.20933986013986,0.334232867132867,0.0606685314685308,0.363974825174825,0.154134265734266,0.250146853146853,0.183905594405594,0.253244055944055,0.450390909090909,0.0939153846153843,0.195095804195804,0.130556643356643,0.367403496503496,0.555454545454545,0.310170629370629,0.37469020979021,0.307185314685314,0.446732867132867,0.581825874125873,0.321742657342657,0.424830769230769,0.271753146853147,0.206507692307692,0.0955657342657339,0.0959937062937062,0.625535664335664,0.403727972027972,0.234225874125874,0.37680979020979,0.446417482517482,0.348453846153846,0.542472727272727,0.224485314685315,0.231163636363636,0.34210909090909,0.208065734265734,0.459880419580419,-0.0458314685314688,0.340682517482517,0.504699999999999,0.214034965034965,0.229573426573426,0.16915944055944,0.382774825174825,0.0950748251748249,0.174688111888112,0.382592307692307,0.587843356643356,0.121586013986014,-0.0604251748251749,-0.0930209790209793],"text":["intercept: 42.23641<br />year1950:  0.56927972<br />continent: Africa<br />country: Algeria","intercept: 31.70797<br />year1950:  0.20933986<br />continent: Africa<br />country: Angola","intercept: 38.92005<br />year1950:  0.33423287<br />continent: Africa<br />country: Benin","intercept: 52.80778<br />year1950:  0.06066853<br />continent: Africa<br />country: Botswana","intercept: 33.95674<br />year1950:  0.36397483<br />continent: Africa<br />country: Burkina Faso","intercept: 40.27037<br />year1950:  0.15413427<br />continent: Africa<br />country: Burundi","intercept: 40.74917<br />year1950:  0.25014685<br />continent: Africa<br />country: Cameroon","intercept: 38.44170<br />year1950:  0.18390559<br />continent: Africa<br />country: Central African Republic","intercept: 39.30288<br />year1950:  0.25324406<br />continent: Africa<br />country: Chad","intercept: 39.09522<br />year1950:  0.45039091<br />continent: Africa<br />country: Comoros","intercept: 41.77325<br />year1950:  0.09391538<br />continent: Africa<br />country: Congo, Dem. Rep.","intercept: 46.74659<br />year1950:  0.19509580<br />continent: Africa<br />country: Congo, Rep.","intercept: 44.58475<br />year1950:  0.13055664<br />continent: Africa<br />country: Cote d'Ivoire","intercept: 35.54235<br />year1950:  0.36740350<br />continent: Africa<br />country: Djibouti","intercept: 39.85709<br />year1950:  0.55545455<br />continent: Africa<br />country: Egypt","intercept: 33.80997<br />year1950:  0.31017063<br />continent: Africa<br />country: Equatorial Guinea","intercept: 34.94589<br />year1950:  0.37469021<br />continent: Africa<br />country: Eritrea","intercept: 35.41378<br />year1950:  0.30718531<br />continent: Africa<br />country: Ethiopia","intercept: 38.04188<br />year1950:  0.44673287<br />continent: Africa<br />country: Gabon","intercept: 27.23672<br />year1950:  0.58182587<br />continent: Africa<br />country: Gambia","intercept: 42.84926<br />year1950:  0.32174266<br />continent: Africa<br />country: Ghana","intercept: 30.70733<br />year1950:  0.42483077<br />continent: Africa<br />country: Guinea","intercept: 31.19353<br />year1950:  0.27175315<br />continent: Africa<br />country: Guinea-Bissau","intercept: 46.58902<br />year1950:  0.20650769<br />continent: Africa<br />country: Kenya","intercept: 47.18789<br />year1950:  0.09556573<br />continent: Africa<br />country: Lesotho","intercept: 39.64444<br />year1950:  0.09599371<br />continent: Africa<br />country: Liberia","intercept: 40.85086<br />year1950:  0.62553566<br />continent: Africa<br />country: Libya","intercept: 35.86061<br />year1950:  0.40372797<br />continent: Africa<br />country: Madagascar","intercept: 36.44192<br />year1950:  0.23422587<br />continent: Africa<br />country: Malawi","intercept: 32.29761<br />year1950:  0.37680979<br />continent: Africa<br />country: Mali","intercept: 39.13277<br />year1950:  0.44641748<br />continent: Africa<br />country: Mauritania","intercept: 54.67386<br />year1950:  0.34845385<br />continent: Africa<br />country: Mauritius","intercept: 41.60589<br />year1950:  0.54247273<br />continent: Africa<br />country: Morocco","intercept: 33.75718<br />year1950:  0.22448531<br />continent: Africa<br />country: Mozambique","intercept: 46.67201<br />year1950:  0.23116364<br />continent: Africa<br />country: Namibia","intercept: 34.46645<br />year1950:  0.34210909<br />continent: Africa<br />country: Niger","intercept: 37.44339<br />year1950:  0.20806573<br />continent: Africa<br />country: Nigeria","intercept: 53.07778<br />year1950:  0.45988042<br />continent: Africa<br />country: Reunion","intercept: 42.83361<br />year1950: -0.04583147<br />continent: Africa<br />country: Rwanda","intercept: 47.84620<br />year1950:  0.34068252<br />continent: Africa<br />country: Sao Tome and Principe","intercept: 35.73727<br />year1950:  0.50470000<br />continent: Africa<br />country: Senegal","intercept: 30.45514<br />year1950:  0.21403497<br />continent: Africa<br />country: Sierra Leone","intercept: 34.21625<br />year1950:  0.22957343<br />continent: Africa<br />country: Somalia","intercept: 49.00296<br />year1950:  0.16915944<br />continent: Africa<br />country: South Africa","intercept: 37.10864<br />year1950:  0.38277483<br />continent: Africa<br />country: Sudan","intercept: 46.19771<br />year1950:  0.09507483<br />continent: Africa<br />country: Swaziland","intercept: 42.75903<br />year1950:  0.17468811<br />continent: Africa<br />country: Tanzania","intercept: 40.21228<br />year1950:  0.38259231<br />continent: Africa<br />country: Togo","intercept: 43.37962<br />year1950:  0.58784336<br />continent: Africa<br />country: Tunisia","intercept: 44.03205<br />year1950:  0.12158601<br />continent: Africa<br />country: Uganda","intercept: 47.77888<br />year1950: -0.06042517<br />continent: Africa<br />country: Zambia","intercept: 55.40729<br />year1950: -0.09302098<br />continent: Africa<br />country: Zimbabwe"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(27,158,119,1)","opacity":0.5,"size":7.55905511811024,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(27,158,119,1)"}},"hoveron":"points","name":"Africa","legendgroup":"Africa","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[62.2250191142191,37.7565843822844,50.7318594405595,68.4461076923077,53.364017016317,52.6656146853147,58.2991261072261,61.571148018648,47.6555027972028,48.0652655011655,45.5576662004662,41.0568505827506,38.4520377622378,41.9067067599068,62.2181983682984,52.1033018648019,41.9320890442891,57.3525818181818,62.1671242424243,43.2922452214453,66.527375990676,61.7049846153846,68.0455076923077,65.3750585081585,56.8538771561772],"y":[0.231708391608391,0.499932167832167,0.39008951048951,0.21886923076923,0.476844055944055,0.380750349650349,0.40278951048951,0.321150349650349,0.471152447552447,0.500053146853146,0.477141258741258,0.531273426573426,0.397058041958041,0.542851748251748,0.221394405594405,0.451034965034965,0.55651958041958,0.354209090909091,0.157354545454545,0.527697902097902,0.210574825174824,0.173661538461538,0.184169230769231,0.183272027972027,0.329721678321678],"text":["intercept: 62.22502<br />year1950:  0.23170839<br />continent: Americas<br />country: Argentina","intercept: 37.75658<br />year1950:  0.49993217<br />continent: Americas<br />country: Bolivia","intercept: 50.73186<br />year1950:  0.39008951<br />continent: Americas<br />country: Brazil","intercept: 68.44611<br />year1950:  0.21886923<br />continent: Americas<br />country: Canada","intercept: 53.36402<br />year1950:  0.47684406<br />continent: Americas<br />country: Chile","intercept: 52.66561<br />year1950:  0.38075035<br />continent: Americas<br />country: Colombia","intercept: 58.29913<br />year1950:  0.40278951<br />continent: Americas<br />country: Costa Rica","intercept: 61.57115<br />year1950:  0.32115035<br />continent: Americas<br />country: Cuba","intercept: 47.65550<br />year1950:  0.47115245<br />continent: Americas<br />country: Dominican Republic","intercept: 48.06527<br />year1950:  0.50005315<br />continent: Americas<br />country: Ecuador","intercept: 45.55767<br />year1950:  0.47714126<br />continent: Americas<br />country: El Salvador","intercept: 41.05685<br />year1950:  0.53127343<br />continent: Americas<br />country: Guatemala","intercept: 38.45204<br />year1950:  0.39705804<br />continent: Americas<br />country: Haiti","intercept: 41.90671<br />year1950:  0.54285175<br />continent: Americas<br />country: Honduras","intercept: 62.21820<br />year1950:  0.22139441<br />continent: Americas<br />country: Jamaica","intercept: 52.10330<br />year1950:  0.45103497<br />continent: Americas<br />country: Mexico","intercept: 41.93209<br />year1950:  0.55651958<br />continent: Americas<br />country: Nicaragua","intercept: 57.35258<br />year1950:  0.35420909<br />continent: Americas<br />country: Panama","intercept: 62.16712<br />year1950:  0.15735455<br />continent: Americas<br />country: Paraguay","intercept: 43.29225<br />year1950:  0.52769790<br />continent: Americas<br />country: Peru","intercept: 66.52738<br />year1950:  0.21057483<br />continent: Americas<br />country: Puerto Rico","intercept: 61.70498<br />year1950:  0.17366154<br />continent: Americas<br />country: Trinidad and Tobago","intercept: 68.04551<br />year1950:  0.18416923<br />continent: Americas<br />country: United States","intercept: 65.37506<br />year1950:  0.18327203<br />continent: Americas<br />country: Uruguay","intercept: 56.85388<br />year1950:  0.32972168<br />continent: Americas<br />country: Venezuela"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(217,95,2,1)","opacity":0.5,"size":7.55905511811024,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(217,95,2,1)"}},"hoveron":"points","name":"Americas","legendgroup":"Americas","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[29.3566375291376,51.8141897435898,35.1392256410256,36.2236174825175,46.1290518321679,62.6966997668998,38.2591144522145,35.6138328671329,43.9857074592075,49.6430405594406,65.7661976689977,64.4162428904429,42.9204002331003,54.2727494172495,48.6167,56.6256606060606,58.1653002331003,50.5761731934732,42.949034032634,40.5453610722611,33.373117948718,35.6633855477855,42.9113769230769,48.5634076923077,39.5148692307692,61.1641125874126,59.3016983682984,44.9925631701632,60.6829463869464,51.9623265734266,37.6668461538462,42.5961960372961,28.9193631701632],"y":[0.275328671328671,0.467507692307692,0.498130769230769,0.395902797202797,0.530714853146853,0.365970629370629,0.505320979020979,0.634641258741258,0.49663986013986,0.235210489510489,0.267106293706294,0.352904195804195,0.57172937062937,0.316426573426573,0.5554,0.416836363636363,0.26102937062937,0.464522377622377,0.438688111888112,0.433095104895104,0.529261538461538,0.772179020979021,0.405792307692307,0.42046923076923,0.649623076923077,0.340886013986014,0.244894405594405,0.55435944055944,0.327244755244754,0.347048251748251,0.671615384615384,0.601100699300699,0.60545944055944],"text":["intercept: 29.35664<br />year1950:  0.27532867<br />continent: Asia<br />country: Afghanistan","intercept: 51.81419<br />year1950:  0.46750769<br />continent: Asia<br />country: Bahrain","intercept: 35.13923<br />year1950:  0.49813077<br />continent: Asia<br />country: Bangladesh","intercept: 36.22362<br />year1950:  0.39590280<br />continent: Asia<br />country: Cambodia","intercept: 46.12905<br />year1950:  0.53071485<br />continent: Asia<br />country: China","intercept: 62.69670<br />year1950:  0.36597063<br />continent: Asia<br />country: Hong Kong, China","intercept: 38.25911<br />year1950:  0.50532098<br />continent: Asia<br />country: India","intercept: 35.61383<br />year1950:  0.63464126<br />continent: Asia<br />country: Indonesia","intercept: 43.98571<br />year1950:  0.49663986<br />continent: Asia<br />country: Iran","intercept: 49.64304<br />year1950:  0.23521049<br />continent: Asia<br />country: Iraq","intercept: 65.76620<br />year1950:  0.26710629<br />continent: Asia<br />country: Israel","intercept: 64.41624<br />year1950:  0.35290420<br />continent: Asia<br />country: Japan","intercept: 42.92040<br />year1950:  0.57172937<br />continent: Asia<br />country: Jordan","intercept: 54.27275<br />year1950:  0.31642657<br />continent: Asia<br />country: Korea, Dem. Rep.","intercept: 48.61670<br />year1950:  0.55540000<br />continent: Asia<br />country: Korea, Rep.","intercept: 56.62566<br />year1950:  0.41683636<br />continent: Asia<br />country: Kuwait","intercept: 58.16530<br />year1950:  0.26102937<br />continent: Asia<br />country: Lebanon","intercept: 50.57617<br />year1950:  0.46452238<br />continent: Asia<br />country: Malaysia","intercept: 42.94903<br />year1950:  0.43868811<br />continent: Asia<br />country: Mongolia","intercept: 40.54536<br />year1950:  0.43309510<br />continent: Asia<br />country: Myanmar","intercept: 33.37312<br />year1950:  0.52926154<br />continent: Asia<br />country: Nepal","intercept: 35.66339<br />year1950:  0.77217902<br />continent: Asia<br />country: Oman","intercept: 42.91138<br />year1950:  0.40579231<br />continent: Asia<br />country: Pakistan","intercept: 48.56341<br />year1950:  0.42046923<br />continent: Asia<br />country: Philippines","intercept: 39.51487<br />year1950:  0.64962308<br />continent: Asia<br />country: Saudi Arabia","intercept: 61.16411<br />year1950:  0.34088601<br />continent: Asia<br />country: Singapore","intercept: 59.30170<br />year1950:  0.24489441<br />continent: Asia<br />country: Sri Lanka","intercept: 44.99256<br />year1950:  0.55435944<br />continent: Asia<br />country: Syria","intercept: 60.68295<br />year1950:  0.32724476<br />continent: Asia<br />country: Taiwan","intercept: 51.96233<br />year1950:  0.34704825<br />continent: Asia<br />country: Thailand","intercept: 37.66685<br />year1950:  0.67161538<br />continent: Asia<br />country: Vietnam","intercept: 42.59620<br />year1950:  0.60110070<br />continent: Asia<br />country: West Bank and Gaza","intercept: 28.91936<br />year1950:  0.60545944<br />continent: Asia<br />country: Yemen, Rep."],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(117,112,179,1)","opacity":0.5,"size":7.55905511811024,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(117,112,179,1)"}},"hoveron":"points","name":"Asia","legendgroup":"Asia","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[58.5597617715618,65.964476923077,67.4737538461539,57.3900536130536,65.4459300699301,63.4048631701632,67.2384461538462,70.7909296037296,65.9731240093241,67.3131254079254,67.1407617715618,66.5824079254079,65.7455226107226,71.6328386946387,67.1432223776224,66.0573738927739,61.6556254079254,71.616241958042,71.9507328671329,64.3884596736597,60.4723920745921,63.6473254079254,61.0240440559441,66.7417836829837,65.6852986013986,65.915958974359,71.2724909090909,69.009255011655,45.0278407925408,68.4365941724942],"y":[0.334683216783216,0.241992307692307,0.209084615384615,0.349755244755244,0.14568881118881,0.22545944055944,0.144815384615384,0.121330069930069,0.237925174825174,0.238501398601399,0.213683216783216,0.242398601398601,0.123648951048951,0.165375524475524,0.19911958041958,0.269710489510489,0.293001398601398,0.136686713286713,0.131941258741258,0.196218881118881,0.337201398601398,0.157401398601398,0.255151048951048,0.134044055944055,0.200523776223776,0.280930769230768,0.166254545454545,0.222231468531468,0.49723986013986,0.185965734265734],"text":["intercept: 58.55976<br />year1950:  0.33468322<br />continent: Europe<br />country: Albania","intercept: 65.96448<br />year1950:  0.24199231<br />continent: Europe<br />country: Austria","intercept: 67.47375<br />year1950:  0.20908462<br />continent: Europe<br />country: Belgium","intercept: 57.39005<br />year1950:  0.34975524<br />continent: Europe<br />country: Bosnia and Herzegovina","intercept: 65.44593<br />year1950:  0.14568881<br />continent: Europe<br />country: Bulgaria","intercept: 63.40486<br />year1950:  0.22545944<br />continent: Europe<br />country: Croatia","intercept: 67.23845<br />year1950:  0.14481538<br />continent: Europe<br />country: Czech Republic","intercept: 70.79093<br />year1950:  0.12133007<br />continent: Europe<br />country: Denmark","intercept: 65.97312<br />year1950:  0.23792517<br />continent: Europe<br />country: Finland","intercept: 67.31313<br />year1950:  0.23850140<br />continent: Europe<br />country: France","intercept: 67.14076<br />year1950:  0.21368322<br />continent: Europe<br />country: Germany","intercept: 66.58241<br />year1950:  0.24239860<br />continent: Europe<br />country: Greece","intercept: 65.74552<br />year1950:  0.12364895<br />continent: Europe<br />country: Hungary","intercept: 71.63284<br />year1950:  0.16537552<br />continent: Europe<br />country: Iceland","intercept: 67.14322<br />year1950:  0.19911958<br />continent: Europe<br />country: Ireland","intercept: 66.05737<br />year1950:  0.26971049<br />continent: Europe<br />country: Italy","intercept: 61.65563<br />year1950:  0.29300140<br />continent: Europe<br />country: Montenegro","intercept: 71.61624<br />year1950:  0.13668671<br />continent: Europe<br />country: Netherlands","intercept: 71.95073<br />year1950:  0.13194126<br />continent: Europe<br />country: Norway","intercept: 64.38846<br />year1950:  0.19621888<br />continent: Europe<br />country: Poland","intercept: 60.47239<br />year1950:  0.33720140<br />continent: Europe<br />country: Portugal","intercept: 63.64733<br />year1950:  0.15740140<br />continent: Europe<br />country: Romania","intercept: 61.02404<br />year1950:  0.25515105<br />continent: Europe<br />country: Serbia","intercept: 66.74178<br />year1950:  0.13404406<br />continent: Europe<br />country: Slovak Republic","intercept: 65.68530<br />year1950:  0.20052378<br />continent: Europe<br />country: Slovenia","intercept: 65.91596<br />year1950:  0.28093077<br />continent: Europe<br />country: Spain","intercept: 71.27249<br />year1950:  0.16625455<br />continent: Europe<br />country: Sweden","intercept: 69.00926<br />year1950:  0.22223147<br />continent: Europe<br />country: Switzerland","intercept: 45.02784<br />year1950:  0.49723986<br />continent: Europe<br />country: Turkey","intercept: 68.43659<br />year1950:  0.18596573<br />continent: Europe<br />country: United Kingdom"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(231,41,138,1)","opacity":0.5,"size":7.55905511811024,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(231,41,138,1)"}},"hoveron":"points","name":"Europe","legendgroup":"Europe","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[67.9450652680653,68.3012811188811],"y":[0.227723776223776,0.192820979020979],"text":["intercept: 67.94507<br />year1950:  0.22772378<br />continent: Oceania<br />country: Australia","intercept: 68.30128<br />year1950:  0.19282098<br />continent: Oceania<br />country: New Zealand"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(102,166,30,1)","opacity":0.5,"size":7.55905511811024,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(102,166,30,1)"}},"hoveron":"points","name":"Oceania","legendgroup":"Oceania","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":28.98833079655,"r":7.30593607305936,"b":42.9426686960934,"l":43.1050228310502},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[25.0010194055945,74.1864335081585],"tickmode":"array","ticktext":["30","40","50","60","70"],"tickvals":[30,40,50,60,70],"categoryorder":"array","categoryarray":["30","40","50","60","70"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"intercept","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.136280979020979,0.815439020979021],"tickmode":"array","ticktext":["0.0","0.2","0.4","0.6","0.8"],"tickvals":[0,0.2,0.4,0.6,0.8],"categoryorder":"array","categoryarray":["0.0","0.2","0.4","0.6","0.8"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"year1950","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.903762029746282},"annotations":[{"text":"continent","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"dcd7a3b1723":{"x":{},"y":{},"colour":{},"label":{},"type":"scatter"}},"cur_data":"dcd7a3b1723","visdat":{"dcd7a3b1723":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-2ec83e5149096682f6d2" style="width:90%;height:324px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2ec83e5149096682f6d2">{"x":{"data":[{"x":[42.2364149184149,31.7079741258741,38.9200470862471,52.8077783216784,33.9567426573427,40.2703724941725,40.7491678321679,38.4417016317017,39.3028836829837,39.0952181818182,41.7732461538462,46.7465904428905,44.5847456876457,35.5423468531469,39.8570909090909,33.8099664335664,34.9458888111888,35.4137832167832,38.0418804195804,27.2367200466201,42.8492582750583,30.7073256410257,31.1935321678322,46.5890230769231,47.1878941724942,39.6444356643357,40.8508645687646,35.8606081585082,36.4419200466201,32.2976111888112,39.1327675990676,54.6738615384616,41.6058878787879,33.7571832167832,46.6720060606061,34.4664484848485,37.4433941724942,53.0777776223777,42.8336116550117,47.8461990675991,35.7372666666667,30.4551351981352,34.2162505827506,49.0029631701632,37.1086426573426,46.1977093240093,42.759034032634,40.2122769230769,43.379620979021,44.0320459207459,47.778875990676,55.4072855477856],"y":[0.56927972027972,0.20933986013986,0.334232867132867,0.0606685314685308,0.363974825174825,0.154134265734266,0.250146853146853,0.183905594405594,0.253244055944055,0.450390909090909,0.0939153846153843,0.195095804195804,0.130556643356643,0.367403496503496,0.555454545454545,0.310170629370629,0.37469020979021,0.307185314685314,0.446732867132867,0.581825874125873,0.321742657342657,0.424830769230769,0.271753146853147,0.206507692307692,0.0955657342657339,0.0959937062937062,0.625535664335664,0.403727972027972,0.234225874125874,0.37680979020979,0.446417482517482,0.348453846153846,0.542472727272727,0.224485314685315,0.231163636363636,0.34210909090909,0.208065734265734,0.459880419580419,-0.0458314685314688,0.340682517482517,0.504699999999999,0.214034965034965,0.229573426573426,0.16915944055944,0.382774825174825,0.0950748251748249,0.174688111888112,0.382592307692307,0.587843356643356,0.121586013986014,-0.0604251748251749,-0.0930209790209793],"text":["intercept: 42.23641<br />year1950:  0.56927972<br />continent: Africa<br />country: Algeria","intercept: 31.70797<br />year1950:  0.20933986<br />continent: Africa<br />country: Angola","intercept: 38.92005<br />year1950:  0.33423287<br />continent: Africa<br />country: Benin","intercept: 52.80778<br />year1950:  0.06066853<br />continent: Africa<br />country: Botswana","intercept: 33.95674<br />year1950:  0.36397483<br />continent: Africa<br />country: Burkina Faso","intercept: 40.27037<br />year1950:  0.15413427<br />continent: Africa<br />country: Burundi","intercept: 40.74917<br />year1950:  0.25014685<br />continent: Africa<br />country: Cameroon","intercept: 38.44170<br />year1950:  0.18390559<br />continent: Africa<br />country: Central African Republic","intercept: 39.30288<br />year1950:  0.25324406<br />continent: Africa<br />country: Chad","intercept: 39.09522<br />year1950:  0.45039091<br />continent: Africa<br />country: Comoros","intercept: 41.77325<br />year1950:  0.09391538<br />continent: Africa<br />country: Congo, Dem. Rep.","intercept: 46.74659<br />year1950:  0.19509580<br />continent: Africa<br />country: Congo, Rep.","intercept: 44.58475<br />year1950:  0.13055664<br />continent: Africa<br />country: Cote d'Ivoire","intercept: 35.54235<br />year1950:  0.36740350<br />continent: Africa<br />country: Djibouti","intercept: 39.85709<br />year1950:  0.55545455<br />continent: Africa<br />country: Egypt","intercept: 33.80997<br />year1950:  0.31017063<br />continent: Africa<br />country: Equatorial Guinea","intercept: 34.94589<br />year1950:  0.37469021<br />continent: Africa<br />country: Eritrea","intercept: 35.41378<br />year1950:  0.30718531<br />continent: Africa<br />country: Ethiopia","intercept: 38.04188<br />year1950:  0.44673287<br />continent: Africa<br />country: Gabon","intercept: 27.23672<br />year1950:  0.58182587<br />continent: Africa<br />country: Gambia","intercept: 42.84926<br />year1950:  0.32174266<br />continent: Africa<br />country: Ghana","intercept: 30.70733<br />year1950:  0.42483077<br />continent: Africa<br />country: Guinea","intercept: 31.19353<br />year1950:  0.27175315<br />continent: Africa<br />country: Guinea-Bissau","intercept: 46.58902<br />year1950:  0.20650769<br />continent: Africa<br />country: Kenya","intercept: 47.18789<br />year1950:  0.09556573<br />continent: Africa<br />country: Lesotho","intercept: 39.64444<br />year1950:  0.09599371<br />continent: Africa<br />country: Liberia","intercept: 40.85086<br />year1950:  0.62553566<br />continent: Africa<br />country: Libya","intercept: 35.86061<br />year1950:  0.40372797<br />continent: Africa<br />country: Madagascar","intercept: 36.44192<br />year1950:  0.23422587<br />continent: Africa<br />country: Malawi","intercept: 32.29761<br />year1950:  0.37680979<br />continent: Africa<br />country: Mali","intercept: 39.13277<br />year1950:  0.44641748<br />continent: Africa<br />country: Mauritania","intercept: 54.67386<br />year1950:  0.34845385<br />continent: Africa<br />country: Mauritius","intercept: 41.60589<br />year1950:  0.54247273<br />continent: Africa<br />country: Morocco","intercept: 33.75718<br />year1950:  0.22448531<br />continent: Africa<br />country: Mozambique","intercept: 46.67201<br />year1950:  0.23116364<br />continent: Africa<br />country: Namibia","intercept: 34.46645<br />year1950:  0.34210909<br />continent: Africa<br />country: Niger","intercept: 37.44339<br />year1950:  0.20806573<br />continent: Africa<br />country: Nigeria","intercept: 53.07778<br />year1950:  0.45988042<br />continent: Africa<br />country: Reunion","intercept: 42.83361<br />year1950: -0.04583147<br />continent: Africa<br />country: Rwanda","intercept: 47.84620<br />year1950:  0.34068252<br />continent: Africa<br />country: Sao Tome and Principe","intercept: 35.73727<br />year1950:  0.50470000<br />continent: Africa<br />country: Senegal","intercept: 30.45514<br />year1950:  0.21403497<br />continent: Africa<br />country: Sierra Leone","intercept: 34.21625<br />year1950:  0.22957343<br />continent: Africa<br />country: Somalia","intercept: 49.00296<br />year1950:  0.16915944<br />continent: Africa<br />country: South Africa","intercept: 37.10864<br />year1950:  0.38277483<br />continent: Africa<br />country: Sudan","intercept: 46.19771<br />year1950:  0.09507483<br />continent: Africa<br />country: Swaziland","intercept: 42.75903<br />year1950:  0.17468811<br />continent: Africa<br />country: Tanzania","intercept: 40.21228<br />year1950:  0.38259231<br />continent: Africa<br />country: Togo","intercept: 43.37962<br />year1950:  0.58784336<br />continent: Africa<br />country: Tunisia","intercept: 44.03205<br />year1950:  0.12158601<br />continent: Africa<br />country: Uganda","intercept: 47.77888<br />year1950: -0.06042517<br />continent: Africa<br />country: Zambia","intercept: 55.40729<br />year1950: -0.09302098<br />continent: Africa<br />country: Zimbabwe"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(27,158,119,1)","opacity":0.5,"size":7.55905511811024,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(27,158,119,1)"}},"hoveron":"points","name":"Africa","legendgroup":"Africa","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[62.2250191142191,37.7565843822844,50.7318594405595,68.4461076923077,53.364017016317,52.6656146853147,58.2991261072261,61.571148018648,47.6555027972028,48.0652655011655,45.5576662004662,41.0568505827506,38.4520377622378,41.9067067599068,62.2181983682984,52.1033018648019,41.9320890442891,57.3525818181818,62.1671242424243,43.2922452214453,66.527375990676,61.7049846153846,68.0455076923077,65.3750585081585,56.8538771561772],"y":[0.231708391608391,0.499932167832167,0.39008951048951,0.21886923076923,0.476844055944055,0.380750349650349,0.40278951048951,0.321150349650349,0.471152447552447,0.500053146853146,0.477141258741258,0.531273426573426,0.397058041958041,0.542851748251748,0.221394405594405,0.451034965034965,0.55651958041958,0.354209090909091,0.157354545454545,0.527697902097902,0.210574825174824,0.173661538461538,0.184169230769231,0.183272027972027,0.329721678321678],"text":["intercept: 62.22502<br />year1950:  0.23170839<br />continent: Americas<br />country: Argentina","intercept: 37.75658<br />year1950:  0.49993217<br />continent: Americas<br />country: Bolivia","intercept: 50.73186<br />year1950:  0.39008951<br />continent: Americas<br />country: Brazil","intercept: 68.44611<br />year1950:  0.21886923<br />continent: Americas<br />country: Canada","intercept: 53.36402<br />year1950:  0.47684406<br />continent: Americas<br />country: Chile","intercept: 52.66561<br />year1950:  0.38075035<br />continent: Americas<br />country: Colombia","intercept: 58.29913<br />year1950:  0.40278951<br />continent: Americas<br />country: Costa Rica","intercept: 61.57115<br />year1950:  0.32115035<br />continent: Americas<br />country: Cuba","intercept: 47.65550<br />year1950:  0.47115245<br />continent: Americas<br />country: Dominican Republic","intercept: 48.06527<br />year1950:  0.50005315<br />continent: Americas<br />country: Ecuador","intercept: 45.55767<br />year1950:  0.47714126<br />continent: Americas<br />country: El Salvador","intercept: 41.05685<br />year1950:  0.53127343<br />continent: Americas<br />country: Guatemala","intercept: 38.45204<br />year1950:  0.39705804<br />continent: Americas<br />country: Haiti","intercept: 41.90671<br />year1950:  0.54285175<br />continent: Americas<br />country: Honduras","intercept: 62.21820<br />year1950:  0.22139441<br />continent: Americas<br />country: Jamaica","intercept: 52.10330<br />year1950:  0.45103497<br />continent: Americas<br />country: Mexico","intercept: 41.93209<br />year1950:  0.55651958<br />continent: Americas<br />country: Nicaragua","intercept: 57.35258<br />year1950:  0.35420909<br />continent: Americas<br />country: Panama","intercept: 62.16712<br />year1950:  0.15735455<br />continent: Americas<br />country: Paraguay","intercept: 43.29225<br />year1950:  0.52769790<br />continent: Americas<br />country: Peru","intercept: 66.52738<br />year1950:  0.21057483<br />continent: Americas<br />country: Puerto Rico","intercept: 61.70498<br />year1950:  0.17366154<br />continent: Americas<br />country: Trinidad and Tobago","intercept: 68.04551<br />year1950:  0.18416923<br />continent: Americas<br />country: United States","intercept: 65.37506<br />year1950:  0.18327203<br />continent: Americas<br />country: Uruguay","intercept: 56.85388<br />year1950:  0.32972168<br />continent: Americas<br />country: Venezuela"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(217,95,2,1)","opacity":0.5,"size":7.55905511811024,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(217,95,2,1)"}},"hoveron":"points","name":"Americas","legendgroup":"Americas","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[29.3566375291376,51.8141897435898,35.1392256410256,36.2236174825175,46.1290518321679,62.6966997668998,38.2591144522145,35.6138328671329,43.9857074592075,49.6430405594406,65.7661976689977,64.4162428904429,42.9204002331003,54.2727494172495,48.6167,56.6256606060606,58.1653002331003,50.5761731934732,42.949034032634,40.5453610722611,33.373117948718,35.6633855477855,42.9113769230769,48.5634076923077,39.5148692307692,61.1641125874126,59.3016983682984,44.9925631701632,60.6829463869464,51.9623265734266,37.6668461538462,42.5961960372961,28.9193631701632],"y":[0.275328671328671,0.467507692307692,0.498130769230769,0.395902797202797,0.530714853146853,0.365970629370629,0.505320979020979,0.634641258741258,0.49663986013986,0.235210489510489,0.267106293706294,0.352904195804195,0.57172937062937,0.316426573426573,0.5554,0.416836363636363,0.26102937062937,0.464522377622377,0.438688111888112,0.433095104895104,0.529261538461538,0.772179020979021,0.405792307692307,0.42046923076923,0.649623076923077,0.340886013986014,0.244894405594405,0.55435944055944,0.327244755244754,0.347048251748251,0.671615384615384,0.601100699300699,0.60545944055944],"text":["intercept: 29.35664<br />year1950:  0.27532867<br />continent: Asia<br />country: Afghanistan","intercept: 51.81419<br />year1950:  0.46750769<br />continent: Asia<br />country: Bahrain","intercept: 35.13923<br />year1950:  0.49813077<br />continent: Asia<br />country: Bangladesh","intercept: 36.22362<br />year1950:  0.39590280<br />continent: Asia<br />country: Cambodia","intercept: 46.12905<br />year1950:  0.53071485<br />continent: Asia<br />country: China","intercept: 62.69670<br />year1950:  0.36597063<br />continent: Asia<br />country: Hong Kong, China","intercept: 38.25911<br />year1950:  0.50532098<br />continent: Asia<br />country: India","intercept: 35.61383<br />year1950:  0.63464126<br />continent: Asia<br />country: Indonesia","intercept: 43.98571<br />year1950:  0.49663986<br />continent: Asia<br />country: Iran","intercept: 49.64304<br />year1950:  0.23521049<br />continent: Asia<br />country: Iraq","intercept: 65.76620<br />year1950:  0.26710629<br />continent: Asia<br />country: Israel","intercept: 64.41624<br />year1950:  0.35290420<br />continent: Asia<br />country: Japan","intercept: 42.92040<br />year1950:  0.57172937<br />continent: Asia<br />country: Jordan","intercept: 54.27275<br />year1950:  0.31642657<br />continent: Asia<br />country: Korea, Dem. Rep.","intercept: 48.61670<br />year1950:  0.55540000<br />continent: Asia<br />country: Korea, Rep.","intercept: 56.62566<br />year1950:  0.41683636<br />continent: Asia<br />country: Kuwait","intercept: 58.16530<br />year1950:  0.26102937<br />continent: Asia<br />country: Lebanon","intercept: 50.57617<br />year1950:  0.46452238<br />continent: Asia<br />country: Malaysia","intercept: 42.94903<br />year1950:  0.43868811<br />continent: Asia<br />country: Mongolia","intercept: 40.54536<br />year1950:  0.43309510<br />continent: Asia<br />country: Myanmar","intercept: 33.37312<br />year1950:  0.52926154<br />continent: Asia<br />country: Nepal","intercept: 35.66339<br />year1950:  0.77217902<br />continent: Asia<br />country: Oman","intercept: 42.91138<br />year1950:  0.40579231<br />continent: Asia<br />country: Pakistan","intercept: 48.56341<br />year1950:  0.42046923<br />continent: Asia<br />country: Philippines","intercept: 39.51487<br />year1950:  0.64962308<br />continent: Asia<br />country: Saudi Arabia","intercept: 61.16411<br />year1950:  0.34088601<br />continent: Asia<br />country: Singapore","intercept: 59.30170<br />year1950:  0.24489441<br />continent: Asia<br />country: Sri Lanka","intercept: 44.99256<br />year1950:  0.55435944<br />continent: Asia<br />country: Syria","intercept: 60.68295<br />year1950:  0.32724476<br />continent: Asia<br />country: Taiwan","intercept: 51.96233<br />year1950:  0.34704825<br />continent: Asia<br />country: Thailand","intercept: 37.66685<br />year1950:  0.67161538<br />continent: Asia<br />country: Vietnam","intercept: 42.59620<br />year1950:  0.60110070<br />continent: Asia<br />country: West Bank and Gaza","intercept: 28.91936<br />year1950:  0.60545944<br />continent: Asia<br />country: Yemen, Rep."],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(117,112,179,1)","opacity":0.5,"size":7.55905511811024,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(117,112,179,1)"}},"hoveron":"points","name":"Asia","legendgroup":"Asia","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[58.5597617715618,65.964476923077,67.4737538461539,57.3900536130536,65.4459300699301,63.4048631701632,67.2384461538462,70.7909296037296,65.9731240093241,67.3131254079254,67.1407617715618,66.5824079254079,65.7455226107226,71.6328386946387,67.1432223776224,66.0573738927739,61.6556254079254,71.616241958042,71.9507328671329,64.3884596736597,60.4723920745921,63.6473254079254,61.0240440559441,66.7417836829837,65.6852986013986,65.915958974359,71.2724909090909,69.009255011655,45.0278407925408,68.4365941724942],"y":[0.334683216783216,0.241992307692307,0.209084615384615,0.349755244755244,0.14568881118881,0.22545944055944,0.144815384615384,0.121330069930069,0.237925174825174,0.238501398601399,0.213683216783216,0.242398601398601,0.123648951048951,0.165375524475524,0.19911958041958,0.269710489510489,0.293001398601398,0.136686713286713,0.131941258741258,0.196218881118881,0.337201398601398,0.157401398601398,0.255151048951048,0.134044055944055,0.200523776223776,0.280930769230768,0.166254545454545,0.222231468531468,0.49723986013986,0.185965734265734],"text":["intercept: 58.55976<br />year1950:  0.33468322<br />continent: Europe<br />country: Albania","intercept: 65.96448<br />year1950:  0.24199231<br />continent: Europe<br />country: Austria","intercept: 67.47375<br />year1950:  0.20908462<br />continent: Europe<br />country: Belgium","intercept: 57.39005<br />year1950:  0.34975524<br />continent: Europe<br />country: Bosnia and Herzegovina","intercept: 65.44593<br />year1950:  0.14568881<br />continent: Europe<br />country: Bulgaria","intercept: 63.40486<br />year1950:  0.22545944<br />continent: Europe<br />country: Croatia","intercept: 67.23845<br />year1950:  0.14481538<br />continent: Europe<br />country: Czech Republic","intercept: 70.79093<br />year1950:  0.12133007<br />continent: Europe<br />country: Denmark","intercept: 65.97312<br />year1950:  0.23792517<br />continent: Europe<br />country: Finland","intercept: 67.31313<br />year1950:  0.23850140<br />continent: Europe<br />country: France","intercept: 67.14076<br />year1950:  0.21368322<br />continent: Europe<br />country: Germany","intercept: 66.58241<br />year1950:  0.24239860<br />continent: Europe<br />country: Greece","intercept: 65.74552<br />year1950:  0.12364895<br />continent: Europe<br />country: Hungary","intercept: 71.63284<br />year1950:  0.16537552<br />continent: Europe<br />country: Iceland","intercept: 67.14322<br />year1950:  0.19911958<br />continent: Europe<br />country: Ireland","intercept: 66.05737<br />year1950:  0.26971049<br />continent: Europe<br />country: Italy","intercept: 61.65563<br />year1950:  0.29300140<br />continent: Europe<br />country: Montenegro","intercept: 71.61624<br />year1950:  0.13668671<br />continent: Europe<br />country: Netherlands","intercept: 71.95073<br />year1950:  0.13194126<br />continent: Europe<br />country: Norway","intercept: 64.38846<br />year1950:  0.19621888<br />continent: Europe<br />country: Poland","intercept: 60.47239<br />year1950:  0.33720140<br />continent: Europe<br />country: Portugal","intercept: 63.64733<br />year1950:  0.15740140<br />continent: Europe<br />country: Romania","intercept: 61.02404<br />year1950:  0.25515105<br />continent: Europe<br />country: Serbia","intercept: 66.74178<br />year1950:  0.13404406<br />continent: Europe<br />country: Slovak Republic","intercept: 65.68530<br />year1950:  0.20052378<br />continent: Europe<br />country: Slovenia","intercept: 65.91596<br />year1950:  0.28093077<br />continent: Europe<br />country: Spain","intercept: 71.27249<br />year1950:  0.16625455<br />continent: Europe<br />country: Sweden","intercept: 69.00926<br />year1950:  0.22223147<br />continent: Europe<br />country: Switzerland","intercept: 45.02784<br />year1950:  0.49723986<br />continent: Europe<br />country: Turkey","intercept: 68.43659<br />year1950:  0.18596573<br />continent: Europe<br />country: United Kingdom"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(231,41,138,1)","opacity":0.5,"size":7.55905511811024,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(231,41,138,1)"}},"hoveron":"points","name":"Europe","legendgroup":"Europe","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[67.9450652680653,68.3012811188811],"y":[0.227723776223776,0.192820979020979],"text":["intercept: 67.94507<br />year1950:  0.22772378<br />continent: Oceania<br />country: Australia","intercept: 68.30128<br />year1950:  0.19282098<br />continent: Oceania<br />country: New Zealand"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(102,166,30,1)","opacity":0.5,"size":7.55905511811024,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(102,166,30,1)"}},"hoveron":"points","name":"Oceania","legendgroup":"Oceania","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":28.98833079655,"r":7.30593607305936,"b":42.9426686960934,"l":43.1050228310502},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[25.0010194055945,74.1864335081585],"tickmode":"array","ticktext":["30","40","50","60","70"],"tickvals":[30,40,50,60,70],"categoryorder":"array","categoryarray":["30","40","50","60","70"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"intercept","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.136280979020979,0.815439020979021],"tickmode":"array","ticktext":["0.0","0.2","0.4","0.6","0.8"],"tickvals":[0,0.2,0.4,0.6,0.8],"categoryorder":"array","categoryarray":["0.0","0.2","0.4","0.6","0.8"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"year1950","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.903762029746282},"annotations":[{"text":"continent","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"2df47d19e5aa":{"x":{},"y":{},"colour":{},"label":{},"type":"scatter"}},"cur_data":"2df47d19e5aa","visdat":{"2df47d19e5aa":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 
 ---
 class: bg-main1
 
 # Let's summarise the information learned from the model coefficients.
 
-.huge[
+.vlarge[
 - Generally the relationship is negative: this means that if a country started with a high intercept tends to have lower rate of increase.
 - There is a difference across the continents: Countries in Europe and Oceania tended to start with higher life expectancy and increased; countries in Asia and America tended to start lower but have high rates of improvement; Africa tends to start lower and have a huge range in rate of change.
 - Three countries had negative growth in life expectancy: Rwand, Zimbabwe, Zambia
@@ -1102,20 +2698,20 @@ country_glance
 
 ```
 ## # A tibble: 142 x 15
-##    country continent data  model r.squared adj.r.squared sigma statistic  p.value    df
-##    &lt;fct&gt;   &lt;fct&gt;     &lt;lis&gt; &lt;lis&gt;     &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;
-##  1 Afghan… Asia      &lt;tib… &lt;lm&gt;      0.948         0.942 1.22      181.  9.84e- 8     2
-##  2 Albania Europe    &lt;tib… &lt;lm&gt;      0.911         0.902 1.98      102.  1.46e- 6     2
-##  3 Algeria Africa    &lt;tib… &lt;lm&gt;      0.985         0.984 1.32      662.  1.81e-10     2
-##  4 Angola  Africa    &lt;tib… &lt;lm&gt;      0.888         0.877 1.41       79.1 4.59e- 6     2
-##  5 Argent… Americas  &lt;tib… &lt;lm&gt;      0.996         0.995 0.292    2246.  4.22e-13     2
-##  6 Austra… Oceania   &lt;tib… &lt;lm&gt;      0.980         0.978 0.621     481.  8.67e-10     2
-##  7 Austria Europe    &lt;tib… &lt;lm&gt;      0.992         0.991 0.407    1261.  7.44e-12     2
-##  8 Bahrain Asia      &lt;tib… &lt;lm&gt;      0.967         0.963 1.64      291.  1.02e- 8     2
-##  9 Bangla… Asia      &lt;tib… &lt;lm&gt;      0.989         0.988 0.977     930.  3.37e-11     2
-## 10 Belgium Europe    &lt;tib… &lt;lm&gt;      0.995         0.994 0.293    1822.  1.20e-12     2
-## # … with 132 more rows, and 5 more variables: logLik &lt;dbl&gt;, AIC &lt;dbl&gt;, BIC &lt;dbl&gt;,
-## #   deviance &lt;dbl&gt;, df.residual &lt;int&gt;
+##    country continent data  model r.squared adj.r.squared sigma statistic
+##    &lt;fct&gt;   &lt;fct&gt;     &lt;lis&gt; &lt;lis&gt;     &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
+##  1 Afghan… Asia      &lt;tib… &lt;lm&gt;      0.948         0.942 1.22      181. 
+##  2 Albania Europe    &lt;tib… &lt;lm&gt;      0.911         0.902 1.98      102. 
+##  3 Algeria Africa    &lt;tib… &lt;lm&gt;      0.985         0.984 1.32      662. 
+##  4 Angola  Africa    &lt;tib… &lt;lm&gt;      0.888         0.877 1.41       79.1
+##  5 Argent… Americas  &lt;tib… &lt;lm&gt;      0.996         0.995 0.292    2246. 
+##  6 Austra… Oceania   &lt;tib… &lt;lm&gt;      0.980         0.978 0.621     481. 
+##  7 Austria Europe    &lt;tib… &lt;lm&gt;      0.992         0.991 0.407    1261. 
+##  8 Bahrain Asia      &lt;tib… &lt;lm&gt;      0.967         0.963 1.64      291. 
+##  9 Bangla… Asia      &lt;tib… &lt;lm&gt;      0.989         0.988 0.977     930. 
+## 10 Belgium Europe    &lt;tib… &lt;lm&gt;      0.995         0.994 0.293    1822. 
+## # … with 132 more rows, and 7 more variables: p.value &lt;dbl&gt;, df &lt;int&gt;,
+## #   logLik &lt;dbl&gt;, AIC &lt;dbl&gt;, BIC &lt;dbl&gt;, deviance &lt;dbl&gt;, df.residual &lt;int&gt;
 ```
 
 ---
@@ -1137,7 +2733,9 @@ class: bg-main1
 
 # Countries with worst fit
 
+.huge[
 Examine the countries with the worst fit, countries with `\(R^2&lt;0.45\)`, by making scatterplots of the data, with the linear model overlaid. 
+]
 
 
 ```r
@@ -1145,6 +2743,7 @@ badfit &lt;- country_glance %&gt;% filter(r.squared &lt;= 0.45)
 
 gap_bad &lt;- gap %&gt;% filter(country %in% badfit$country)
 
+gg_bad_fit &lt;-
 ggplot(data = gap_bad, 
        aes(x = year, 
            y = lifeExp)) + 
@@ -1156,9 +2755,14 @@ ggplot(data = gap_bad,
               se = FALSE)
 ```
 
-&lt;img src="lecture-7b-slides_files/figure-html/show-bad-fit-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+---
+class: bg-main1
 
+&lt;img src="lecture-7b-slides_files/figure-html/gg-show-bad-fit-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+.vlarge[
 Each of these countries had been moving on a nice trajectory of increasing life expectancy, and then suffered a big dip during the time period.
+]
 
 ---
 class: bg-main1
@@ -1167,7 +2771,9 @@ class: bg-main1
 
 .huge[
 - Use google to explain these dips using world history and current affairs information. 
-- finish the lab exercise
+- finish the lab exercise (with new data)
+- once you are done, you can collect mid semester exam
+- remember the project deadline: **Find team members, and potential topics to study (List of groups will be posted here)**
 ]
 
 ---

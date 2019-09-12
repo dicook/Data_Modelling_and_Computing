@@ -4,118 +4,466 @@ author: "YOUR NAME"
 output: html_document
 ---
 
-For the co2 model fitting from yesterday, examine the model fit statistics for the linear model vs the one with a quadratic term. 
-
-What do they indicate is the better fit?
-
-Try fitting the seasonal pattern with one of the ideas you came up with yesterday. Use the model fit statistics, and residual plots, to determine if the model is better than the quadratic model.
-
-```{r eval=FALSE}
-library(lubridate)
-co2_spo <- read_csv("http://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/merged_in_situ_and_flask/daily/daily_merge_co2_spo.csv", 
-                    col_names = c("date", 
-                                  "time", 
-                                  "day", 
-                                  "decdate", 
-                                  "n", 
-                                  "flg", 
-                                  "co2"), 
-                    skip = 69) %>%
-  mutate(lat = -90.0, 
-         lon = 0, 
-         stn = "spo") %>%
-  filter(flg == 0) %>%
-  mutate(date = ymd(date)) %>%
-#   First we re-scale to start from 1 until the number of days in the time frame. 
-  mutate(day0 = day - min(day)) %>%
-  mutate(month = month(date, label = TRUE, abbr = TRUE))
+```{r}
+library(tidyverse)
 ```
 
-
-```{r eval=FALSE}
-co2_fit1 <- lm(co2 ~ day0, data = co2_spo)
-co2_fit2 <- lm(co2 ~ day0 + I(day0^2), data = co2_spo)
-glance(co2_fit1)
-glance(co2_fit2)
-
-# Plot both models
-co2_model2 <- augment(co2_fit2, co2_spo)
-
-ggplot(co2_spo, aes(x = day0, y = co2)) + geom_point() +
-  geom_line(data = co2_model1, aes(y = .fitted), colour = "blue") +
-  geom_line(data = co2_model2, aes(y = .fitted), colour = "red")
-```
-
-```{r eval=FALSE}
-# Fit the model and print fit statistics
-co2_fit3 <- lm(co2 ~ day0 + I(day0^2) + month, data = co2_spo)
-glance(co2_fit3)
-
-# Add the fitted values and residuals to data set
-co2_model3 <- augment(co2_fit3, co2_spo)
-
-# Plot all three models
-ggplot(co2_spo, 
-       aes(x = day0, 
-           y = co2)) + geom_point() +
-  geom_line(data = co2_model1, aes(y = .fitted), colour = "blue") +
-  geom_line(data = co2_model2, aes(y = .fitted), colour = "red") +
-  geom_line(data = co2_model3, aes(y = .fitted), colour = "orange")
-
-# Print out the model coefficients
-tidy(co2_fit3)
-
-# Zoom in and examine a small subset
-ggplot(
-  filter(co2_model3, year(date) > 1975, year(date) < 1987),
-  aes(x = date, y = co2)
-) +
-  geom_point() +
-  geom_line(aes(y = .fitted), colour = "blue")
-```
-
-```{r eval=FALSE}
-# Fit an interaction term, to allow the coefficients for the quadratic term to change for each month
-co2_fit4 <- lm(co2 ~ day0 * month + I(day0^2) * month, data = co2_spo)
-
-glance(co2_fit4)
-
-co2_model4 <- augment(co2_fit4, co2_spo)
-
-ggplot(co2_model4, aes(x = date, y = co2)) +
-  geom_point() +
-  geom_line(aes(y = .fitted), colour = "blue")
-
-ggplot(
-  filter(co2_model4, 
-         year(date) > 1965, year(date) < 1972),
-  aes(x = date, y = co2)) +
-  geom_point() +
-  geom_line(aes(y = .fitted), colour = "blue")
-# It makes too complex a model, which probably doesn't help us get any better understanding of CO2
-```
 
 - Fit the models to all countries
 - Pick your favourite country (not Australia), print the coefficients, and make a hand sketch of the the model fit.
 
 # Using the gapminder data
 
+# Gapminder
 
-## content / process from the lecture
+- Hans Rosling was a Swedish doctor, academic and statistician, Professor of International Health at Karolinska Institute. Sadley he passed away in 2017. 
+- He developed a keen interest in health and wealth across the globe, and the relationship with other factors like agriculture, education, energy. 
+- You can play with the gapminder data using animations at https://www.gapminder.org/tools/. 
 
 
-## Your turn: new data - fertility
+<iframe width="1008" height="567" src="https://www.youtube.com/embed/jbkSRLYSojo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
--Using the fertility data from the [gapminder web site](https://www.gapminder.org/data/) ()
+---
+class: bg-main1
+
+# R package: `gapminder`
+
+Contains subset of the data on five year intervals from 1952 to 2007.
+
+```{r show-gapminder}
+library(gapminder)
+glimpse(gapminder)
+```
+
+
+# "How has life expectancy changed over years, for each country?"
+
+```{r gg-gapminder-line, fig.height = 4, echo = FALSE}
+gapminder %>% 
+  ggplot(aes(year, lifeExp, group = country)) +
+    geom_line(alpha = 1/3)
+
+```
+
+
+# "How has life expectancy changed over years, for each country?"
+
+.huge[
+- There generally appears to be an increase in life expectancy
+- A number of countries have big dips from the 70s through 90s
+- a cluster of countries starts off with low life expectancy but ends up close to the highest by the end of the period.
+]
+
+
+# Gapminder: Australia
+
+.huge[
+Australia was already had one of the top life expectancies in the 1950s.
+]
+
+```{r gapminder-oz}
+oz <- gapminder %>% filter(country == "Australia")
+
+oz
+```
+
+
+# Gapminder: Australia
+
+```{r plot-gapminder-oz, fig.height=3, fig.width=8}
+ggplot(data = oz, 
+       aes(x = year, 
+           y = lifeExp)) + 
+  geom_line() 
+```
+
+
+# Gapminder: Australia
+
+```{r lm-oz-gapminder}
+oz_lm <- lm(lifeExp ~ year, data = oz)
+
+oz_lm
+```
+
+
+```{r tidy-oz-gapminder}
+tidy(oz_lm)
+```
+
+.huge[
+$$\widehat{lifeExp} = -376.1163 - 0.2277~year$$
+]
+
+
+# center year
+
+.huge[
+Let us treat 1950 is the first year, so for model fitting we are going to shift year to begin in 1950, makes interpretability easier.
+]
+
+```{r center-eyar}
+gap <- gapminder %>% mutate(year1950 = year - 1950)
+oz <- gap %>%  filter(country == "Australia")
+```
+
+
+
+# model for centered year
+
+```{r oz-gapminder-centered-year}
+oz_lm <- lm(lifeExp ~ year1950, data = oz)
+
+oz_lm
+```
+
+
+
+```{r tidy-oz-gapminder-centered-year}
+tidy(oz_lm)
+```
+
+.huge[
+$$\widehat{lifeExp} = 67.9 +  0.2277~year$$
+]
+
+```{r oz-gapminder-augment, fig.height=3, fig.width=8}
+oz_aug <- augment(oz_lm, oz)
+
+oz_aug
+```
+
+
+```{r oz-gap-aug, fig.height=3, fig.width=8}
+ggplot(data = oz_aug, 
+       aes(x = year, 
+           y = .fitted)) + 
+  geom_line(colour = "blue") + 
+  geom_point(aes(x = year,
+                 y = lifeExp))
+```
+
+
+```{r oz-gap-year-resid, fig.height=3, fig.width=8}
+ggplot(data = oz_aug, 
+             aes(x = year, 
+                 y = .std.resid)) + 
+  geom_hline(yintercept = 0,
+             colour = "white", 
+             size = 2) +
+  geom_line() 
+
+```
+
+
+# Making inferences from this
+
+.huge[
+- Life expectancy has increased 2.3 years every decade, on average. 
+- There was a slow period from 1960 through to 1972, probably related to mortality during the Vietnam war.
+]
+
+
+# Can we fit for New Zealand?
+
+```{r lm-nz}
+nz <- gap %>%  filter(country == "New Zealand")
+nz_lm <- lm(lifeExp ~ year1950, data = nz)
+nz_lm
+```
+
+
+# Can we fit for Japan?
+
+```{r lm-japan}
+japan <- gap %>%  filter(country == "Japan")
+japan_lm <- lm(lifeExp ~ year1950, data = japan)
+japan_lm
+```
+
+
+# Can we fit for italy?
+
+```{r lm-italy}
+italy <- gap %>%  filter(country == "Italy")
+italy_lm <- lm(lifeExp ~ year1950, data = italy)
+italy_lm
+```
+
+# Is there a better way?
+
+
+
+# Like, what if we wanted to fit a model for ALL countries?
+
+
+# Let's tinker with the data.
+
+
+# nest country level data (one row = one country)
+
+```{r nest}
+by_country <- gap %>% 
+  select(country, year1950, lifeExp, continent) %>%
+  group_by(country, continent) %>% 
+  nest()
+
+by_country
+```
+
+
+# What is in `data`?
+
+```{r show-nest}
+by_country$data[[1]]
+```
+
+
+# It's a list!
+
+
+# fit a linear model to each one?
+
+```{r fit-many-model}
+lm_afganistan <- lm(lifeExp ~ year1950, data = by_country$data[[1]])
+lm_albania <- lm(lifeExp ~ year1950, data = by_country$data[[2]])
+lm_algeria <- lm(lifeExp ~ year1950, data = by_country$data[[3]])
+```
+
+
+# But we are copying and pasting this code more than twice...is there a better way?
+
+
+# A case for map???
+
+.huge[
+`map(<data object>, <function>)`
+]
+
+
+# A case for map???
+
+```{r mapped-lm}
+mapped_lm <- 
+map(by_country$data, function(x){
+  lm(lifeExp ~ year1950, data = x) 
+  })
+
+mapped_lm
+```
+
+
+
+# Map inside the data?
+
+```{r map-country}
+country_model <- by_country %>% 
+  mutate(model = map(data, function(x){
+    lm(lifeExp ~ year1950, data = x)
+    })
+    )
+
+country_model
+```
+
+
+# A case for map (shorthand function)
+
+```{r map-country-short}
+country_model <- by_country %>% 
+  mutate(model = map(data, ~lm(lifeExp ~ year1950, data = .)))
+
+country_model
+```
+
+
+# where's the model?
+
+```{r print-model}
+country_model$model[[1]]
+```
+
+
+# we need to summarise this content?
+
+```{r tidy-printed-model}
+tidy(country_model$model[[1]])
+```
+
+
+# So should we repeat it for each one?
+
+```{r tidy-many-printed-model}
+tidy(country_model$model[[1]])
+tidy(country_model$model[[2]])
+tidy(country_model$model[[3]])
+```
+
+
+# NO NICK, THERE's A BETTER WAY.
+
+```{r}
+country_model %>%
+  mutate(tidy = map(model, tidy))
+```
+
+
+
+```{r map-tidy-model}
+country_coefs <- country_model %>%
+  mutate(tidy = map(model, tidy)) %>%
+  unnest(tidy) %>%
+  select(country, continent, term, estimate)
+
+country_coefs
+```
+
+
+```{r tidy-unnested-coefs}
+tidy_country_coefs <- country_coefs %>%
+  spread(key = term, 
+         value = estimate) %>%
+  rename(intercept = `(Intercept)`)
+
+tidy_country_coefs
+```
+
+
+```{r oz-unnested-coef, echo=TRUE}
+tidy_country_coefs %>%
+  filter(country == "Australia")
+```
+
+
+# Your turn: Five minute challenge
+
+- Fit the models to all countries
+- Pick your favourite country (not Australia), print the coefficients, and make a hand sketch of the the model fit.
+
+
+# Plot all the models
+
+```{r augmente-many-countries, fig.height=4}
+country_aug <- country_model %>% 
+  mutate(augmented = map(model, augment)) %>%
+  unnest(augmented)
+
+country_aug
+```
+
+
+```{r plot-gapminder-data, fig.height=4}
+p1 <- gapminder %>% 
+  ggplot(aes(year, lifeExp, group = country)) +
+    geom_line(alpha = 1/3) + ggtitle("Data")
+
+p2 <- ggplot(country_aug) + 
+  geom_line(aes(x = year1950 + 1950, 
+                y = .fitted, 
+                group = country), 
+            alpha = 1/3) +
+  xlab("year") +
+  ggtitle("Fitted models")
+```
+
+```{r plot-print-gapminder, fig.height = 4}
+grid.arrange(p1, p2, ncol=2)
+```
+
+
+# Plot all the model coefficients
+
+```{r ggplotly-aug-coef}
+p <- ggplot(tidy_country_coefs, 
+            aes(x = intercept, 
+                y = year1950, 
+                colour = continent, 
+                label = country)) +
+  geom_point(alpha = 0.5, 
+             size = 2) +
+  scale_color_brewer(palette = "Dark2")
+```
+
+---
+class: bg-main1
+
+```{r ggplotly-aug-data}
+library(plotly)
+ggplotly(p)
+
+```
+
+
+# Let's summarise the information learned from the model coefficients.
+
+- Generally the relationship is negative: this means that if a country started with a high intercept tends to have lower rate of increase.
+- There is a difference across the continents: Countries in Europe and Oceania tended to start with higher life expectancy and increased; countries in Asia and America tended to start lower but have high rates of improvement; Africa tends to start lower and have a huge range in rate of change.
+- Three countries had negative growth in life expectancy: Rwand, Zimbabwe, Zambia
+
+
+# Model diagnostics by country
+
+```{r glance-country}
+country_glance <- country_model %>% 
+  mutate(glance = map(model, glance)) %>%
+  unnest(glance)
+
+country_glance
+```
+
+
+# Plot the $R^2$ values as a histogram. 
+
+```{r country-fit, fig.height = 3.5}
+ggplot(country_glance, 
+       aes(x = r.squared)) + 
+  geom_histogram()
+```
+
+
+# Countries with worst fit
+
+Examine the countries with the worst fit, countries with $R^2<0.45$, by making scatterplots of the data, with the linear model overlaid. 
+
+```{r show-bad-fit}
+badfit <- country_glance %>% filter(r.squared <= 0.45)
+
+gap_bad <- gap %>% filter(country %in% badfit$country)
+
+gg_bad_fit <-
+ggplot(data = gap_bad, 
+       aes(x = year, 
+           y = lifeExp)) + 
+         geom_point() +
+  facet_wrap(~country) +
+  scale_x_continuous(breaks = seq(1950,2000,10), 
+                     labels = c("1950", "60","70", "80","90","2000")) +
+  geom_smooth(method = "lm", 
+              se = FALSE)
+```
+
+
+```{r gg-show-bad-fit, fig.height=4}
+gg_bad_fit
+```
+
+Each of these countries had been moving on a nice trajectory of increasing life expectancy, and then suffered a big dip during the time period.
+
+
+
+
+## Your turn: new data - fertility data
+
+-Using the fertility data from the [gapminder web site](https://www.gapminder.org/data/) (in data/ folder)
 - Conduct the same analysis as previous, but for life expectancy.
 - Find unusual countries
 
 The code below will help you read in the data and process it, but you will need to make some changes to do the full analysis.
 
-```{r eval=FALSE}
+```{r read-data}
 library(readxl)
 library(janitor)
-fertility_raw <- read_xlsx("~/Downloads/indicator undata total_fertility.xlsx") %>%
+fertility_raw <- read_xlsx("data-raw/indicator-undata-total-fertility.xlsx") %>%
   clean_names() %>%
   rename(country = total_fertility_rate)
 ```
@@ -124,7 +472,7 @@ You will need to gather the data into longer form, use the `gather` function.
 
 You should know how to do the rest from your experience with past assignments.
 
-```{r eval=FALSE}
+```{r tidy-fertility}
 fertility <- fertility_raw %>% 
   gather(key = year, 
                 value = fertility, 
@@ -144,4 +492,28 @@ ggplot(fertility,
            group = country)) +
   geom_line(alpha=0.1)
 ```
+
+# How has fertility changed over years? For each country?
+
+## How has fertility changed in Australia?
+
+## Center the year variable, using 1950 as the centerpoint
+
+## Fit a model for Australia
+
+## Explore model fit for Australia
+
+## How has fertility increased every year / decade in Australia?
+
+## How well does the model fit?
+
+## Fit a linear model for all countries
+
+## Plot the model fit against the data in two plots
+
+## plot the model coefficients with plotly
+
+## Summarise what you have learned from the model coefficients
+
+## Find those countries with the worst fit
 

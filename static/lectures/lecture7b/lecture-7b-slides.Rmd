@@ -1,6 +1,6 @@
 ---
 title: "ETC1010: Data Modelling and Computing"
-subtitle: "Lecture 7A: Linear Models"
+subtitle: "Lecture 7B: Linear Models part II"
 author: "Dr. Nicholas Tierney & Professor Di Cook"
 institute: "EBS, Monash U."
 date: "`r Sys.Date()`"
@@ -91,6 +91,12 @@ smp <- df %>%
 
 df_cor <- bind_rows(smp) %>% mutate(r = rep(df$r, rep(1000, 9)))
 
+b1 <- smp %>%
+  map_dbl(~ coefficients(lm(V2 ~ V1, data = .x))[2])
+
+sample_r <- smp %>%
+  map_dbl(~ cor(.x$V1, .x$V2))
+
 ```
 
 ```{r fun-gg-xy-cor, echo = FALSE}
@@ -115,39 +121,34 @@ gg_xy_cor <- function(data, cor = NULL){
 }
 ```
 
+---
+class: bg-main1
+
+# Recap
+
+---
+class: bg-main1
 
 # Overview
 
 - Feedback from the tests
-
-- What is correlation
 - What is r2
   - (pull examples from exercise)
 - short exercise in class to calculate correlation and r2 and answer questions
-  
-- unpacking lm and model objects
 - augment?
-- why are making day0
 - understanding residuals
 - components of variation?
-
-- understanding tidy, glance, and augment
-- using tidy, glance, and augment
-
-- Briefly show the examples of AIC, BIC, Deviance
-  - These are evidence to make a decision
-  - Just so they have notes on how to interpret these (higher/lower is better?)
   
 ---
 class: bg-main1
 
-# Feedback from assignment 1
+# Feedback from assignment 1 (from Sherry)
 
 .vlarge[
 - Some students forgot to answer some of the questions: "Is there anything else in the excel spreadsheet we could look at?".
 - Some groups need to follow Amelia's three-sentence interpretation to describe plots.
 - For the last questions, I (Sherry) expect people to also talks about how the analysis would help with the business.
-
+ 
 Presentation & grammar:
 - Remember to do a spell check before submitting any of your files
 - Don't need install.package in your Rmd library() is enough
@@ -156,9 +157,19 @@ Presentation & grammar:
 ---
 class: bg-main1
 
-# Mid-semester exam
+# Other Admin
 
+## Mid-semester exam
+
+.huge[
 - Marks will be released at the end of class
+]
+
+## Project deadline (today)
+
+.huge[
+Find team members, and potential topics to study (ed quiz will be posted soon)
+]
 
 ---
 class: bg-main1
@@ -173,7 +184,7 @@ class: bg-main1
 ---
 class: bg-main1
 
-# Strongest Positive correlation: As one variable increases, so does another variable
+## Strongest Positive correlation: As one variable increases, so does another variable
 
 ```{r plot-strong-pos-corr, echo = FALSE}
 gg_xy_cor(df_cor, 1)
@@ -182,7 +193,7 @@ gg_xy_cor(df_cor, 1)
 ---
 class: bg-main1
 
-# strong Positive correlation: As one variable increases, so does another variable
+## strong Positive correlation: As one variable increases, so does another variable
 
 ```{r plot-pos-corr, echo = FALSE}
 
@@ -193,13 +204,16 @@ gg_xy_cor(df_cor, 0.75)
 ---
 class: bg-main1
 
-# zero correlation: neither variables are related linearly
+## zero correlation: neither variables are related linearly
 
 ```{r plot-meh-corr, echo = FALSE}
 gg_xy_cor(df_cor, 0)
 ```
 
-# strong negative correlation: as one variable increases, another variable decreases
+---
+class: bg-main1
+
+## strong negative correlation: as one variable increases, another variable decreases
 
 ```{r plot-neg-corr, echo = FALSE}
 gg_xy_cor(df_cor, -0.5)
@@ -209,7 +223,7 @@ gg_xy_cor(df_cor, -0.5)
 ---
 class: bg-main1
 
-# STRONG negative correlation: as one variable increases, another variable decreases
+## STRONG negative correlation: as one variable increases, another variable decreases
 
 ```{r plot-strong-neg-corr, echo = FALSE}
 gg_xy_cor(df_cor, -1)
@@ -252,10 +266,13 @@ class: bg-main1
 
 # definition of correlation
 
+.huge[
 For two variables $X, Y$, correlation is:
+]
 
+.vlarge[
 $$r=\frac{\sum_{i=1}^{n} (x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2}\sqrt{\sum_{i=1}^{n}(y_i-\bar{y})^2}} = \frac{cov(X,Y)}{s_xs_y}$$
-
+]
 ---
 class: bg-main1
 
@@ -266,7 +283,7 @@ class: bg-main1
 ---
 class: bg-main1
 
-# Remember: Correlation does not equal causation
+# Remember! Correlation does not equal causation
 
 ---
 class: bg-main1
@@ -284,14 +301,41 @@ class: bg-main1
 
 # plots of rsquared
 
+```{r plot-rsquared, echo = FALSE, eval = FALSE}
+df2 <- tibble(b1 = b1, 
+              rs = sample_r, 
+              r = names(b1), V1 = 0, V2 = 4) %>%
+  mutate(r = fct_relevel(r, as.character(df$r)))
+
+df_cor$r <- fct_relevel(as.character(df_cor$r), 
+                        as.character(df_cor$r))
+
+anim_rsq <- ggplot(df_cor, 
+       aes(x = V1, y = V2)) + 
+  geom_point(alpha = 0.5) +
+  facet_wrap(~r,
+             ncol = 5,
+             labeller = "label_both") +
+  theme(aspect.ratio = 1) + 
+  geom_smooth(method = "lm") +
+  xlab("X") + ylab("Y") +
+  geom_text(data = df2,
+    aes(x = V1,
+        y = V2,
+        label = paste0("b1=", 
+                       b1 = round(b1, 2), 
+                       ", r=", 
+                       r = round(rs, 2))),
+    size = 3)
+
+anim_rsq
+```
 
 
 ---
 class: bg-main1
 
 # unpacking lm and model objects
-
-- Last class we fit a model that predicted the height from the width
 
 ```{r read-paris}
 pp <- read_csv("data/paris-paintings.csv", na = c("n/a", "", "NA"))
@@ -301,12 +345,12 @@ pp
 ---
 class: bg-main1
 
-# last class:
+# unpacking linear models
 
-plot of paris paintings data
-
-```{r}
-
+```{r gg-paris, fig.height = 3.5}
+ggplot(data = pp, aes(x = Width_in, y = Height_in)) +
+  geom_point() +
+  geom_smooth(method = "lm") # lm for linear model
 ```
 
 
@@ -329,9 +373,9 @@ class: bg-main1
 # Fitting a linear model
 
 ```{r fit-paris}
-m_wt_ht <- lm(Height_in ~ Width_in, data = pp)
+m_ht_wt <- lm(Height_in ~ Width_in, data = pp)
 
-m_wt_ht
+m_ht_wt
 ```
 
 ---
@@ -349,7 +393,50 @@ class: bg-main1
 ]
 
 ```{r tidy-paris}
-tidy(m_wt_ht)
+tidy(m_ht_wt)
+```
+
+
+---
+
+# Visualizing residuals
+
+```{r vis-resid, echo=FALSE}
+d <- tibble(
+    Width_in     = m_ht_wt$model$Width_in,
+    Height_in    = m_ht_wt$model$Height_in,
+    pred         = m_ht_wt$fitted.values,
+    res          = m_ht_wt$residuals
+  )
+p <- ggplot(data = d, mapping = aes(x = Width_in, y = Height_in)) +
+  geom_point(alpha = 0.2) + 
+  theme_bw() +
+  labs(title = "Height vs. width of paintings", subtitle = "Just the data") +
+  xlim(0, 250) +
+  ylim(0, 200)
+p
+```
+
+---
+
+## Visualizing residuals (cont.)
+
+```{r vis-resid-line, echo=FALSE}
+p <- p + 
+  geom_smooth(method = "lm", color = color_palette$darkblue, se = FALSE) +
+  geom_point(mapping = aes(y = pred), color = color_palette$darkblue) +
+  labs(subtitle = "Data + least squares resgression line")
+p
+```
+
+---
+
+## Visualizing residuals (cont.)
+
+```{r vis-redis-segment, echo = FALSE}
+p + 
+  geom_segment(mapping = aes(xend = Width_in, yend = pred), color = color_palette$lightblue, alpha = 0.4) +
+  labs(subtitle = "Data + least squares resgression line + residuals")
 ```
 
 ---
@@ -362,7 +449,7 @@ class: bg-main1
 ]
 
 ```{r glance-paris}
-glance(m_wt_ht)
+glance(m_ht_wt)
 ```
 
 ---
@@ -370,23 +457,36 @@ class: bg-main1
 
 # AIC, BIC, Deviance
 
-  - AIC, BIC, and Deviance are evidence to make a decision
+.huge[
 
+- **AIC**, **BIC**, and **Deviance** are evidence to make a decision
 - Deviance is the residual variation, how much variation in response that IS NOT explained by the model. The close to 0 the better, but it is not on a standard scale. In comparing two models if one has substantially lower deviance, then it is a better model.
-- Similarly BIC (Bayes Information Criterion) indicates how well the model fits, best used to compare two models. The lower is better.
-- df is the degrees of freedom left from the model fit. Starts at $n$ (sample size) and drops for each additional parameter estimated by the model. 
+- Similarly BIC (Bayes Information Criterion) indicates how well the model fits, best used to compare two models. Lower is better.
 
-All of these statistics indicate the model 2 is substantially a better fit than model 1.
+]
 
 ---
 class: bg-main1
 
 # augment: get the data
 
+.huge[
+`augment<MODEL>>`
+
+or
+
+`augment(<MODEL>, <DATA>)`
+]
+
 ---
 class: bg-main1
 
 # augment
+
+```{r aug-ht-wt}
+augment(m_ht_wt)
+```
+
 
 ---
 class: bg-main1
@@ -412,7 +512,7 @@ include_graphics("images/blind-men-and-the-elephant.png")
 
 .huge[
 - Beyond a single model
-- Fitting many models
+- Fitting many models 
 ]
 
 Image source: https://balajiviswanathan.quora.com/Lessons-from-the-Blind-men-and-the-elephant
@@ -422,10 +522,16 @@ class: bg-main1
 
 # Gapminder
 
-- Hans Rosling was a Swedish doctor, academic and statistician, Professor of International Health at Karolinska Institute. Sadley he passed away in 2017. - He developed a keen interest in health and wealth across the globe, and the relationship with other factors like agriculture, education, energy. 
-- His presentations on data are amazing! A starting place is https://www.youtube.com/watch?v=jbkSRLYSojo. 
+.huge[
+- Hans Rosling was a Swedish doctor, academic and statistician, Professor of International Health at Karolinska Institute. Sadley he passed away in 2017. 
+- He developed a keen interest in health and wealth across the globe, and the relationship with other factors like agriculture, education, energy. 
+- You can play with the gapminder data using animations at https://www.gapminder.org/tools/. 
+]
 
-And you can play with the gapminder data using animations at https://www.gapminder.org/tools/. 
+---
+class: bg-main1
+
+<iframe width="1008" height="567" src="https://www.youtube.com/embed/jbkSRLYSojo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ---
 class: bg-main1
@@ -444,17 +550,17 @@ class: bg-main1
 
 # "How has life expectancy changed over years, for each country?"
 
-.huge[
-- Plot life expectancy by year, for each country.
-- What do you learn?
-]
-
-```{r gg-gapminder-line, fig.height=4}
+```{r gg-gapminder-line, fig.height = 4, echo = FALSE}
 gapminder %>% 
   ggplot(aes(year, lifeExp, group = country)) +
     geom_line(alpha = 1/3)
 
 ```
+
+???
+
+- Plot life expectancy by year, for each country.
+- What do you learn?
 
 ---
 class: bg-main1
@@ -472,7 +578,9 @@ class: bg-main1
 
 # Gapminder: Australia
 
+.huge[
 Australia was already had one of the top life expectancies in the 1950s.
+]
 
 ```{r gapminder-oz}
 oz <- gapminder %>% filter(country == "Australia")
@@ -497,25 +605,35 @@ class: bg-main1
 
 # Gapminder: Australia
 
-```{r tidy-oz-gapminder}
+```{r lm-oz-gapminder}
 oz_lm <- lm(lifeExp ~ year, data = oz)
 
 oz_lm
+```
 
+---
+class: bg-main1
+
+```{r tidy-oz-gapminder}
 tidy(oz_lm)
 ```
+
+.huge[
+$$\widehat{lifeExp} = -376.1163 - 0.2277~year$$
+]
 
 ---
 class: bg-main1
 
 # center year
 
-1950 is the first year, so for model fitting we are going to shift year to begin in 1950, makes interpretability easier.
+.huge[
+Let us treat 1950 is the first year, so for model fitting we are going to shift year to begin in 1950, makes interpretability easier.
+]
 
 ```{r center-eyar}
 gap <- gapminder %>% mutate(year1950 = year - 1950)
 oz <- gap %>%  filter(country == "Australia")
-oz
 ```
 
 
@@ -528,10 +646,19 @@ class: bg-main1
 oz_lm <- lm(lifeExp ~ year1950, data = oz)
 
 oz_lm
+```
 
+
+---
+class: bg-main1
+
+```{r tidy-oz-gapminder-centered-year}
 tidy(oz_lm)
 ```
 
+.huge[
+$$\widehat{lifeExp} = 67.9 +  0.2277~year$$
+]
 ---
 class: bg-main1
 
@@ -648,6 +775,10 @@ class: bg-main1
 by_country$data[[1]]
 ```
 
+--
+
+# It's a list!
+
 ---
 class: bg-main1
 
@@ -668,14 +799,36 @@ class: bg-main1
 
 # A case for map???
 
+.huge[
+`map(<data object>, <function>)`
+]
+
+---
+class: bg-main1
+
+# A case for map???
+
+```{r mapped-lm}
+mapped_lm <- 
+map(by_country$data, function(x){
+  lm(lifeExp ~ year1950, data = x) 
+  })
+
+mapped_lm
+```
+
+
+---
+class: bg-main1
+
+# Map inside the data?
+
 ```{r map-country}
 country_model <- by_country %>% 
-  mutate(model = map(data, 
-                     function(x){
-                       lm(lifeExp ~ year1950, data = x)
-                       }
-                     )
-         )
+  mutate(model = map(data, function(x){
+    lm(lifeExp ~ year1950, data = x)
+    })
+    )
 
 country_model
 ```
@@ -685,7 +838,7 @@ class: bg-main1
 
 # A case for map (shorthand function)
 
-```{r map-country}
+```{r map-country-short}
 country_model <- by_country %>% 
   mutate(model = map(data, ~lm(lifeExp ~ year1950, data = .)))
 
@@ -726,9 +879,14 @@ class: bg-main1
 
 # NO NICK, THERE's A BETTER WAY.
 
+```{r}
+country_model %>%
+  mutate(tidy = map(model, tidy))
+```
+
+
 ---
 class: bg-main1
-
 
 ```{r map-tidy-model}
 country_coefs <- country_model %>%
@@ -764,8 +922,11 @@ class: bg-main1
 
 # Your turn: Five minute challenge
 
+.huge[
 - Fit the models to all countries
 - Pick your favourite country (not Australia), print the coefficients, and make a hand sketch of the the model fit.
+]
+
 
 ---
 class: bg-main1
@@ -795,9 +956,15 @@ p2 <- ggplot(country_aug) +
             alpha = 1/3) +
   xlab("year") +
   ggtitle("Fitted models")
+```
 
+---
+class: bg-main1
+
+```{r plot-print-gapminder, fig.height = 4}
 grid.arrange(p1, p2, ncol=2)
 ```
+
 
 ---
 class: bg-main1
@@ -813,9 +980,15 @@ p <- ggplot(tidy_country_coefs,
   geom_point(alpha = 0.5, 
              size = 2) +
   scale_color_brewer(palette = "Dark2")
+```
 
+---
+class: bg-main1
+
+```{r ggplotly-aug-data}
 library(plotly)
 ggplotly(p)
+
 ```
 
 ---
@@ -823,7 +996,7 @@ class: bg-main1
 
 # Let's summarise the information learned from the model coefficients.
 
-.huge[
+.vlarge[
 - Generally the relationship is negative: this means that if a country started with a high intercept tends to have lower rate of increase.
 - There is a difference across the continents: Countries in Europe and Oceania tended to start with higher life expectancy and increased; countries in Asia and America tended to start lower but have high rates of improvement; Africa tends to start lower and have a huge range in rate of change.
 - Three countries had negative growth in life expectancy: Rwand, Zimbabwe, Zambia
@@ -847,7 +1020,7 @@ class: bg-main1
 
 # Plot the $R^2$ values as a histogram. 
 
-```{r country-fit}
+```{r country-fit, fig.height = 3.5}
 ggplot(country_glance, 
        aes(x = r.squared)) + 
   geom_histogram()
@@ -858,13 +1031,16 @@ class: bg-main1
 
 # Countries with worst fit
 
+.huge[
 Examine the countries with the worst fit, countries with $R^2<0.45$, by making scatterplots of the data, with the linear model overlaid. 
+]
 
-```{r show-bad-fit, fig.height=4}
+```{r show-bad-fit}
 badfit <- country_glance %>% filter(r.squared <= 0.45)
 
 gap_bad <- gap %>% filter(country %in% badfit$country)
 
+gg_bad_fit <-
 ggplot(data = gap_bad, 
        aes(x = year, 
            y = lifeExp)) + 
@@ -876,7 +1052,16 @@ ggplot(data = gap_bad,
               se = FALSE)
 ```
 
+---
+class: bg-main1
+
+```{r gg-show-bad-fit, fig.height=4, echo = FALSE}
+gg_bad_fit
+```
+
+.vlarge[
 Each of these countries had been moving on a nice trajectory of increasing life expectancy, and then suffered a big dip during the time period.
+]
 
 ---
 class: bg-main1
@@ -885,7 +1070,9 @@ class: bg-main1
 
 .huge[
 - Use google to explain these dips using world history and current affairs information. 
-- finish the lab exercise
+- finish the lab exercise (with new data)
+- once you are done, you can collect mid semester exam
+- remember the project deadline: **Find team members, and potential topics to study (List of groups will be posted here)**
 ]
 
 ---

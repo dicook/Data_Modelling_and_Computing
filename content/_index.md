@@ -89,13 +89,16 @@ We have a limited amount of laptops available for students to borrow (during sem
      - Wednesday slides: [HTML](lectures/lecture7a/lecture-7a-slides.html); [PDF](lectures/lecture7a/lecture-7a-slides.pdf); [RMD](lectures/lecture7a/lecture-7a-slides.Rmd)
      - [Wednesday exercise](lectures/lecture7a/exercise/week-7a-exercise.Rmd)
      - Friday reading: [Building Models](https://r4ds.had.co.nz/model-building.html) ; [Many Models](http://r4ds.had.co.nz/many-models.html)
-     - Friday slides:
+     - Friday slides: [HTML](lectures/lecture7b/lecture-7b-slides.html); [RMD](lectures/lecture7b/lecture-7b-slides.Rmd)
+     - [Friday exercise](lectures/lecture7b/exercise/exercise-7b.html)
+     - [Friday data](lectures/lecture7b/exercise/data-raw/indicator-undata-total-fertility.xlsx)
      
 - Week 8: Analysing text data
      - Wednesday reading: [Introduction to tidy text analysis](https://www.tidytextmining.com/tidytext.html); [Sentiment Analysis with tidy text](https://www.tidytextmining.com/sentiment.html)
      - Wednesday slides:
      - Friday reading: [Word and document frequency](https://www.tidytextmining.com/tfidf.html); [n-grams](https://www.tidytextmining.com/ngrams.html)
      - Friday slides:
+     
 - Week 9: Wrangling, plotting and modeling network data
 - Week 10: Computational modeling, and good data collection practices
 - Week 11: 
