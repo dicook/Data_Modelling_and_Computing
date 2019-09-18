@@ -118,7 +118,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 
 - Assignment 2 **Due 5pm, Thursday, September 5th**: [Instructions](assignments/assignment-2-2019-s2/instructions.html) [zip](assignments/assignment-2-2019-s2/assignment-2-2019-s2.zip) (Unzip the file and double click on the rstudio project, "assignment-2-2019-s2.Rproj" This contains the data and Rmd file). **Note that the assignment is also on rstudio.cloud as well under assignment-2-2019-s2**.
 
-- Assignment 3 **Due 5pm, Thursday, September 26**: (Assignment will be released by Thursday, September 12th)
+- Assignment 3 **Due 5pm, Friday, October 11**: (Assignment will be released by Friday, September 20th)
 
 <!--
 ## Assignment 1 peer evaluation
