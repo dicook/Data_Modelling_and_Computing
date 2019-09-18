@@ -164,7 +164,8 @@ You will **not** mark your own group, this gives you a chance to see how other s
 [Project instructions](project/project-instructions.html) 
 
 - **Deadline 1 (13th September)**:  Find team members, and potential topics to study (List of groups will be posted here)
-- **Deadline 2 (20th September)**:  Team members and team name, data description. - **Deadline 3 **:  Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
+- **Deadline 2 (20th September)**:  Team members and team name, data description.
+- **Deadline 3 **:  Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
 - **Deadline 4 **:  Final version of story board uploaded. 
 - **Presentation in week 12**
 
