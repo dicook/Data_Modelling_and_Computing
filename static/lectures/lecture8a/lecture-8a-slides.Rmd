@@ -816,7 +816,14 @@ class: bg-main1
 darwin6 <- gutenberg_download(2009)
 
 darwin6$text <- removeNumbers(darwin6$text)
+```
 
+---
+class: bg-main1
+
+# show tokenized words
+
+```{r table-second-edition}
 darwin6_words <- darwin6 %>%
   unnest_tokens(word, text) %>%
   anti_join(stop_words) %>%
@@ -829,9 +836,15 @@ darwin6_words
 ---
 class: bg-main1
 
-```{r gg-second-edition}
+```{r quantile-second-edition}
 quantile(darwin6_words$n, probs = seq(0.9, 1, 0.01))
+```
 
+---
+class: bg-main1
+
+
+```{r gg-second-edition}
 darwin6_words %>%
   top_n(n = 20,
         wt = n) %>%
@@ -1022,7 +1035,7 @@ class: bg-main1
 ---
 class: bg-main1
 
-# Lab exercise (extension)
+# Lab exercise 
 
 .huge[
 Text Mining with R has an example comparing historical physics textbooks:  *Discourse on Floating Bodies* by Galileo Galilei, *Treatise on Light* by Christiaan Huygens, *Experiments with Alternate Currents of High Potential and High Frequency* by Nikola Tesla, and *Relativity: The Special and General Theory* by Albert Einstein. All are available on the Gutenberg project. 
