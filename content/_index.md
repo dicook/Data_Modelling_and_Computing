@@ -95,7 +95,8 @@ We have a limited amount of laptops available for students to borrow (during sem
      
 - Week 8: Analysing text data
      - Wednesday reading: [Introduction to tidy text analysis](https://www.tidytextmining.com/tidytext.html); [Sentiment Analysis with tidy text](https://www.tidytextmining.com/sentiment.html)
-     - Wednesday slides:
+     - Wednesday slides: [HTML](lectures/lecture8a/lecture-8a-slides.html); [RMD](lectures/lecture8a/lecture-8a-slides.Rmd)
+     - Wednesday exercise: [exercise-8a](lectures/lecture8a/exercise/exercise-8a.Rmd)
      - Friday reading: [Word and document frequency](https://www.tidytextmining.com/tfidf.html); [n-grams](https://www.tidytextmining.com/ngrams.html)
      - Friday slides:
      
@@ -175,6 +176,8 @@ There are several ways to do the storyboard:
 Past Example projects from ETC1010:
 
 - [Analysing Movie Data](https://ebsmonash.shinyapps.io/Thor/)
+- [Instagram analysis](https://ebsmonash.shinyapps.io/Instagram/)
+- 
 
 - Examples from different web sites:
   - [Blue Bikes Sharing in Boston](https://www.r-bloggers.com/blue-bikes-sharing-in-boston/)

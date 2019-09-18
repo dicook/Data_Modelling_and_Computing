@@ -1,0 +1,631 @@
+---
+title: "lecture-8a-exercise"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(textdata)
+library(tm)
+library(tidytext)
+library(genius)
+library(gutenbergr)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Lecture content
+
+## Why text analysis?
+
+- To use the realtors text description to improve the Melbourne housing price model
+- Determine the extent of public discontent with train stoppages in Melbourne
+- The differences between Darwin's first edition of the Origin of the Species and the 6th edition
+- Does the sentiment of posts on Newcastle Jets public facebook page reflect their win/los record?
+
+
+# Typical Process
+
+1. Read in text
+2. Pre-processing: remove punctuation signs, remove numbers, stop words, stem words
+3. Tokenise: words, sentences, ngrams, chapters
+4. Summarise
+5. model
+
+
+# Packages
+
+In addition to `tidyverse` we will be using three other packages today
+
+```{r list-pkgs}
+library(tidytext)
+library(genius)
+library(gutenbergr)
+```
+
+
+# Tidytext
+
+- Using tidy data principles can make many text mining tasks easier, more effective, and consistent with tools already in wide use.
+
+- Learn more at https://www.tidytextmining.com/, by Julia Silge and David Robinson.
+
+
+# What is tidy text?
+
+```{r show-text}
+text <- c("This will be an uncertain time for us my love",
+          "I can hear the echo of your voice in my head",
+          "Singing my love",
+          "I can see your face there in my hands my love",
+          "I have been blessed by your grace and care my love",
+          "Singing my love")
+
+text
+```
+
+
+# What is tidy text?
+
+```{r tidy-text-tile}
+text_df <- tibble(line = seq_along(text), text = text)
+
+text_df
+```
+
+
+# What is tidy text?
+
+```{r unnest-tokens}
+text_df %>%
+  unnest_tokens(
+    output = word,
+    input = text,
+    token = "words" # default option
+  ) 
+```
+
+
+# What is unnesting?
+
+```{r unnest-tokens-chars}
+text_df %>%
+  unnest_tokens(
+    output = word,
+    input = text,
+    token = "characters"
+  )
+```
+
+
+# What is unnesting - ngrams length 2
+
+```{r unnest-tokens-ngram-2}
+text_df %>%
+  unnest_tokens(
+    output = word,
+    input = text,
+    token = "ngrams",
+    n = 2
+  )
+```
+
+# What is unnesting - ngrams length 3
+
+```{r unnest-tokens-ngram-3}
+text_df %>%
+  unnest_tokens(
+    output = word,
+    input = text,
+    token = "ngrams",
+    n = 3
+  )
+```
+
+
+# Analyzing lyrics of one artist
+
+
+# Let's get more data
+
+We'll use the `genius` package to get song lyric data from [Genius](https://genius.com/).
+
+- `genius_album()` allows you to download the lyrics for an entire album in a 
+tidy format. 
+
+
+# getting more data
+
+- Input: Two arguments: `artists` and `album`. If it gives you issues check that you have the album name and
+artists as specified on [Genius](https://genius.com/).
+
+- Output: A tidy data frame with three columns:
+    - `title`: track name
+    - `track_n`: track number
+    - `text`: lyrics
+
+# [Greatest Australian Album of all time (as voted by triple J)](https://www.abc.net.au/triplej/hottest100/alltime/11/countdown/cd_1.htm)
+
+# Greatest Australian Album of all time (as voted by triple J)
+
+```{r powderfinger-album, cache=TRUE}
+od_num_five <- genius_album(
+  artist = "Powderfinger",
+  album = "Odyssey Number Five"
+)
+
+od_num_five
+```
+
+
+# Save for later
+
+```{r save-powderfinger}
+powderfinger <- od_num_five %>%
+  mutate(
+    artist = "Powderfinger",
+    album = "Odyssey Number Five"
+  )
+
+powderfinger
+```
+
+
+# What songs are in the album?
+
+```{r distinct-songs}
+powderfinger %>% distinct(track_title)
+```
+
+
+# How long are the lyrics in Powderfinger's songs?
+
+```{r powderfinger-n-lines}
+powderfinger %>%
+  count(track_title) %>%
+  arrange(-n)
+```
+
+
+# Tidy up the lyrics!
+
+```{r unnest-tokens-powderfinger}
+powderfinger_lyrics <- powderfinger %>%
+  unnest_tokens(output = word,
+                input = lyric)
+
+powderfinger_lyrics
+```
+
+# What are the most common words?
+
+```{r common-words}
+powderfinger_lyrics %>%
+  count(word) %>%
+  arrange(-n)
+```
+
+
+# Stop words
+
+- In computing, stop words are words which are filtered out before or after processing of natural language data (text).
+
+- They usually refer to the most common words in a language, but there is not a single list of stop words used by all natural language processing tools.
+
+
+# English stop words
+
+```{r eng-stopwords}
+get_stopwords()
+```
+
+
+# What are the most common words?
+
+```{r repeat}
+powderfinger_lyrics
+```
+
+
+# What are the most common words?
+
+```{r stopwords-anti-join}
+stopwords <- get_stopwords()
+
+powderfinger_lyrics %>%
+  anti_join(stopwords)
+```
+
+
+# What are the most common words?
+
+```{r stopwords-anti-join-complete}
+powderfinger_lyrics %>%
+  anti_join(stopwords) %>%
+  count(word) %>%
+  arrange(-n)
+```
+
+
+# What are the most common words?
+
+```{r gg-common-words, eval=FALSE}
+powderfinger_lyrics %>%
+  anti_join(stopwords) %>%
+  count(word) %>%
+  arrange(-n) %>%
+  top_n(20) %>%
+  ggplot(aes(fct_reorder(word, n), n)) +
+  geom_col() +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Frequency of Powderfinger's lyrics",
+       subtitle = "`Back` tops the chart",
+       y = "",
+       x = "")
+```
+
+
+```{r gg-common-words-out, ref.label = 'gg-common-words', echo = FALSE, out.width = "100%"}
+
+```
+
+
+# Sentiment analysis
+
+- One way to analyze the sentiment of a text is to consider the text as a combination of its individual words 
+
+- and the sentiment content of the whole text as the sum of the sentiment content of the individual words
+
+
+# Sentiment lexicons
+
+```{r show-sentiment-afinn}
+get_sentiments("afinn")
+```
+
+```{r show-sentiment-bing}
+get_sentiments("bing")
+```
+
+# Sentiment lexicons
+
+```{r show-sentiment-bing2}
+get_sentiments(lexicon = "bing")
+```
+
+```{r show-sentiment-loughran}
+get_sentiments(lexicon = "loughran")
+```
+
+
+# Sentiments in Powderfinger's lyrics
+
+```{r sentiment-powderfinger}
+sentiments_bing <- get_sentiments("bing")
+
+powderfinger_lyrics %>%
+  inner_join(sentiments_bing) %>%
+  count(sentiment, word) %>%
+  arrange(-n)
+```
+
+
+# Visualising sentiments
+
+```{r gg-sentiment, echo=FALSE, message=FALSE}
+powderfinger_lyrics %>%
+  inner_join(sentiments_bing) %>%
+  count(sentiment, word) %>%
+  arrange(desc(n)) %>%
+  group_by(sentiment) %>%
+  top_n(10) %>%
+  ungroup() %>%
+  ggplot(aes(fct_reorder(word, n), n, fill = sentiment)) +
+  geom_col() +
+  coord_flip() +
+  facet_wrap(~sentiment, scales = "free") +
+  theme_minimal() +
+  labs(
+    title = "Sentiments in Powderfinger's lyrics",
+    x = ""
+  )
+```
+
+
+## Visualising sentiments
+
+```{r gg-sentiment2, eval = FALSE}
+powderfinger_lyrics %>%
+  inner_join(sentiments_bing) %>%
+  count(sentiment, word) %>%
+  arrange(desc(n)) %>%
+  group_by(sentiment) %>%
+  top_n(10) %>%
+  ungroup() %>%
+  ggplot(aes(fct_reorder(word, n), n, fill = sentiment)) +
+  geom_col() +
+  coord_flip() +
+  facet_wrap(~sentiment, scales = "free") +
+  theme_minimal() +
+  labs(
+    title = "Sentiments in Powderfinger's lyrics",
+    x = ""
+  )
+```
+
+
+# Comparing lyrics across artists
+
+
+## Get more data: The White Stripes & The Midnight
+
+
+```{r get-artists, cache=TRUE}
+stripes <- genius_album(artist = "The White Stripes",
+                        album = "Elephant") %>%
+  mutate(artist = "The White Stripes",
+         album = "Elephant")
+
+midnight <- genius_album(artist = "The Midnight",
+                         album = "Kids") %>%
+  mutate(artist = "The Midnight",
+         album = "Kids")
+```
+
+# Combine data:
+
+```{r combine-data}
+ldoc <- bind_rows(powderfinger,
+                  stripes,
+                  midnight)
+
+ldoc
+```
+
+
+# LDOC lyrics
+
+```{r ldoc-lyrics}
+ldoc_lyrics <- ldoc %>%
+  unnest_tokens(word, lyric)
+
+ldoc_lyrics
+```
+
+# Common LDOC lyrics - Without stop words:
+
+```{r common-LDOC-lyrics}
+ldoc_lyrics %>%
+  anti_join(stopwords) %>%
+  count(artist, word, sort = TRUE) # alternative way to sort
+```
+
+
+# Common LDOC lyrics - With stop words:
+
+```{r common-ldoc}
+ldoc_lyrics_counts <- ldoc_lyrics %>%
+  count(artist, word, sort = TRUE)
+
+ldoc_lyrics_counts
+```
+
+
+# What is a document about?
+
+.huge[
+- Term frequency
+- Inverse document frequency
+
+$$idf(\text{term}) = \ln{\left(\frac{n_{\text{documents}}}{n_{\text{documents containing term}}}\right)}$$
+
+tf-idf is about comparing **documents** within a **collection**.
+]
+
+
+# Calculating tf-idf: Perhaps not that exciting... What's the issue?
+
+```{r calc-tf-idf}
+ldoc_words <- ldoc_lyrics_counts %>%
+  bind_tf_idf(term = word, document = artist, n = n)
+
+ldoc_words
+```
+
+
+# Re-calculating tf-idf
+
+```{r re-calc-tf-odf}
+ldoc_words %>%
+  bind_tf_idf(term = word, document = artist, n = n) %>%
+  arrange(-tf_idf)
+```
+
+
+```{r gg-tf-idf, echo=FALSE,message=FALSE, fig.height = 5}
+ldoc_words %>%
+  group_by(artist) %>%
+  top_n(10) %>%
+  ungroup() %>%
+  ggplot(aes(fct_reorder(word, tf_idf), tf_idf, fill = artist)) +
+  geom_col(show.legend = FALSE) + 
+  coord_flip() +
+  facet_wrap(~artist, ncol = 1, scales = "free") +
+  scale_y_continuous() +
+  theme_minimal() +
+  labs(x = NULL, y = "tf-idf") +
+  ylim(c(0, 0.015))
+```
+
+---
+# Exercise 1: Explore music with `genius`! 
+
+Repeat lecture analyses for your own artists.
+- some suggestions:
+  - Daft Punk's "Discovery" or "Random Access Memories"
+  - Musicals: "Les Miserables" or "Wicked"
+
+
+## Get data with `genius_album()`
+
+```{r}
+album_name <- genius_album()
+```
+
+
+## add artist and album info
+
+```{r}
+artist <- album_name %>%
+  mutate(album = "",
+         artist = "")
+```
+
+## What songs are in the album?
+
+```{r}
+# hint - use distinct()
+```
+
+## How long (in lines of lyrics) are the songs?
+
+```{r}
+# hint - use count and arrange
+```
+
+## tidy up the lyrics so there is one word per row
+
+```{r}
+# hint, use unnest_tokens
+artist_lyrics <- ...
+```
+
+## what are the most common words?
+
+```{r}
+# hint - use the tidied up lyrics on the lyrics data
+# then use count and arrange
+```
+
+## remove the stopwords from the lyrics data
+
+```{r}
+# hint - use anti_join, with the words from get_stopwords
+```
+
+## What are the most common words (with stop words taken out)
+
+## Make a plot of the most common words
+
+## Get the sentiments out of the lyrics
+
+```{r}
+# hint - get the sentiments with get_sentiments
+# hint - use innerjoin on the sentiments, and count the sentiments and words
+```
+
+## Visualise the sentiments
+
+# Exercise 2: Explore books with `gutenbergr`
+
+## Download and tokenize the 6th edition
+
+```{r}
+darwin6 <- gutenberg_download(2009)
+stop_words <- get_stopwords()
+darwin6$text <- removeNumbers(darwin6$text)
+
+darwin6_words <- darwin6 %>% 
+  unnest_tokens(___, ___) %>%
+  anti_join(stop_words) %>%
+  count(___, sort=TRUE) %>%
+  mutate(len = str_length(word)) 
+```
+
+```{r}
+quantile(darwin6_words$n, probs = seq(0.9, 1, 0.01))
+
+darwin6_words %>%
+  top_n(n = 20,
+        wt = n) %>%
+  ggplot(aes(x = n, y = fct_reorder(word, n))) + geom_point() +
+  ylab("")
+```
+
+Compare the word frequency
+
+```{r}
+darwin <- full_join(
+  darwin1_words, 
+  darwin6_words, 
+  by = "word"
+  ) %>%
+  rename(
+    n_ed1 = n.x, 
+    len_ed1 = len.x, 
+    n_ed6 = n.y, 
+    len_ed6 = len.y
+    )
+
+darwin
+```
+
+Plot words against each other
+
+```{r}
+library(plotly)
+p <- ggplot(darwin, 
+            aes(x = n_ed1, 
+                y = n_ed6, 
+                label = word)) +
+  geom_abline(intercept = 0, 
+              slope = 1) +
+  geom_point(alpha = 0.5) +
+  xlab("First edition") + 
+  ylab("6th edition") +
+  scale_x_log10() + 
+  scale_y_log10() + 
+  theme(aspect.ratio = 1)
+ggplotly(p)
+```
+
+
+
+# Exercise 3: comparing darwin's 1st adn 6th editions
+
+- Does it look like the 6th edition was an expanded version of the first?
+
+- What word is most frequent in both editions?
+
+- Find some words that are not in the first edition but appear in the 6th.
+
+- Find some words that are used the first edition but not in the 6th.
+
+- Using a linear regression model find the top few words that appear more often than expected, based on the frequency in the first edition. Find the top few words that appear less often than expected. 
+
+
+```{r}
+# This code is a guide, but you need to think about transformations
+# and perhaps relative increase, or filtering outliers
+library(broom)
+mod <- lm(n_ed6 ~ n_ed1, data = darwin)
+tidy(mod)
+
+fit <- augment(mod, darwin)
+
+fit %>%
+  arrange(desc(.resid)) %>%
+  top_n(10)
+
+gg_ed1_resid <- ggplot(fit, 
+       aes(x = n_ed1, 
+           y = .resid, 
+           label = word)) + 
+  geom_point(alpha = 0.5)
+
+ggplotly(gg_ed1_resid)
+
+```
+
+
