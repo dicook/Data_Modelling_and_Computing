@@ -629,3 +629,16 @@ ggplotly(gg_ed1_resid)
 ```
 
 
+
+
+# Final exercise
+
+Text Mining with R has an example comparing historical physics textbooks:  
+- *Discourse on Floating Bodies* by Galileo Galilei
+- *Treatise on Light* by Christiaan Huygens
+- *Experiments with Alternate Currents of High Potential and High Frequency* by Nikola Tesla,
+- *Relativity: The Special and General Theory* by Albert Einstein. 
+
+All are available on the Gutenberg project. 
+
+Work your way through the [comparison of physics books](https://www.tidytextmining.com/tfidf.html#a-corpus-of-physics-texts). It is section 3.4.
