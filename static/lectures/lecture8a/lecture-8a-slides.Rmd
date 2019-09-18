@@ -86,8 +86,8 @@ class: bg-main1
 .huge[
 - Assignment 3
 - Project
-- Peer review marking open
-- no class on September 27
+- Peer review marking open (soon!)
+- No class on September 27 (AFL day)
 ]
 
 ---
