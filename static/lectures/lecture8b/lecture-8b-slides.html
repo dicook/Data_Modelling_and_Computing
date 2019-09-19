@@ -28,9 +28,343 @@ class: bg-main1
 
 # recap 
 
+.huge[
 - tidying up text
 - use `genius_album()` to download lyrics of songs
 - stop_words - (I, am, be, the, this, what, we, myself)
+]
+
+---
+class: bg-main1
+
+# Overview
+
+.huge[
+- interactions in modelling
+- tidy text
+]
+
+---
+class: bg-main1
+
+# Adding interactions to the model
+
+![](images/interaction.png)
+
+---
+class: bg-main1
+
+# Remember linear regression?
+
+&lt;img src="lecture-8b-slides_files/figure-html/unnamed-chunk-1-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+
+---
+class: bg-main1
+# Interaction between quantitative and categorical variables
+
+.huge[
+- An interaction term is needed in a model if the linear relationship is different for the response vs quantitative variable for different levels of the categorical variable. 
+- That is, a different *slope* needs to be used/estimated for each level. 
+]
+
+---
+class: bg-main1
+
+# Interaction between quantitative and categorical variables
+
+.huge[
+- Let's take a look at how this works for the [2015 OECD PISA data](http://www.oecd.org/pisa/data/2015database/).
+- The question to be answered is whether more time spent studying science is associated with higher science scores, and how this varies with enjoyment of science.
+]
+
+---
+class: bg-main1
+
+# PISA data
+
+
+```r
+pisa_au &lt;- read_csv("data/pisa_au.csv")
+pisa_au
+```
+
+```
+## # A tibble: 14,530 x 44
+##    state schtype yr    birthmonth birthyr gender  desk  room computer internet solarpanels
+##    &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;      
+##  1 QLD   Gov     Y10           10    1999 female     1     2        1        1 0036001    
+##  2 QLD   Gov     Y10            2    2000 female     2     1        1        1 0036002    
+##  3 QLD   Gov     Y10            3    2000 female     1     1        1        1 0036002    
+##  4 QLD   Gov     Y10            7    1999 female     1     1        1        1 0036001    
+##  5 QLD   Gov     Y10            8    1999 male       1     1        1        1 0036001    
+##  6 QLD   Gov     Y10            3    2000 male       1     1        1        1 0036001    
+##  7 QLD   Gov     Y10            3    2000 male       1     1        1        1 0036001    
+##  8 QLD   Gov     Y10            1    2000 male       1     1        2        1 0036001    
+##  9 QLD   Gov     Y10            6    1999 female     1     1        1        1 0036001    
+## 10 QLD   Gov     Y10            9    1999 female     1     1        2        1 0036002    
+## # … with 14,520 more rows, and 33 more variables: tvs &lt;dbl&gt;, cars &lt;dbl&gt;,
+## #   music_instr &lt;dbl&gt;, books &lt;dbl&gt;, birthcnt &lt;dbl&gt;, mother_birthcnt &lt;dbl&gt;,
+## #   father_birthcnt &lt;dbl&gt;, test_anxiety &lt;dbl&gt;, ambitious &lt;dbl&gt;, prefer_team &lt;dbl&gt;,
+## #   make_friends_easy &lt;dbl&gt;, tardy &lt;dbl&gt;, science_fun &lt;dbl&gt;, breakfast &lt;dbl&gt;,
+## #   work_pay &lt;dbl&gt;, sport &lt;dbl&gt;, internet_use &lt;dbl&gt;, install_software &lt;dbl&gt;,
+## #   outhours_study &lt;dbl&gt;, math_time &lt;dbl&gt;, read_time &lt;dbl&gt;, science_time &lt;dbl&gt;,
+## #   belong &lt;dbl&gt;, anxtest &lt;dbl&gt;, motivat &lt;dbl&gt;, language &lt;dbl&gt;, home_edres &lt;dbl&gt;,
+## #   home_poss &lt;dbl&gt;, wealth &lt;dbl&gt;, stuweight &lt;dbl&gt;, math &lt;dbl&gt;, science &lt;dbl&gt;, read &lt;dbl&gt;
+```
+
+---
+class: bg-main1
+
+# PISA data
+
+
+```r
+pisa_au %&gt;%
+  select(science_time,
+         science,
+         science_fun)
+```
+
+```
+## # A tibble: 14,530 x 3
+##    science_time science science_fun
+##           &lt;dbl&gt;   &lt;dbl&gt;       &lt;dbl&gt;
+##  1          210    590.          NA
+##  2          165    557.           3
+##  3          210    569.           2
+##  4          210    529.           4
+##  5          210    504.           3
+##  6          210    473.          NA
+##  7          135    496.          NA
+##  8          280    336.           1
+##  9          210    565.           2
+## 10            0    605.           2
+## # … with 14,520 more rows
+```
+
+
+---
+class: bg-main1
+
+# Interaction between quantitative and categorical variables
+
+
+&lt;img src="lecture-8b-slides_files/figure-html/read-pisa-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+class: bg-main1
+
+.vlarge[
+There are two possible models:
+
+`\(y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\varepsilon_i\)` (Model 1)
+
+`\(y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\beta_3x_{i1}*x_{i2}+\varepsilon_i\)` (Model 2)
+
+- `\(y=\)` science score
+- `\(x_1=\)` science study time
+- `\(x_2=\)` science enjoyment. 
+
+Model 2 has an interaction term. 
+
+This means that the slope will be allowed to vary for the different levels of the categorical variables, science_fun.
+]
+
+---
+class: bg-main1
+
+# Note on modelling
+
+.huge[
+*Note:* Ordered factors are treated as "numeric" in the default model fit, so we should convert `science_fun` to be an unordered categorical variable. Also, `science_time` is heavily skewed so should be transformed.
+]
+
+---
+class: bg-main1
+
+
+```r
+pisa_au_science_log10 &lt;- pisa_au_science %&gt;%
+  mutate(log_science_time = log10(science_time)) %&gt;%
+  mutate(science_fun_c = factor(science_fun, ordered = FALSE))
+
+*mod1 &lt;- lm(science ~ log_science_time + science_fun_c,
+           data = pisa_au_science_log10, 
+           weights = stuweight)
+
+*mod2 &lt;- lm(science ~ log_science_time * science_fun_c,
+           data = pisa_au_science_log10, 
+           weights = stuweight)
+```
+
+---
+class: bg-main1
+
+
+```r
+tidy(mod1)
+```
+
+```
+## # A tibble: 5 x 5
+##   term             estimate std.error statistic   p.value
+##   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)         268.      14.6       18.3 1.26e- 73
+## 2 log_science_time     83.8      6.18      13.6 1.31e- 41
+## 3 science_fun_c2       31.8      3.15      10.1 9.28e- 24
+## 4 science_fun_c3       63.1      2.80      22.5 7.17e-110
+## 5 science_fun_c4      104.       3.25      32.1 3.00e-216
+```
+
+```r
+tidy(mod2)
+```
+
+```
+## # A tibble: 8 x 5
+##   term                              estimate std.error statistic   p.value
+##   &lt;chr&gt;                                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)                      463.           43.5 10.6       2.37e-26
+## 2 log_science_time                  -0.00400      18.6 -0.000215 10.00e- 1
+## 3 science_fun_c2                  -152.           55.5 -2.74      6.18e- 3
+## 4 science_fun_c3                  -167.           48.1 -3.46      5.33e- 4
+## 5 science_fun_c4                  -122.           53.6 -2.29      2.23e- 2
+## 6 log_science_time:science_fun_c2   78.6          23.8  3.31      9.33e- 4
+## 7 log_science_time:science_fun_c3   98.4          20.6  4.78      1.74e- 6
+## 8 log_science_time:science_fun_c4   96.9          22.8  4.25      2.11e- 5
+```
+
+---
+class: bg-main1
+
+# Five minute challenge
+
+.huge[
+- Write out the equations for both models. (Ignore the log transformation.)
+- Make a **hand** sketch of both models.
+]
+
+---
+class: bg-main1
+
+# Which is the better model?
+
+
+```r
+glance(mod1)
+```
+
+```
+## # A tibble: 1 x 11
+##   r.squared adj.r.squared sigma statistic   p.value    df  logLik    AIC    BIC deviance
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+## 1     0.123         0.123  387.      385. 6.87e-311     5 -66706. 1.33e5 1.33e5   1.64e9
+## # … with 1 more variable: df.residual &lt;int&gt;
+```
+
+```r
+glance(mod2)
+```
+
+```
+## # A tibble: 1 x 11
+##   r.squared adj.r.squared sigma statistic   p.value    df  logLik    AIC    BIC deviance
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+## 1     0.125         0.125  387.      224. 2.62e-312     8 -66694. 1.33e5 1.33e5   1.64e9
+## # … with 1 more variable: df.residual &lt;int&gt;
+```
+
+.vlarge[
+😲 they are both pretty bad! The interaction model (mod2) is slightly better but its really not.
+]
+
+---
+class: bg-main1
+
+# Interaction between quantitative variables
+
+- Interactions for two quantitative variables in a model, can be thought of as allowing the paper sheet (model) to curl.
+
+&lt;img src="lecture-8b-slides_files/figure-html/show-curves-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+class: bg-main1
+
+# Five minute challenge
+
+.huge[
+Using the PISA data: How does science score relate to text anxiety and gender?
+- Make a plot of science by anxtest, coloured by gender. Does it look like an interaction term might be necessary?
+- Fit the model with `science` score as the response and `gender` and `anxtest`. 
+- Try an interaction between gender and anxtest. 
+- Which is the better model?
+] 
+
+---
+class: bg-main1
+
+# Model building, Goal:
+
+.huge[
+The simplest model possible that provides similar predictive accuracy to most complex model.
+]
+
+---
+class: bg-main1
+
+# Model building, Approach:
+
+.huge[
+- Start simply, fit main effects models (single best variable, adding several more variables independently) and try to understand the effect that each has in the model. 
+- Explore transformations with the aim to build a stable foundation of explanatory variables for the model.
+- Check model diagnostics, residual plots.
+- Explore two variable interactions, and understand effect on model.
+- Explore three variable interactions.
+- Use model goodness of fit to help decide on final. There may be more than one model that are almost equally as good.
+]
+
+---
+class: bg-main1
+
+# Some asides on model building
+
+.vlarge[
+- Ideally, values of explanatory variables cover all possible combinations in their domain. 
+- There should *not be any association between explanatory variables*. 
+- If there is, then the there is more uncertainty in the parameter estimates. 
+- Its like building a table with only two legs, that table would be a bit wobbly, and unstable. 
+]
+
+---
+class: bg-main1
+
+# Some asides on model building
+
+.vlarge[
+- A work around is to first regress one explanatory variable on the other, and add the residuals from this fit to the model, instead of the original variable. 
+- That is, suppose `\(X_1, X_2\)` are strongly linearly associated, then model `\(X_2\sim b_0+b_1X_1+e\)`, and use `\(e\)` (call it `\(X^*_2\)`) in the model instead of `\(X_2\)`. 
+- You would then only be using the part of `\(X_2\)` that is not related to `\(X_1\)` to expand the model. 
+- This approach can be used for multiple explanatory variables that are associated. 
+]
+
+---
+class: bg-main1
+
+# Your Turn:
+
+.vlarge[
+Build the best model you can for science scoreby exploring  these variables: 
+
+- math score
+- reading score
+- tvs
+- books
+- breakfast
+
+Feel free to choose others. (Code provided in exercise is just a sample, and needs to be modified.)
+]
+
 
 ---
 class: bg-main1
@@ -823,7 +1157,7 @@ Here is the data collected in the previous year's AFL finals.
 
 
 ```r
-load("data/afl_twitter.rda")
+afl &lt;- read_rds("data/afl_twitter_past.rds")
 afl
 ```
 
@@ -887,290 +1221,13 @@ class: bg-main1
 # Your Turn: Sentiment analysis
 
 .huge[
-Need to break text of each tweet into words, tag words with sentiments, and make a cumulative score for each tweet.
+We need to break text of each tweet into words, tag words with sentiments, and make a cumulative score for each tweet.
 
 - Which tweeter is the most positive? negative?
 - Is there a day that spirits were higher in the tweets? Or when tweets were more negative?
 - Does the tweeter `aflratings` have a trend in positivity or negativity?
 ]
 
----
-class: bg-main1
-
-# Part 2: Adding interactions to the model
-
-![](images/interaction.png)
-
----
-class: bg-main1
-
-# Remember linear regression?
-
-- reminder image / graphic
-
----
-class: bg-main1
-# Interaction between quantitative and categorical variables
-
-.huge[
-- An interaction term is needed in a model if the linear relationship is different for the response vs quantitative variable for different levels of the categorical variable. 
-- That is, a different *slope* needs to be used/estimated for each level. 
-]
-
----
-class: bg-main1
-
-# Interaction between quantitative and categorical variables
-
-.huge[
-- Let's take a look at how this works for the [2015 OECD PISA data](http://www.oecd.org/pisa/data/2015database/).
-- The question to be answered is whether more time spent studying science is associated with higher science scores, and how this varies with enjoyment of science.
-]
-
----
-class: bg-main1
-
-# PISA data
-
-
-```r
-pisa_au &lt;- read_csv("data/pisa_au.csv")
-pisa_au
-```
-
-```
-## # A tibble: 14,530 x 44
-##    state schtype yr    birthmonth birthyr gender  desk  room computer internet solarpanels
-##    &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;      
-##  1 QLD   Gov     Y10           10    1999 female     1     2        1        1 0036001    
-##  2 QLD   Gov     Y10            2    2000 female     2     1        1        1 0036002    
-##  3 QLD   Gov     Y10            3    2000 female     1     1        1        1 0036002    
-##  4 QLD   Gov     Y10            7    1999 female     1     1        1        1 0036001    
-##  5 QLD   Gov     Y10            8    1999 male       1     1        1        1 0036001    
-##  6 QLD   Gov     Y10            3    2000 male       1     1        1        1 0036001    
-##  7 QLD   Gov     Y10            3    2000 male       1     1        1        1 0036001    
-##  8 QLD   Gov     Y10            1    2000 male       1     1        2        1 0036001    
-##  9 QLD   Gov     Y10            6    1999 female     1     1        1        1 0036001    
-## 10 QLD   Gov     Y10            9    1999 female     1     1        2        1 0036002    
-## # … with 14,520 more rows, and 33 more variables: tvs &lt;dbl&gt;, cars &lt;dbl&gt;,
-## #   music_instr &lt;dbl&gt;, books &lt;dbl&gt;, birthcnt &lt;dbl&gt;, mother_birthcnt &lt;dbl&gt;,
-## #   father_birthcnt &lt;dbl&gt;, test_anxiety &lt;dbl&gt;, ambitious &lt;dbl&gt;, prefer_team &lt;dbl&gt;,
-## #   make_friends_easy &lt;dbl&gt;, tardy &lt;dbl&gt;, science_fun &lt;dbl&gt;, breakfast &lt;dbl&gt;,
-## #   work_pay &lt;dbl&gt;, sport &lt;dbl&gt;, internet_use &lt;dbl&gt;, install_software &lt;dbl&gt;,
-## #   outhours_study &lt;dbl&gt;, math_time &lt;dbl&gt;, read_time &lt;dbl&gt;, science_time &lt;dbl&gt;,
-## #   belong &lt;dbl&gt;, anxtest &lt;dbl&gt;, motivat &lt;dbl&gt;, language &lt;dbl&gt;, home_edres &lt;dbl&gt;,
-## #   home_poss &lt;dbl&gt;, wealth &lt;dbl&gt;, stuweight &lt;dbl&gt;, math &lt;dbl&gt;, science &lt;dbl&gt;, read &lt;dbl&gt;
-```
-
-
----
-class: bg-main1
-
-# Interaction between quantitative and categorical variables
-
-
-&lt;img src="lecture-8b-slides_files/figure-html/unnamed-chunk-2-1.png" width="90%" style="display: block; margin: auto;" /&gt;
-
----
-class: bg-main1
-
-.vlarge[
-There are two possible models:
-
-`\(y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\varepsilon_i\)` (Model 1)
-
-`\(y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\beta_3x_{i1}*x_{i2}+\varepsilon_i\)` (Model 2)
-
-where `\(y=\)` science score, `\(x_1=\)` science study time, `\(x_2=\)` science enjoyment. 
-Model 2 has an interaction term. This means that the slope will be allowed to vary for the different levels of the categorical variables, science_fun.
-
-*Note:* Ordered factors are treated as "numeric" in the default model fit, so we should convert `science_fun` to be an unordered categorical variable. Also, `science_time` is heavily skewed so should be transformed.
-]
-
----
-class: bg-main1
-
-
-```r
-pisa_au_science &lt;- pisa_au_science %&gt;%
-  mutate(log_science_time = log10(science_time)) %&gt;%
-  mutate(science_fun_c = factor(science_fun, ordered = FALSE))
-
-mod1 &lt;- lm(science ~ log_science_time + science_fun_c, 
-           data = pisa_au_science, 
-           weights = stuweight)
-
-mod2 &lt;- lm(science ~ log_science_time * science_fun_c, 
-           data = pisa_au_science, 
-           weights = stuweight)
-```
-
----
-class: bg-main1
-
-
-```r
-tidy(mod1)
-```
-
-```
-## # A tibble: 5 x 5
-##   term             estimate std.error statistic   p.value
-##   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)         268.      14.6       18.3 1.26e- 73
-## 2 log_science_time     83.8      6.18      13.6 1.31e- 41
-## 3 science_fun_c2       31.8      3.15      10.1 9.28e- 24
-## 4 science_fun_c3       63.1      2.80      22.5 7.17e-110
-## 5 science_fun_c4      104.       3.25      32.1 3.00e-216
-```
-
-```r
-tidy(mod2)
-```
-
-```
-## # A tibble: 8 x 5
-##   term                              estimate std.error statistic   p.value
-##   &lt;chr&gt;                                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)                      463.           43.5 10.6       2.37e-26
-## 2 log_science_time                  -0.00400      18.6 -0.000215 10.00e- 1
-## 3 science_fun_c2                  -152.           55.5 -2.74      6.18e- 3
-## 4 science_fun_c3                  -167.           48.1 -3.46      5.33e- 4
-## 5 science_fun_c4                  -122.           53.6 -2.29      2.23e- 2
-## 6 log_science_time:science_fun_c2   78.6          23.8  3.31      9.33e- 4
-## 7 log_science_time:science_fun_c3   98.4          20.6  4.78      1.74e- 6
-## 8 log_science_time:science_fun_c4   96.9          22.8  4.25      2.11e- 5
-```
-
----
-class: bg-main1
-
-# Five minute challenge
-
-.huge[
-- Write out the equations for both models. (Ignore the log transformation.)
-- Make a **hand** sketch of both models.
-]
-
----
-class: bg-main1
-
-# Which is the better model?
-
-
-```r
-glance(mod1)
-```
-
-```
-## # A tibble: 1 x 11
-##   r.squared adj.r.squared sigma statistic   p.value    df  logLik    AIC    BIC deviance
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
-## 1     0.123         0.123  387.      385. 6.87e-311     5 -66706. 1.33e5 1.33e5   1.64e9
-## # … with 1 more variable: df.residual &lt;int&gt;
-```
-
-```r
-glance(mod2)
-```
-
-```
-## # A tibble: 1 x 11
-##   r.squared adj.r.squared sigma statistic   p.value    df  logLik    AIC    BIC deviance
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
-## 1     0.125         0.125  387.      224. 2.62e-312     8 -66694. 1.33e5 1.33e5   1.64e9
-## # … with 1 more variable: df.residual &lt;int&gt;
-```
-
-.vlarge[
-😲 they are both pretty bad! The interaction model (mod2) is slightly better but its really not.
-]
-
----
-class: bg-main1
-
-# Interaction between quantitative variables
-
-- Interactions for two quantitative variables in a model, can be thought of as allowing the paper sheet (model) to curl.
-
-&lt;img src="lecture-8b-slides_files/figure-html/show-curves-1.png" width="90%" style="display: block; margin: auto;" /&gt;
-
----
-class: bg-main1
-
-# Five minute challenge
-
-.huge[
-Using the PISA data: How does science score relate to text anxiety and gender?
-- Make a plot of science by anxtest, coloured by gender. Does it look like an interaction term might be necessary?
-- Fit the model with `science` score as the response and `gender` and `anxtest`. 
-- Try an interaction between gender and anxtest. 
-- Which is the better model?
-] 
-
----
-class: bg-main1
-
-# Model building, Goal:
-
-.huge[
-The simplest model possible that provides similar predictive accuracy to most complex model.
-]
-
----
-class: bg-main1
-
-# Model building, Approach:
-
-.huge[
-- Start simply, fit main effects models (single best variable, adding several more variables independently) and try to understand the effect that each has in the model. 
-- Explore transformations with the aim to build a stable foundation of explanatory variables for the model.
-- Check model diagnostics, residual plots.
-- Explore two variable interactions, and understand effect on model.
-- Explore three variable interactions.
-- Use model goodness of fit to help decide on final. There may be more than one model that are almost equally as good.
-]
-
----
-class: bg-main1
-
-# Some asides on model building
-
-.vlarge[
-- Ideally, values of explanatory variables cover all possible combinations in their domain. 
-- There should *not be any association between explanatory variables*. 
-- If there is, then the there is more uncertainty in the parameter estimates. 
-- Its like building a table with only two legs, that table would be a bit wobbly, and unstable. 
-]
-
----
-class: bg-main1
-
-# Some asides on model building
-
-.vlarge[
-- A work around is to first regress one explanatory variable on the other, and add the residuals from this fit to the model, instead of the original variable. 
-- That is, suppose `\(X_1, X_2\)` are strongly linearly associated, then model `\(X_2\sim b_0+b_1X_1+e\)`, and use `\(e\)` (call it `\(X^*_2\)`) in the model instead of `\(X_2\)`. 
-- You would then only be using the part of `\(X_2\)` that is not related to `\(X_1\)` to expand the model. 
-- This approach can be used for multiple explanatory variables that are associated. 
-]
-
----
-class: bg-main1
-
-# Your Turn:
-
-.vlarge[
-Build the best model you can for science scoreby exploring  these variables: 
-
-- math score
-- reading score
-- tvs
-- books
-- breakfast
-
-Feel free to choose others. (Code provided in exercise is just a sample, and needs to be modified.)
-]
 
 ---
 class: bg-main1

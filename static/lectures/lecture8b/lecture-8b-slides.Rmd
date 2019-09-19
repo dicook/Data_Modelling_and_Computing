@@ -64,16 +64,287 @@ class: bg-main1
 
 # recap 
 
+.huge[
 - tidying up text
 - use `genius_album()` to download lyrics of songs
 - stop_words - (I, am, be, the, this, what, we, myself)
+]
 
 ---
 class: bg-main1
 
-# Sentiment analysis
+# Overview
 
 .huge[
+- interactions in modelling
+- tidy text
+]
+
+---
+class: bg-main1
+
+# Adding interactions to the model
+
+![](images/interaction.png)
+
+---
+class: bg-main1
+
+# Remember linear regression?
+
+```{r echo = FALSE}
+pp <- read_csv("data/paris-paintings.csv")
+
+ggplot(pp, aes(x = Height_in,
+               y = Width_in,
+               colour = factor(landsALL))) + 
+  geom_point(alpha = 0.3) + 
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(colour = "")
+```
+
+
+---
+class: bg-main1
+# Interaction between quantitative and categorical variables
+
+.huge[
+- An interaction term is needed in a model if the linear relationship is different for the response vs quantitative variable for different levels of the categorical variable. 
+- That is, a different *slope* needs to be used/estimated for each level. 
+]
+
+---
+class: bg-main1
+
+# Interaction between quantitative and categorical variables
+
+.huge[
+- Let's take a look at how this works for the [2015 OECD PISA data](http://www.oecd.org/pisa/data/2015database/).
+- The question to be answered is whether more time spent studying science is associated with higher science scores, and how this varies with enjoyment of science.
+]
+
+---
+class: bg-main1
+
+# PISA data
+
+```{r print-pisa}
+pisa_au <- read_csv("data/pisa_au.csv")
+pisa_au
+```
+
+---
+class: bg-main1
+
+# PISA data
+
+```{r show-specific-pisa}
+pisa_au %>%
+  select(science_time,
+         science,
+         science_fun)
+```
+
+
+---
+class: bg-main1
+
+# Interaction between quantitative and categorical variables
+
+
+```{r read-pisa, echo=FALSE}
+
+library(labelled)
+pisa_au_science <- pisa_au %>% 
+  filter(science_fun < 5) %>%
+  filter(!is.na(science_time)) %>% 
+  select(science, 
+         science_fun, 
+         science_time, 
+         stuweight) %>%
+  mutate(science_fun = to_factor(science_fun, 
+                                 ordered = TRUE, 
+                                 drop_unused_labels = TRUE)) %>%
+  mutate(science_time = as.numeric(science_time)) %>%
+  filter(science_time > 0)
+  
+ggplot(pisa_au_science, 
+       aes(x = science_time, 
+           y = science,
+           colour = science_fun)) + 
+  geom_point(alpha = 0.1) + 
+  scale_colour_brewer("Enjoy science", 
+                      palette = "Dark2") +
+  facet_wrap(~science_fun, 
+             ncol = 2) + 
+  scale_x_log10() +
+  # geom_smooth(method="lm", se=FALSE) + 
+  theme(legend.position = "bottom") + 
+  xlab("Time spent studying science per week (mins") + 
+  ylab("Synthetic science score")
+```
+
+---
+class: bg-main1
+
+.vlarge[
+There are two possible models:
+
+$y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\varepsilon_i$ (Model 1)
+
+$y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\beta_3x_{i1}*x_{i2}+\varepsilon_i$ (Model 2)
+
+- $y=$ science score
+- $x_1=$ science study time
+- $x_2=$ science enjoyment. 
+
+Model 2 has an interaction term.  This means that the slope will be allowed to vary for the different levels of the categorical variables, science_fun.
+]
+
+---
+class: bg-main1
+
+# Note on modelling
+
+.huge[
+*Note:* Ordered factors are treated as "numeric" in the default model fit, so we should convert `science_fun` to be an unordered categorical variable. Also, `science_time` is heavily skewed so should be transformed.
+]
+
+---
+class: bg-main1
+
+```{r pisa-science}
+pisa_au_science_log10 <- pisa_au_science %>%
+  mutate(log_science_time = log10(science_time)) %>%
+  mutate(science_fun_c = factor(science_fun, ordered = FALSE))
+
+mod1 <- lm(science ~ log_science_time + science_fun_c, #<<
+           data = pisa_au_science_log10, 
+           weights = stuweight)
+
+mod2 <- lm(science ~ log_science_time * science_fun_c, #<<
+           data = pisa_au_science_log10, 
+           weights = stuweight)
+```
+
+---
+class: bg-main1
+
+```{r pisa-science-show}
+tidy(mod1)
+tidy(mod2)
+```
+
+---
+class: bg-main1
+
+# Five minute challenge
+
+.huge[
+- Write out the equations for both models. (Ignore the log transformation.)
+- Make a **hand** sketch of both models.
+]
+
+---
+class: bg-main1
+
+# Which is the better model?
+
+```{r glance-models}
+glance(mod1)
+glance(mod2)
+```
+
+.vlarge[
+`r emo::ji("shocked")` they are both pretty bad! The interaction model (mod2) is slightly better but its really not.
+]
+
+---
+class: bg-main1
+
+# Five minute challenge
+
+.huge[
+Using the PISA data: How does science score relate to text anxiety and gender?
+- Make a plot of science by anxtest, coloured by gender. Does it look like an interaction term might be necessary?
+- Fit the model with `science` score as the response and `gender` and `anxtest`. 
+- Try an interaction between gender and anxtest. 
+- Which is the better model?
+] 
+
+---
+class: bg-main1
+
+# Model building, Goal:
+
+.huge[
+The simplest model possible that provides similar predictive accuracy to most complex model.
+]
+
+---
+class: bg-main1
+
+# Model building, Approach:
+
+.huge[
+- Start simply, fit main effects models (single best variable, adding several more variables independently) and try to understand the effect that each has in the model. 
+- Explore transformations with the aim to build a stable foundation of explanatory variables for the model.
+- Check model diagnostics, residual plots.
+- Explore two variable interactions, and understand effect on model.
+- Explore three variable interactions.
+- Use model goodness of fit to help decide on final. There may be more than one model that are almost equally as good.
+]
+
+---
+class: bg-main1
+
+# Some asides on model building
+
+.vlarge[
+- Ideally, values of explanatory variables cover all possible combinations in their domain. 
+- There should *not be any association between explanatory variables*. 
+- If there is, then the there is more uncertainty in the parameter estimates. 
+- Its like building a table with only two legs, that table would be a bit wobbly, and unstable. 
+]
+
+---
+class: bg-main1
+
+# Some asides on model building
+
+.vlarge[
+- A work around is to first regress one explanatory variable on the other, and add the residuals from this fit to the model, instead of the original variable. 
+- That is, suppose $X_1, X_2$ are strongly linearly associated, then model $X_2\sim b_0+b_1X_1+e$, and use $e$ (call it $X^*_2$) in the model instead of $X_2$. 
+- You would then only be using the part of $X_2$ that is not related to $X_1$ to expand the model. 
+- This approach can be used for multiple explanatory variables that are associated. 
+]
+
+---
+class: bg-main1
+
+# Your Turn:
+
+.vlarge[
+Build the best model you can for science scoreby exploring  these variables: 
+
+- math score
+- reading score
+- tvs
+- books
+- breakfast
+
+Feel free to choose others. (Code provided in exercise is just a sample, and needs to be modified.)
+]
+
+
+---
+class: bg-black
+
+.white[
+# Sentiment analysis
+]
+
+.huge.white[
 Sentiment analysis tags words or phrases with an emotion, and summarises these, often as the positive or negative state, over a body of text. 
 ]
 
@@ -435,6 +706,7 @@ ggplot(sc_top_20,
 ```{r process-simpsons-s5-out, ref.label = 'process-simpsons-s5', echo = FALSE, out.width = "100%"}
 
 ```
+]
 
 ---
 class: bg-main1
@@ -544,8 +816,8 @@ class: bg-main1
 Here is the data collected in the previous year's AFL finals.
 ]
 
-```{r}
-load("data/afl_twitter.rda")
+```{r load-afl}
+afl <- read_rds("data/afl_twitter_past.rds")
 afl
 ```
 
@@ -568,284 +840,13 @@ class: bg-main1
 # Your Turn: Sentiment analysis
 
 .huge[
-Need to break text of each tweet into words, tag words with sentiments, and make a cumulative score for each tweet.
+We need to break text of each tweet into words, tag words with sentiments, and make a cumulative score for each tweet.
 
 - Which tweeter is the most positive? negative?
 - Is there a day that spirits were higher in the tweets? Or when tweets were more negative?
 - Does the tweeter `aflratings` have a trend in positivity or negativity?
 ]
 
----
-class: bg-main1
-
-# Part 2: Adding interactions to the model
-
-![](images/interaction.png)
-
----
-class: bg-main1
-
-# Remember linear regression?
-
-- reminder image / graphic
-
----
-class: bg-main1
-# Interaction between quantitative and categorical variables
-
-.huge[
-- An interaction term is needed in a model if the linear relationship is different for the response vs quantitative variable for different levels of the categorical variable. 
-- That is, a different *slope* needs to be used/estimated for each level. 
-]
-
----
-class: bg-main1
-
-# Interaction between quantitative and categorical variables
-
-.huge[
-- Let's take a look at how this works for the [2015 OECD PISA data](http://www.oecd.org/pisa/data/2015database/).
-- The question to be answered is whether more time spent studying science is associated with higher science scores, and how this varies with enjoyment of science.
-]
-
----
-class: bg-main1
-
-# PISA data
-
-```{r print-pisa}
-pisa_au <- read_csv("data/pisa_au.csv")
-pisa_au
-```
-
-
----
-class: bg-main1
-
-# Interaction between quantitative and categorical variables
-
-
-```{r echo=FALSE}
-pisa_au <- read_csv("data/pisa_au.csv")
-
-library(labelled)
-pisa_au_science <- pisa_au %>% 
-  filter(science_fun < 5) %>%
-  filter(!is.na(science_time)) %>% 
-  select(science, 
-         science_fun, 
-         science_time, 
-         stuweight) %>%
-  mutate(science_fun = to_factor(science_fun, 
-                                 ordered = TRUE, 
-                                 drop_unused_labels = TRUE)) %>%
-  mutate(science_time = as.numeric(science_time)) %>%
-  filter(science_time > 0)
-  
-ggplot(pisa_au_science, 
-       aes(x = science_time, 
-           y = science,
-           colour = science_fun)) + 
-  geom_point(alpha = 0.1) + 
-  scale_colour_brewer("Enjoy science", 
-                      palette = "Dark2") +
-  facet_wrap(~science_fun, 
-             ncol = 2) + 
-  scale_x_log10() +
-  # geom_smooth(method="lm", se=FALSE) + 
-  theme(legend.position = "bottom") + 
-  xlab("Time spent studying science per week (mins") + 
-  ylab("Synthetic science score")
-```
-
----
-class: bg-main1
-
-.vlarge[
-There are two possible models:
-
-$y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\varepsilon_i$ (Model 1)
-
-$y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\beta_3x_{i1}*x_{i2}+\varepsilon_i$ (Model 2)
-
-where $y=$ science score, $x_1=$ science study time, $x_2=$ science enjoyment. 
-Model 2 has an interaction term. This means that the slope will be allowed to vary for the different levels of the categorical variables, science_fun.
-
-*Note:* Ordered factors are treated as "numeric" in the default model fit, so we should convert `science_fun` to be an unordered categorical variable. Also, `science_time` is heavily skewed so should be transformed.
-]
-
----
-class: bg-main1
-
-```{r pisa-science}
-pisa_au_science <- pisa_au_science %>%
-  mutate(log_science_time = log10(science_time)) %>%
-  mutate(science_fun_c = factor(science_fun, ordered = FALSE))
-
-mod1 <- lm(science ~ log_science_time + science_fun_c, 
-           data = pisa_au_science, 
-           weights = stuweight)
-
-mod2 <- lm(science ~ log_science_time * science_fun_c, 
-           data = pisa_au_science, 
-           weights = stuweight)
-```
-
----
-class: bg-main1
-
-```{r pisa-science-show}
-tidy(mod1)
-tidy(mod2)
-```
-
----
-class: bg-main1
-
-# Five minute challenge
-
-.huge[
-- Write out the equations for both models. (Ignore the log transformation.)
-- Make a **hand** sketch of both models.
-]
-
----
-class: bg-main1
-
-# Which is the better model?
-
-```{r}
-glance(mod1)
-glance(mod2)
-```
-
-.vlarge[
-`r emo::ji("shocked")` they are both pretty bad! The interaction model (mod2) is slightly better but its really not.
-]
-
----
-class: bg-main1
-
-# Interaction between quantitative variables
-
-- Interactions for two quantitative variables in a model, can be thought of as allowing the paper sheet (model) to curl.
-
-```{r show-curves, echo = FALSE}
-library(viridis)
-x1 <- runif(500)
-x2 <- runif(500)
-df <- tibble(x1, x2, y1=5-2*x1+4*x2+rnorm(500)*0.5,
-             y2=5-2*x1+4*x2+10*(-x1)*x2+rnorm(500)*0.5)
-p1 <- ggplot(df, aes(x=x1, y=x2, colour=y1)) + 
-  geom_point(size=5, alpha=0.5) + 
-  scale_colour_viridis() + 
-  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
-  ggtitle("Flat sheet: no interaction")
-p2 <- ggplot(df, aes(x=x1, y=x2, colour=y2)) + 
-  geom_point(size=5, alpha=0.5) + 
-  scale_colour_viridis() + 
-  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
-  ggtitle("Curled sheet: needs an interaction term")
-df_loess1 <- loess(y1~x1+x2, data=df)
-df_loess2 <- loess(y2~x1+x2, data=df)
-df_grid <- expand.grid(x1=seq(0, 1, 0.1), x2=seq(0, 1, 0.1))
-
-df_grid <- df_grid %>%
-  mutate(y1 = as.vector(predict(df_loess1, newdata=df_grid)),
-         y2 = as.vector(predict(df_loess2, newdata=df_grid)))
-
-p3 <- ggplot(df_grid, aes(x=x1, y=x2, z=y1, colour=y1)) + 
-  geom_contour(aes(colour = stat(level))) + 
-  scale_colour_viridis() + 
-  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
-  ggtitle("Flat sheet: no interaction") + 
-  geom_point(data=df, aes(x=x1, y=x2, colour=y1), size=0.5, alpha=0.5)
-
-p4 <- ggplot(df_grid, aes(x=x1, y=x2, z=y2)) + 
-  geom_contour(aes(colour = stat(level))) + 
-  scale_colour_viridis() + 
-  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
-  ggtitle("Curled sheet: needs an interaction term") + 
-  geom_point(data=df, aes(x=x1, y=x2, colour=y2), size=0.5, alpha=0.5)
-grid.arrange(p1, p2, p3, p4, ncol=2)
-```
-
----
-class: bg-main1
-
-# Five minute challenge
-
-.huge[
-Using the PISA data: How does science score relate to text anxiety and gender?
-- Make a plot of science by anxtest, coloured by gender. Does it look like an interaction term might be necessary?
-- Fit the model with `science` score as the response and `gender` and `anxtest`. 
-- Try an interaction between gender and anxtest. 
-- Which is the better model?
-] 
-
----
-class: bg-main1
-
-# Model building, Goal:
-
-.huge[
-The simplest model possible that provides similar predictive accuracy to most complex model.
-]
-
----
-class: bg-main1
-
-# Model building, Approach:
-
-.huge[
-- Start simply, fit main effects models (single best variable, adding several more variables independently) and try to understand the effect that each has in the model. 
-- Explore transformations with the aim to build a stable foundation of explanatory variables for the model.
-- Check model diagnostics, residual plots.
-- Explore two variable interactions, and understand effect on model.
-- Explore three variable interactions.
-- Use model goodness of fit to help decide on final. There may be more than one model that are almost equally as good.
-]
-
----
-class: bg-main1
-
-# Some asides on model building
-
-.vlarge[
-- Ideally, values of explanatory variables cover all possible combinations in their domain. 
-- There should *not be any association between explanatory variables*. 
-- If there is, then the there is more uncertainty in the parameter estimates. 
-- Its like building a table with only two legs, that table would be a bit wobbly, and unstable. 
-]
-
----
-class: bg-main1
-
-# Some asides on model building
-
-.vlarge[
-- A work around is to first regress one explanatory variable on the other, and add the residuals from this fit to the model, instead of the original variable. 
-- That is, suppose $X_1, X_2$ are strongly linearly associated, then model $X_2\sim b_0+b_1X_1+e$, and use $e$ (call it $X^*_2$) in the model instead of $X_2$. 
-- You would then only be using the part of $X_2$ that is not related to $X_1$ to expand the model. 
-- This approach can be used for multiple explanatory variables that are associated. 
-]
-
----
-class: bg-main1
-
-# Your Turn:
-
-.vlarge[
-Build the best model you can for science scoreby exploring  these variables: 
-
-- math score
-- reading score
-- tvs
-- books
-- breakfast
-
-Feel free to choose others. (Code provided in exercise is just a sample, and needs to be modified.)
-]
 
 ---
 class: bg-main1

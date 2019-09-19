@@ -67,30 +67,27 @@ mod2 <- lm(science ~ log_science_time * science_fun_c,
 - Write out the equations for both models. (Ignore the log transformation.)
 - Make a **hand** sketch of both models.
 
-# Using the PISA data: How does science score relate to text anxiety and gender?
+Using the PISA data: How does science score relate to text anxiety and gender?
 
 - Make a plot of science by anxtest, coloured by gender. Does it look like an interaction term might be necessary?
 
-```{r }
-# filter out the missings in science_time, and only look at science, gender, anxtext, and stuweight
+```{r eval=FALSE}
 pisa_au_science <- pisa_au %>% 
   filter(!is.na(science_time)) %>%
   select(science, gender, anxtest, stuweight) 
 
-# plot of science by anxtest, coloured by gender. Does it look like an interaction term might be necessary?
 ggplot(pisa_au_science, 
-       aes(x = , 
-           y = , 
-           colour = )) + 
-  geom_smooth(method = "lm")
+       aes(x = anxtest, 
+           y = science, 
+           colour = gender)) + 
+  geom_smooth(method="lm")
 ```
+
 
 - Fit the model with `science` score as the response and `gender` and `anxtest`. 
 
 ```{r}
-sci_lm1 <- lm(science ~  +  ,
-              data = pisa_au_science, 
-              weights=stuweight)
+sci_lm1 <- lm(science ~ ??? + ???, data=pisa_au_science, weights=stuweight)
 tidy(???)
 glance(???)
 ```
