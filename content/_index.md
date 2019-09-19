@@ -98,7 +98,7 @@ We have a limited amount of laptops available for students to borrow (during sem
      - Wednesday slides: [HTML](lectures/lecture8a/lecture-8a-slides.html); [RMD](lectures/lecture8a/lecture-8a-slides.Rmd)
      - Wednesday exercise: [exercise-8a](lectures/lecture8a/exercise/exercise-8a.Rmd)
      - Friday reading: [Word and document frequency](https://www.tidytextmining.com/tfidf.html); [n-grams](https://www.tidytextmining.com/ngrams.html)
-     - Friday slides: [HTML](lectures/lecture8/lecture-8-slides.html); [RMD](lectures/lecture8/lecture-8-slides.Rmd)
+     - Friday slides: [HTML](lectures/lecture8b/lecture-8b-slides.html); [RMD](lectures/lecture8b/lecture-8b-slides.Rmd)
      - [Friday exercise](lectures/lecture8/exercise/exercise-8b.Rmd)
      - [Friday data](lectures/lecture8b/data.zip)
      
