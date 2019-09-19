@@ -888,8 +888,7 @@ class: bg-main1
 
 .left-code[
 ```{r plot-word-freq, eval = FALSE}
-library(plotly)
-p <- ggplot(darwin, 
+ggplot(darwin, 
             aes(x = n_ed1, 
                 y = n_ed6, 
                 label = word)) +
@@ -901,7 +900,6 @@ p <- ggplot(darwin,
   scale_x_log10() + 
   scale_y_log10() + 
   theme(aspect.ratio = 1)
-ggplotly(p)
 ```
 ]
 
