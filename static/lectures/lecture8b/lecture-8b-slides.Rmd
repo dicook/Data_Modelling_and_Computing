@@ -1,0 +1,879 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+subtitle: "Lecture 8B: Text analysis and linear models"
+author: "Dr. Nicholas Tierney & Professor Di Cook"
+institute: "EBS, Monash U."
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["shinobi", "ninjutsu", "slides.css"]
+    seal: true
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+library(emo)
+library(tidyverse)
+library(tidytext)
+library(knitr)
+library(lubridate)
+library(gridExtra)
+library(plotly)
+library(broom)
+knitr::opts_chunk$set(
+  fig.width = 8,
+  fig.height = 4.5,
+  fig.retina = 3,
+  fig.align = "center",
+  out.width = "90%",
+  message = FALSE,
+  warning = FALSE,
+  cache = TRUE,
+  autodep = TRUE,
+  hiline = TRUE
+)
+
+knitr::opts_hooks$set(fig.callout = function(options) {
+  if (options$fig.callout) {
+    options$echo <- FALSE
+    options$out.height <- "99%"
+    options$fig.width <- 16
+    options$fig.height <- 8
+  }
+  options
+})
+
+options(
+  htmltools.dir.version = FALSE,
+  width = 90,
+  max.print = 9999,
+  knitr.table.format = "html"
+)
+
+as_table <- function(...) knitr::kable(..., format = "html", digits = 3)
+
+```
+
+class: bg-main1
+
+# recap 
+
+- tidying up text
+- use `genius_album()` to download lyrics of songs
+- stop_words - (I, am, be, the, this, what, we, myself)
+
+---
+class: bg-main1
+
+# Sentiment analysis
+
+.huge[
+Sentiment analysis tags words or phrases with an emotion, and summarises these, often as the positive or negative state, over a body of text. 
+]
+
+---
+class: bg-main1
+
+# Sentiment analysis: examples
+
+.huge[
+- Examining effect of emotional state in twitter posts
+- Determining public reactions to government policy, or new product releases
+- Trying to make money in the stock market by modeling social media posts on listed companies
+- Evaluating product reviews on Amazon, restaurants on zomato, or travel options on TripAdvisor
+]
+
+---
+class: bg-main1
+
+# Lexicons
+
+.huge[
+The `tidytext` package has a lexicon of sentiments, based on four major sources: [AFINN](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010), [bing](https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html), [Loughran](https://sraf.nd.edu/textual-analysis/resources/#LM%20Sentiment%20Word%20Lists), [nrc](http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm)
+]
+
+---
+class: bg-main1
+
+# emotion
+
+.huge[
+What emotion do these words elicit in you?
+
+- summer
+- hot chips
+- hug
+- lose
+- stolen
+- smile
+]
+
+---
+class: bg-main1
+
+# Different sources of sentiment
+
+.huge[
+- The `nrc` lexicon categorizes words in a binary fashion ("yes"/"no") into categories of positive, negative, anger, anticipation, disgust, fear, joy, sadness, surprise, and trust. 
+- The `bing` lexicon categorizes words in a binary fashion into positive and negative categories. 
+- The `AFINN` lexicon assigns words with a score that runs between -5 and 5, with negative scores indicating negative sentiment and positive scores indicating positive sentiment.
+]
+
+---
+class: bg-main1
+
+# Different sources of sentiment
+```{r get-sentiment-afinn}
+get_sentiments("afinn")
+```
+
+---
+class: bg-main1
+
+# Sentiment analysis
+
+.huge[
+- Once you have a bag of words, you need to join the sentiments dictionary to the words data. 
+- Particularly the lexicon `nrc` has multiple tags per word, so you may need to use an "inner_join". 
+- `inner_join()` returns all rows from x where there are matching values in y, and all columns from x and y. 
+- If there are multiple matches between x and y, all combination of the matches are returned.
+]
+
+---
+class: bg-main1
+
+# Exploring sentiment in Jane Austen
+
+.huge[
+`janeaustenr` package contains the full texts, ready for analysis for for Jane Austen's 6 completed novels: 
+
+1. "Sense and Sensibility"
+2. "Pride and Prejudice"
+3. "Mansfield Park"
+4. "Emma"
+5. "Northanger Abbey"
+6. "Persuasion"
+]
+
+
+---
+class: bg-main1
+
+# Exploring sentiment in Jane Austen
+
+```{r show-jane-austen}
+library(janeaustenr)
+library(stringr)
+
+tidy_books <- austen_books() %>%
+  group_by(book) %>%
+  mutate(linenumber = row_number(),
+         chapter = cumsum(str_detect(text, 
+                                     regex("^chapter [\\divxlc]", 
+                                           ignore_case = TRUE)))) %>%
+  ungroup() %>%
+  unnest_tokens(word, text)
+```
+
+---
+class: bg-main1
+
+# Exploring sentiment in Jane Austen
+```{r print-tidy-ooks}
+tidy_books
+```
+
+---
+class: bg-main1
+
+# Count joyful words in "Emma"
+
+```{r count-joy}
+nrc_joy <- get_sentiments("nrc") %>% 
+  filter(sentiment == "joy")
+
+tidy_books %>%
+  filter(book == "Emma") %>%
+  inner_join(nrc_joy) %>%
+  count(word, sort = TRUE)
+```
+
+---
+class: bg-main1
+
+# Count joyful words in "Emma"
+
+.huge[
+"Good" is the most common joyful word, followed by "young", "friend", "hope". 
+
+All make sense until you see "found". 
+
+Is "found" a joyful word?
+]
+
+---
+class: bg-main1
+
+# Your turn: go to rstudio.cloud
+
+.huge[
+- What are the most common "anger" words used in Emma?
+- What are the most common "surprise" words used in Emma?
+]
+
+---
+class: bg-main1
+
+# Comparing lexicons
+
+.huge.pull-left[
+- All of the lexicons have a measure of positive or negative. 
+- We can tag the words in Emma by each lexicon, and see if they agree. 
+]
+
+.pull-right[
+```{r compare-sentiments}
+nrc_pn <- get_sentiments("nrc") %>% 
+  filter(sentiment %in% c("positive", 
+                          "negative"))
+
+emma_nrc <- tidy_books %>%
+  filter(book == "Emma") %>%
+  inner_join(nrc_pn)
+
+emma_bing <- tidy_books %>%
+  filter(book == "Emma") %>%
+  inner_join(get_sentiments("bing")) 
+
+emma_afinn <- tidy_books %>%
+  filter(book == "Emma") %>%
+  inner_join(get_sentiments("afinn"))
+```
+]
+
+---
+class: bg-main1
+
+# Comparing lexicons
+
+```{r show-lexi} 
+emma_nrc
+```
+
+---
+class: bg-main1
+
+# Comparing lexicons
+
+```{r show-lexi-afinn} 
+emma_afinn
+```
+
+
+---
+class: bg-main1
+
+# Comparing lexicons
+
+```{r compare-sentiments-show}
+emma_nrc %>% count(sentiment) %>% mutate(n / sum(n))
+
+emma_bing %>% count(sentiment) %>% mutate(n / sum(n))
+```
+
+---
+class: bg-main1
+
+# Comparing lexicons
+
+```{r compare-sentiments-more}
+emma_afinn %>% 
+  mutate(sentiment = ifelse(value > 0, 
+                            "positive", 
+                            "negative")) %>% 
+  count(sentiment) %>% 
+  mutate(n / sum(n))
+
+```
+
+---
+class: bg-main1
+
+# Your turn: Exercise 2
+
+.huge[
+- Using your choice of lexicon (nrc, bing, or afinn) compute the proportion of positive words in each of Austen's books.
+- Which book is the most positive? negative?
+]
+
+
+---
+class: bg-main1
+
+# Example: Simpsons
+
+.huge[
+Data from the popular animated TV series, The Simpsons, has been made available on [kaggle](https://www.kaggle.com/wcukierski/the-simpsons-by-the-data/data). 
+
+- `simpsons_script_lines.csv`: Contains the text spoken during each episode (including details about which character said it and where)
+- `simpsons_characters.csv`: Contains character names and a character id
+]
+
+---
+class: bg-main1
+
+# The Simpsons
+
+```{r read-scripts}
+scripts <- read_csv("data/simpsons_script_lines.csv")
+chs <- read_csv("data/simpsons_characters.csv")
+sc <- left_join(scripts, chs, by = c("character_id" = "id"))
+
+sc
+```
+
+---
+class: bg-main1
+
+# count the number of times a character speaks
+
+```{r count-names}
+sc %>% count(name, sort = TRUE)
+```
+
+---
+class: bg-main1
+
+# missing name?
+
+```{r explore-missing}
+sc %>% filter(is.na(name))
+```
+
+
+---
+class: bg-main1
+
+# Simpsons Pre-process the text
+
+```{r process-simpsons-s1}
+sc %>%
+  unnest_tokens(output = word, 
+                input = spoken_words)
+```
+
+---
+class: bg-main1
+
+# Simpsons Pre-process the text
+
+
+```{r process-simpsons-s2}
+sc %>%
+  unnest_tokens(output = word, 
+                input = spoken_words) %>%
+  anti_join(stop_words)
+```
+
+---
+class: bg-main1
+
+# Simpsons Pre-process the text
+
+```{r process-simpsons-s3}
+sc %>%
+  unnest_tokens(output = word, 
+                input = spoken_words) %>%
+  anti_join(stop_words) %>%
+  count(word, sort = TRUE) %>%
+  filter(!is.na(word))
+```
+
+---
+class: bg-main1
+
+# Simpsons Pre-process the text
+
+```{r process-simpsons-s4}
+sc_top_20 <- sc %>%
+  unnest_tokens(output = word, 
+                input = spoken_words) %>%
+  anti_join(stop_words) %>%
+  count(word, sort = TRUE) %>%
+  filter(!is.na(word)) %>%
+  mutate(word = factor(word, 
+                       levels = rev(unique(word)))) %>%
+  top_n(20)
+```
+
+---
+class: bg-main1
+
+# Simpsons plot most common words
+
+.left-code[
+```{r process-simpsons-s5, eval = FALSE}
+ggplot(sc_top_20,
+       aes(x = word, 
+           y = n)) +
+  geom_col() +
+  labs(x = '', 
+       y = 'count', 
+       title = 'Top 20 words') +
+  coord_flip() + 
+  theme_bw()
+```  
+]
+
+.right-plot[
+```{r process-simpsons-s5-out, ref.label = 'process-simpsons-s5', echo = FALSE, out.width = "100%"}
+
+```
+
+---
+class: bg-main1
+
+# Tag the words with sentiments
+
+.huge[
+Using AFINN words will be tagged on a negative to positive scale of -1 to 5.
+]
+
+.pull-left[
+```{r tag-sentiments}
+sc_word <- sc %>%
+  unnest_tokens(output = word, 
+                input = spoken_words) %>%
+  anti_join(stop_words) %>%
+  count(name, word) %>%
+  filter(!is.na(word))
+```
+]
+
+.pull-right[
+```{r tag-sentiments-print}
+sc_word
+```
+]
+
+---
+class: bg-main1
+
+```{r tag-sentiments2}
+sc_s <- sc_word %>% 
+  inner_join(get_sentiments("afinn"), by = "word")
+
+sc_s
+```
+
+---
+class: bg-main1
+
+# Examine Simpsons characters
+
+```{r summarise-simpsons-characters}
+sc_s %>% 
+  group_by(name) %>% 
+  summarise(m = mean(value)) %>% 
+  arrange(desc(m))
+```
+
+---
+class: bg-main1
+
+# Examine Simpsons characters: Focus on the main characters.
+
+
+```{r keep-main-chars}
+keep <- sc %>% count(name, 
+                     sort=TRUE) %>%
+  filter(!is.na(name)) %>%
+  filter(n > 999)
+
+sc_s %>% 
+  filter(name %in% keep$name) %>% 
+  group_by(name) %>% 
+  summarise(m = mean(value)) %>% 
+  arrange(m)
+```
+
+---
+class: bg-main1
+
+# Your turn: Exercise 3
+
+.huge[
+1. Bart Simpson is featured at various ages. How has the sentiment of his words changed over his life?
+
+2. Repeat the sentiment analysis with the NRC lexicon. What character is the most "angry"? "joyful"?
+]
+
+---
+class: bg-main1
+
+# (if time) Example: AFL Finals tweets
+
+.huge[
+The `rtweet` package allows you to pull tweets from the archive. It gives only the last 6-9 days worth of data. You need to have a twitter account, and you need to create an app (its really basic) in order to pull twitter data. The instructions that come from this package (https://rtweet.info) are pretty simple to follow.
+]
+
+---
+class: bg-main1
+
+# (if time) Example: AFL Finals tweets
+
+.huge[
+Given that it is AFL final week, I thought it might be interesting to look at tweets that use the hashtag "#AFLFinals". Once you have a developer account, this is as simple as 
+]
+```
+afl <- search_tweets(
+  "#AFLFinals", n = 20000, include_rts = FALSE
+)
+```
+
+---
+class: bg-main1
+
+.huge[
+Here is the data collected in the previous year's AFL finals.
+]
+
+```{r}
+load("data/afl_twitter.rda")
+afl
+```
+
+---
+class: bg-main1
+
+# Your turn
+
+.huge[
+- When was the final played last year?
+- What is the range of dates of this data?
+- Who is the most frequent tweeter using this hashtag?
+- Are there some days that have more tweets than others?
+- Are there some hours of the day that are more common tweet times?
+]
+
+---
+class: bg-main1
+
+# Your Turn: Sentiment analysis
+
+.huge[
+Need to break text of each tweet into words, tag words with sentiments, and make a cumulative score for each tweet.
+
+- Which tweeter is the most positive? negative?
+- Is there a day that spirits were higher in the tweets? Or when tweets were more negative?
+- Does the tweeter `aflratings` have a trend in positivity or negativity?
+]
+
+---
+class: bg-main1
+
+# Part 2: Adding interactions to the model
+
+![](images/interaction.png)
+
+---
+class: bg-main1
+
+# Remember linear regression?
+
+- reminder image / graphic
+
+---
+class: bg-main1
+# Interaction between quantitative and categorical variables
+
+.huge[
+- An interaction term is needed in a model if the linear relationship is different for the response vs quantitative variable for different levels of the categorical variable. 
+- That is, a different *slope* needs to be used/estimated for each level. 
+]
+
+---
+class: bg-main1
+
+# Interaction between quantitative and categorical variables
+
+.huge[
+- Let's take a look at how this works for the [2015 OECD PISA data](http://www.oecd.org/pisa/data/2015database/).
+- The question to be answered is whether more time spent studying science is associated with higher science scores, and how this varies with enjoyment of science.
+]
+
+---
+class: bg-main1
+
+# PISA data
+
+```{r print-pisa}
+pisa_au <- read_csv("data/pisa_au.csv")
+pisa_au
+```
+
+
+---
+class: bg-main1
+
+# Interaction between quantitative and categorical variables
+
+
+```{r echo=FALSE}
+pisa_au <- read_csv("data/pisa_au.csv")
+
+library(labelled)
+pisa_au_science <- pisa_au %>% 
+  filter(science_fun < 5) %>%
+  filter(!is.na(science_time)) %>% 
+  select(science, 
+         science_fun, 
+         science_time, 
+         stuweight) %>%
+  mutate(science_fun = to_factor(science_fun, 
+                                 ordered = TRUE, 
+                                 drop_unused_labels = TRUE)) %>%
+  mutate(science_time = as.numeric(science_time)) %>%
+  filter(science_time > 0)
+  
+ggplot(pisa_au_science, 
+       aes(x = science_time, 
+           y = science,
+           colour = science_fun)) + 
+  geom_point(alpha = 0.1) + 
+  scale_colour_brewer("Enjoy science", 
+                      palette = "Dark2") +
+  facet_wrap(~science_fun, 
+             ncol = 2) + 
+  scale_x_log10() +
+  # geom_smooth(method="lm", se=FALSE) + 
+  theme(legend.position = "bottom") + 
+  xlab("Time spent studying science per week (mins") + 
+  ylab("Synthetic science score")
+```
+
+---
+class: bg-main1
+
+.vlarge[
+There are two possible models:
+
+$y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\varepsilon_i$ (Model 1)
+
+$y_i = \beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\beta_3x_{i1}*x_{i2}+\varepsilon_i$ (Model 2)
+
+where $y=$ science score, $x_1=$ science study time, $x_2=$ science enjoyment. 
+Model 2 has an interaction term. This means that the slope will be allowed to vary for the different levels of the categorical variables, science_fun.
+
+*Note:* Ordered factors are treated as "numeric" in the default model fit, so we should convert `science_fun` to be an unordered categorical variable. Also, `science_time` is heavily skewed so should be transformed.
+]
+
+---
+class: bg-main1
+
+```{r pisa-science}
+pisa_au_science <- pisa_au_science %>%
+  mutate(log_science_time = log10(science_time)) %>%
+  mutate(science_fun_c = factor(science_fun, ordered = FALSE))
+
+mod1 <- lm(science ~ log_science_time + science_fun_c, 
+           data = pisa_au_science, 
+           weights = stuweight)
+
+mod2 <- lm(science ~ log_science_time * science_fun_c, 
+           data = pisa_au_science, 
+           weights = stuweight)
+```
+
+---
+class: bg-main1
+
+```{r pisa-science-show}
+tidy(mod1)
+tidy(mod2)
+```
+
+---
+class: bg-main1
+
+# Five minute challenge
+
+.huge[
+- Write out the equations for both models. (Ignore the log transformation.)
+- Make a **hand** sketch of both models.
+]
+
+---
+class: bg-main1
+
+# Which is the better model?
+
+```{r}
+glance(mod1)
+glance(mod2)
+```
+
+.vlarge[
+`r emo::ji("shocked")` they are both pretty bad! The interaction model (mod2) is slightly better but its really not.
+]
+
+---
+class: bg-main1
+
+# Interaction between quantitative variables
+
+- Interactions for two quantitative variables in a model, can be thought of as allowing the paper sheet (model) to curl.
+
+```{r show-curves, echo = FALSE}
+library(viridis)
+x1 <- runif(500)
+x2 <- runif(500)
+df <- tibble(x1, x2, y1=5-2*x1+4*x2+rnorm(500)*0.5,
+             y2=5-2*x1+4*x2+10*(-x1)*x2+rnorm(500)*0.5)
+p1 <- ggplot(df, aes(x=x1, y=x2, colour=y1)) + 
+  geom_point(size=5, alpha=0.5) + 
+  scale_colour_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
+  ggtitle("Flat sheet: no interaction")
+p2 <- ggplot(df, aes(x=x1, y=x2, colour=y2)) + 
+  geom_point(size=5, alpha=0.5) + 
+  scale_colour_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
+  ggtitle("Curled sheet: needs an interaction term")
+df_loess1 <- loess(y1~x1+x2, data=df)
+df_loess2 <- loess(y2~x1+x2, data=df)
+df_grid <- expand.grid(x1=seq(0, 1, 0.1), x2=seq(0, 1, 0.1))
+
+df_grid <- df_grid %>%
+  mutate(y1 = as.vector(predict(df_loess1, newdata=df_grid)),
+         y2 = as.vector(predict(df_loess2, newdata=df_grid)))
+
+p3 <- ggplot(df_grid, aes(x=x1, y=x2, z=y1, colour=y1)) + 
+  geom_contour(aes(colour = stat(level))) + 
+  scale_colour_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
+  ggtitle("Flat sheet: no interaction") + 
+  geom_point(data=df, aes(x=x1, y=x2, colour=y1), size=0.5, alpha=0.5)
+
+p4 <- ggplot(df_grid, aes(x=x1, y=x2, z=y2)) + 
+  geom_contour(aes(colour = stat(level))) + 
+  scale_colour_viridis() + 
+  theme_bw() + theme(aspect.ratio=1, legend.position="none") +
+  ggtitle("Curled sheet: needs an interaction term") + 
+  geom_point(data=df, aes(x=x1, y=x2, colour=y2), size=0.5, alpha=0.5)
+grid.arrange(p1, p2, p3, p4, ncol=2)
+```
+
+---
+class: bg-main1
+
+# Five minute challenge
+
+.huge[
+Using the PISA data: How does science score relate to text anxiety and gender?
+- Make a plot of science by anxtest, coloured by gender. Does it look like an interaction term might be necessary?
+- Fit the model with `science` score as the response and `gender` and `anxtest`. 
+- Try an interaction between gender and anxtest. 
+- Which is the better model?
+] 
+
+---
+class: bg-main1
+
+# Model building, Goal:
+
+.huge[
+The simplest model possible that provides similar predictive accuracy to most complex model.
+]
+
+---
+class: bg-main1
+
+# Model building, Approach:
+
+.huge[
+- Start simply, fit main effects models (single best variable, adding several more variables independently) and try to understand the effect that each has in the model. 
+- Explore transformations with the aim to build a stable foundation of explanatory variables for the model.
+- Check model diagnostics, residual plots.
+- Explore two variable interactions, and understand effect on model.
+- Explore three variable interactions.
+- Use model goodness of fit to help decide on final. There may be more than one model that are almost equally as good.
+]
+
+---
+class: bg-main1
+
+# Some asides on model building
+
+.vlarge[
+- Ideally, values of explanatory variables cover all possible combinations in their domain. 
+- There should *not be any association between explanatory variables*. 
+- If there is, then the there is more uncertainty in the parameter estimates. 
+- Its like building a table with only two legs, that table would be a bit wobbly, and unstable. 
+]
+
+---
+class: bg-main1
+
+# Some asides on model building
+
+.vlarge[
+- A work around is to first regress one explanatory variable on the other, and add the residuals from this fit to the model, instead of the original variable. 
+- That is, suppose $X_1, X_2$ are strongly linearly associated, then model $X_2\sim b_0+b_1X_1+e$, and use $e$ (call it $X^*_2$) in the model instead of $X_2$. 
+- You would then only be using the part of $X_2$ that is not related to $X_1$ to expand the model. 
+- This approach can be used for multiple explanatory variables that are associated. 
+]
+
+---
+class: bg-main1
+
+# Your Turn:
+
+.vlarge[
+Build the best model you can for science scoreby exploring  these variables: 
+
+- math score
+- reading score
+- tvs
+- books
+- breakfast
+
+Feel free to choose others. (Code provided in exercise is just a sample, and needs to be modified.)
+]
+
+---
+class: bg-main1
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+
+
+
+```{r pipeline, eval=FALSE, echo = FALSE}
+quiz(
+  question("How would you describe the relationship between science score and time spent studying?",
+    answer("Weak", correct = TRUE),
+    answer("Moderate"), 
+    answer("Strong")),
+  question("What do these lines of code do?   `filter(science_fun < 5) %>%
+  filter(!is.na(science_time))`", 
+    answer("Remove missing values", correct = TRUE),
+    answer("Remove extreme values, and missing values"),
+    answer("I have no idea")),
+  question("Why was `science_time` transformed to a log scale?",
+    answer("It has a right-skewed distribution.", correct = TRUE),
+    answer("It has a left-skewed distribution."),
+    answer("It is symmetric")),
+  question("Why were 0 values of `science_time` removed?",
+    answer("It could be argued that these are most likely missing values", correct = TRUE),
+    answer("They are outliers affecting the modeling"),
+    answer("No-one would be able to study science 0 minutes per week"))
+)
+```

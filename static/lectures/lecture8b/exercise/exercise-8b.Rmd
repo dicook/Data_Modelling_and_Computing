@@ -1,0 +1,241 @@
+---
+title: ""
+author: ""
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+library(tidytext)
+```
+
+
+```{r get-sentiment-afinn}
+get_sentiments("afinn")
+```
+
+# Sentiment analysis
+
+- Once you have a bag of words, you need to join the sentiments dictionary to the words data. 
+- Particularly the lexicon `nrc` has multiple tags per word, so you may need to use an "inner_join". 
+- `inner_join()` returns all rows from x where there are matching values in y, and all columns from x and y. 
+- If there are multiple matches between x and y, all combination of the matches are returned.
+
+
+# Exploring sentiment in Jane Austen
+
+- The `janeaustenr` package contains the full texts, ready for analysis for for Jane Austen's 6 completed novels: 
+
+1. "Sense and Sensibility"
+2. "Pride and Prejudice"
+3. "Mansfield Park"
+4. "Emma"
+5. "Northanger Abbey"
+6. "Persuasion"
+
+
+# Exploring sentiment in Jane Austen
+
+```{r show-jane-austen}
+library(janeaustenr)
+library(stringr)
+
+tidy_books <- austen_books() %>%
+  group_by(book) %>%
+  mutate(linenumber = row_number(),
+         chapter = cumsum(str_detect(text, 
+                                     regex("^chapter [\\divxlc]", 
+                                           ignore_case = TRUE)))) %>%
+  ungroup() %>%
+  unnest_tokens(word, text)
+```
+
+---
+class: bg-main1
+
+# Count joyful words in "Emma"
+
+```{r count-joy}
+nrc_joy <- get_sentiments("nrc") %>% 
+  filter(sentiment == "joy")
+
+tidy_books %>%
+  filter(book == "Emma") %>%
+  inner_join(nrc_joy) %>%
+  count(word, sort = TRUE)
+```
+
+# Exercise 1: 
+
+- What are the most common "anger" words used in Emma?
+- What are the most common "surprise" words used in Emma?
+
+```{r}
+nrc_anger <- get_sentiments("nrc") %>% 
+  filter(sentiment == "anger")
+
+tidy_books %>%
+  filter(book == "Emma") %>%
+  inner_join(nrc_anger) %>%
+  count(word, sort = TRUE)
+
+nrc_surprise <- get_sentiments("nrc") %>% 
+  filter(sentiment == "surprise")
+
+tidy_books %>%
+  filter(book == "Emma") %>%
+  inner_join(nrc_surprise) %>%
+  count(word, sort = TRUE)
+```
+
+# Your Turn: Exercise 2
+
+- Using your choice of lexicon (nrc, bing, or afinn) compute the proportion of positive words in each of Austen's books.
+- Which book is the most positive? negative?
+
+
+```{r}
+pos_nrc <- tidy_books %>%
+  group_by(???) %>%
+  ???_join(nrc_pn) %>% 
+  ???(sentiment) %>% 
+  mutate(pos = ???/sum(n)) %>%
+  filter(sentiment == ???)
+pos_nrc %>% arrange(desc(???))
+```
+
+
+# Your turn: Exercise 3
+
+1. Bart Simpson is featured at various ages. How has the sentiment of his words changed over his life?
+
+2. Repeat the sentiment analysis with the NRC lexicon. What character is the most "angry"? "joyful"?
+
+
+# Your Turn: Sentiment analysis
+
+.huge[
+We need to break the text of each tweet into words, tag the words with sentiments, and make a cumulative score for each tweet.
+
+- Which tweeter is the most positive? negative?
+- Is there a day that spirits were higher in the tweets? Or when tweets were more negative?
+- Does the tweeter `aflratings` have a trend in positivity or negativity?
+]
+
+```{r eval=FALSE, echo=FALSE}
+afl_sentiment <- afl %>% 
+  group_by(???) %>%
+  unnest_tokens(word, ???) %>%
+  ???_join(get_sentiments("afinn")) %>%
+  ???(sentiment = mean(score, na.rm=T)) 
+afl_sentiment <- afl %>% select(status_id, screen_name, created_at, text) %>% 
+  left_join(afl_sentiment, by=c(???))
+afl_sentiment %>% group_by(???) %>%
+  ???(s = mean(sentiment, na.rm=TRUE)) %>% arrange(desc(s))
+afl_sentiment %>% mutate(day = ???)) %>% ggplot(aes(x=day, y=sentiment)) + geom_point() + geom_smooth(se=FALSE)
+afl_sentiment %>% filter(screen_name == ???) %>% 
+  mutate(day = ???) %>%
+  ggplot(aes(x=day, y=sentiment)) + geom_point() + geom_smooth()
+```
+
+1. Bart Simpson is featured at various ages. How has the sentiment of his words changed over his life?
+
+2. Repeat the sentiment analysis with the NRC lexicon. What character is the most "angry"? "joyful"?
+
+```{r eval=FALSE, echo=FALSE}
+sc %>% ???(name, sort=TRUE) %>%
+  ???(grepl("Bart", name)) %>% print(n=50)
+bart_names <- c("Bart Simpson", "Baby Bart", 
+                "1-Year-Old Bart", "2-Year-Old Bart", 
+                "5-Year-Old Bart", "80-Year-Old Bart")
+bart <- sc %>% filter(name %in% ???)
+bart_word <- bart %>%
+  unnest_tokens(word, ???) %>%
+  ???_join(stop_words) %>%
+  ???(name, word) %>%
+  ungroup() %>%
+  filter(!is.na(word))
+bart_s <- bart_word %>% 
+  ???_join(get_sentiments("afinn"), by = "word")
+bart_s %>% group_by(???) %>% 
+  ???(m=mean(score)) %>% 
+  arrange(desc(m))
+```
+
+
+```{r eval=FALSE, echo=FALSE}
+sc_s <- sc_word %>% 
+  ???_join(get_sentiments("nrc"), by = "word")
+sc_s %>% filter(name %in% ???) %>% 
+  group_by(///) %>% 
+  summarise(angry = sum(n[sentiment==???]/sum(n))) %>%
+  arrange(desc(angry))
+```
+
+
+### Your turn
+
+- When was the final played last year?
+- What is the range of dates of this data?
+- Who is the most frequent tweeter using this hashtag?
+- Are there some days that have more tweets than others?
+- Are there some hours of the day that are more common tweet times?
+
+---
+class: bg-main1
+
+### Sentiment analysis
+
+We need to break the text of each tweet into words, tag the words with sentiments, and make a cumulative score for each tweet.
+
+```{r eval=FALSE, echo=FALSE}
+afl_sentiment <- afl %>% 
+  group_by(???) %>%
+  unnest_tokens(word, ???) %>%
+  ???_join(get_sentiments("afinn")) %>%
+  ???(sentiment = mean(score, na.rm=T)) 
+afl_sentiment <- afl %>% select(status_id, screen_name, created_at, text) %>% 
+  left_join(afl_sentiment, by=c(???))
+afl_sentiment %>% group_by(???) %>%
+  ???(s = mean(sentiment, na.rm=TRUE)) %>% arrange(desc(s))
+afl_sentiment %>% mutate(day = ???)) %>% ggplot(aes(x=day, y=sentiment)) + geom_point() + geom_smooth(se=FALSE)
+afl_sentiment %>% filter(screen_name == ???) %>% 
+  mutate(day = ???) %>%
+  ggplot(aes(x=day, y=sentiment)) + geom_point() + geom_smooth()
+```
+
+- Which tweeter is the most positive? negative?
+- Is there a day that spirits were higher in the tweets? Or when tweets were more negative?
+- Does the tweeter `aflratings` have a trend in positivity or negativity?
+
+
+# five minute exercise
+
+```{r eval=FALSE}
+pisa_au_science <- pisa_au %>% 
+  filter(!is.na(???)) %>%
+  select(science, gender, anxtest, stuweight) 
+ggplot(pisa_au_science, aes(x=anxtest, y=science, colour=gender)) + geom_smooth(method="lm")
+sci_lm1 <- lm(science ~ ??? + ???, data=pisa_au_science, weights=stuweight)
+sci_lm2 <- lm(science ~ ??? * ???, data=pisa_au_science, weights=stuweight)
+tidy(???)
+glance(???)
+```
+
+
+# final model exercise
+
+```{r echo=FALSE, eval=FALSE}
+pisa_au_science <- pisa_au %>% 
+  filter(science_fun < 5) %>%
+  filter(!is.na(science_time)) %>%
+  filter(!is.na(anxtest)) %>%
+  select(science, math, read, science_fun, science_time, breakfast, gender, anxtest, books, tvs, stuweight) %>%
+  mutate(science_time = as.numeric(science_time)) %>%
+  filter(science_time>0) %>%
+  mutate(log_science_time = log10(science_time)) %>%
+  mutate(science_fun_c = factor(science_fun, ordered=FALSE))
+sci_lm <- lm(science ~ math + read + science_fun_c + science_time + gender*anxtest, data=pisa_au_science, weights=stuweight)
+tidy(sci_lm)
+glance(sci_lm)
+```
