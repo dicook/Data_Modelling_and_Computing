@@ -104,7 +104,7 @@ We have a limited amount of laptops available for students to borrow (during sem
      
 - Week 9: Wrangling, plotting and modeling network data
      - Wednesday reading:
-     - Wednesday slides:
+     - Wednesday slides: [HTML](lectures/lecture9a/lecture-9a-slides.html); [RMD](lectures/lecture9a/lecture-9a-slides.Rmd)
      - NO CLASS ON FRIDAY (AFL Day)
 - Week 10: Computational modeling, and good data collection practices
      - Wednesday reading:
