@@ -130,6 +130,7 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 - Assignment 3 **Due 5pm, Friday, October 11**: (Assignment will be released by Friday, September 20th) [assignment](assignments/assignment-3-2019-s2/etc1010-assignment-3.zip).
 (Unzip the file and double click on the rstudio project).
 **Note that the assignment is also on rstudio.cloud as well under assignment 3**
+
 <!--
 ## Assignment 1 peer evaluation
 
@@ -165,9 +166,7 @@ You will **not** mark your own group, this gives you a chance to see how other s
 - taipan [zip](assignments/2019-a1-submissions/taipan.zip)
 - team dplyr [zip](assignments/2019-a1-submissions/team_dplyr.zip)
 - visdat [zip](assignments/2019-a1-submissions/visdat.zip)
-- wesanderson [zip](assignments/2019-a1-submissions/wesanderson.zip)
-
--->
+- wesanderson [zip](assignments/2019-a1-submissions/wesanderson.zip) -->
 
 ## Project
 
@@ -175,8 +174,8 @@ You will **not** mark your own group, this gives you a chance to see how other s
 
 - **Deadline 1 (13th September)**:  Find team members, and potential topics to study (List of groups will be posted here)
 - **Deadline 2 (20th September)**:  Team members and team name, data description.
-- **Deadline 3 **:  Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
-- **Deadline 4 **:  Final version of story board uploaded. 
+- **Deadline 3 (11th October) **:  Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
+- **Deadline 4 (18th October) **:  Final version of story board uploaded. 
 - **Presentation in week 12**
 
 There are several ways to do the storyboard:

@@ -1,0 +1,497 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+subtitle: "Lecture 9A: Networks and Graphs"
+author: "Dr. Nicholas Tierney & Professor Di Cook"
+institute: "EBS, Monash U."
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["shinobi", "ninjutsu", "slides.css"]
+    seal: true
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+library(emo)
+library(tidyverse)
+library(ggraph)
+library(igraph)
+library(tidygraph)
+library(knitr)
+library(lubridate)
+library(gridExtra)
+library(plotly)
+knitr::opts_chunk$set(
+  fig.width = 8,
+  fig.height = 4.5,
+  fig.retina = 3,
+  fig.align = "center",
+  out.width = "90%",
+  message = FALSE,
+  warning = FALSE,
+  cache = TRUE,
+  autodep = TRUE,
+  hiline = TRUE
+)
+
+knitr::opts_hooks$set(fig.callout = function(options) {
+  if (options$fig.callout) {
+    options$echo <- FALSE
+    options$out.height <- "99%"
+    options$fig.width <- 16
+    options$fig.height <- 8
+  }
+  options
+})
+
+options(
+  htmltools.dir.version = FALSE,
+  width = 90,
+  max.print = 9999,
+  knitr.table.format = "html"
+)
+
+as_table <- function(...) knitr::kable(..., format = "html", digits = 3)
+
+```
+
+class: bg-main1
+
+# Announcements
+
+.vlarge[
+- Assignment 3 has been released
+- NO LECTURE ON FRIDAY
+- Project deadlines:
+  - **Deadline 3 (11th October) **:  Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
+  - **Deadline 4 (18th October) **:  Final version of story board uploaded. 
+- Practical exam: **18th October in class at 8am**
+]
+
+
+---
+class: bg-main1
+
+# recap: Last week on tidy text data
+
+
+
+---
+class: bg-main1
+
+# Network analysis
+
+--
+
+# A description of phone calls
+
+.huge[
+- Johnny --> Liz
+- Liz --> Anna
+- Johnny -- > Dan
+- Dan --> Liz
+- Dan --> Lucy
+]
+
+---
+class: bg-main1
+
+### As a graph
+
+```{r make-call-graph, echo = FALSE}
+simple <- make_graph('bull')
+V(simple)$name <- c('Johnny', 'Dan', 'Liz', 'Lucy', 'Anna')
+
+example <- as_tbl_graph(simple)
+ggraph(example, layout = 'graphopt') + 
+    geom_edge_link(aes(start_cap = label_rect(node1.name),
+                       end_cap = label_rect(node2.name)), 
+                   arrow = arrow(length = unit(4, 'mm'))) + 
+    geom_node_text(aes(label = name))
+
+```
+
+---
+class: bg-main1
+
+# And as an association matrix
+
+.vvvhuge[
+[DEMO]
+]
+
+---
+class: bg-main1
+
+# Nodes and edges?
+
+.huge[
+Netword data can be thought of as two related tables, **nodes** and **edges**:
+
+- **nodes** are connection points
+- **edges** are the connections between points
+]
+
+---
+class: bg-main1
+
+# Example: Mad Men. (Nodes = characters from the series)
+
+```{r mm-show-nodes, echo=FALSE}
+library(geomnet)
+data(madmen)
+as_tibble(madmen$vertices)
+```
+
+---
+class: bg-main1
+
+# Example: Mad Men. (Edges = how they are associated)
+
+```{r echo=FALSE}
+as_tibble(madmen$edges)
+```
+
+---
+class: bg-main1
+
+# Why care about these relationships?
+
+.huge[
+- **Telephone exchanges**: Nodes are the phone numbers. Edges would indicate a call was made betwen two numbers.
+- **Book or movie plots**: Nodes are the characters. Edges would indicate whether they appear together in a scene, or chapter. If they speak to each other, various ways we might measure the association.
+- **Social media**: nodes would be the people who post on facebook, including comments. Edges would measure who  comments on who's posts.
+]
+
+---
+class: bg-main1
+
+# Drawing these relationships out:
+
+.vlarge[
+One way to describe these relationships is to provide association matrix between many objects. 
+]
+
+```{r draw-association, echo = FALSE, out.width = "80%"}
+include_graphics("images/network_data.png")
+```
+
+(Image created by Sam Tyner.) 
+---
+class: bg-main1
+
+# Example: Madmen
+
+```{r show-madmen-logo, echo = FALSE}
+include_graphics("images/Mad-men-title-card.jpg")
+```
+
+*Source: [wikicommons](https://en.wikipedia.org/wiki/Mad_Men#/media/File:Mad-men-title-card.jpg)*
+
+---
+class: bg-main1
+
+# Generate a network view
+
+.huge[
+- Create a layout (in 2D) which places nodes which are most related close,
+- Plot the nodes as points, connect the appropriate lines
+- Overlaying other aspects, e.g. gender
+]
+
+---
+class: bg-main1
+
+# introducing `tidygraph` and `ggraph`
+
+.pull-left[
+```{r make-madmen-graph}
+library(tidygraph)
+library(ggraph)
+
+madmen_graph <-  tbl_graph(
+  nodes = madmen$vertices,
+  edges = madmen$edges,
+  directed = FALSE
+  )
+```
+]
+
+.pull-right[
+```{r print-madmen, echo = FALSE}
+madmen_graph
+```
+
+]
+
+---
+class: bg-main1
+
+# plotting using ggraph
+
+```{r ggraph-madmen}
+gg_madmen <- ggraph(madmen_graph, layout = "kk") + 
+  geom_edge_link() + 
+  geom_node_label(aes(colour = Gender,
+                      label = label))
+
+```
+
+---
+class: bg-main1
+
+# plotting using ggraph
+
+```{r print-ggraph-madmen, fig.width = 9, fig.height = 5}
+gg_madmen
+```
+
+
+---
+class: bg-main1
+
+# Which actor was most connected?
+
+```{r most-connected}
+madmen_graph %>%
+  activate(nodes) %>% 
+  mutate(count = centrality_degree()) %>%
+  arrange(-count) %>%
+  as_tibble()
+```
+
+---
+class: bg-main1
+
+# `activate()` what now?
+
+.pull-left[
+```{r show-madmen-graph}
+madmen_graph
+```
+]
+
+.huge.pull-right[
+- need to tell dplyr if you are working on `nodes` or `edges`. 
+- `activate` means we don't need a `mutate_nodes` or `mutate_edges` commands
+]
+
+---
+class: bg-main1
+
+# `centrality` what now?
+
+.pull-left[
+```{r}
+madmen_graph %>%
+  activate(nodes) %>% 
+  mutate(count = centrality_degree()) %>% #<<
+  arrange(-count) %>%
+  as_tibble()
+```
+]
+
+.pull-right.vlarge[
+- How central is a node or edge in a graph?
+- definition is inherently vague
+- there are many different centrality scores that exist
+- `centrality_degree()` says: "What is the number of adjacent edges?"
+]
+
+---
+class: bg-main1
+
+# What do we learn?
+
+.huge[
+- Joan Holloway had a lot of affairs, all with loyal partners except for his wife Betty, who had two affairs herself
+- Followed by Woman at Clios party
+]
+
+---
+class: bg-main1
+
+# Example: American college football
+
+.huge[
+Early American football outfits were like Australian AFL today!
+]
+
+```{r show-football, echo = FALSE, out.width = "50%"}
+include_graphics("images/1480px-Unknown_Early_American_Football_Team.jpg")
+```
+
+*Source: [wikicommons](https://commons.wikimedia.org/wiki/File:Unknown_Early_American_Football_Team.jpg)*
+
+---
+class: bg-main1
+
+# Example: American college football
+
+.huge[
+Fall 2000 Season of [Division I college football](https://en.wikipedia.org/wiki/NCAA_Division_I). 
+- Nodes are the teams, edges are the matches. 
+- Teams are broken into "conferences" which are the primary competition, but they can play outside this group.
+]
+
+```{r  make-football-graph, echo=FALSE}
+foot_graph <- as_tbl_graph(football) %>%
+  mutate(schools = if_else(value == "Independents", 
+                           true = label, 
+                           false = NA_character_)) %>%
+  rename(conference = value,
+         uni = label)
+```
+
+---
+class: bg-main1
+
+# Example: American college football
+
+```{r print-football}
+foot_graph
+```
+
+
+---
+class: bg-main1
+
+```{r plot-foot-graph}
+set.seed(2019-09-25-1117)
+gg_foot_graph <-
+ggraph(foot_graph, layout = "fr") + 
+  geom_edge_link(alpha = 0.2) + 
+  geom_node_point(size = 7,
+                  alpha = 0.9,
+                  aes(colour = conference)) +
+  scale_colour_brewer(palette = "Paired") + 
+  theme(legend.position = "bottom") 
+```
+
+---
+class: bg-main1
+
+```{r print-gg-foot-graph, echo = FALSE, fig.width = 10, fig.height = 8, out.width = "80%"}
+gg_foot_graph
+```
+
+---
+class: bg-main1
+
+# What do we learn?
+
+.vlarge[
+- Remember layout is done to place nodes that are more similar close together in the display. 
+- The colours indicate conference the team belongs too. For the most part, conferences are clustered, more similar to each other than other conferences. 
+- There are some clusters of conference groups, eg Mid-American, Big East, and Atlantic Coast
+- The Independents are independent
+- Some teams play far afield from their conference.
+]
+
+---
+class: bg-main1
+
+## Example: Harry Potter characters
+
+```{r show-hp-platform, echo = FALSE, out.width = "50%"}
+include_graphics("images/1069px-Harry_Potter_Platform_Kings_Cross.jpg")
+```
+
+*Source: [wikicommons](https://commons.wikimedia.org/wiki/File:Harry_Potter_Platform_Kings_Cross.jpg)*
+
+---
+class: bg-main1
+
+.huge[
+There is a connection between two students if one provides emotional support to the other at some point in the book. 
+- Code to pull the data together is provided by Sam Tyner [here](https://github.com/sctyner/geomnet/blob/master/README.Rmd#harry-potter-peer-support-network).
+] 
+
+```{r read-hp, echo=FALSE}
+hp_chars <- read_csv("data/hp_chars.csv")
+hp_edges <- read_csv("data/hp_edges.csv") 
+
+hp <- tbl_graph(nodes = hp_chars,
+                edges = hp_edges)
+```
+
+---
+class: bg-main1
+
+# Harry potter data as nodes and edges
+
+```{r print-hp}
+hp
+```
+
+---
+class: bg-main1
+
+# Let's plot the characters
+
+```{r echo=TRUE}
+ggraph_hp <- 
+ggraph(hp,
+       layout = "fr") + 
+  geom_edge_link(alpha = 0.2) + 
+  geom_node_point(aes(colour = house,
+                      shape = gender)) + 
+  # geom_node_text(aes(label = name)) +
+  facet_edges(~book,
+              ncol = 2) +
+  scale_colour_manual(values = c("#941B08","#F1F31C", 
+                                 "#071A80", "#154C07"))
+
+```
+
+---
+class: bg-main1
+
+# Let's plot the characters
+
+```{r ggraph-hp}
+ggraph_hp
+```
+
+
+---
+class: bg-main1
+
+# Your turn: rstudio.cloud
+
+.vlarge.pull-left[
+- Read in last semesters class data, which contains `s1_name` and `s2_name` are the first names of class members, and tutors, with the latter being the "go-to" person for the former. 
+- Write the code to produce a class network that looks something like below
+]
+
+.pull-right[
+![](images/class_network.png)
+]
+
+<!--
+## Simpsons
+
+Your turn to make a network diagram for the Simpsons. The measure of association will be "that the two characters had lines in the same episode together".
+
+- How many characters appeared only in one episode? (You will want to drop these)
+- Write code to search if a character has a line in an episode
+- Compile a dataset of episode (rows) and character (columns) which is a binary matrix where 1 indicates the character had a line in the episode, and 0 is otherwise
+- Gather the matrix into long form, with these columns: `episode`, `character`, `had a line` (0,1)
+- Filter the rows with `had a line` equal to 1. 
+- Count the number of times the pair of characters appeared. This now forms your edge set, with an additional column of the strength of the relationship
+- Make your network display
+-->
+
+---
+class: bg-main1
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+
