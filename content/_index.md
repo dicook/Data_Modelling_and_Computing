@@ -107,9 +107,9 @@ We have a limited amount of laptops available for students to borrow (during sem
      - Wednesday slides: [HTML](lectures/lecture9a/lecture-9a-slides.html); [RMD](lectures/lecture9a/lecture-9a-slides.Rmd)
      - NO CLASS ON FRIDAY (AFL Day)
 - Week 10: Computational modeling, and good data collection practices
-     - Wednesday reading:
-     - Wednesday slides:
-     - Friday reading:
+     - Wednesday reading: NO READING
+     - Wednesday slides: [HTML](lectures/lecture9b/lecture-9b-slides.html); [RMD](lectures/lecture9b/lecture-9b-slides.Rmd)
+     - Friday reading: NO READING
      - Friday slides:
 - Week 11: 
    - Wednesday slides: Guest lecture. Final polishing of project story boards. 
