@@ -1,0 +1,652 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+subtitle: "Lecture 9B: More on networks"
+author: "Dr. Nicholas Tierney & Professor Di Cook"
+institute: "EBS, Monash U."
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["shinobi", "ninjutsu", "slides.css"]
+    seal: true
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+library(emo)
+library(tidyverse)
+library(ggraph)
+library(igraph)
+library(tidygraph)
+library(geomnet)
+library(knitr)
+library(lubridate)
+library(gridExtra)
+library(plotly)
+library(knitr)
+library(countdown)
+knitr::opts_chunk$set(
+  fig.width = 8,
+  fig.height = 4.5,
+  fig.retina = 3,
+  fig.align = "center",
+  out.width = "90%",
+  message = FALSE,
+  warning = FALSE,
+  cache = FALSE,
+  autodep = TRUE,
+  hiline = TRUE
+)
+
+knitr::opts_hooks$set(fig.callout = function(options) {
+  if (options$fig.callout) {
+    options$echo <- FALSE
+    options$out.height <- "99%"
+    options$fig.width <- 16
+    options$fig.height <- 8
+  }
+  options
+})
+
+options(
+  htmltools.dir.version = FALSE,
+  width = 90,
+  max.print = 9999,
+  knitr.table.format = "html"
+)
+
+as_table <- function(...) knitr::kable(..., format = "html", digits = 3)
+
+```
+
+class: bg-main1
+
+# Announcements
+
+.vlarge[
+- Assignment 3 is due this Friday at 5pm
+- Project deadlines:
+  - **Deadline 3 (11th October) **:  Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
+  - **Deadline 4 (18th October) **:  Final version of story board uploaded. 
+- Guest Lecture: **16th October**: Dr. James McKeone 
+- Practical exam: **18th October in class at 8am**
+- Final Exam: I will provide a review of exam content
+]
+
+---
+class: bg-main1
+
+# recap: on network data
+
+.huge[
+- To make a network analysis, you need:
+    - an association matrix, that describes how nodes (vertices) are connected to each other
+    - a layout algorithm to place the nodes optimally so that the fewest edges cross, or that the nodes that are most closely associated are near to each other.
+]
+
+---
+class: bg-main1
+
+# Quantitative association matrices
+
+.huge[
+Previous association matrices were black and white: 
+]
+
+```{r show-network-data, out.width = "80%", echo = FALSE}
+include_graphics("images/network_data.png")
+```
+
+---
+
+class: bg-main1
+
+## Quantitative association matrices
+
+.huge[
+- You could have the association between nodes described as real numbers.
+]
+
+
+---
+class: bg-main1
+
+## Quantitative association matrices
+
+.huge[
+- E.g., these are the number of times that these people called each other in the last week:
+]
+
+```{r show-n-times-ppl-called, echo = FALSE}
+d <- matrix(c(0, 5, 4, 1, 1, 
+              5, 0, 4, 2, 1,
+              4, 4, 0, 0, 0,
+              1, 2, 0, 0, 6,
+              1, 1, 0, 6, 0), ncol=5, byrow=T)
+colnames(d) <- c("Meg", "Tay", "Yat", "Zili", "Jess")
+rownames(d) <- colnames(d)
+kable(d)
+```
+
+---
+class: bg-main1
+
+## Quantitative association matrices
+
+.huge[
+We would need to turn this into an edge data set:
+]
+
+```{r show-edges, echo=FALSE}
+d_edges <- d %>% as_tibble() %>%
+  mutate(from = rownames(d)) %>%
+  gather(to, count, -from)
+d_edges
+```
+
+---
+class: bg-main1
+
+## Quantitative association matrices
+
+.huge[
+- We need to decide what corresponds to a "connection".
+
+- Let's say they need to have called each other at least 4 times, to be considered connected.
+]
+
+
+```{r decide-connections, echo = TRUE}
+d_edges_filter <- d_edges %>% filter(count > 3)
+```
+
+---
+class: bg-main1
+
+## Quantitative association matrices
+
+
+```{r decide-connections-print, echo = TRUE}
+d_edges_filter
+```
+
+
+---
+class: bg-main1
+
+## Quantitative association matrices: Make the network diagram.
+
+.left-code[
+```{r geom-net-cals, eval = FALSE}
+library(geomnet)
+set.seed(2019-10-09)
+ggplot(data = d_edges_filter, 
+       aes(
+         from_id = from, 
+         to_id = to)) +
+  geom_net(
+    layout.alg = "kamadakawai",
+    size = 2, 
+    labelon = TRUE, 
+    vjust = -0.6, 
+    ecolour = "grey60",
+    directed =FALSE, 
+    fontsize = 3, 
+    ealpha = 0.5
+    ) +
+    theme_net() 
+```  
+]
+
+.right-plot[
+```{r geom-net-cals-out, ref.label = 'geom-net-cals', echo = FALSE, out.width = "100%"}
+
+```
+]
+
+---
+class: bg-main1
+
+## Data:  Last 4 months of currency USD cross-rates
+
+.huge[
+`r set.seed(7);emo::ji("shocked")` SO let's try this with cross-currency rates across the globe!
+]
+
+--
+
+.huge[
+- Data extracted from http://openexchangerates.org/api/historical
+- R packages `jsonlite`, processed with `tidyverse`, `lubridate`
+]
+
+---
+class: bg-main1
+
+## Data:  Last 4 months of currency USD cross-rates
+
+
+```{r show-rates, echo=FALSE, fig.width=5, fig.height=5}
+library(tidyverse)
+library(lubridate)
+library(gridExtra)
+rates <- read_csv("data/rates_new.csv")
+rates <- rates %>% arrange(date)
+rates %>% head()
+```
+
+
+---
+class: bg-main1
+
+## Data:  Last 4 months of currency USD cross-rates
+
+```{r plot-rates, echo=FALSE, out.width = "100%"}
+p1 <- ggplot(rates, aes(x=date, y=AUD)) + geom_line()
+p2 <- ggplot(rates, aes(x=date, y=EUR)) + geom_line()
+p3 <- ggplot(rates, aes(x=date, y=JPY)) + geom_line()
+p4 <- rates %>% select(date, AUD, EUR, JPY) %>%
+  gather(curr, value, -date) %>%
+  ggplot(aes(x=date, y=value, colour=curr, group=curr)) + 
+    geom_line() + theme(legend.position="none") +
+  scale_colour_brewer(palette="Dark2")
+grid.arrange(p1, p2, p3, p4, ncol=2)
+```
+
+---
+class: bg-main1
+
+# Your turn: rstudio cloud
+
+.huge[
+Make some plots (or google) to answer these questions
+
+- Is the NZD more similar to AUD, EUR, or JPY? (What currency is NZD?)
+- Is SGD more similar to AUD, EUR, or JPY? (What currency is SGD?)
+- How many currencies are there in the British Isles? 
+]
+
+```{r cd-round-1, echo = FALSE}
+countdown(minutes = 5)
+```
+
+
+---
+class: bg-main1
+
+```{r show-many-currencies, out.width = "100%", echo = FALSE}
+p1 <- ggplot(rates, aes(x=date, y=AUD)) + geom_line()
+p2 <- ggplot(rates, aes(x=date, y=EUR)) + geom_line()
+p3 <- ggplot(rates, aes(x=date, y=JPY)) + geom_line()
+p4 <- ggplot(rates, aes(x=date, y=SGD)) + geom_line()
+grid.arrange(p1, p2, p3, p4, ncol=2)
+```
+
+---
+class: bg-main1
+
+## Pre-processing data: Keep only currencies that change over the period
+
+.huge[
+- Some currencies don't change very much. 
+- These should be filtered from the analysis, because in a study of currency movement, if it doesn't move then there is nothing more to be said. 
+]
+
+---
+class: bg-main1
+
+## Pre-processing data: Keep only currencies that change over the period
+
+.huge[
+- To filter out these currencies we use a statistic called [coefficient of variation](https://en.wikipedia.org/wiki/Coefficient_of_variation):
+
+$$
+Coef Variation = \frac{\sigma}{\mu}
+$$
+]
+
+--
+
+.vlarge[
+- Measures standard deviation of currency relative to the mean. 
+- For high means, we expect a currency to change more. 
+- That is, relatively the standard deviation would be larger to consider it to be changing.
+]
+
+---
+class: bg-main1
+
+```{r}
+cv <- function(x){
+  sd(x)/mean(x)
+}
+
+rates %>% select(-date) %>%
+  summarise_all(funs(cv))
+```
+
+---
+class: bg-main1
+
+```{r}
+cv <- function(x){
+  sd(x)/mean(x)
+}
+
+rates %>% select(-date) %>%
+  summarise_all(funs(cv)) %>%
+  gather(key = curr, 
+         value = cv) 
+```
+
+
+---
+class: bg-main1
+
+```{r}
+cv <- function(x){
+  sd(x)/mean(x)
+}
+
+rates %>% select(-date) %>%
+  summarise_all(funs(cv)) %>%
+  gather(key = curr, 
+         value = cv) %>%
+  filter(cv > 0.0027)
+```
+
+
+---
+class: bg-main1
+
+
+```{r fig.width=5, fig.height=5}
+# Compute coefficient of variation. We will only analyse 
+# currencies that have changes substantially over this time.
+# Dates dropped
+cv <- function(x){
+  sd(x)/mean(x)
+}
+
+rates_sum <- rates %>% select(-date) %>%
+  summarise_all(funs(cv)) %>%
+  gather(key = curr, 
+         value = cv) %>%
+  filter(cv > 0.0027)
+
+
+rates_sub <- select(rates, rates_sum$curr)
+
+head(rates_sub)
+```
+
+---
+class: bg-main1
+
+## Remove currencies that are not currencies
+
+.huge[
+Some of the currencies ... aren't really currencies. Google these ones: XAG, XDR, XPT - what are they?
+]
+
+```{r cd-2, echo = FALSE}
+countdown(minutes = 2)
+```
+
+
+```{r}
+# Remove non-currencies
+rates_dropped <- rates_sub %>% select(-ALL, -XAG, -XDR, -XPT)
+```
+
+???
+
+XAG is Gold
+XPT is Platinum
+XDR is special drawing rights
+
+---
+class: bg-main1
+
+# Standardize the currencies
+
+.huge[
+To examine overall trend regardless of actual USD cross rate, standardise the values to have mean 0 and standard deviation 1.
+]
+
+```{r}
+scale01 <- function(x) (x-mean(x))/sd(x)
+rates_scaled <-  rates_dropped %>%
+  mutate_all(funs(scale01))
+```
+
+---
+class: bg-main1
+
+# What is `mutate_all()`?
+
+.huge[
+Instead of:
+]
+
+```{r show-reason-mutate-all, echo = TRUE, eval = FALSE}
+rates_dropped %>%
+  mutate(AFN = scale01(AFN),
+         AMD = scale01(AMD),
+         ANG = scale01(ANG),
+         ...
+         ...)
+```
+
+---
+class: bg-main1
+
+# What is `mutate_all()`?
+
+.huge[
+We can write:
+]
+
+```{r}
+rates_scaled <-  rates_dropped %>%
+  mutate_all(funs(scale01))
+```
+
+---
+class: bg-main1
+
+# These are called `scoped variants` - and there are more:
+
+.huge[
+- `*_if` = Do this thing **if** some condition is met
+- `*_at` = Do this thing **at** these select variables
+- `*_all` = Do this thing **for all** variables
+]
+
+---
+class: bg-main1
+
+# Example: `mutate_if()`
+
+```{r}
+iris %>% mutate_if(is.numeric, scale01)
+```
+
+---
+class: bg-main1
+
+# Example: `mutate_at()`
+
+```{r}
+iris %>% mutate_at(vars(Sepal.Width, Sepal.Length), scale01)
+```
+
+---
+class: bg-main1
+
+# Scoped Variants (**if**, **at**, *all**) are available for the five verbs:
+
+.huge[
+- `mutate()`
+- `filter()`
+- `select()`
+- `summarise()`
+- `group_by()`
+]
+
+
+---
+class: bg-main1
+
+# Standardize the currencies
+
+```{r currencies-standardized, out.width = "100%", echo = FALSE}
+rates_scaled_date <- rates_scaled %>% mutate(date = rates$date)
+p1 <- ggplot(rates_scaled_date, aes(x=date, y=AUD)) + geom_line()
+p2 <- ggplot(rates_scaled_date, aes(x=date, y=EUR)) + geom_line()
+p3 <- ggplot(rates_scaled_date, aes(x=date, y=JPY)) + geom_line()
+p4 <- rates_scaled_date %>% select(date, AUD, EUR, JPY) %>%
+  gather(curr, value, -date) %>%
+  ggplot(aes(x=date, y=value, colour=curr, group=curr)) + 
+    geom_line() + theme(legend.position="none") +
+  scale_colour_brewer(palette="Dark2")
+grid.arrange(p1, p2, p3, p4, ncol=2)
+```
+
+---
+class: bg-main1
+
+# Compute distances between all pairs of currencies
+
+.huge[
+Euclidean distance is used to compute similarity between all pairs of currencies. 
+
+$d_{ij} = \sqrt{\sum_{i=1}^{t}{(C_{1i}-C_{2i})^2}}$
+]
+
+---
+class: bg-main1
+
+# Compute distances between all pairs of currencies
+
+```{r compute-dist}
+# Compute distance between currencies
+# Need to transpose! Turn matrix around, rows <--> columns
+rates_dropped_t <- t(rates_dropped) %>% data.frame()
+
+dates_dist <- as.matrix(dist(rates_dropped_t, 
+                             diag = TRUE, 
+                             upper = TRUE))
+
+colnames(dates_dist) <- as.factor(colnames(rates_dropped))
+rownames(dates_dist) <- as.factor(colnames(rates_dropped))
+quantile(dates_dist, 
+         probs = c(0, 0.25, 0.5, 0.75, 1))
+```
+
+---
+class: bg-main1
+
+# A note on distance matrices:
+
+.huge[
+- A distance matrix is the inverse of an association matrix. 
+- A distance matrix close to 0 means the pair are most similar. 
+- For an association matrix far from zero means the pair are close. 
+- Either can be used to generate a network. 
+]
+
+---
+class: bg-main1
+
+# Make the network: Gather the data into long form, and filter based on similarity
+
+.huge[
+Here only the pairs of currencies who are closer than "4" to each other are kept. 
+]
+
+```{r}
+d_zero <- d
+d_zero_tbl <- d_zero %>% 
+  as_tibble() %>%
+  mutate(curr1=rownames(d_zero)) %>%
+  gather(curr2, dst, -curr1) %>%
+  filter(dst<3) %>%
+  filter(curr1 != curr2)
+```
+
+---
+class: bg-main1
+
+# Make the network: Gather the data into long form, and filter based on similarity
+
+.huge[
+Here only the pairs of currencies who are closer than "4" to each other are kept. 
+]
+
+```{r show-zero-tbl}
+d_zero_tbl
+```
+
+
+---
+class: bg-main1
+
+### Network laid out
+
+.left-code[
+```{r currency-network, eval = FALSE}
+# Make network
+library(geomnet)
+set.seed(10052016)
+ggplot(data = d_zero_tbl, 
+       aes(
+         from_id = curr1, 
+         to_id = curr2
+         )) +
+  geom_net(
+    layout.alg = "kamadakawai",
+    size = 2, 
+    labelon = TRUE, 
+    vjust = -0.6, 
+    ecolour = "grey60",
+    directed = FALSE, 
+    fontsize = 3, 
+    ealpha = 0.5
+    ) +
+    theme_net() +
+    theme(
+      legend.position = "bottom"
+      )
+```  
+]
+
+.right-plot[
+```{r currency-network-out, ref.label = 'currency-network', echo = FALSE, out.width = "100%"}
+
+```
+]
+
+---
+class: bg-main1
+
+# Your turn
+
+.huge[
+- Make a plot of the AUD vs the SGD (using the standardised units). Do they look like they are trending together as suggested by the network?
+- Finish the rstudio cloud exercise
+- Reamining time: Ask questions about project / assignment
+]
+
+
+---
+class: bg-main1
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.

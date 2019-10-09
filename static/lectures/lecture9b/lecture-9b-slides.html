@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>ETC1010: Data Modelling and Computing</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Nicholas Tierney &amp; Professor Di Cook" />
+    <meta name="date" content="2019-10-09" />
+    <link href="libs/remark-css/shinobi.css" rel="stylesheet" />
+    <link href="libs/remark-css/ninjutsu.css" rel="stylesheet" />
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
+    <link rel="stylesheet" href="slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# ETC1010: Data Modelling and Computing
+## Lecture 9B: More on networks
+### Dr. Nicholas Tierney &amp; Professor Di Cook
+### EBS, Monash U.
+### 2019-10-09
+
+---
+
+
+
+
+class: bg-main1
+
+# Announcements
+
+.vlarge[
+- Assignment 3 is due this Friday at 5pm
+- Project deadlines:
+  - **Deadline 3 (11th October) **:  Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
+  - **Deadline 4 (18th October) **:  Final version of story board uploaded. 
+- Guest Lecture: **16th October**: Dr. James McKeone 
+- Practical exam: **18th October in class at 8am**
+- Final Exam: I will provide a review of exam content
+]
+
+---
+class: bg-main1
+
+# recap: on network data
+
+.huge[
+- To make a network analysis, you need:
+    - an association matrix, that describes how nodes (vertices) are connected to each other
+    - a layout algorithm to place the nodes optimally so that the fewest edges cross, or that the nodes that are most closely associated are near to each other.
+]
+
+---
+class: bg-main1
+
+# Quantitative association matrices
+
+.huge[
+Previous association matrices were black and white: 
+]
+
+&lt;img src="images/network_data.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: bg-main1
+
+## Quantitative association matrices
+
+.huge[
+- You could have the association between nodes described as real numbers.
+]
+
+
+---
+class: bg-main1
+
+## Quantitative association matrices
+
+.huge[
+- E.g., these are the number of times that these people called each other in the last week:
+]
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Meg &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Tay &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Yat &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Zili &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Jess &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Meg &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Tay &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Yat &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Zili &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Jess &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+class: bg-main1
+
+## Quantitative association matrices
+
+.huge[
+We would need to turn this into an edge data set:
+]
+
+
+```
+## # A tibble: 25 x 3
+##    from  to    count
+##    &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt;
+##  1 Meg   Meg       0
+##  2 Tay   Meg       5
+##  3 Yat   Meg       4
+##  4 Zili  Meg       1
+##  5 Jess  Meg       1
+##  6 Meg   Tay       5
+##  7 Tay   Tay       0
+##  8 Yat   Tay       4
+##  9 Zili  Tay       2
+## 10 Jess  Tay       1
+## # … with 15 more rows
+```
+
+---
+class: bg-main1
+
+## Quantitative association matrices
+
+.huge[
+- We need to decide what corresponds to a "connection".
+
+- Let's say they need to have called each other at least 4 times, to be considered connected.
+]
+
+
+
+```r
+d_edges_filter &lt;- d_edges %&gt;% filter(count &gt; 3)
+```
+
+---
+class: bg-main1
+
+## Quantitative association matrices
+
+
+
+```r
+d_edges_filter
+```
+
+```
+## # A tibble: 8 x 3
+##   from  to    count
+##   &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt;
+## 1 Tay   Meg       5
+## 2 Yat   Meg       4
+## 3 Meg   Tay       5
+## 4 Yat   Tay       4
+## 5 Meg   Yat       4
+## 6 Tay   Yat       4
+## 7 Jess  Zili      6
+## 8 Zili  Jess      6
+```
+
+
+---
+class: bg-main1
+
+## Quantitative association matrices: Make the network diagram.
+
+.left-code[
+
+```r
+library(geomnet)
+set.seed(2019-10-09)
+ggplot(data = d_edges_filter, 
+       aes(
+         from_id = from, 
+         to_id = to)) +
+  geom_net(
+    layout.alg = "kamadakawai",
+    size = 2, 
+    labelon = TRUE, 
+    vjust = -0.6, 
+    ecolour = "grey60",
+    directed =FALSE, 
+    fontsize = 3, 
+    ealpha = 0.5
+    ) +
+    theme_net() 
+```
+]
+
+.right-plot[
+&lt;img src="lecture-9b-slides_files/figure-html/geom-net-cals-out-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+class: bg-main1
+
+## Data:  Last 4 months of currency USD cross-rates
+
+.huge[
+😨 SO let's try this with cross-currency rates across the globe!
+]
+
+--
+
+.huge[
+- Data extracted from http://openexchangerates.org/api/historical
+- R packages `jsonlite`, processed with `tidyverse`, `lubridate`
+]
+
+---
+class: bg-main1
+
+## Data:  Last 4 months of currency USD cross-rates
+
+
+
+```
+## # A tibble: 6 x 171
+##   date         AED   AFN   ALL   AMD   ANG   AOA   ARS   AUD   AWG   AZN   BAM   BBD   BDT
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 2018-05-14  3.67  71.2  106.  485.  1.79  230.  25.0  1.33  1.79  1.70  1.63     2  84.7
+## 2 2018-05-15  3.67  71.2  107.  485.  1.80  230.  24.1  1.34  1.79  1.70  1.64     2  84.8
+## 3 2018-05-16  3.67  71.0  108.  484.  1.80  232.  24.3  1.33  1.79  1.70  1.66     2  84.8
+## 4 2018-05-17  3.67  71.0  108.  483.  1.80  233.  24.3  1.33  1.79  1.70  1.66     2  84.8
+## 5 2018-05-18  3.67  71.0  108.  483.  1.80  233.  24.4  1.33  1.79  1.70  1.66     2  84.8
+## 6 2018-05-19  3.67  70.9  108.  482.  1.79  233.  24.4  1.33  1.79  1.70  1.66     2  84.8
+## # … with 157 more variables: BGN &lt;dbl&gt;, BHD &lt;dbl&gt;, BIF &lt;dbl&gt;, BMD &lt;dbl&gt;, BND &lt;dbl&gt;,
+## #   BOB &lt;dbl&gt;, BRL &lt;dbl&gt;, BSD &lt;dbl&gt;, BTC &lt;dbl&gt;, BTN &lt;dbl&gt;, BWP &lt;dbl&gt;, BYN &lt;dbl&gt;,
+## #   BZD &lt;dbl&gt;, CAD &lt;dbl&gt;, CDF &lt;dbl&gt;, CHF &lt;dbl&gt;, CLF &lt;dbl&gt;, CLP &lt;dbl&gt;, CNH &lt;dbl&gt;,
+## #   CNY &lt;dbl&gt;, COP &lt;dbl&gt;, CRC &lt;dbl&gt;, CUC &lt;dbl&gt;, CUP &lt;dbl&gt;, CVE &lt;dbl&gt;, CZK &lt;dbl&gt;,
+## #   DJF &lt;dbl&gt;, DKK &lt;dbl&gt;, DOP &lt;dbl&gt;, DZD &lt;dbl&gt;, EGP &lt;dbl&gt;, ERN &lt;dbl&gt;, ETB &lt;dbl&gt;,
+## #   EUR &lt;dbl&gt;, FJD &lt;dbl&gt;, FKP &lt;dbl&gt;, GBP &lt;dbl&gt;, GEL &lt;dbl&gt;, GGP &lt;dbl&gt;, GHS &lt;dbl&gt;,
+## #   GIP &lt;dbl&gt;, GMD &lt;dbl&gt;, GNF &lt;dbl&gt;, GTQ &lt;dbl&gt;, GYD &lt;dbl&gt;, HKD &lt;dbl&gt;, HNL &lt;dbl&gt;,
+## #   HRK &lt;dbl&gt;, HTG &lt;dbl&gt;, HUF &lt;dbl&gt;, IDR &lt;dbl&gt;, ILS &lt;dbl&gt;, IMP &lt;dbl&gt;, INR &lt;dbl&gt;,
+## #   IQD &lt;dbl&gt;, IRR &lt;dbl&gt;, ISK &lt;dbl&gt;, JEP &lt;dbl&gt;, JMD &lt;dbl&gt;, JOD &lt;dbl&gt;, JPY &lt;dbl&gt;,
+## #   KES &lt;dbl&gt;, KGS &lt;dbl&gt;, KHR &lt;dbl&gt;, KMF &lt;dbl&gt;, KPW &lt;dbl&gt;, KRW &lt;dbl&gt;, KWD &lt;dbl&gt;,
+## #   KYD &lt;dbl&gt;, KZT &lt;dbl&gt;, LAK &lt;dbl&gt;, LBP &lt;dbl&gt;, LKR &lt;dbl&gt;, LRD &lt;dbl&gt;, LSL &lt;dbl&gt;,
+## #   LYD &lt;dbl&gt;, MAD &lt;dbl&gt;, MDL &lt;dbl&gt;, MGA &lt;dbl&gt;, MKD &lt;dbl&gt;, MMK &lt;dbl&gt;, MNT &lt;dbl&gt;,
+## #   MOP &lt;dbl&gt;, MRO &lt;dbl&gt;, MRU &lt;dbl&gt;, MUR &lt;dbl&gt;, MVR &lt;dbl&gt;, MWK &lt;dbl&gt;, MXN &lt;dbl&gt;,
+## #   MYR &lt;dbl&gt;, MZN &lt;dbl&gt;, NAD &lt;dbl&gt;, NGN &lt;dbl&gt;, NIO &lt;dbl&gt;, NOK &lt;dbl&gt;, NPR &lt;dbl&gt;,
+## #   NZD &lt;dbl&gt;, OMR &lt;dbl&gt;, PAB &lt;dbl&gt;, PEN &lt;dbl&gt;, …
+```
+
+
+---
+class: bg-main1
+
+## Data:  Last 4 months of currency USD cross-rates
+
+&lt;img src="lecture-9b-slides_files/figure-html/plot-rates-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+class: bg-main1
+
+# Your turn: rstudio cloud
+
+.huge[
+Make some plots (or google) to answer these questions
+
+- Is the NZD more similar to AUD, EUR, or JPY? (What currency is NZD?)
+- Is SGD more similar to AUD, EUR, or JPY? (What currency is SGD?)
+- How many currencies are there in the British Isles? 
+]
+
+<div class="countdown" id="timer_5d9d5ad6" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+
+---
+class: bg-main1
+
+&lt;img src="lecture-9b-slides_files/figure-html/show-many-currencies-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+class: bg-main1
+
+## Pre-processing data: Keep only currencies that change over the period
+
+.huge[
+- Some currencies don't change very much. 
+- These should be filtered from the analysis, because in a study of currency movement, if it doesn't move then there is nothing more to be said. 
+]
+
+---
+class: bg-main1
+
+## Pre-processing data: Keep only currencies that change over the period
+
+.huge[
+- To filter out these currencies we use a statistic called [coefficient of variation](https://en.wikipedia.org/wiki/Coefficient_of_variation):
+
+$$
+Coef Variation = \frac{\sigma}{\mu}
+$$
+]
+
+--
+
+.vlarge[
+- Measures standard deviation of currency relative to the mean. 
+- For high means, we expect a currency to change more. 
+- That is, relatively the standard deviation would be larger to consider it to be changing.
+]
+
+---
+class: bg-main1
+
+
+```r
+cv &lt;- function(x){
+  sd(x)/mean(x)
+}
+
+rates %&gt;% select(-date) %&gt;%
+  summarise_all(funs(cv))
+```
+
+```
+## # A tibble: 1 x 170
+##       AED    AFN     ALL     AMD    ANG    AOA   ARS    AUD     AWG     AZN    BAM   BBD
+##     &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1 2.22e-5 0.0111 0.00823 0.00276 0.0120 0.0535 0.116 0.0151 0.00136 3.28e-4 0.0106     0
+## # … with 158 more variables: BDT &lt;dbl&gt;, BGN &lt;dbl&gt;, BHD &lt;dbl&gt;, BIF &lt;dbl&gt;, BMD &lt;dbl&gt;,
+## #   BND &lt;dbl&gt;, BOB &lt;dbl&gt;, BRL &lt;dbl&gt;, BSD &lt;dbl&gt;, BTC &lt;dbl&gt;, BTN &lt;dbl&gt;, BWP &lt;dbl&gt;,
+## #   BYN &lt;dbl&gt;, BZD &lt;dbl&gt;, CAD &lt;dbl&gt;, CDF &lt;dbl&gt;, CHF &lt;dbl&gt;, CLF &lt;dbl&gt;, CLP &lt;dbl&gt;,
+## #   CNH &lt;dbl&gt;, CNY &lt;dbl&gt;, COP &lt;dbl&gt;, CRC &lt;dbl&gt;, CUC &lt;dbl&gt;, CUP &lt;dbl&gt;, CVE &lt;dbl&gt;,
+## #   CZK &lt;dbl&gt;, DJF &lt;dbl&gt;, DKK &lt;dbl&gt;, DOP &lt;dbl&gt;, DZD &lt;dbl&gt;, EGP &lt;dbl&gt;, ERN &lt;dbl&gt;,
+## #   ETB &lt;dbl&gt;, EUR &lt;dbl&gt;, FJD &lt;dbl&gt;, FKP &lt;dbl&gt;, GBP &lt;dbl&gt;, GEL &lt;dbl&gt;, GGP &lt;dbl&gt;,
+## #   GHS &lt;dbl&gt;, GIP &lt;dbl&gt;, GMD &lt;dbl&gt;, GNF &lt;dbl&gt;, GTQ &lt;dbl&gt;, GYD &lt;dbl&gt;, HKD &lt;dbl&gt;,
+## #   HNL &lt;dbl&gt;, HRK &lt;dbl&gt;, HTG &lt;dbl&gt;, HUF &lt;dbl&gt;, IDR &lt;dbl&gt;, ILS &lt;dbl&gt;, IMP &lt;dbl&gt;,
+## #   INR &lt;dbl&gt;, IQD &lt;dbl&gt;, IRR &lt;dbl&gt;, ISK &lt;dbl&gt;, JEP &lt;dbl&gt;, JMD &lt;dbl&gt;, JOD &lt;dbl&gt;,
+## #   JPY &lt;dbl&gt;, KES &lt;dbl&gt;, KGS &lt;dbl&gt;, KHR &lt;dbl&gt;, KMF &lt;dbl&gt;, KPW &lt;dbl&gt;, KRW &lt;dbl&gt;,
+## #   KWD &lt;dbl&gt;, KYD &lt;dbl&gt;, KZT &lt;dbl&gt;, LAK &lt;dbl&gt;, LBP &lt;dbl&gt;, LKR &lt;dbl&gt;, LRD &lt;dbl&gt;,
+## #   LSL &lt;dbl&gt;, LYD &lt;dbl&gt;, MAD &lt;dbl&gt;, MDL &lt;dbl&gt;, MGA &lt;dbl&gt;, MKD &lt;dbl&gt;, MMK &lt;dbl&gt;,
+## #   MNT &lt;dbl&gt;, MOP &lt;dbl&gt;, MRO &lt;dbl&gt;, MRU &lt;dbl&gt;, MUR &lt;dbl&gt;, MVR &lt;dbl&gt;, MWK &lt;dbl&gt;,
+## #   MXN &lt;dbl&gt;, MYR &lt;dbl&gt;, MZN &lt;dbl&gt;, NAD &lt;dbl&gt;, NGN &lt;dbl&gt;, NIO &lt;dbl&gt;, NOK &lt;dbl&gt;,
+## #   NPR &lt;dbl&gt;, NZD &lt;dbl&gt;, OMR &lt;dbl&gt;, PAB &lt;dbl&gt;, …
+```
+
+---
+class: bg-main1
+
+
+```r
+cv &lt;- function(x){
+  sd(x)/mean(x)
+}
+
+rates %&gt;% select(-date) %&gt;%
+  summarise_all(funs(cv)) %&gt;%
+  gather(key = curr, 
+         value = cv) 
+```
+
+```
+## # A tibble: 170 x 2
+##    curr         cv
+##    &lt;chr&gt;     &lt;dbl&gt;
+##  1 AED   0.0000222
+##  2 AFN   0.0111   
+##  3 ALL   0.00823  
+##  4 AMD   0.00276  
+##  5 ANG   0.0120   
+##  6 AOA   0.0535   
+##  7 ARS   0.116    
+##  8 AUD   0.0151   
+##  9 AWG   0.00136  
+## 10 AZN   0.000328 
+## # … with 160 more rows
+```
+
+
+---
+class: bg-main1
+
+
+```r
+cv &lt;- function(x){
+  sd(x)/mean(x)
+}
+
+rates %&gt;% select(-date) %&gt;%
+  summarise_all(funs(cv)) %&gt;%
+  gather(key = curr, 
+         value = cv) %&gt;%
+  filter(cv &gt; 0.0027)
+```
+
+```
+## # A tibble: 130 x 2
+##    curr       cv
+##    &lt;chr&gt;   &lt;dbl&gt;
+##  1 AFN   0.0111 
+##  2 ALL   0.00823
+##  3 AMD   0.00276
+##  4 ANG   0.0120 
+##  5 AOA   0.0535 
+##  6 ARS   0.116  
+##  7 AUD   0.0151 
+##  8 BAM   0.0106 
+##  9 BDT   0.00404
+## 10 BGN   0.00932
+## # … with 120 more rows
+```
+
+
+---
+class: bg-main1
+
+
+
+```r
+# Compute coefficient of variation. We will only analyse 
+# currencies that have changes substantially over this time.
+# Dates dropped
+cv &lt;- function(x){
+  sd(x)/mean(x)
+}
+
+rates_sum &lt;- rates %&gt;% select(-date) %&gt;%
+  summarise_all(funs(cv)) %&gt;%
+  gather(key = curr, 
+         value = cv) %&gt;%
+  filter(cv &gt; 0.0027)
+
+
+rates_sub &lt;- select(rates, rates_sum$curr)
+
+head(rates_sub)
+```
+
+```
+## # A tibble: 6 x 130
+##     AFN   ALL   AMD   ANG   AOA   ARS   AUD   BAM   BDT   BGN   BIF   BND   BRL      BTC
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1  71.2  106.  485.  1.79  230.  25.0  1.33  1.63  84.7  1.64 1767.  1.33  3.62 0.000115
+## 2  71.2  107.  485.  1.80  230.  24.1  1.34  1.64  84.8  1.65 1773.  1.33  3.65 0.000118
+## 3  71.0  108.  484.  1.80  232.  24.3  1.33  1.66  84.8  1.66 1759.  1.33  3.68 0.000120
+## 4  71.0  108.  483.  1.80  233.  24.3  1.33  1.66  84.8  1.66 1759.  1.33  3.70 0.000124
+## 5  71.0  108.  483.  1.80  233.  24.4  1.33  1.66  84.8  1.66 1762.  1.33  3.74 0.000121
+## 6  70.9  108.  482.  1.79  233.  24.4  1.33  1.66  84.8  1.66 1761.  1.33  3.74 0.000121
+## # … with 116 more variables: BTN &lt;dbl&gt;, BWP &lt;dbl&gt;, BYN &lt;dbl&gt;, CAD &lt;dbl&gt;, CDF &lt;dbl&gt;,
+## #   CHF &lt;dbl&gt;, CLF &lt;dbl&gt;, CLP &lt;dbl&gt;, CNH &lt;dbl&gt;, CNY &lt;dbl&gt;, COP &lt;dbl&gt;, CRC &lt;dbl&gt;,
+## #   CVE &lt;dbl&gt;, CZK &lt;dbl&gt;, DKK &lt;dbl&gt;, DOP &lt;dbl&gt;, DZD &lt;dbl&gt;, ERN &lt;dbl&gt;, ETB &lt;dbl&gt;,
+## #   EUR &lt;dbl&gt;, FJD &lt;dbl&gt;, FKP &lt;dbl&gt;, GBP &lt;dbl&gt;, GEL &lt;dbl&gt;, GGP &lt;dbl&gt;, GHS &lt;dbl&gt;,
+## #   GIP &lt;dbl&gt;, GMD &lt;dbl&gt;, GNF &lt;dbl&gt;, GTQ &lt;dbl&gt;, GYD &lt;dbl&gt;, HNL &lt;dbl&gt;, HRK &lt;dbl&gt;,
+## #   HTG &lt;dbl&gt;, HUF &lt;dbl&gt;, IDR &lt;dbl&gt;, ILS &lt;dbl&gt;, IMP &lt;dbl&gt;, INR &lt;dbl&gt;, IRR &lt;dbl&gt;,
+## #   ISK &lt;dbl&gt;, JEP &lt;dbl&gt;, JMD &lt;dbl&gt;, JPY &lt;dbl&gt;, KES &lt;dbl&gt;, KMF &lt;dbl&gt;, KRW &lt;dbl&gt;,
+## #   KZT &lt;dbl&gt;, LAK &lt;dbl&gt;, LKR &lt;dbl&gt;, LRD &lt;dbl&gt;, LSL &lt;dbl&gt;, LYD &lt;dbl&gt;, MAD &lt;dbl&gt;,
+## #   MDL &lt;dbl&gt;, MGA &lt;dbl&gt;, MKD &lt;dbl&gt;, MMK &lt;dbl&gt;, MNT &lt;dbl&gt;, MRU &lt;dbl&gt;, MUR &lt;dbl&gt;,
+## #   MVR &lt;dbl&gt;, MWK &lt;dbl&gt;, MXN &lt;dbl&gt;, MYR &lt;dbl&gt;, MZN &lt;dbl&gt;, NAD &lt;dbl&gt;, NIO &lt;dbl&gt;,
+## #   NOK &lt;dbl&gt;, NPR &lt;dbl&gt;, NZD &lt;dbl&gt;, PEN &lt;dbl&gt;, PGK &lt;dbl&gt;, PHP &lt;dbl&gt;, PKR &lt;dbl&gt;,
+## #   PLN &lt;dbl&gt;, PYG &lt;dbl&gt;, RON &lt;dbl&gt;, RSD &lt;dbl&gt;, RUB &lt;dbl&gt;, RWF &lt;dbl&gt;, SBD &lt;dbl&gt;,
+## #   SCR &lt;dbl&gt;, SEK &lt;dbl&gt;, SGD &lt;dbl&gt;, SHP &lt;dbl&gt;, SLL &lt;dbl&gt;, SOS &lt;dbl&gt;, STD &lt;dbl&gt;,
+## #   STN &lt;dbl&gt;, SZL &lt;dbl&gt;, THB &lt;dbl&gt;, TJS &lt;dbl&gt;, TMT &lt;dbl&gt;, TND &lt;dbl&gt;, TOP &lt;dbl&gt;,
+## #   TRY &lt;dbl&gt;, TWD &lt;dbl&gt;, UAH &lt;dbl&gt;, UGX &lt;dbl&gt;, …
+```
+
+---
+class: bg-main1
+
+## Remove currencies that are not currencies
+
+.huge[
+Some of the currencies ... aren't really currencies. Google these ones: XAG, XDR, XPT - what are they?
+]
+
+<div class="countdown" id="timer_5d9d5be8" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">02</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+
+
+```r
+# Remove non-currencies
+rates_dropped &lt;- rates_sub %&gt;% select(-ALL, -XAG, -XDR, -XPT)
+```
+
+???
+
+XAG is Gold
+XPT is Platinum
+XDR is special drawing rights
+
+---
+class: bg-main1
+
+# Standardize the currencies
+
+.huge[
+To examine overall trend regardless of actual USD cross rate, standardise the values to have mean 0 and standard deviation 1.
+]
+
+
+```r
+scale01 &lt;- function(x) (x-mean(x))/sd(x)
+rates_scaled &lt;-  rates_dropped %&gt;%
+  mutate_all(funs(scale01))
+```
+
+---
+class: bg-main1
+
+# What is `mutate_all()`?
+
+.huge[
+Instead of:
+]
+
+
+```r
+rates_dropped %&gt;%
+  mutate(AFN = scale01(AFN),
+         AMD = scale01(AMD),
+         ANG = scale01(ANG),
+         ...
+         ...)
+```
+
+---
+class: bg-main1
+
+# What is `mutate_all()`?
+
+.huge[
+We can write:
+]
+
+
+```r
+rates_scaled &lt;-  rates_dropped %&gt;%
+  mutate_all(funs(scale01))
+```
+
+---
+class: bg-main1
+
+# These are called `scoped variants` - and there are more:
+
+.huge[
+- `*_if` = Do this thing **if** some condition is met
+- `*_at` = Do this thing **at** these select variables
+- `*_all` = Do this thing **for all** variables
+]
+
+---
+class: bg-main1
+
+# Example: `mutate_if()`
+
+
+```r
+iris %&gt;% mutate_if(is.numeric, scale01)
+```
+
+```
+##     Sepal.Length Sepal.Width Petal.Length   Petal.Width    Species
+## 1    -0.89767388  1.01560199  -1.33575163 -1.3110521482     setosa
+## 2    -1.13920048 -0.13153881  -1.33575163 -1.3110521482     setosa
+## 3    -1.38072709  0.32731751  -1.39239929 -1.3110521482     setosa
+## 4    -1.50149039  0.09788935  -1.27910398 -1.3110521482     setosa
+## 5    -1.01843718  1.24503015  -1.33575163 -1.3110521482     setosa
+## 6    -0.53538397  1.93331463  -1.16580868 -1.0486667950     setosa
+## 7    -1.50149039  0.78617383  -1.33575163 -1.1798594716     setosa
+## 8    -1.01843718  0.78617383  -1.27910398 -1.3110521482     setosa
+## 9    -1.74301699 -0.36096697  -1.33575163 -1.3110521482     setosa
+## 10   -1.13920048  0.09788935  -1.27910398 -1.4422448248     setosa
+## 11   -0.53538397  1.47445831  -1.27910398 -1.3110521482     setosa
+## 12   -1.25996379  0.78617383  -1.22245633 -1.3110521482     setosa
+## 13   -1.25996379 -0.13153881  -1.33575163 -1.4422448248     setosa
+## 14   -1.86378030 -0.13153881  -1.50569459 -1.4422448248     setosa
+## 15   -0.05233076  2.16274279  -1.44904694 -1.3110521482     setosa
+## 16   -0.17309407  3.08045544  -1.27910398 -1.0486667950     setosa
+## 17   -0.53538397  1.93331463  -1.39239929 -1.0486667950     setosa
+## 18   -0.89767388  1.01560199  -1.33575163 -1.1798594716     setosa
+## 19   -0.17309407  1.70388647  -1.16580868 -1.1798594716     setosa
+## 20   -0.89767388  1.70388647  -1.27910398 -1.1798594716     setosa
+## 21   -0.53538397  0.78617383  -1.16580868 -1.3110521482     setosa
+## 22   -0.89767388  1.47445831  -1.27910398 -1.0486667950     setosa
+## 23   -1.50149039  1.24503015  -1.56234224 -1.3110521482     setosa
+## 24   -0.89767388  0.55674567  -1.16580868 -0.9174741184     setosa
+## 25   -1.25996379  0.78617383  -1.05251337 -1.3110521482     setosa
+## 26   -1.01843718 -0.13153881  -1.22245633 -1.3110521482     setosa
+## 27   -1.01843718  0.78617383  -1.22245633 -1.0486667950     setosa
+## 28   -0.77691058  1.01560199  -1.27910398 -1.3110521482     setosa
+## 29   -0.77691058  0.78617383  -1.33575163 -1.3110521482     setosa
+## 30   -1.38072709  0.32731751  -1.22245633 -1.3110521482     setosa
+## 31   -1.25996379  0.09788935  -1.22245633 -1.3110521482     setosa
+## 32   -0.53538397  0.78617383  -1.27910398 -1.0486667950     setosa
+## 33   -0.77691058  2.39217095  -1.27910398 -1.4422448248     setosa
+## 34   -0.41462067  2.62159911  -1.33575163 -1.3110521482     setosa
+## 35   -1.13920048  0.09788935  -1.27910398 -1.3110521482     setosa
+## 36   -1.01843718  0.32731751  -1.44904694 -1.3110521482     setosa
+## 37   -0.41462067  1.01560199  -1.39239929 -1.3110521482     setosa
+## 38   -1.13920048  1.24503015  -1.33575163 -1.4422448248     setosa
+## 39   -1.74301699 -0.13153881  -1.39239929 -1.3110521482     setosa
+## 40   -0.89767388  0.78617383  -1.27910398 -1.3110521482     setosa
+## 41   -1.01843718  1.01560199  -1.39239929 -1.1798594716     setosa
+## 42   -1.62225369 -1.73753594  -1.39239929 -1.1798594716     setosa
+## 43   -1.74301699  0.32731751  -1.39239929 -1.3110521482     setosa
+## 44   -1.01843718  1.01560199  -1.22245633 -0.7862814418     setosa
+## 45   -0.89767388  1.70388647  -1.05251337 -1.0486667950     setosa
+## 46   -1.25996379 -0.13153881  -1.33575163 -1.1798594716     setosa
+## 47   -0.89767388  1.70388647  -1.22245633 -1.3110521482     setosa
+## 48   -1.50149039  0.32731751  -1.33575163 -1.3110521482     setosa
+## 49   -0.65614727  1.47445831  -1.27910398 -1.3110521482     setosa
+## 50   -1.01843718  0.55674567  -1.33575163 -1.3110521482     setosa
+## 51    1.39682886  0.32731751   0.53362088  0.2632599711 versicolor
+## 52    0.67224905  0.32731751   0.42032558  0.3944526477 versicolor
+## 53    1.27606556  0.09788935   0.64691619  0.3944526477 versicolor
+## 54   -0.41462067 -1.73753594   0.13708732  0.1320672944 versicolor
+## 55    0.79301235 -0.59039513   0.47697323  0.3944526477 versicolor
+## 56   -0.17309407 -0.59039513   0.42032558  0.1320672944 versicolor
+## 57    0.55148575  0.55674567   0.53362088  0.5256453243 versicolor
+## 58   -1.13920048 -1.50810778  -0.25944625 -0.2615107354 versicolor
+## 59    0.91377565 -0.36096697   0.47697323  0.1320672944 versicolor
+## 60   -0.77691058 -0.81982329   0.08043967  0.2632599711 versicolor
+## 61   -1.01843718 -2.42582042  -0.14615094 -0.2615107354 versicolor
+## 62    0.06843254 -0.13153881   0.25038262  0.3944526477 versicolor
+## 63    0.18919584 -1.96696410   0.13708732 -0.2615107354 versicolor
+## 64    0.30995914 -0.36096697   0.53362088  0.2632599711 versicolor
+## 65   -0.29385737 -0.36096697  -0.08950329  0.1320672944 versicolor
+## 66    1.03453895  0.09788935   0.36367793  0.2632599711 versicolor
+## 67   -0.29385737 -0.13153881   0.42032558  0.3944526477 versicolor
+## 68   -0.05233076 -0.81982329   0.19373497 -0.2615107354 versicolor
+## 69    0.43072244 -1.96696410   0.42032558  0.3944526477 versicolor
+## 70   -0.29385737 -1.27867961   0.08043967 -0.1303180588 versicolor
+## 71    0.06843254  0.32731751   0.59026853  0.7880306775 versicolor
+## 72    0.30995914 -0.59039513   0.13708732  0.1320672944 versicolor
+## 73    0.55148575 -1.27867961   0.64691619  0.3944526477 versicolor
+## 74    0.30995914 -0.59039513   0.53362088  0.0008746178 versicolor
+## 75    0.67224905 -0.36096697   0.30703027  0.1320672944 versicolor
+## 76    0.91377565 -0.13153881   0.36367793  0.2632599711 versicolor
+## 77    1.15530226 -0.59039513   0.59026853  0.2632599711 versicolor
+## 78    1.03453895 -0.13153881   0.70356384  0.6568380009 versicolor
+## 79    0.18919584 -0.36096697   0.42032558  0.3944526477 versicolor
+## 80   -0.17309407 -1.04925145  -0.14615094 -0.2615107354 versicolor
+## 81   -0.41462067 -1.50810778   0.02379201 -0.1303180588 versicolor
+## 82   -0.41462067 -1.50810778  -0.03285564 -0.2615107354 versicolor
+## 83   -0.05233076 -0.81982329   0.08043967  0.0008746178 versicolor
+## 84    0.18919584 -0.81982329   0.76021149  0.5256453243 versicolor
+## 85   -0.53538397 -0.13153881   0.42032558  0.3944526477 versicolor
+## 86    0.18919584  0.78617383   0.42032558  0.5256453243 versicolor
+## 87    1.03453895  0.09788935   0.53362088  0.3944526477 versicolor
+## 88    0.55148575 -1.73753594   0.36367793  0.1320672944 versicolor
+## 89   -0.29385737 -0.13153881   0.19373497  0.1320672944 versicolor
+## 90   -0.41462067 -1.27867961   0.13708732  0.1320672944 versicolor
+## 91   -0.41462067 -1.04925145   0.36367793  0.0008746178 versicolor
+## 92    0.30995914 -0.13153881   0.47697323  0.2632599711 versicolor
+## 93   -0.05233076 -1.04925145   0.13708732  0.0008746178 versicolor
+## 94   -1.01843718 -1.73753594  -0.25944625 -0.2615107354 versicolor
+## 95   -0.29385737 -0.81982329   0.25038262  0.1320672944 versicolor
+## 96   -0.17309407 -0.13153881   0.25038262  0.0008746178 versicolor
+## 97   -0.17309407 -0.36096697   0.25038262  0.1320672944 versicolor
+## 98    0.43072244 -0.36096697   0.30703027  0.1320672944 versicolor
+## 99   -0.89767388 -1.27867961  -0.42938920 -0.1303180588 versicolor
+## 100  -0.17309407 -0.59039513   0.19373497  0.1320672944 versicolor
+## 101   0.55148575  0.55674567   1.27004036  1.7063794137  virginica
+## 102  -0.05233076 -0.81982329   0.76021149  0.9192233541  virginica
+## 103   1.51759216 -0.13153881   1.21339271  1.1816087073  virginica
+## 104   0.55148575 -0.36096697   1.04344975  0.7880306775  virginica
+## 105   0.79301235 -0.13153881   1.15674505  1.3128013839  virginica
+## 106   2.12140867 -0.13153881   1.60992627  1.1816087073  virginica
+## 107  -1.13920048 -1.27867961   0.42032558  0.6568380009  virginica
+## 108   1.75911877 -0.36096697   1.43998331  0.7880306775  virginica
+## 109   1.03453895 -1.27867961   1.15674505  0.7880306775  virginica
+## 110   1.63835547  1.24503015   1.32668801  1.7063794137  virginica
+## 111   0.79301235  0.32731751   0.76021149  1.0504160307  virginica
+## 112   0.67224905 -0.81982329   0.87350679  0.9192233541  virginica
+## 113   1.15530226 -0.13153881   0.98680210  1.1816087073  virginica
+## 114  -0.17309407 -1.27867961   0.70356384  1.0504160307  virginica
+## 115  -0.05233076 -0.59039513   0.76021149  1.5751867371  virginica
+## 116   0.67224905  0.32731751   0.87350679  1.4439940605  virginica
+## 117   0.79301235 -0.13153881   0.98680210  0.7880306775  virginica
+## 118   2.24217198  1.70388647   1.66657392  1.3128013839  virginica
+## 119   2.24217198 -1.04925145   1.77986923  1.4439940605  virginica
+## 120   0.18919584 -1.96696410   0.70356384  0.3944526477  virginica
+## 121   1.27606556  0.32731751   1.10009740  1.4439940605  virginica
+## 122  -0.29385737 -0.59039513   0.64691619  1.0504160307  virginica
+## 123   2.24217198 -0.59039513   1.66657392  1.0504160307  virginica
+## 124   0.55148575 -0.81982329   0.64691619  0.7880306775  virginica
+## 125   1.03453895  0.55674567   1.10009740  1.1816087073  virginica
+## 126   1.63835547  0.32731751   1.27004036  0.7880306775  virginica
+## 127   0.43072244 -0.59039513   0.59026853  0.7880306775  virginica
+## 128   0.30995914 -0.13153881   0.64691619  0.7880306775  virginica
+## 129   0.67224905 -0.59039513   1.04344975  1.1816087073  virginica
+## 130   1.63835547 -0.13153881   1.15674505  0.5256453243  virginica
+## 131   1.87988207 -0.59039513   1.32668801  0.9192233541  virginica
+## 132   2.48369858  1.70388647   1.49663097  1.0504160307  virginica
+## 133   0.67224905 -0.59039513   1.04344975  1.3128013839  virginica
+## 134   0.55148575 -0.59039513   0.76021149  0.3944526477  virginica
+## 135   0.30995914 -1.04925145   1.04344975  0.2632599711  virginica
+## 136   2.24217198 -0.13153881   1.32668801  1.4439940605  virginica
+## 137   0.55148575  0.78617383   1.04344975  1.5751867371  virginica
+## 138   0.67224905  0.09788935   0.98680210  0.7880306775  virginica
+## 139   0.18919584 -0.13153881   0.59026853  0.7880306775  virginica
+## 140   1.27606556  0.09788935   0.93015445  1.1816087073  virginica
+## 141   1.03453895  0.09788935   1.04344975  1.5751867371  virginica
+## 142   1.27606556  0.09788935   0.76021149  1.4439940605  virginica
+## 143  -0.05233076 -0.81982329   0.76021149  0.9192233541  virginica
+## 144   1.15530226  0.32731751   1.21339271  1.4439940605  virginica
+## 145   1.03453895  0.55674567   1.10009740  1.7063794137  virginica
+## 146   1.03453895 -0.13153881   0.81685914  1.4439940605  virginica
+## 147   0.55148575 -1.27867961   0.70356384  0.9192233541  virginica
+## 148   0.79301235 -0.13153881   0.81685914  1.0504160307  virginica
+## 149   0.43072244  0.78617383   0.93015445  1.4439940605  virginica
+## 150   0.06843254 -0.13153881   0.76021149  0.7880306775  virginica
+```
+
+---
+class: bg-main1
+
+# Example: `mutate_at()`
+
+
+```r
+iris %&gt;% mutate_at(vars(Sepal.Width, Sepal.Length), scale01)
+```
+
+```
+##     Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+## 1    -0.89767388  1.01560199          1.4         0.2     setosa
+## 2    -1.13920048 -0.13153881          1.4         0.2     setosa
+## 3    -1.38072709  0.32731751          1.3         0.2     setosa
+## 4    -1.50149039  0.09788935          1.5         0.2     setosa
+## 5    -1.01843718  1.24503015          1.4         0.2     setosa
+## 6    -0.53538397  1.93331463          1.7         0.4     setosa
+## 7    -1.50149039  0.78617383          1.4         0.3     setosa
+## 8    -1.01843718  0.78617383          1.5         0.2     setosa
+## 9    -1.74301699 -0.36096697          1.4         0.2     setosa
+## 10   -1.13920048  0.09788935          1.5         0.1     setosa
+## 11   -0.53538397  1.47445831          1.5         0.2     setosa
+## 12   -1.25996379  0.78617383          1.6         0.2     setosa
+## 13   -1.25996379 -0.13153881          1.4         0.1     setosa
+## 14   -1.86378030 -0.13153881          1.1         0.1     setosa
+## 15   -0.05233076  2.16274279          1.2         0.2     setosa
+## 16   -0.17309407  3.08045544          1.5         0.4     setosa
+## 17   -0.53538397  1.93331463          1.3         0.4     setosa
+## 18   -0.89767388  1.01560199          1.4         0.3     setosa
+## 19   -0.17309407  1.70388647          1.7         0.3     setosa
+## 20   -0.89767388  1.70388647          1.5         0.3     setosa
+## 21   -0.53538397  0.78617383          1.7         0.2     setosa
+## 22   -0.89767388  1.47445831          1.5         0.4     setosa
+## 23   -1.50149039  1.24503015          1.0         0.2     setosa
+## 24   -0.89767388  0.55674567          1.7         0.5     setosa
+## 25   -1.25996379  0.78617383          1.9         0.2     setosa
+## 26   -1.01843718 -0.13153881          1.6         0.2     setosa
+## 27   -1.01843718  0.78617383          1.6         0.4     setosa
+## 28   -0.77691058  1.01560199          1.5         0.2     setosa
+## 29   -0.77691058  0.78617383          1.4         0.2     setosa
+## 30   -1.38072709  0.32731751          1.6         0.2     setosa
+## 31   -1.25996379  0.09788935          1.6         0.2     setosa
+## 32   -0.53538397  0.78617383          1.5         0.4     setosa
+## 33   -0.77691058  2.39217095          1.5         0.1     setosa
+## 34   -0.41462067  2.62159911          1.4         0.2     setosa
+## 35   -1.13920048  0.09788935          1.5         0.2     setosa
+## 36   -1.01843718  0.32731751          1.2         0.2     setosa
+## 37   -0.41462067  1.01560199          1.3         0.2     setosa
+## 38   -1.13920048  1.24503015          1.4         0.1     setosa
+## 39   -1.74301699 -0.13153881          1.3         0.2     setosa
+## 40   -0.89767388  0.78617383          1.5         0.2     setosa
+## 41   -1.01843718  1.01560199          1.3         0.3     setosa
+## 42   -1.62225369 -1.73753594          1.3         0.3     setosa
+## 43   -1.74301699  0.32731751          1.3         0.2     setosa
+## 44   -1.01843718  1.01560199          1.6         0.6     setosa
+## 45   -0.89767388  1.70388647          1.9         0.4     setosa
+## 46   -1.25996379 -0.13153881          1.4         0.3     setosa
+## 47   -0.89767388  1.70388647          1.6         0.2     setosa
+## 48   -1.50149039  0.32731751          1.4         0.2     setosa
+## 49   -0.65614727  1.47445831          1.5         0.2     setosa
+## 50   -1.01843718  0.55674567          1.4         0.2     setosa
+## 51    1.39682886  0.32731751          4.7         1.4 versicolor
+## 52    0.67224905  0.32731751          4.5         1.5 versicolor
+## 53    1.27606556  0.09788935          4.9         1.5 versicolor
+## 54   -0.41462067 -1.73753594          4.0         1.3 versicolor
+## 55    0.79301235 -0.59039513          4.6         1.5 versicolor
+## 56   -0.17309407 -0.59039513          4.5         1.3 versicolor
+## 57    0.55148575  0.55674567          4.7         1.6 versicolor
+## 58   -1.13920048 -1.50810778          3.3         1.0 versicolor
+## 59    0.91377565 -0.36096697          4.6         1.3 versicolor
+## 60   -0.77691058 -0.81982329          3.9         1.4 versicolor
+## 61   -1.01843718 -2.42582042          3.5         1.0 versicolor
+## 62    0.06843254 -0.13153881          4.2         1.5 versicolor
+## 63    0.18919584 -1.96696410          4.0         1.0 versicolor
+## 64    0.30995914 -0.36096697          4.7         1.4 versicolor
+## 65   -0.29385737 -0.36096697          3.6         1.3 versicolor
+## 66    1.03453895  0.09788935          4.4         1.4 versicolor
+## 67   -0.29385737 -0.13153881          4.5         1.5 versicolor
+## 68   -0.05233076 -0.81982329          4.1         1.0 versicolor
+## 69    0.43072244 -1.96696410          4.5         1.5 versicolor
+## 70   -0.29385737 -1.27867961          3.9         1.1 versicolor
+## 71    0.06843254  0.32731751          4.8         1.8 versicolor
+## 72    0.30995914 -0.59039513          4.0         1.3 versicolor
+## 73    0.55148575 -1.27867961          4.9         1.5 versicolor
+## 74    0.30995914 -0.59039513          4.7         1.2 versicolor
+## 75    0.67224905 -0.36096697          4.3         1.3 versicolor
+## 76    0.91377565 -0.13153881          4.4         1.4 versicolor
+## 77    1.15530226 -0.59039513          4.8         1.4 versicolor
+## 78    1.03453895 -0.13153881          5.0         1.7 versicolor
+## 79    0.18919584 -0.36096697          4.5         1.5 versicolor
+## 80   -0.17309407 -1.04925145          3.5         1.0 versicolor
+## 81   -0.41462067 -1.50810778          3.8         1.1 versicolor
+## 82   -0.41462067 -1.50810778          3.7         1.0 versicolor
+## 83   -0.05233076 -0.81982329          3.9         1.2 versicolor
+## 84    0.18919584 -0.81982329          5.1         1.6 versicolor
+## 85   -0.53538397 -0.13153881          4.5         1.5 versicolor
+## 86    0.18919584  0.78617383          4.5         1.6 versicolor
+## 87    1.03453895  0.09788935          4.7         1.5 versicolor
+## 88    0.55148575 -1.73753594          4.4         1.3 versicolor
+## 89   -0.29385737 -0.13153881          4.1         1.3 versicolor
+## 90   -0.41462067 -1.27867961          4.0         1.3 versicolor
+## 91   -0.41462067 -1.04925145          4.4         1.2 versicolor
+## 92    0.30995914 -0.13153881          4.6         1.4 versicolor
+## 93   -0.05233076 -1.04925145          4.0         1.2 versicolor
+## 94   -1.01843718 -1.73753594          3.3         1.0 versicolor
+## 95   -0.29385737 -0.81982329          4.2         1.3 versicolor
+## 96   -0.17309407 -0.13153881          4.2         1.2 versicolor
+## 97   -0.17309407 -0.36096697          4.2         1.3 versicolor
+## 98    0.43072244 -0.36096697          4.3         1.3 versicolor
+## 99   -0.89767388 -1.27867961          3.0         1.1 versicolor
+## 100  -0.17309407 -0.59039513          4.1         1.3 versicolor
+## 101   0.55148575  0.55674567          6.0         2.5  virginica
+## 102  -0.05233076 -0.81982329          5.1         1.9  virginica
+## 103   1.51759216 -0.13153881          5.9         2.1  virginica
+## 104   0.55148575 -0.36096697          5.6         1.8  virginica
+## 105   0.79301235 -0.13153881          5.8         2.2  virginica
+## 106   2.12140867 -0.13153881          6.6         2.1  virginica
+## 107  -1.13920048 -1.27867961          4.5         1.7  virginica
+## 108   1.75911877 -0.36096697          6.3         1.8  virginica
+## 109   1.03453895 -1.27867961          5.8         1.8  virginica
+## 110   1.63835547  1.24503015          6.1         2.5  virginica
+## 111   0.79301235  0.32731751          5.1         2.0  virginica
+## 112   0.67224905 -0.81982329          5.3         1.9  virginica
+## 113   1.15530226 -0.13153881          5.5         2.1  virginica
+## 114  -0.17309407 -1.27867961          5.0         2.0  virginica
+## 115  -0.05233076 -0.59039513          5.1         2.4  virginica
+## 116   0.67224905  0.32731751          5.3         2.3  virginica
+## 117   0.79301235 -0.13153881          5.5         1.8  virginica
+## 118   2.24217198  1.70388647          6.7         2.2  virginica
+## 119   2.24217198 -1.04925145          6.9         2.3  virginica
+## 120   0.18919584 -1.96696410          5.0         1.5  virginica
+## 121   1.27606556  0.32731751          5.7         2.3  virginica
+## 122  -0.29385737 -0.59039513          4.9         2.0  virginica
+## 123   2.24217198 -0.59039513          6.7         2.0  virginica
+## 124   0.55148575 -0.81982329          4.9         1.8  virginica
+## 125   1.03453895  0.55674567          5.7         2.1  virginica
+## 126   1.63835547  0.32731751          6.0         1.8  virginica
+## 127   0.43072244 -0.59039513          4.8         1.8  virginica
+## 128   0.30995914 -0.13153881          4.9         1.8  virginica
+## 129   0.67224905 -0.59039513          5.6         2.1  virginica
+## 130   1.63835547 -0.13153881          5.8         1.6  virginica
+## 131   1.87988207 -0.59039513          6.1         1.9  virginica
+## 132   2.48369858  1.70388647          6.4         2.0  virginica
+## 133   0.67224905 -0.59039513          5.6         2.2  virginica
+## 134   0.55148575 -0.59039513          5.1         1.5  virginica
+## 135   0.30995914 -1.04925145          5.6         1.4  virginica
+## 136   2.24217198 -0.13153881          6.1         2.3  virginica
+## 137   0.55148575  0.78617383          5.6         2.4  virginica
+## 138   0.67224905  0.09788935          5.5         1.8  virginica
+## 139   0.18919584 -0.13153881          4.8         1.8  virginica
+## 140   1.27606556  0.09788935          5.4         2.1  virginica
+## 141   1.03453895  0.09788935          5.6         2.4  virginica
+## 142   1.27606556  0.09788935          5.1         2.3  virginica
+## 143  -0.05233076 -0.81982329          5.1         1.9  virginica
+## 144   1.15530226  0.32731751          5.9         2.3  virginica
+## 145   1.03453895  0.55674567          5.7         2.5  virginica
+## 146   1.03453895 -0.13153881          5.2         2.3  virginica
+## 147   0.55148575 -1.27867961          5.0         1.9  virginica
+## 148   0.79301235 -0.13153881          5.2         2.0  virginica
+## 149   0.43072244  0.78617383          5.4         2.3  virginica
+## 150   0.06843254 -0.13153881          5.1         1.8  virginica
+```
+
+---
+class: bg-main1
+
+# Scoped Variants (**if**, **at**, *all**) are available for the five verbs:
+
+.huge[
+- `mutate()`
+- `filter()`
+- `select()`
+- `summarise()`
+- `group_by()`
+]
+
+
+---
+class: bg-main1
+
+# Standardize the currencies
+
+&lt;img src="lecture-9b-slides_files/figure-html/currencies-standardized-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+class: bg-main1
+
+# Compute distances between all pairs of currencies
+
+.huge[
+Euclidean distance is used to compute similarity between all pairs of currencies. 
+
+`\(d_{ij} = \sqrt{\sum_{i=1}^{t}{(C_{1i}-C_{2i})^2}}\)`
+]
+
+---
+class: bg-main1
+
+# Compute distances between all pairs of currencies
+
+
+```r
+# Compute distance between currencies
+# Need to transpose! Turn matrix around, rows &lt;--&gt; columns
+rates_dropped_t &lt;- t(rates_dropped) %&gt;% data.frame()
+
+dates_dist &lt;- as.matrix(dist(rates_dropped_t, 
+                             diag = TRUE, 
+                             upper = TRUE))
+
+colnames(dates_dist) &lt;- as.factor(colnames(rates_dropped))
+rownames(dates_dist) &lt;- as.factor(colnames(rates_dropped))
+quantile(dates_dist, 
+         probs = c(0, 0.25, 0.5, 0.75, 1))
+```
+
+```
+##           0%          25%          50%          75%         100% 
+##       0.0000     172.2863    1074.7584   11948.3344 1449147.7492
+```
+
+---
+class: bg-main1
+
+# A note on distance matrices:
+
+.huge[
+- A distance matrix is the inverse of an association matrix. 
+- A distance matrix close to 0 means the pair are most similar. 
+- For an association matrix far from zero means the pair are close. 
+- Either can be used to generate a network. 
+]
+
+---
+class: bg-main1
+
+# Make the network: Gather the data into long form, and filter based on similarity
+
+.huge[
+Here only the pairs of currencies who are closer than "4" to each other are kept. 
+]
+
+
+```r
+d_zero &lt;- d
+d_zero_tbl &lt;- d_zero %&gt;% 
+  as_tibble() %&gt;%
+  mutate(curr1=rownames(d_zero)) %&gt;%
+  gather(curr2, dst, -curr1) %&gt;%
+  filter(dst&lt;3) %&gt;%
+  filter(curr1 != curr2)
+```
+
+---
+class: bg-main1
+
+# Make the network: Gather the data into long form, and filter based on similarity
+
+.huge[
+Here only the pairs of currencies who are closer than "4" to each other are kept. 
+]
+
+
+```r
+d_zero_tbl
+```
+
+```
+## # A tibble: 12 x 3
+##    curr1 curr2   dst
+##    &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt;
+##  1 Zili  Meg       1
+##  2 Jess  Meg       1
+##  3 Zili  Tay       2
+##  4 Jess  Tay       1
+##  5 Zili  Yat       0
+##  6 Jess  Yat       0
+##  7 Meg   Zili      1
+##  8 Tay   Zili      2
+##  9 Yat   Zili      0
+## 10 Meg   Jess      1
+## 11 Tay   Jess      1
+## 12 Yat   Jess      0
+```
+
+
+---
+class: bg-main1
+
+### Network laid out
+
+.left-code[
+
+```r
+# Make network
+library(geomnet)
+set.seed(10052016)
+ggplot(data = d_zero_tbl, 
+       aes(
+         from_id = curr1, 
+         to_id = curr2
+         )) +
+  geom_net(
+    layout.alg = "kamadakawai",
+    size = 2, 
+    labelon = TRUE, 
+    vjust = -0.6, 
+    ecolour = "grey60",
+    directed = FALSE, 
+    fontsize = 3, 
+    ealpha = 0.5
+    ) +
+    theme_net() +
+    theme(
+      legend.position = "bottom"
+      )
+```
+]
+
+.right-plot[
+&lt;img src="lecture-9b-slides_files/figure-html/currency-network-out-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+class: bg-main1
+
+# Your turn
+
+.huge[
+- Make a plot of the AUD vs the SGD (using the standardised units). Do they look like they are trending together as suggested by the network?
+- Finish the rstudio cloud exercise
+- Reamining time: Ask questions about project / assignment
+]
+
+
+---
+class: bg-main1
+
+## Share and share alike
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by/4.0/"&gt;Creative Commons Attribution 4.0 International License&lt;/a&gt;.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

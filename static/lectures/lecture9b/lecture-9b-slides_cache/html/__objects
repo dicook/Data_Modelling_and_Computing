@@ -1,0 +1,28 @@
+show-n-times-ppl-called	d
+show-edges	d_edges
+decide-connections	d_edges
+geom-net-cals	
+geom-net-cals-out	
+show-rates	ru
+plot-rates	p1	p2	p3	p4
+unnamed-chunk-1	cv	ru_sub	s
+unnamed-chunk-2	ru_sub
+cd-1	.lecture-9b-slides_cache/html/cd-1_6b4b12e552e501b036d91f57f045e769_meta
+unnamed-chunk-3	ru_sub	scale01
+unnamed-chunk-4	d	ru_sub_t
+unnamed-chunk-5	d_zero	d_zero_tbl
+unnamed-chunk-6	
+unnamed-chunk-7	class
+unnamed-chunk-8	class
+unnamed-chunk-9	
+show-network-data	
+setup	as_table
+currencies-standardized	p1	p2	p3	p4	ru_sub_dt
+currency-network	
+currency-network-out	
+unnamed-chunk-10	class
+create-edges	d_edges
+decide-connections-print	
+cd-round-1	.lecture-9b-slides_cache/html/cd-round-1_86527ee634c848a958683ed6b07a4868_meta
+show-many-currencies	p1	p2	p3	p4
+cd-2	.lecture-9b-slides_cache/html/cd-2_b00960d17a09654855bf3fc675a46e9e_meta

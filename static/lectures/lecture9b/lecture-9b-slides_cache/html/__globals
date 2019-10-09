@@ -1,0 +1,28 @@
+show-n-times-ppl-called	c	colnames	colnames<-	kable	matrix	rownames<-	T
+show-edges	%>%	as_tibble	count	d	from	gather	mutate	rownames	to
+decide-connections	%>%	>	count	filter
+geom-net-cals	aes	d_edges	from	geom_net	ggplot	library	set.seed	theme_net	to
+geom-net-cals-out	aes	d_edges	from	geom_net	ggplot	library	set.seed	theme_net	to
+show-rates	%>%	arrange	date	head	library	read_csv
+plot-rates	%>%	aes	AUD	curr	date	EUR	gather	geom_line	ggplot	grid.arrange	JPY	ru	scale_colour_brewer	select	theme	value
+unnamed-chunk-1	%>%	>	$	curr	date	filter	funs	gather	mean	ru	sd	select	summarise_all
+unnamed-chunk-2	%>%	ALL	select	XAG	XDR	XPT
+cd-1	countdown
+unnamed-chunk-3	%>%	funs	mean	mutate_all	sd
+unnamed-chunk-4	as.factor	as.matrix	c	colnames	colnames<-	data.frame	dist	quantile	rownames<-	ru_sub	t
+unnamed-chunk-5	!=	%>%	<	as_tibble	curr1	curr2	d	dst	filter	gather	mutate	rownames
+unnamed-chunk-6	%>%	aes	AUD	curr	date	gather	geom_line	ggplot	grid.arrange	NZD	ru_sub_dt	scale_colour_brewer	select	SGD	value
+unnamed-chunk-7	%>%	aes	arrow	geom_net	ggplot	ifelse	mutate	R	read_csv	s1.name	s2.name	scale_colour_brewer	set.seed	str_detect	theme_net	type	unit
+unnamed-chunk-8	%>%	aes	arrow	geom_net	ggplot	ifelse	mutate	R	read_csv	s1.name	s2.name	scale_colour_brewer	set.seed	str_detect	theme_net	type	unit
+unnamed-chunk-9	%>%	aes	AUD	curr	date	gather	geom_line	ggplot	grid.arrange	NZD	ru_sub_dt	scale_colour_brewer	select	SGD	value
+show-network-data	include_graphics
+setup	::	$	$<-	if	library	options
+currencies-standardized	%>%	$	aes	AUD	curr	date	EUR	gather	geom_line	ggplot	grid.arrange	JPY	mutate	ru	ru_sub	scale_colour_brewer	select	theme	value
+currency-network	aes	curr1	curr2	d_zero_tbl	geom_net	ggplot	library	set.seed	theme	theme_net
+currency-network-out	aes	curr1	curr2	d_zero_tbl	geom_net	ggplot	library	set.seed	theme	theme_net
+unnamed-chunk-10	%>%	aes	arrow	geom_net	ggplot	ifelse	mutate	R	read_csv	s1.name	s2.name	scale_colour_brewer	set.seed	str_detect	theme_net	type	unit
+create-edges	%>%	as_tibble	count	d	from	gather	mutate	rownames	to
+decide-connections-print	d_edges
+cd-round-1	countdown
+show-many-currencies	aes	AUD	date	EUR	geom_line	ggplot	grid.arrange	JPY	ru	SGD
+cd-2	countdown
