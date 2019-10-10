@@ -60,7 +60,9 @@ class: bg-main1
 # Announcements
 
 .huge[
-- Some of the lecture slides don't hope on a web browser - you can download these in the RMD and render them for the moment - I'm in the process of sorting it out.
+- Some of the lecture slides don't load on a web browser
+- Current alternative for viewing: Download the HTML or the RMD for the moment and view locally.
+- I'm in the process of sorting it out
 ]
 
 ---
@@ -80,14 +82,16 @@ class: bg-main1
 ---
 class: bg-main1
 
-# The Project: Data Milestone
+# The Project Data Milestone: What do Submit
 
 .huge[
-- What you need to submit: (details on ED)
-  - An Rmd file
-  - The rendered HTML file
-  - The data
-  - Zipped / compressed together
+- An Rmd file + 
+- The rendered HTML file
+- The data
+- Zipped / compressed together
+- In the document:
+  - Write about the data - what is it, what are the variables, what sort of questions are you asking, what did you need to do clean the data, what cleaning is remaining?
+  - (About 1-2 paragraphs of text.)
 ]
 
 ---
@@ -102,7 +106,7 @@ class: bg-main1
   - You will all mark the projects as you watch them
 - You will need to present for 5 minutes max - use this to help frame how long your analysis should be. 
 - 5 minutes is short - but it is actually a pretty serious challenge!
-- But also consider that the project will be marked by me as well, so it shouldn't be so short
+- But also consider that the project will be marked by me as well - you won't need to cover everything
 ]
 
 ---
@@ -122,49 +126,58 @@ Many options!
 ---
 class: bg-main1
 
-# The Exam details
+# Exam details
 
---
+.huge[
+- Worth 50% of your final grade
+- NOT Open Book
+- Calculator: Yes - Allowed to take in "Only HP 10bII+ or Casio FX82 (any suffix) calculator permitted"
+- One A4 page of notes, printed on both sides. This will be collected at the end of the examination.
+- **Hurdle requirement**: You must get 40% on the exam to pass the course (also true of the final project).
+]
+
+---
+class: bg-main1
+
+# Exam Details
 
 .huge[
 - I'll now talk about the questions in the exam, and some of the concepts you need to be familiar with
+
+- These concepts will help guide what you focus on in the lectures
+
+- Disclaimer: This list is not exhaustive - these are to help give you a sense of what I'm thinking about for each of the questions in the exam.
+
 ]
 
 ---
 class: bg-main1
 
-# Tidy data
+# Tidy data Concepts:
 
 .huge[
-Concepts:
-
-- variables
-- observations
-- tidy data
+- Variables
+- Observations
+- Tidy data
 ]
 
 ---
 class: bg-main1
 
-# Data Wrangling
+# Data Wrangling Concepts:
 
 .huge[
-Concepts:
-
 - Converting "messy" data to tidy data
 - Code / key functions to use to convert data into "tidy" data
+  - e.g, `gather`, `spread`, `separate`, etc.
 ]
 
 ---
 class: bg-main1
 
-# Relational data
-
---
+# Relational data concepts:
 
 .huge[
-Concept:
-
 - Left Join
 - Why do joins of data
 - Predict output of a join
@@ -174,51 +187,79 @@ Concept:
 ---
 class: bg-main1
 
-# Data visualisation
+# Data visualisation concepts:
 
 .huge[
-Concepts:
-
-- How the grammar of graphics prodcues a plot - identify plots produced by which code
-- Understand what the focus of a given graphic on the data - questions like: "What and how does this graphic make us focus on what feature of the data?", "What do you learn from a graphic?"
+- How the grammar of graphics produces a plot - identify plots produced by which code
+- Understand the focus of a given graphic on the data - questions like: 
+  - "What and how does this graphic make us focus on what feature of the data?"
+  - "What do you learn from a graphic?"
 ]
 
 ---
 class: bg-main1
 
-# Missing Values
+# Missing Values concepts:
 
 .huge[
-- Understand the principles of tidy missing data
-- Interpret graphics of missing data
-- Understand how missing values work with computations 
-- Understand what imputation is and which methods are good / bad
+- Principles of tidy missing data
+- Interpreting graphics of missing data
+- Predict output of function on data with missing values
+- Imputation - what is it, which methods are good / bad / better
 ]
 
 ---
 class: bg-main1
 
-# Linear Models
+# Linear Models Concepts:
 
 .huge[
-Concepts:
-
 - Write down an equation of a model from code output
-- $R^2^$ - what it is - what values mean good/bad fit?
-- How residuals should be distributed
+]
+
+--
+
+.huge[
+- The formula $y = 3x + 5$ is a function with input $x$, and output $y$, when x is `___` , the output is `___`
+]
+
+---
+class: bg-main1
+
+# Linear Models Concepts:
+
+.huge[
+$$\widehat{height_{in}} \sim 3.62 + 0.78 Width_{in}$$
+- **slope**: For each additional inch the painting is wider, the height is expected to be higher, on average, by 0.78 inches.
+
+- **Intercept**: Paintings that are 0 inches wide are expected to be 3.62 inches high, on average.
+
+- If a paining is 5 Inches wide, what is it's estimated height?
+
+]
+
+---
+class: bg-main1
+
+# Linear Models Concepts:
+
+.huge[
 - How to make predictions from a fitted model
 - Understand what makes predictions good and bad
-- Think about how you might fit better models to your data
+- Measurements of model fit:
+  - R2 - what it is - what values mean good/bad fit?
+  - **A good idea to bring in an equation of R2**
+- Residuals - What do we expect to see
+- Centering variables
+- Think about how you can improve fit of models to your data
 ]
 
 ---
 class: bg-main1
 
-# Programming
+# Programming concepts:
 
 .huge[
-Concepts:
-
 - Why write functions
 - How to write a function in R
 - How to take existing code and turn it into a function
@@ -229,11 +270,9 @@ Concepts:
 ---
 class: bg-main1
 
-# Networks
+# Networks Concepts:
 
 .huge[
-Concepts:
-
 - From an association / correlation matrix, which are most or least related?
 - Understand how you can convert a numeric matrix into a binary association matrix
 - Understand how a correlation matrix (or other association) of data relates to a provided network (let's do an example)
@@ -244,15 +283,27 @@ class: bg-main1
 
 # How to study for the exam
 
-.huge[
-Use these concepts I've discussed to help guide what you focus on in the lectures
+.vlarge[
+These concepts guide what to focus on
+
+While the readings aren't assessed, **they provide great information that will certainly help improve your understanding**
 
 Remember that these are to help you focus, I can't give you the exam, but I can help tell you what is important.
 
-This list is not exhaustive - these are to help give you a sense of what I'm thinking about for each of the questions in the exam.
-
+Disclaimer: This list is not exhaustive - these are to help give you a sense of what I'm thinking about for each of the questions in the exam.
 ]
 
 ---
 class: bg-main1
 
+# On a more personal note
+
+.huge[
+
+I've had a great time this semester
+
+I've been **seriously impressed** with you all - you are all so bright!
+
+Thanks for being engaged and curious, I'm really excited to see your projects!
+
+]
