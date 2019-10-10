@@ -1,0 +1,44 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat:300,300i);
+@import url(https://fonts.googleapis.com/css?family=Josefin+Sans);
+@import url(https://cdn.rawgit.com/tonsky/FiraCode/1.204/distr/fira_code.css);
+
+
+.blockquote {
+  /*background: #474863;*/
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+}
+
+/* Font sizes */
+.gigantic { font-size: 1000%;}
+.vvvhuge { font-size: 700%;}
+.vvhuge { font-size: 500%;}
+.vhuge { font-size: 350%;}
+.huge { font-size: 250%;}
+.vlarge { font-size: 200%;}
+.large { font-size: 150%;}
+.medium { font-size: 120%;}
+.small { font-size: 70%;}
+
+/* custom.css */
+.left-code {
+  /*color: #777;*/
+  width: 38%;
+  height: 92%;
+  float: left;
+}
+.right-plot {
+  width: 60%;
+  float: right;
+  padding-left: 1%;
+}
+
+.pull-left {
+  float: left;
+  width: 47%;
+}
+.pull-right {
+  float: right;
+  width: 47%;
+}

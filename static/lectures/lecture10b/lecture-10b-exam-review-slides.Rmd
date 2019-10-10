@@ -1,0 +1,258 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+subtitle: "Lecture 10B: Exam Review"
+author: "Dr. Nicholas Tierney & Professor Di Cook"
+institute: "EBS, Monash U."
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["shinobi", "ninjutsu", "slides.css"]
+    seal: true
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+library(emo)
+library(tidyverse)
+library(knitr)
+library(lubridate)
+knitr::opts_chunk$set(
+  fig.width = 8, 
+  fig.height = 4.5,
+  fig.retina = 3,
+  fig.align = "center",
+  out.width = "90%",
+  message = FALSE,
+  warning = FALSE,
+  cache = TRUE,
+  autodep = TRUE,
+  hiline = TRUE
+)
+
+knitr::opts_hooks$set(fig.callout = function(options) {
+  if (options$fig.callout) {
+    options$echo <- FALSE
+    options$out.height <- "99%"
+    options$fig.width <- 16
+    options$fig.height <- 8
+  }
+  options
+})
+
+options(
+  htmltools.dir.version = FALSE,
+  width = 90,
+  max.print = 9999,
+  knitr.table.format = "html"
+)
+
+as_table <- function(...) knitr::kable(..., format = "html", digits = 3)
+```
+
+class: bg-main1
+
+# Announcements
+
+.huge[
+- Some of the lecture slides don't hope on a web browser - you can download these in the RMD and render them for the moment - I'm in the process of sorting it out.
+]
+
+---
+class: bg-main1
+
+# The Practical Exam
+
+.huge[
+- Time: 1 Hour
+- Task: Complete a data analysis and answer questions (like the assignments, but short - similar to the in class exercises)
+- Conditions: 
+  - Open book
+  - Internet access
+  - No contacting / messaging / communicating friends during exam (penalty will be the same as cheating in exam)
+]
+
+---
+class: bg-main1
+
+# The Project: Data Milestone
+
+.huge[
+- What you need to submit: (details on ED)
+  - An Rmd file
+  - The rendered HTML file
+  - The data
+  - Zipped / compressed together
+]
+
+---
+class: bg-main1
+
+# The Project: More general questions
+
+.huge[
+- "How many questions should we ask?"
+  - About 3 - roughly one per person in your group
+- "How will the project be marked?"
+  - You will all mark the projects as you watch them
+- You will need to present for 5 minutes max - use this to help frame how long your analysis should be. 
+- 5 minutes is short - but it is actually a pretty serious challenge!
+- But also consider that the project will be marked by me as well, so it shouldn't be so short
+]
+
+---
+class: bg-main1
+
+# The project: What should we present?
+
+.huge[
+Many options!
+
+- You can submit an Rmarkdown document + HTML file
+- You present with a [flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) (demo)
+- You could even present as a slide show (like the lecture slides)
+- How to share - Ideally you can use netlify drag and drop (demo)
+]
+
+---
+class: bg-main1
+
+# The Exam details
+
+--
+
+.huge[
+- I'll now talk about the questions in the exam, and some of the concepts you need to be familiar with
+]
+
+---
+class: bg-main1
+
+# Tidy data
+
+.huge[
+Concepts:
+
+- variables
+- observations
+- tidy data
+]
+
+---
+class: bg-main1
+
+# Data Wrangling
+
+.huge[
+Concepts:
+
+- Converting "messy" data to tidy data
+- Code / key functions to use to convert data into "tidy" data
+]
+
+---
+class: bg-main1
+
+# Relational data
+
+--
+
+.huge[
+Concept:
+
+- Left Join
+- Why do joins of data
+- Predict output of a join
+- Sketching out code to summarise data from a join
+]
+
+---
+class: bg-main1
+
+# Data visualisation
+
+.huge[
+Concepts:
+
+- How the grammar of graphics prodcues a plot - identify plots produced by which code
+- Understand what the focus of a given graphic on the data - questions like: "What and how does this graphic make us focus on what feature of the data?", "What do you learn from a graphic?"
+]
+
+---
+class: bg-main1
+
+# Missing Values
+
+.huge[
+- Understand the principles of tidy missing data
+- Interpret graphics of missing data
+- Understand how missing values work with computations 
+- Understand what imputation is and which methods are good / bad
+]
+
+---
+class: bg-main1
+
+# Linear Models
+
+.huge[
+Concepts:
+
+- Write down an equation of a model from code output
+- $R^2^$ - what it is - what values mean good/bad fit?
+- How residuals should be distributed
+- How to make predictions from a fitted model
+- Understand what makes predictions good and bad
+- Think about how you might fit better models to your data
+]
+
+---
+class: bg-main1
+
+# Programming
+
+.huge[
+Concepts:
+
+- Why write functions
+- How to write a function in R
+- How to take existing code and turn it into a function
+- Identify potential mistakes in provided code
+- Understand what `map` does
+]
+
+---
+class: bg-main1
+
+# Networks
+
+.huge[
+Concepts:
+
+- From an association / correlation matrix, which are most or least related?
+- Understand how you can convert a numeric matrix into a binary association matrix
+- Understand how a correlation matrix (or other association) of data relates to a provided network (let's do an example)
+]
+
+---
+class: bg-main1
+
+# How to study for the exam
+
+.huge[
+Use these concepts I've discussed to help guide what you focus on in the lectures
+
+Remember that these are to help you focus, I can't give you the exam, but I can help tell you what is important.
+
+This list is not exhaustive - these are to help give you a sense of what I'm thinking about for each of the questions in the exam.
+
+]
+
+---
+class: bg-main1
+
