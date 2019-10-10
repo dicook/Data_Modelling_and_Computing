@@ -110,7 +110,7 @@ We have a limited amount of laptops available for students to borrow (during sem
      - Wednesday reading: NO READING
      - Wednesday slides: [HTML](lectures/lecture9b/lecture-9b-slides.html); [RMD](lectures/lecture9b/lecture-9b-slides.Rmd)
      - Friday reading: NO READING
-     - Friday slides:
+     - Friday slides: [HTML](lectures/lecture10b/lecture-10b-exam-review-slides.html); [RMD](lectures/lecture10b/lecture-10b-exam-review-slides.Rmd) 
 - Week 11: 
    - Wednesday slides: Guest lecture. Final polishing of project story boards. 
    - Friday: Practical exam. Turn in project.
