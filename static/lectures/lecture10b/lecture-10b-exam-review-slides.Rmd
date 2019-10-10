@@ -299,11 +299,15 @@ class: bg-main1
 # On a more personal note
 
 .huge[
-
 I've had a great time this semester
 
 I've been **seriously impressed** with you all - you are all so bright!
 
 Thanks for being engaged and curious, I'm really excited to see your projects!
+]
 
+--
+
+.huge[
+Also a special thanks to everyone for dealing with the 8am lecture!
 ]
