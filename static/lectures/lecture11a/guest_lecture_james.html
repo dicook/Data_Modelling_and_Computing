@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>ETC1010: Data Modelling and Computing</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr James McKeone" />
+    <meta name="date" content="2019-10-15" />
+    <link href="libs/remark-css/shinobi.css" rel="stylesheet" />
+    <link href="libs/remark-css/ninjutsu.css" rel="stylesheet" />
+    <link rel="stylesheet" href="slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# ETC1010: Data Modelling and Computing
+## Guest lecture
+### Dr James McKeone
+### Brightstar
+### 2019-10-15
+
+---
+
+
+exclude: true
+&lt;style type="text/css"&gt;
+code.r{
+  font-size: 16px;
+}
+pre {
+  font-size: 16px !important;
+}
+&lt;/style&gt;
+
+
+
+---
+# Contents
+
+.huge[
+* Data science practice
+* I've seen R now, so what else?
+  * Databases? Is SQL really necessary?
+  * Languages? I gotta learn Python/Spark/Julia/C#/f#/Haskell/C/C++/(SAS?) too?
+  * Version control? I need version control?
+  * Must do DeepLearning^{TM}! Hmmm.
+* Test driven development (live demo)
+]
+
+---
+# James
+
+.huge[
+* 🎓 Bachelors of Business, Mathematics, Applied Science (hons) QUT
+*  🎓 PhD in Statistics QUT
+* Research: Functional data analysis, model choice, Bayesian methods, design, max-stable processes
+* Research applications: Spinal injury and motor neurone disease 🦴, clinical trials 🥼, climate models 🍃
+* Industry applications: 🏦, 💷, 📡, ☎️
+]
+
+---
+class: bg-indigo
+
+.white.huge[Thoughts on data science practices]
+
+
+.blockquote.huge.white[
+
+What you need to learn (Remember Week 1?)
+
+Data preparation accounts for about 80% of the work of data scientists 
+
+-- [Gil Press, Forbes 2016](https://www.forbes.com/sites/gilpress/2016/03/23/data-preparation-most-time-consuming-least-enjoyable-data-science-task-survey-says/##47cbbbf46f63)
+]
+
+---
+class: bg-indigo
+
+.white.huge[Thoughts on data science practices]
+
+.white.huge[
+* In my experience, data preparation is at least 80%
+* The "model" is often fit in 1 line of code
+* Most industry problems are "solved" before the data science team touches them
+  * Are we enablers?
+* Company jargon that I find objectionable - Resources. Capacity. High-level plans.
+]
+
+---
+
+# I've seen R now, so what else?
+
+## Databases? I need SQL?
+
+.huge[
+* Structured query language (SQL) -- the method to access most databases.
+* Very easy to learn the basics ~ 1 week?
+* Quite nuanced to master
+* Leave databases to DBA's and developers
+]
+
+---
+
+# I've seen R now, so what else?
+
+### How a data scientist should use it
+
+.huge[
+  * Poorly written SQL code can crash the server
+  * Write the simplest query that returns the smallest dataset you need, preferably in a single query statement
+  * Then use R and all of the skills you have learned in this course!
+]
+
+---
+
+# I've seen R now, so what else?
+
+## Databases? I need SQL?
+
+.vlarge[
+* Data scientists generally are pretty poor at SQL
+* Just like in R, use a style and follow or set best practices
+]
+
+
+```sql
+SELECT 
+   [Date]
+  ,[Model]
+  ,[Capacity]
+  ,[Colour]
+  ,[Region]
+  ,[Price]
+  ,[Quantity]
+FROM [dbo].[GlobalPriceTable] as P
+INNER JOIN [dbo].[PhoneInfo] as I
+ON P.[PhoneId] = I.[PhoneId]
+WHERE [Date] &gt; '2000-01-01'
+```
+
+---
+
+# I've seen R now, so what else?
+
+## Languages? I need to learn Python/Spark/Julia/C#/Haksell/C++/C 
+
+.vlarge[
+* Use what your colleagues use
+* What out for R-shamers (&amp; R fanbois!)
+* Search is your friend. All the tools learned in this course have synonyms in other languages, eg. "gather in python pandas" Search!
+* R studio is an excellent IDE for R don't let it be a crutch to learning other languages
+* Wait for the right project to learn a new language
+]
+
+---
+
+# I've seen R now, so what else?
+
+## Version control. I need version control?
+
+.huge[
+* If you want to build data science products, you must use version control
+* If a company doesn't have it / wont let you have it, don't join
+* Tools:
+  * GIT GUIs: SourceTree, git Kraken, git tower, et al.
+  * Difftools: Meld, p4Merge, TortiseMerge, et al.
+  * Command line -- easiest in the long-term
+]
+
+---
+
+# I've seen R now, so what else?
+
+## Must do DeepLearning! Hmmm
+
+.huge[
+* Have their place - image detection, massive datasets
+* Try simple first
+  * Linear(!)
+  * Linear with feature engineering
+* The simplest model that lets the business make the decision is the best. It can always be improved later
+]
+
+---
+
+# I've seen R now, so what else?
+
+## Code Broken? Testing and Test Driven Development (TDD)
+
+
+.blockquote.large[
+* You are not allowed to write any production code unless it is to make a failing unit test pass
+* You are not allowed to write more of a unit test than is sufficient to fail
+* You are not allowed to write any more production code than is sufficient to pass the failing test
+
+-- Uncle Bob: The Three Laws of TDD (https://www.youtube.com/watch?v=qkblc5WRn-U)
+]
+
+.huge[
+Demo...
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

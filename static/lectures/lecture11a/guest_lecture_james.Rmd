@@ -1,0 +1,207 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+subtitle: "Guest lecture"
+author: "Dr James McKeone"
+institute: "Brightstar"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["shinobi", "ninjutsu", "slides.css"]
+    seal: true
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+exclude: true
+<style type="text/css">
+code.r{
+  font-size: 16px;
+}
+pre {
+  font-size: 16px !important;
+}
+</style>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(kableExtra)
+opts_chunk$set(echo = FALSE,   
+                      message = FALSE,
+                      warning = FALSE,
+                      collapse = TRUE,
+                      fig.height = 4,
+                      fig.width = 8,
+                      fig.align = "center",
+                      cache = FALSE)
+options(htmltools.dir.version = FALSE)
+```
+
+---
+# Contents
+
+.huge[
+* Data science practice
+* I've seen R now, so what else?
+  * Databases? Is SQL really necessary?
+  * Languages? I gotta learn Python/Spark/Julia/C#/f#/Haskell/C/C++/(SAS?) too?
+  * Version control? I need version control?
+  * Must do DeepLearning^{TM}! Hmmm.
+* Test driven development (live demo)
+]
+
+---
+# James
+
+.huge[
+* `r emo::ji("mortar_board")` Bachelors of Business, Mathematics, Applied Science (hons) QUT
+*  `r emo::ji("mortar_board")` PhD in Statistics QUT
+* Research: Functional data analysis, model choice, Bayesian methods, design, max-stable processes
+* Research applications: Spinal injury and motor neurone disease `r emo::ji("bone")`, clinical trials `r emo::ji("doctor")`, climate models `r emo::ji("wind")`
+* Industry applications: `r emo::ji("bank")`, `r emo::ji("money")`, `r emo::ji("signal")`, `r emo::ji("phone")`
+]
+
+---
+class: bg-indigo
+
+.white.huge[Thoughts on data science practices]
+
+
+.blockquote.huge.white[
+
+What you need to learn (Remember Week 1?)
+
+Data preparation accounts for about 80% of the work of data scientists 
+
+-- [Gil Press, Forbes 2016](https://www.forbes.com/sites/gilpress/2016/03/23/data-preparation-most-time-consuming-least-enjoyable-data-science-task-survey-says/##47cbbbf46f63)
+]
+
+---
+class: bg-indigo
+
+.white.huge[Thoughts on data science practices]
+
+.white.huge[
+* In my experience, data preparation is at least 80%
+* The "model" is often fit in 1 line of code
+* Most industry problems are "solved" before the data science team touches them
+  * Are we enablers?
+* Company jargon that I find objectionable - Resources. Capacity. High-level plans.
+]
+
+---
+
+# I've seen R now, so what else?
+
+## Databases? I need SQL?
+
+.huge[
+* Structured query language (SQL) -- the method to access most databases.
+* Very easy to learn the basics ~ 1 week?
+* Quite nuanced to master
+* Leave databases to DBA's and developers
+]
+
+---
+
+# I've seen R now, so what else?
+
+### How a data scientist should use it
+
+.huge[
+  * Poorly written SQL code can crash the server
+  * Write the simplest query that returns the smallest dataset you need, preferably in a single query statement
+  * Then use R and all of the skills you have learned in this course!
+]
+
+---
+
+# I've seen R now, so what else?
+
+## Databases? I need SQL?
+
+.vlarge[
+* Data scientists generally are pretty poor at SQL
+* Just like in R, use a style and follow or set best practices
+]
+
+```{sql typical_query, eval = FALSE, echo = TRUE}
+SELECT 
+   [Date]
+  ,[Model]
+  ,[Capacity]
+  ,[Colour]
+  ,[Region]
+  ,[Price]
+  ,[Quantity]
+FROM [dbo].[GlobalPriceTable] as P
+INNER JOIN [dbo].[PhoneInfo] as I
+ON P.[PhoneId] = I.[PhoneId]
+WHERE [Date] > '2000-01-01'
+```
+
+---
+
+# I've seen R now, so what else?
+
+## Languages? I need to learn Python/Spark/Julia/C#/Haksell/C++/C 
+
+.vlarge[
+* Use what your colleagues use
+* What out for R-shamers (& R fanbois!)
+* Search is your friend. All the tools learned in this course have synonyms in other languages, eg. "gather in python pandas" Search!
+* R studio is an excellent IDE for R don't let it be a crutch to learning other languages
+* Wait for the right project to learn a new language
+]
+
+---
+
+# I've seen R now, so what else?
+
+## Version control. I need version control?
+
+.huge[
+* If you want to build data science products, you must use version control
+* If a company doesn't have it / wont let you have it, don't join
+* Tools:
+  * GIT GUIs: SourceTree, git Kraken, git tower, et al.
+  * Difftools: Meld, p4Merge, TortiseMerge, et al.
+  * Command line -- easiest in the long-term
+]
+
+---
+
+# I've seen R now, so what else?
+
+## Must do DeepLearning! Hmmm
+
+.huge[
+* Have their place - image detection, massive datasets
+* Try simple first
+  * Linear(!)
+  * Linear with feature engineering
+* The simplest model that lets the business make the decision is the best. It can always be improved later
+]
+
+---
+
+# I've seen R now, so what else?
+
+## Code Broken? Testing and Test Driven Development (TDD)
+
+
+.blockquote.large[
+* You are not allowed to write any production code unless it is to make a failing unit test pass
+* You are not allowed to write more of a unit test than is sufficient to fail
+* You are not allowed to write any more production code than is sufficient to pass the failing test
+
+-- Uncle Bob: The Three Laws of TDD (https://www.youtube.com/watch?v=qkblc5WRn-U)
+]
+
+.huge[
+Demo...
+]

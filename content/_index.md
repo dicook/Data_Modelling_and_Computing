@@ -112,7 +112,8 @@ We have a limited amount of laptops available for students to borrow (during sem
      - Friday reading: NO READING
      - Friday slides: [HTML](lectures/lecture10b/lecture-10b-exam-review-slides.html); [RMD](lectures/lecture10b/lecture-10b-exam-review-slides.Rmd) 
 - Week 11: 
-   - Wednesday slides: Guest lecture. Final polishing of project story boards. 
+   - Wednesday (Guest lecture from James McKeone) slides: [HTML](lectures/lecture11a/guest_lecture_james.html); [RMD](lectures/lecture11a/guest_lecture_james.Rmd) [R files](lectures/lecture11a/guest-lecture-r-files.zip)
+     - Final polishing of project story boards. 
    - Friday: Practical exam. Turn in project.
 - Practical Exam: 
 - Week 12: Project presentations
