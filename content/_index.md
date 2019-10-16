@@ -114,7 +114,7 @@ We have a limited amount of laptops available for students to borrow (during sem
 - Week 11: 
    - Wednesday (Guest lecture from James McKeone) slides: [HTML](lectures/lecture11a/guest_lecture_james.html); [RMD](lectures/lecture11a/guest_lecture_james.Rmd) [R files](lectures/lecture11a/guest-lecture-r-files.zip)
      - Final polishing of project story boards. 
-   - Friday: Practical exam. Turn in project.
+   - Friday: Practical exam. Time for working on project.
 - Practical Exam: 
 - Week 12: Project presentations
 
@@ -132,43 +132,6 @@ https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
 (Unzip the file and double click on the rstudio project).
 **Note that the assignment is also on rstudio.cloud as well under assignment 3**
 
-<!--
-## Assignment 1 peer evaluation
-
-[Allocations for peer grading](assignments/2019-a1-submissions/evaluation_assignment1.csv)
-This csv contains your students numbers, the name of your group and the name of the group we would like to grade.
-You will **not** mark your own group, this gives you a chance to see how other students approached the assignment.
-
-- ahvcds [zip](assignments/2019-a1-submissions/ahvcds.zip)
-- ara [zip](assignments/2019-a1-submissions/ara.zip)
-- bobcats [zip](assignments/2019-a1-submissions/bobcats.zip)
-- bomrang [zip](assignments/2019-a1-submissions/bomrang.zip)
-- bowerbird [zip](assignments/2019-a1-submissions/bowerbird.zip)
-- broom [zip](assignments/2019-a1-submissions/broom.zip)
-- chocolate [zip](assignments/2019-a1-submissions/chocolate.zip)
-- dataspice [zip](assignments/2019-a1-submissions/dataspice.zip)
-- drake [zip](assignments/2019-a1-submissions/drake.zip)
-- fable [zip](assignments/2019-a1-submissions/fable.zip)
-- garfield [zip](assignments/2019-a1-submissions/garfield.zip)
-- gganimate [zip](assignments/2019-a1-submissions/gganimate.zip)
-- golem [zip](assignments/2019-a1-submissions/golem.zip)
-- gravitas [zip](assignments/2019-a1-submissions/gravitas.zip)
-- HDPLZ [zip](assignments/2019-a1-submissions/HDPLZ.zip)
-- icon [zip](assignments/2019-a1-submissions/icon.zip)
-- magick [zip](assignments/2019-a1-submissions/magick.zip)
-- nullabor [zip](assignments/2019-a1-submissions/nullabor.zip)
-- purrr [zip](assignments/2019-a1-submissions/purrr.zip)
-- rude recliners [zip](assignments/2019-a1-submissions/rude_recliners.zip)
-- sf [zip](assignments/2019-a1-submissions/sf.zip)
-- skda [zip](assignments/2019-a1-submissions/skda.zip)
-- smurfs [zip](assignments/2019-a1-submissions/smurfs.zip)
-- sugarbag [zip](assignments/2019-a1-submissions/sugarbag.zip)
-- suggrants [zip](assignments/2019-a1-submissions/suggrants.zip)
-- taipan [zip](assignments/2019-a1-submissions/taipan.zip)
-- team dplyr [zip](assignments/2019-a1-submissions/team_dplyr.zip)
-- visdat [zip](assignments/2019-a1-submissions/visdat.zip)
-- wesanderson [zip](assignments/2019-a1-submissions/wesanderson.zip) -->
-
 ## Project
 
 [Project instructions](project/project-instructions.html) 
@@ -176,7 +139,7 @@ You will **not** mark your own group, this gives you a chance to see how other s
 - **Deadline 1 (13th September)**:  Find team members, and potential topics to study (List of groups will be posted here)
 - **Deadline 2 (20th September)**:  Team members and team name, data description.
 - **Deadline 3 (11th October) **:  Electronic copy of your data, and a page of data description, and cleaning done, or needing to be done.
-- **Deadline 4 (18th October) **:  Final version of story board uploaded. 
+- **Deadline 4 (21st October) **:  Final version of story board uploaded. 
 - **Presentation in week 12**
 
 There are several ways to do the storyboard:
