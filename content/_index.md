@@ -174,6 +174,17 @@ Past Example projects from ETC1010:
 - [platypus_meta.csv](http://dmac.dicook.org/lectures/data/platypus_meta.csv) Platypus meta information data from the Living Atlas of Australia
 - [map.rds](lectures/lecture4a/data/map.rds) Map of USA for ggmap() in lecture 4a material.
 
+# Practical Exam details
+
+- Time: 1 Hour
+- Task: Complete a (short) data analysis and answer questions (like the assignments, but short - similar to the in class exercises)
+- Conditions:
+  - **Bring your laptop**
+  - Open book
+  - Internet access
+  - No contacting / messaging / communicating friends during exam (penalty will be the same as cheating in exam)
+
+
 ## Exam information
 
 - [Midterm 2019](exam/midterm2019.pdf) [(solution)](exam/midterm2019_solution.pdf)
@@ -182,6 +193,8 @@ Past Example projects from ETC1010:
 
 - [Final Exam for 2018 Semester 1](exam/exam2018.pdf) [(solution)](exam/exam2018_solution.pdf)
 - [Final Exam for 2018 Semester 2](exam/exam2018_S2.pdf) [(solution)](exam/exam2018_S2_solution.pdf)
+
+
 
 ## Useful resources
 
