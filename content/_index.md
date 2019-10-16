@@ -177,7 +177,7 @@ Past Example projects from ETC1010:
 # Practical Exam details
 
 - Time: 1 Hour
-- Task: Complete a (short) data analysis and answer questions (like the assignments, but short - similar to the in class exercises)
+- Task: Complete a (short) data analysis in rstudio, and answer questions (like the assignments, but short - similar to the in class exercises)
 - Conditions:
   - **Bring your laptop**
   - Open book
