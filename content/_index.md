@@ -183,7 +183,40 @@ Past Example projects from ETC1010:
   - Open book
   - Internet access
   - No contacting / messaging / communicating friends during exam (penalty will be the same as cheating in exam)
+  
+## Speaking order for Talks
 
+**Wednesday: **
+  
+-purrr
+-AHVCD
+-HD_TEAM
+-Lumos
+-gravitas
+-icon
+-smurfs
+-drake
+-suggrants
+-count
+-Bowerbird
+-Alfredo
+-team analytica
+
+**Friday: **
+
+-Team dyplr
+-visdat
+-HDPLZ
+-ecc team
+-tapian
+-free real estate
+-knit
+-sugarbag
+-bomrang
+-fable
+-rude recliners
+-The Bobcats
+-The Foodies
 
 ## Exam information
 
