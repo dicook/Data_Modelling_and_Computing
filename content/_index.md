@@ -202,7 +202,7 @@ Past Example projects from ETC1010:
 - Alfredo
 - team analytica
 
-**Friday **
+**Friday:**
 
 - Team dyplr
 - visdat
