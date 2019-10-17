@@ -184,6 +184,20 @@ Past Example projects from ETC1010:
   - Internet access
   - No contacting / messaging / communicating friends during exam (penalty will be the same as cheating in exam)
   
+# Taking the Practical Exam:
+
+Three ways:
+
+- On the cloud: go to rstudio.cloud > find "practical-exam"
+- locally: open R, and run:
+
+```r
+library(usethis) # install.packages("usethis")
+use_course("bit.ly/dmac-exam-19")
+```
+
+- or [download the exam from this link](/exam/practical-exam.zip)
+  
 ## Speaking order for Talks
 
 **Wednesday:**
