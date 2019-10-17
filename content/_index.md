@@ -186,37 +186,37 @@ Past Example projects from ETC1010:
   
 ## Speaking order for Talks
 
-**Wednesday: **
+**Wednesday:**
   
--purrr
--AHVCD
--HD_TEAM
--Lumos
--gravitas
--icon
--smurfs
--drake
--suggrants
--count
--Bowerbird
--Alfredo
--team analytica
+- purrr
+- AHVCD
+- HD_TEAM
+- Lumos
+- gravitas
+- icon
+- smurfs
+- drake
+- suggrants
+- count
+- Bowerbird
+- Alfredo
+- team analytica
 
-**Friday: **
+**Friday **
 
--Team dyplr
--visdat
--HDPLZ
--ecc team
--tapian
--free real estate
--knit
--sugarbag
--bomrang
--fable
--rude recliners
--The Bobcats
--The Foodies
+- Team dyplr
+- visdat
+- HDPLZ
+- ecc team
+- tapian
+- free real estate
+- knit
+- sugarbag
+- bomrang
+- fable
+- rude recliners
+- The Bobcats
+- The Foodies
 
 ## Exam information
 
