@@ -196,8 +196,6 @@ library(usethis) # install.packages("usethis")
 use_course("bit.ly/dmac-exam-19")
 ```
 
-- or [download the exam from this link](/exam/practical-exam.zip)
-  
 ## Speaking order for Talks
 
 **Wednesday:**
