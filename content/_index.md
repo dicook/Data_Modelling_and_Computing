@@ -174,6 +174,8 @@ Past Example projects from ETC1010:
 - [platypus_meta.csv](http://dmac.dicook.org/lectures/data/platypus_meta.csv) Platypus meta information data from the Living Atlas of Australia
 - [map.rds](lectures/lecture4a/data/map.rds) Map of USA for ggmap() in lecture 4a material.
 
+<!--
+
 # Practical Exam details
 
 - Time: 1 Hour
@@ -195,6 +197,7 @@ Three ways:
 library(usethis) # install.packages("usethis")
 use_course("bit.ly/dmac-exam-19")
 ```
+--> 
 
 ## Speaking order for Talks
 
