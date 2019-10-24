@@ -93,6 +93,17 @@ https://www.monash.edu/business/master-of-business-analytics
 ---
 class: bg-main1
 
+# Assessment marks
+
+.huge[
+- Please try and finish the peer review for assignment 2 so I can send you your marks :)
+- Assignment 3 marks being finalised
+- ED assessment and remaining marks will be uploaded and shared with you via moodle
+]
+
+---
+class: bg-main1
+
 ## Final Exam 
 
 .huge[
@@ -114,6 +125,19 @@ class: bg-main1
 The exam from last year is posted. 
 
 Not all topics are the same this year, and this should be obvious when you look at the questions.
+]
+
+---
+class: bg-main1
+
+# Music from the semester
+
+.huge[
+If you want to listen to any of the music played this semester you can search for "ETC1010" on spotify, or click on these links:
+
+[ETC1010 Openers](https://open.spotify.com/playlist/437mFw9wTy2b17TZksp0Yp?si=n_rlrdB-Tiqd-4HXjLSB3w)
+
+[ETC1010 Closers](https://open.spotify.com/playlist/6OxlUzqcsLhVhKcWhLckbx?si=oBezzbIvTG-G3kU1b0gjPA)
 ]
 
 ---
