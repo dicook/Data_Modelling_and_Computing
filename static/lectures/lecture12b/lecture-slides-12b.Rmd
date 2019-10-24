@@ -32,6 +32,21 @@ And maybe use these skills in other classes where you are doing data analysis.
 ]
 
 ---
+class: bg-main1
+
+# Special thanks to the super tutor dream team
+
+.huge[
+Mitch
+
+Steff
+
+Sayani
+
+Sherry
+]
+
+---
 class: bg-main1 center middle
 
 # What Now?
