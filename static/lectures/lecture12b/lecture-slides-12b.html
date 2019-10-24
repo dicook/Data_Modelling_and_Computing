@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>ETC1010: Data Modelling and Computing</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Nicholas Tierney" />
+    <meta name="date" content="2019-10-25" />
+    <link href="libs/remark-css-0.0.1/shinobi.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
+    <link rel="stylesheet" href="slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# ETC1010: Data Modelling and Computing
+## Final Lecture
+### Dr. Nicholas Tierney
+### Monash
+### 2019-10-25
+
+---
+
+
+class: bg-main1
+
+## You did it!
+
+.huge[
+It has been an absolute pleasure to teach you all this semester
+
+You have such a great group of students to work with!
+
+We hope that what we've covered can be useful for you and that you *continue to practice these skills*. 
+
+And maybe use these skills in other classes where you are doing data analysis.
+]
+
+---
+class: bg-main1 center middle
+
+# What Now?
+
+
+
+---
+
+## Join the R community 
+
+&lt;img src="https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/welcome_to_rstats_twitter.png" width="50%" /&gt;
+
+
+*image from Alison Horst*
+
+---
+class: bg-main1
+
+## What Now?
+
+.huge[
+- Consider writing up your project as a blog post using [blogdown](https://bookdown.org/yihui/blogdown/) - See [Alison Hill's blogpost on creating your own blog](https://alison.rbind.io/post/2017-06-12-up-and-running-with-blogdown/)
+- Consider sharing your project talk with the [Melbourne R user network (MelbURN)](https://www.meetup.com/MelbURN-Melbourne-Users-of-R-Network/) or [R-Ladies Melbourne](https://www.meetup.com/rladies-melbourne/)
+]
+
+---
+class: bg-main1
+
+## Major
+
+.vlarge[
+- Where do you go from here, if you are a **business analytics major**
+- Courses using R: 
+    - **core** 
+        - ETC2420: randomization and simulation to understand uncertainty, and a little about Bayesian models
+        - ETC3250: data mining, computationally intensive approach to fitting models
+    - **electives** 
+        - ETC3555, ETC3580: advanced statistical models, and advanced machine learning methods
+        - ETC3550, ETF3500, ETX2250: forcasting and multivariate analysis, data analytics
+]
+
+---
+class: bg-main1
+
+## Masters
+
+.huge[
+Monash is launching a new masters program, the Masters of Business Analytics.
+
+You can learn more about the new masters program at this link:
+
+https://www.monash.edu/business/master-of-business-analytics
+
+(check out the video too, there are some familiar faces there!)
+]
+
+---
+class: bg-main1
+
+## Final Exam 
+
+.huge[
+For exam prep, the week before the exam, we will have **three consultation times**. 
+
+- Steph: 1st November 1 - 2pm (W1105/6)
+- Sayani: 6th November 3 - 4pm (W1105/6)
+- Mitch: TBA
+- Sherry: TBA
+- Nick: TBA
+]
+
+---
+class: bg-main1
+
+## Final Exam
+
+.huge[
+These will be posted on the course web site. 
+
+The exam from last year is posted. 
+
+Not all topics are the same this year, and this should be obvious when you look at the questions.
+]
+
+---
+class: bg-main1
+ 
+## Course evaluation
+
+.huge[
+*Please complete the course evaluation.*
+
+This is a new version, new material, new format. The course will evolve, and your help in improving it is greatly appreciated.
+]
+
+---
+class: bg-main1
+
+## Share and share alike
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by/4.0/"&gt;Creative Commons Attribution 4.0 International License&lt;/a&gt;.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

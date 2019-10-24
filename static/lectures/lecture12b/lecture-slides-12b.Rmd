@@ -1,0 +1,135 @@
+---
+title: "ETC1010: Data Modelling and Computing"
+subtitle: "Final Lecture"
+author: "Dr. Nicholas Tierney"
+institute: "Monash"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["shinobi", "ninjutsu", "slides.css"]
+    seal: true
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+class: bg-main1
+
+## You did it!
+
+.huge[
+It has been an absolute pleasure to teach you all this semester
+
+You have such a great group of students to work with!
+
+We hope that what we've covered can be useful for you and that you *continue to practice these skills*. 
+
+And maybe use these skills in other classes where you are doing data analysis.
+]
+
+---
+class: bg-main1 center middle
+
+# What Now?
+
+
+
+---
+
+## Join the R community 
+
+```{r alison-horst, out.width = "50%", echo = FALSE}
+knitr::include_graphics("https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/welcome_to_rstats_twitter.png")
+```
+
+
+*image from Alison Horst*
+
+---
+class: bg-main1
+
+## What Now?
+
+.huge[
+- Consider writing up your project as a blog post using [blogdown](https://bookdown.org/yihui/blogdown/) - See [Alison Hill's blogpost on creating your own blog](https://alison.rbind.io/post/2017-06-12-up-and-running-with-blogdown/)
+- Consider sharing your project talk with the [Melbourne R user network (MelbURN)](https://www.meetup.com/MelbURN-Melbourne-Users-of-R-Network/) or [R-Ladies Melbourne](https://www.meetup.com/rladies-melbourne/)
+]
+
+---
+class: bg-main1
+
+## Major
+
+.vlarge[
+- Where do you go from here, if you are a **business analytics major**
+- Courses using R: 
+    - **core** 
+        - ETC2420: randomization and simulation to understand uncertainty, and a little about Bayesian models
+        - ETC3250: data mining, computationally intensive approach to fitting models
+    - **electives** 
+        - ETC3555, ETC3580: advanced statistical models, and advanced machine learning methods
+        - ETC3550, ETF3500, ETX2250: forcasting and multivariate analysis, data analytics
+]
+
+---
+class: bg-main1
+
+## Masters
+
+.huge[
+Monash is launching a new masters program, the Masters of Business Analytics.
+
+You can learn more about the new masters program at this link:
+
+https://www.monash.edu/business/master-of-business-analytics
+
+(check out the video too, there are some familiar faces there!)
+]
+
+---
+class: bg-main1
+
+## Final Exam 
+
+.huge[
+For exam prep, the week before the exam, we will have **three consultation times**. (these will be posted on the course site)
+
+- Steph: 1st November 1 - 2pm (W1105/6)
+- Sayani: 6th November 3 - 4pm (W1105/6)
+- Mitch: TBA
+- Sherry: TBA
+- Nick: TBA
+]
+
+---
+class: bg-main1
+
+## Final Exam
+
+.huge[
+The exam from last year is posted. 
+
+Not all topics are the same this year, and this should be obvious when you look at the questions.
+]
+
+---
+class: bg-main1
+ 
+## Course evaluation
+
+.huge[
+*Please complete the course evaluation.*
+
+This is a new version, new material, new format. The course will evolve, and your help in improving it is greatly appreciated.
+]
+
+---
+class: bg-main1
+
+## Share and share alike
+
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.

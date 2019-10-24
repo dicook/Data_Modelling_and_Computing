@@ -117,6 +117,7 @@ We have a limited amount of laptops available for students to borrow (during sem
    - Friday: Practical exam. Time for working on project.
 - Practical Exam: 
 - Week 12: Project presentations
+- Week 12: Final Lecture: [HTML](lectures/lecture12b/lecture-slides-12b.html); [RMD](lectures/lecture12b/lecture-slides-12b.Rmd)
 
 <!--
 https://www.monash.edu/policy-bank/academic/education/learning-and-teaching
@@ -241,6 +242,7 @@ use_course("bit.ly/dmac-exam-19")
 
 - [Final Exam for 2018 Semester 1](exam/exam2018.pdf) [(solution)](exam/exam2018_solution.pdf)
 - [Final Exam for 2018 Semester 2](exam/exam2018_S2.pdf) [(solution)](exam/exam2018_S2_solution.pdf)
+- [Final Exam for 2019 Semester 1](exam/exam2019-s1.pdf)
 
 
 
