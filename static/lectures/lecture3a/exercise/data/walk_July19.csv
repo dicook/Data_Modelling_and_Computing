@@ -1,0 +1,1489 @@
+Sensor,Date_Time,Date,Time,Count
+Melbourne Central,2019-06-30T14:00:00Z,2019-07-01,0,250
+Flinders Street Station Underpass,2019-06-30T14:00:00Z,2019-07-01,0,160
+Melbourne Central,2019-06-30T15:00:00Z,2019-07-01,1,109
+Flinders Street Station Underpass,2019-06-30T15:00:00Z,2019-07-01,1,61
+Melbourne Central,2019-06-30T16:00:00Z,2019-07-01,2,48
+Flinders Street Station Underpass,2019-06-30T16:00:00Z,2019-07-01,2,43
+Melbourne Central,2019-06-30T17:00:00Z,2019-07-01,3,68
+Flinders Street Station Underpass,2019-06-30T17:00:00Z,2019-07-01,3,39
+Melbourne Central,2019-06-30T18:00:00Z,2019-07-01,4,36
+Flinders Street Station Underpass,2019-06-30T18:00:00Z,2019-07-01,4,52
+Melbourne Central,2019-06-30T19:00:00Z,2019-07-01,5,79
+Flinders Street Station Underpass,2019-06-30T19:00:00Z,2019-07-01,5,248
+Melbourne Central,2019-06-30T20:00:00Z,2019-07-01,6,155
+Flinders Street Station Underpass,2019-06-30T20:00:00Z,2019-07-01,6,1014
+Melbourne Central,2019-06-30T21:00:00Z,2019-07-01,7,261
+Flinders Street Station Underpass,2019-06-30T21:00:00Z,2019-07-01,7,1829
+Melbourne Central,2019-06-30T22:00:00Z,2019-07-01,8,647
+Flinders Street Station Underpass,2019-06-30T22:00:00Z,2019-07-01,8,3936
+Melbourne Central,2019-06-30T23:00:00Z,2019-07-01,9,680
+Flinders Street Station Underpass,2019-06-30T23:00:00Z,2019-07-01,9,2102
+Melbourne Central,2019-07-01T00:00:00Z,2019-07-01,10,804
+Flinders Street Station Underpass,2019-07-01T00:00:00Z,2019-07-01,10,1251
+Melbourne Central,2019-07-01T01:00:00Z,2019-07-01,11,1244
+Flinders Street Station Underpass,2019-07-01T01:00:00Z,2019-07-01,11,1477
+Melbourne Central,2019-07-01T02:00:00Z,2019-07-01,12,2330
+Flinders Street Station Underpass,2019-07-01T02:00:00Z,2019-07-01,12,2111
+Melbourne Central,2019-07-01T03:00:00Z,2019-07-01,13,2358
+Flinders Street Station Underpass,2019-07-01T03:00:00Z,2019-07-01,13,2211
+Melbourne Central,2019-07-01T04:00:00Z,2019-07-01,14,2110
+Flinders Street Station Underpass,2019-07-01T04:00:00Z,2019-07-01,14,1987
+Melbourne Central,2019-07-01T05:00:00Z,2019-07-01,15,2252
+Flinders Street Station Underpass,2019-07-01T05:00:00Z,2019-07-01,15,2300
+Melbourne Central,2019-07-01T06:00:00Z,2019-07-01,16,2096
+Flinders Street Station Underpass,2019-07-01T06:00:00Z,2019-07-01,16,3121
+Melbourne Central,2019-07-01T07:00:00Z,2019-07-01,17,2350
+Flinders Street Station Underpass,2019-07-01T07:00:00Z,2019-07-01,17,5176
+Melbourne Central,2019-07-01T08:00:00Z,2019-07-01,18,2223
+Flinders Street Station Underpass,2019-07-01T08:00:00Z,2019-07-01,18,2913
+Melbourne Central,2019-07-01T09:00:00Z,2019-07-01,19,1956
+Flinders Street Station Underpass,2019-07-01T09:00:00Z,2019-07-01,19,1551
+Melbourne Central,2019-07-01T10:00:00Z,2019-07-01,20,1687
+Flinders Street Station Underpass,2019-07-01T10:00:00Z,2019-07-01,20,1054
+Melbourne Central,2019-07-01T11:00:00Z,2019-07-01,21,1195
+Flinders Street Station Underpass,2019-07-01T11:00:00Z,2019-07-01,21,841
+Melbourne Central,2019-07-01T12:00:00Z,2019-07-01,22,767
+Flinders Street Station Underpass,2019-07-01T12:00:00Z,2019-07-01,22,622
+Melbourne Central,2019-07-01T13:00:00Z,2019-07-01,23,368
+Flinders Street Station Underpass,2019-07-01T13:00:00Z,2019-07-01,23,434
+Melbourne Central,2019-07-01T14:00:00Z,2019-07-02,0,199
+Flinders Street Station Underpass,2019-07-01T14:00:00Z,2019-07-02,0,157
+Melbourne Central,2019-07-01T15:00:00Z,2019-07-02,1,101
+Flinders Street Station Underpass,2019-07-01T15:00:00Z,2019-07-02,1,48
+Melbourne Central,2019-07-01T16:00:00Z,2019-07-02,2,41
+Flinders Street Station Underpass,2019-07-01T16:00:00Z,2019-07-02,2,27
+Melbourne Central,2019-07-01T17:00:00Z,2019-07-02,3,35
+Flinders Street Station Underpass,2019-07-01T17:00:00Z,2019-07-02,3,23
+Melbourne Central,2019-07-01T18:00:00Z,2019-07-02,4,14
+Flinders Street Station Underpass,2019-07-01T18:00:00Z,2019-07-02,4,40
+Melbourne Central,2019-07-01T19:00:00Z,2019-07-02,5,77
+Flinders Street Station Underpass,2019-07-01T19:00:00Z,2019-07-02,5,207
+Melbourne Central,2019-07-01T20:00:00Z,2019-07-02,6,174
+Flinders Street Station Underpass,2019-07-01T20:00:00Z,2019-07-02,6,1018
+Melbourne Central,2019-07-01T21:00:00Z,2019-07-02,7,282
+Flinders Street Station Underpass,2019-07-01T21:00:00Z,2019-07-02,7,1837
+Melbourne Central,2019-07-01T22:00:00Z,2019-07-02,8,563
+Flinders Street Station Underpass,2019-07-01T22:00:00Z,2019-07-02,8,3963
+Melbourne Central,2019-07-01T23:00:00Z,2019-07-02,9,684
+Flinders Street Station Underpass,2019-07-01T23:00:00Z,2019-07-02,9,2046
+Melbourne Central,2019-07-02T00:00:00Z,2019-07-02,10,813
+Flinders Street Station Underpass,2019-07-02T00:00:00Z,2019-07-02,10,1137
+Melbourne Central,2019-07-02T01:00:00Z,2019-07-02,11,1317
+Flinders Street Station Underpass,2019-07-02T01:00:00Z,2019-07-02,11,1178
+Melbourne Central,2019-07-02T02:00:00Z,2019-07-02,12,2230
+Flinders Street Station Underpass,2019-07-02T02:00:00Z,2019-07-02,12,1947
+Melbourne Central,2019-07-02T03:00:00Z,2019-07-02,13,2582
+Flinders Street Station Underpass,2019-07-02T03:00:00Z,2019-07-02,13,2108
+Melbourne Central,2019-07-02T04:00:00Z,2019-07-02,14,2209
+Flinders Street Station Underpass,2019-07-02T04:00:00Z,2019-07-02,14,1921
+Melbourne Central,2019-07-02T05:00:00Z,2019-07-02,15,2360
+Flinders Street Station Underpass,2019-07-02T05:00:00Z,2019-07-02,15,2228
+Melbourne Central,2019-07-02T06:00:00Z,2019-07-02,16,2346
+Flinders Street Station Underpass,2019-07-02T06:00:00Z,2019-07-02,16,3206
+Melbourne Central,2019-07-02T07:00:00Z,2019-07-02,17,2691
+Flinders Street Station Underpass,2019-07-02T07:00:00Z,2019-07-02,17,5234
+Melbourne Central,2019-07-02T08:00:00Z,2019-07-02,18,2491
+Flinders Street Station Underpass,2019-07-02T08:00:00Z,2019-07-02,18,2788
+Melbourne Central,2019-07-02T09:00:00Z,2019-07-02,19,2216
+Flinders Street Station Underpass,2019-07-02T09:00:00Z,2019-07-02,19,1464
+Melbourne Central,2019-07-02T10:00:00Z,2019-07-02,20,1725
+Flinders Street Station Underpass,2019-07-02T10:00:00Z,2019-07-02,20,1076
+Melbourne Central,2019-07-02T11:00:00Z,2019-07-02,21,1388
+Flinders Street Station Underpass,2019-07-02T11:00:00Z,2019-07-02,21,984
+Melbourne Central,2019-07-02T12:00:00Z,2019-07-02,22,872
+Flinders Street Station Underpass,2019-07-02T12:00:00Z,2019-07-02,22,687
+Melbourne Central,2019-07-02T13:00:00Z,2019-07-02,23,459
+Flinders Street Station Underpass,2019-07-02T13:00:00Z,2019-07-02,23,395
+Melbourne Central,2019-07-02T14:00:00Z,2019-07-03,0,252
+Flinders Street Station Underpass,2019-07-02T14:00:00Z,2019-07-03,0,168
+Melbourne Central,2019-07-02T15:00:00Z,2019-07-03,1,123
+Flinders Street Station Underpass,2019-07-02T15:00:00Z,2019-07-03,1,40
+Melbourne Central,2019-07-02T16:00:00Z,2019-07-03,2,64
+Flinders Street Station Underpass,2019-07-02T16:00:00Z,2019-07-03,2,28
+Melbourne Central,2019-07-02T17:00:00Z,2019-07-03,3,43
+Flinders Street Station Underpass,2019-07-02T17:00:00Z,2019-07-03,3,19
+Melbourne Central,2019-07-02T18:00:00Z,2019-07-03,4,34
+Flinders Street Station Underpass,2019-07-02T18:00:00Z,2019-07-03,4,43
+Melbourne Central,2019-07-02T19:00:00Z,2019-07-03,5,105
+Flinders Street Station Underpass,2019-07-02T19:00:00Z,2019-07-03,5,245
+Melbourne Central,2019-07-02T20:00:00Z,2019-07-03,6,192
+Flinders Street Station Underpass,2019-07-02T20:00:00Z,2019-07-03,6,999
+Melbourne Central,2019-07-02T21:00:00Z,2019-07-03,7,297
+Flinders Street Station Underpass,2019-07-02T21:00:00Z,2019-07-03,7,1854
+Melbourne Central,2019-07-02T22:00:00Z,2019-07-03,8,592
+Flinders Street Station Underpass,2019-07-02T22:00:00Z,2019-07-03,8,3768
+Melbourne Central,2019-07-02T23:00:00Z,2019-07-03,9,760
+Flinders Street Station Underpass,2019-07-02T23:00:00Z,2019-07-03,9,2084
+Melbourne Central,2019-07-03T00:00:00Z,2019-07-03,10,757
+Flinders Street Station Underpass,2019-07-03T00:00:00Z,2019-07-03,10,1201
+Melbourne Central,2019-07-03T01:00:00Z,2019-07-03,11,1414
+Flinders Street Station Underpass,2019-07-03T01:00:00Z,2019-07-03,11,1393
+Melbourne Central,2019-07-03T02:00:00Z,2019-07-03,12,2224
+Flinders Street Station Underpass,2019-07-03T02:00:00Z,2019-07-03,12,2244
+Melbourne Central,2019-07-03T03:00:00Z,2019-07-03,13,2495
+Flinders Street Station Underpass,2019-07-03T03:00:00Z,2019-07-03,13,2231
+Melbourne Central,2019-07-03T04:00:00Z,2019-07-03,14,2250
+Flinders Street Station Underpass,2019-07-03T04:00:00Z,2019-07-03,14,1956
+Melbourne Central,2019-07-03T05:00:00Z,2019-07-03,15,2367
+Flinders Street Station Underpass,2019-07-03T05:00:00Z,2019-07-03,15,2168
+Melbourne Central,2019-07-03T06:00:00Z,2019-07-03,16,2262
+Flinders Street Station Underpass,2019-07-03T06:00:00Z,2019-07-03,16,2931
+Melbourne Central,2019-07-03T07:00:00Z,2019-07-03,17,2762
+Flinders Street Station Underpass,2019-07-03T07:00:00Z,2019-07-03,17,5089
+Melbourne Central,2019-07-03T08:00:00Z,2019-07-03,18,2754
+Flinders Street Station Underpass,2019-07-03T08:00:00Z,2019-07-03,18,2792
+Melbourne Central,2019-07-03T09:00:00Z,2019-07-03,19,2441
+Flinders Street Station Underpass,2019-07-03T09:00:00Z,2019-07-03,19,1692
+Melbourne Central,2019-07-03T10:00:00Z,2019-07-03,20,2050
+Flinders Street Station Underpass,2019-07-03T10:00:00Z,2019-07-03,20,1300
+Melbourne Central,2019-07-03T11:00:00Z,2019-07-03,21,1532
+Flinders Street Station Underpass,2019-07-03T11:00:00Z,2019-07-03,21,1102
+Melbourne Central,2019-07-03T12:00:00Z,2019-07-03,22,916
+Flinders Street Station Underpass,2019-07-03T12:00:00Z,2019-07-03,22,683
+Melbourne Central,2019-07-03T13:00:00Z,2019-07-03,23,568
+Flinders Street Station Underpass,2019-07-03T13:00:00Z,2019-07-03,23,491
+Melbourne Central,2019-07-03T14:00:00Z,2019-07-04,0,261
+Flinders Street Station Underpass,2019-07-03T14:00:00Z,2019-07-04,0,174
+Melbourne Central,2019-07-03T15:00:00Z,2019-07-04,1,153
+Flinders Street Station Underpass,2019-07-03T15:00:00Z,2019-07-04,1,47
+Melbourne Central,2019-07-03T16:00:00Z,2019-07-04,2,44
+Flinders Street Station Underpass,2019-07-03T16:00:00Z,2019-07-04,2,38
+Melbourne Central,2019-07-03T17:00:00Z,2019-07-04,3,43
+Flinders Street Station Underpass,2019-07-03T17:00:00Z,2019-07-04,3,30
+Melbourne Central,2019-07-03T18:00:00Z,2019-07-04,4,24
+Flinders Street Station Underpass,2019-07-03T18:00:00Z,2019-07-04,4,44
+Melbourne Central,2019-07-03T19:00:00Z,2019-07-04,5,82
+Flinders Street Station Underpass,2019-07-03T19:00:00Z,2019-07-04,5,225
+Melbourne Central,2019-07-03T20:00:00Z,2019-07-04,6,167
+Flinders Street Station Underpass,2019-07-03T20:00:00Z,2019-07-04,6,1017
+Melbourne Central,2019-07-03T21:00:00Z,2019-07-04,7,282
+Flinders Street Station Underpass,2019-07-03T21:00:00Z,2019-07-04,7,1756
+Melbourne Central,2019-07-03T22:00:00Z,2019-07-04,8,590
+Flinders Street Station Underpass,2019-07-03T22:00:00Z,2019-07-04,8,4006
+Melbourne Central,2019-07-03T23:00:00Z,2019-07-04,9,646
+Flinders Street Station Underpass,2019-07-03T23:00:00Z,2019-07-04,9,2175
+Melbourne Central,2019-07-04T00:00:00Z,2019-07-04,10,805
+Flinders Street Station Underpass,2019-07-04T00:00:00Z,2019-07-04,10,1251
+Melbourne Central,2019-07-04T01:00:00Z,2019-07-04,11,1171
+Flinders Street Station Underpass,2019-07-04T01:00:00Z,2019-07-04,11,1313
+Melbourne Central,2019-07-04T02:00:00Z,2019-07-04,12,2025
+Flinders Street Station Underpass,2019-07-04T02:00:00Z,2019-07-04,12,2187
+Melbourne Central,2019-07-04T03:00:00Z,2019-07-04,13,2370
+Flinders Street Station Underpass,2019-07-04T03:00:00Z,2019-07-04,13,2329
+Melbourne Central,2019-07-04T04:00:00Z,2019-07-04,14,2210
+Flinders Street Station Underpass,2019-07-04T04:00:00Z,2019-07-04,14,2021
+Melbourne Central,2019-07-04T05:00:00Z,2019-07-04,15,2286
+Flinders Street Station Underpass,2019-07-04T05:00:00Z,2019-07-04,15,2414
+Melbourne Central,2019-07-04T06:00:00Z,2019-07-04,16,2167
+Flinders Street Station Underpass,2019-07-04T06:00:00Z,2019-07-04,16,3393
+Melbourne Central,2019-07-04T07:00:00Z,2019-07-04,17,2743
+Flinders Street Station Underpass,2019-07-04T07:00:00Z,2019-07-04,17,5409
+Melbourne Central,2019-07-04T08:00:00Z,2019-07-04,18,2658
+Flinders Street Station Underpass,2019-07-04T08:00:00Z,2019-07-04,18,3101
+Melbourne Central,2019-07-04T09:00:00Z,2019-07-04,19,2180
+Flinders Street Station Underpass,2019-07-04T09:00:00Z,2019-07-04,19,1781
+Melbourne Central,2019-07-04T10:00:00Z,2019-07-04,20,1857
+Flinders Street Station Underpass,2019-07-04T10:00:00Z,2019-07-04,20,1338
+Melbourne Central,2019-07-04T11:00:00Z,2019-07-04,21,1782
+Flinders Street Station Underpass,2019-07-04T11:00:00Z,2019-07-04,21,1125
+Melbourne Central,2019-07-04T12:00:00Z,2019-07-04,22,1151
+Flinders Street Station Underpass,2019-07-04T12:00:00Z,2019-07-04,22,838
+Melbourne Central,2019-07-04T13:00:00Z,2019-07-04,23,568
+Flinders Street Station Underpass,2019-07-04T13:00:00Z,2019-07-04,23,574
+Melbourne Central,2019-07-04T14:00:00Z,2019-07-05,0,336
+Flinders Street Station Underpass,2019-07-04T14:00:00Z,2019-07-05,0,239
+Melbourne Central,2019-07-04T15:00:00Z,2019-07-05,1,151
+Flinders Street Station Underpass,2019-07-04T15:00:00Z,2019-07-05,1,84
+Melbourne Central,2019-07-04T16:00:00Z,2019-07-05,2,83
+Flinders Street Station Underpass,2019-07-04T16:00:00Z,2019-07-05,2,62
+Melbourne Central,2019-07-04T17:00:00Z,2019-07-05,3,76
+Flinders Street Station Underpass,2019-07-04T17:00:00Z,2019-07-05,3,60
+Melbourne Central,2019-07-04T18:00:00Z,2019-07-05,4,47
+Flinders Street Station Underpass,2019-07-04T18:00:00Z,2019-07-05,4,49
+Melbourne Central,2019-07-04T19:00:00Z,2019-07-05,5,93
+Flinders Street Station Underpass,2019-07-04T19:00:00Z,2019-07-05,5,227
+Melbourne Central,2019-07-04T20:00:00Z,2019-07-05,6,173
+Flinders Street Station Underpass,2019-07-04T20:00:00Z,2019-07-05,6,937
+Melbourne Central,2019-07-04T21:00:00Z,2019-07-05,7,240
+Flinders Street Station Underpass,2019-07-04T21:00:00Z,2019-07-05,7,1677
+Melbourne Central,2019-07-04T22:00:00Z,2019-07-05,8,557
+Flinders Street Station Underpass,2019-07-04T22:00:00Z,2019-07-05,8,3763
+Melbourne Central,2019-07-04T23:00:00Z,2019-07-05,9,609
+Flinders Street Station Underpass,2019-07-04T23:00:00Z,2019-07-05,9,2238
+Melbourne Central,2019-07-05T00:00:00Z,2019-07-05,10,810
+Flinders Street Station Underpass,2019-07-05T00:00:00Z,2019-07-05,10,1435
+Melbourne Central,2019-07-05T01:00:00Z,2019-07-05,11,1471
+Flinders Street Station Underpass,2019-07-05T01:00:00Z,2019-07-05,11,1749
+Melbourne Central,2019-07-05T02:00:00Z,2019-07-05,12,2484
+Flinders Street Station Underpass,2019-07-05T02:00:00Z,2019-07-05,12,2584
+Melbourne Central,2019-07-05T03:00:00Z,2019-07-05,13,2626
+Flinders Street Station Underpass,2019-07-05T03:00:00Z,2019-07-05,13,2718
+Melbourne Central,2019-07-05T04:00:00Z,2019-07-05,14,2398
+Flinders Street Station Underpass,2019-07-05T04:00:00Z,2019-07-05,14,2544
+Melbourne Central,2019-07-05T05:00:00Z,2019-07-05,15,2314
+Flinders Street Station Underpass,2019-07-05T05:00:00Z,2019-07-05,15,2854
+Melbourne Central,2019-07-05T06:00:00Z,2019-07-05,16,2402
+Flinders Street Station Underpass,2019-07-05T06:00:00Z,2019-07-05,16,3672
+Melbourne Central,2019-07-05T07:00:00Z,2019-07-05,17,3100
+Flinders Street Station Underpass,2019-07-05T07:00:00Z,2019-07-05,17,5069
+Melbourne Central,2019-07-05T08:00:00Z,2019-07-05,18,3194
+Flinders Street Station Underpass,2019-07-05T08:00:00Z,2019-07-05,18,3224
+Melbourne Central,2019-07-05T09:00:00Z,2019-07-05,19,2729
+Flinders Street Station Underpass,2019-07-05T09:00:00Z,2019-07-05,19,2216
+Melbourne Central,2019-07-05T10:00:00Z,2019-07-05,20,2462
+Flinders Street Station Underpass,2019-07-05T10:00:00Z,2019-07-05,20,1619
+Melbourne Central,2019-07-05T11:00:00Z,2019-07-05,21,2589
+Flinders Street Station Underpass,2019-07-05T11:00:00Z,2019-07-05,21,1586
+Melbourne Central,2019-07-05T12:00:00Z,2019-07-05,22,1793
+Flinders Street Station Underpass,2019-07-05T12:00:00Z,2019-07-05,22,1453
+Melbourne Central,2019-07-05T13:00:00Z,2019-07-05,23,1372
+Flinders Street Station Underpass,2019-07-05T13:00:00Z,2019-07-05,23,1135
+Melbourne Central,2019-07-05T14:00:00Z,2019-07-06,0,886
+Flinders Street Station Underpass,2019-07-05T14:00:00Z,2019-07-06,0,663
+Melbourne Central,2019-07-05T15:00:00Z,2019-07-06,1,563
+Flinders Street Station Underpass,2019-07-05T15:00:00Z,2019-07-06,1,479
+Melbourne Central,2019-07-05T16:00:00Z,2019-07-06,2,271
+Flinders Street Station Underpass,2019-07-05T16:00:00Z,2019-07-06,2,224
+Melbourne Central,2019-07-05T17:00:00Z,2019-07-06,3,198
+Flinders Street Station Underpass,2019-07-05T17:00:00Z,2019-07-06,3,151
+Melbourne Central,2019-07-05T18:00:00Z,2019-07-06,4,126
+Flinders Street Station Underpass,2019-07-05T18:00:00Z,2019-07-06,4,147
+Melbourne Central,2019-07-05T19:00:00Z,2019-07-06,5,121
+Flinders Street Station Underpass,2019-07-05T19:00:00Z,2019-07-06,5,135
+Melbourne Central,2019-07-05T20:00:00Z,2019-07-06,6,110
+Flinders Street Station Underpass,2019-07-05T20:00:00Z,2019-07-06,6,226
+Melbourne Central,2019-07-05T21:00:00Z,2019-07-06,7,269
+Flinders Street Station Underpass,2019-07-05T21:00:00Z,2019-07-06,7,409
+Melbourne Central,2019-07-05T22:00:00Z,2019-07-06,8,302
+Flinders Street Station Underpass,2019-07-05T22:00:00Z,2019-07-06,8,487
+Melbourne Central,2019-07-05T23:00:00Z,2019-07-06,9,486
+Flinders Street Station Underpass,2019-07-05T23:00:00Z,2019-07-06,9,889
+Melbourne Central,2019-07-06T00:00:00Z,2019-07-06,10,753
+Flinders Street Station Underpass,2019-07-06T00:00:00Z,2019-07-06,10,1233
+Melbourne Central,2019-07-06T01:00:00Z,2019-07-06,11,1336
+Flinders Street Station Underpass,2019-07-06T01:00:00Z,2019-07-06,11,1673
+Melbourne Central,2019-07-06T02:00:00Z,2019-07-06,12,1945
+Flinders Street Station Underpass,2019-07-06T02:00:00Z,2019-07-06,12,1903
+Melbourne Central,2019-07-06T03:00:00Z,2019-07-06,13,2105
+Flinders Street Station Underpass,2019-07-06T03:00:00Z,2019-07-06,13,1872
+Melbourne Central,2019-07-06T04:00:00Z,2019-07-06,14,2414
+Flinders Street Station Underpass,2019-07-06T04:00:00Z,2019-07-06,14,2440
+Melbourne Central,2019-07-06T05:00:00Z,2019-07-06,15,2598
+Flinders Street Station Underpass,2019-07-06T05:00:00Z,2019-07-06,15,2275
+Melbourne Central,2019-07-06T06:00:00Z,2019-07-06,16,2493
+Flinders Street Station Underpass,2019-07-06T06:00:00Z,2019-07-06,16,2761
+Melbourne Central,2019-07-06T07:00:00Z,2019-07-06,17,2659
+Flinders Street Station Underpass,2019-07-06T07:00:00Z,2019-07-06,17,2579
+Melbourne Central,2019-07-06T08:00:00Z,2019-07-06,18,2649
+Flinders Street Station Underpass,2019-07-06T08:00:00Z,2019-07-06,18,2183
+Melbourne Central,2019-07-06T09:00:00Z,2019-07-06,19,2659
+Flinders Street Station Underpass,2019-07-06T09:00:00Z,2019-07-06,19,1839
+Melbourne Central,2019-07-06T10:00:00Z,2019-07-06,20,2567
+Flinders Street Station Underpass,2019-07-06T10:00:00Z,2019-07-06,20,1470
+Melbourne Central,2019-07-06T11:00:00Z,2019-07-06,21,2208
+Flinders Street Station Underpass,2019-07-06T11:00:00Z,2019-07-06,21,1297
+Melbourne Central,2019-07-06T12:00:00Z,2019-07-06,22,1698
+Flinders Street Station Underpass,2019-07-06T12:00:00Z,2019-07-06,22,1280
+Melbourne Central,2019-07-06T13:00:00Z,2019-07-06,23,1332
+Flinders Street Station Underpass,2019-07-06T13:00:00Z,2019-07-06,23,979
+Melbourne Central,2019-07-06T14:00:00Z,2019-07-07,0,856
+Flinders Street Station Underpass,2019-07-06T14:00:00Z,2019-07-07,0,607
+Melbourne Central,2019-07-06T15:00:00Z,2019-07-07,1,613
+Flinders Street Station Underpass,2019-07-06T15:00:00Z,2019-07-07,1,354
+Melbourne Central,2019-07-06T16:00:00Z,2019-07-07,2,375
+Flinders Street Station Underpass,2019-07-06T16:00:00Z,2019-07-07,2,231
+Melbourne Central,2019-07-06T17:00:00Z,2019-07-07,3,236
+Flinders Street Station Underpass,2019-07-06T17:00:00Z,2019-07-07,3,187
+Melbourne Central,2019-07-06T18:00:00Z,2019-07-07,4,145
+Flinders Street Station Underpass,2019-07-06T18:00:00Z,2019-07-07,4,154
+Melbourne Central,2019-07-06T19:00:00Z,2019-07-07,5,132
+Flinders Street Station Underpass,2019-07-06T19:00:00Z,2019-07-07,5,125
+Melbourne Central,2019-07-06T20:00:00Z,2019-07-07,6,66
+Flinders Street Station Underpass,2019-07-06T20:00:00Z,2019-07-07,6,182
+Melbourne Central,2019-07-06T21:00:00Z,2019-07-07,7,164
+Flinders Street Station Underpass,2019-07-06T21:00:00Z,2019-07-07,7,271
+Melbourne Central,2019-07-06T22:00:00Z,2019-07-07,8,237
+Flinders Street Station Underpass,2019-07-06T22:00:00Z,2019-07-07,8,415
+Melbourne Central,2019-07-06T23:00:00Z,2019-07-07,9,422
+Flinders Street Station Underpass,2019-07-06T23:00:00Z,2019-07-07,9,683
+Melbourne Central,2019-07-07T00:00:00Z,2019-07-07,10,651
+Flinders Street Station Underpass,2019-07-07T00:00:00Z,2019-07-07,10,977
+Melbourne Central,2019-07-07T01:00:00Z,2019-07-07,11,1216
+Flinders Street Station Underpass,2019-07-07T01:00:00Z,2019-07-07,11,1329
+Melbourne Central,2019-07-07T02:00:00Z,2019-07-07,12,1780
+Flinders Street Station Underpass,2019-07-07T02:00:00Z,2019-07-07,12,1673
+Melbourne Central,2019-07-07T03:00:00Z,2019-07-07,13,2131
+Flinders Street Station Underpass,2019-07-07T03:00:00Z,2019-07-07,13,1618
+Melbourne Central,2019-07-07T04:00:00Z,2019-07-07,14,2564
+Flinders Street Station Underpass,2019-07-07T04:00:00Z,2019-07-07,14,1685
+Melbourne Central,2019-07-07T05:00:00Z,2019-07-07,15,2095
+Flinders Street Station Underpass,2019-07-07T05:00:00Z,2019-07-07,15,1664
+Melbourne Central,2019-07-07T06:00:00Z,2019-07-07,16,1823
+Flinders Street Station Underpass,2019-07-07T06:00:00Z,2019-07-07,16,1624
+Melbourne Central,2019-07-07T07:00:00Z,2019-07-07,17,1575
+Flinders Street Station Underpass,2019-07-07T07:00:00Z,2019-07-07,17,1182
+Melbourne Central,2019-07-07T08:00:00Z,2019-07-07,18,1725
+Flinders Street Station Underpass,2019-07-07T08:00:00Z,2019-07-07,18,1042
+Melbourne Central,2019-07-07T09:00:00Z,2019-07-07,19,1819
+Flinders Street Station Underpass,2019-07-07T09:00:00Z,2019-07-07,19,852
+Melbourne Central,2019-07-07T10:00:00Z,2019-07-07,20,1672
+Flinders Street Station Underpass,2019-07-07T10:00:00Z,2019-07-07,20,757
+Melbourne Central,2019-07-07T11:00:00Z,2019-07-07,21,1167
+Flinders Street Station Underpass,2019-07-07T11:00:00Z,2019-07-07,21,641
+Melbourne Central,2019-07-07T12:00:00Z,2019-07-07,22,776
+Flinders Street Station Underpass,2019-07-07T12:00:00Z,2019-07-07,22,520
+Melbourne Central,2019-07-07T13:00:00Z,2019-07-07,23,375
+Flinders Street Station Underpass,2019-07-07T13:00:00Z,2019-07-07,23,353
+Melbourne Central,2019-07-07T14:00:00Z,2019-07-08,0,213
+Flinders Street Station Underpass,2019-07-07T14:00:00Z,2019-07-08,0,162
+Melbourne Central,2019-07-07T15:00:00Z,2019-07-08,1,96
+Flinders Street Station Underpass,2019-07-07T15:00:00Z,2019-07-08,1,38
+Melbourne Central,2019-07-07T16:00:00Z,2019-07-08,2,78
+Flinders Street Station Underpass,2019-07-07T16:00:00Z,2019-07-08,2,33
+Melbourne Central,2019-07-07T17:00:00Z,2019-07-08,3,53
+Flinders Street Station Underpass,2019-07-07T17:00:00Z,2019-07-08,3,8
+Melbourne Central,2019-07-07T18:00:00Z,2019-07-08,4,41
+Flinders Street Station Underpass,2019-07-07T18:00:00Z,2019-07-08,4,47
+Melbourne Central,2019-07-07T19:00:00Z,2019-07-08,5,70
+Flinders Street Station Underpass,2019-07-07T19:00:00Z,2019-07-08,5,172
+Melbourne Central,2019-07-07T20:00:00Z,2019-07-08,6,174
+Flinders Street Station Underpass,2019-07-07T20:00:00Z,2019-07-08,6,529
+Melbourne Central,2019-07-07T21:00:00Z,2019-07-08,7,286
+Flinders Street Station Underpass,2019-07-07T21:00:00Z,2019-07-08,7,1587
+Melbourne Central,2019-07-07T22:00:00Z,2019-07-08,8,579
+Flinders Street Station Underpass,2019-07-07T22:00:00Z,2019-07-08,8,3703
+Melbourne Central,2019-07-07T23:00:00Z,2019-07-08,9,704
+Flinders Street Station Underpass,2019-07-07T23:00:00Z,2019-07-08,9,1967
+Melbourne Central,2019-07-08T00:00:00Z,2019-07-08,10,870
+Flinders Street Station Underpass,2019-07-08T00:00:00Z,2019-07-08,10,1160
+Melbourne Central,2019-07-08T01:00:00Z,2019-07-08,11,1369
+Flinders Street Station Underpass,2019-07-08T01:00:00Z,2019-07-08,11,1326
+Melbourne Central,2019-07-08T02:00:00Z,2019-07-08,12,2270
+Flinders Street Station Underpass,2019-07-08T02:00:00Z,2019-07-08,12,2253
+Melbourne Central,2019-07-08T03:00:00Z,2019-07-08,13,2429
+Flinders Street Station Underpass,2019-07-08T03:00:00Z,2019-07-08,13,2378
+Melbourne Central,2019-07-08T04:00:00Z,2019-07-08,14,2235
+Flinders Street Station Underpass,2019-07-08T04:00:00Z,2019-07-08,14,1767
+Melbourne Central,2019-07-08T05:00:00Z,2019-07-08,15,2269
+Flinders Street Station Underpass,2019-07-08T05:00:00Z,2019-07-08,15,1957
+Melbourne Central,2019-07-08T06:00:00Z,2019-07-08,16,2127
+Flinders Street Station Underpass,2019-07-08T06:00:00Z,2019-07-08,16,2776
+Melbourne Central,2019-07-08T07:00:00Z,2019-07-08,17,2391
+Flinders Street Station Underpass,2019-07-08T07:00:00Z,2019-07-08,17,4397
+Melbourne Central,2019-07-08T08:00:00Z,2019-07-08,18,2340
+Flinders Street Station Underpass,2019-07-08T08:00:00Z,2019-07-08,18,2622
+Melbourne Central,2019-07-08T09:00:00Z,2019-07-08,19,2274
+Flinders Street Station Underpass,2019-07-08T09:00:00Z,2019-07-08,19,1402
+Melbourne Central,2019-07-08T10:00:00Z,2019-07-08,20,1642
+Flinders Street Station Underpass,2019-07-08T10:00:00Z,2019-07-08,20,982
+Melbourne Central,2019-07-08T11:00:00Z,2019-07-08,21,1199
+Flinders Street Station Underpass,2019-07-08T11:00:00Z,2019-07-08,21,863
+Melbourne Central,2019-07-08T12:00:00Z,2019-07-08,22,762
+Flinders Street Station Underpass,2019-07-08T12:00:00Z,2019-07-08,22,623
+Melbourne Central,2019-07-08T13:00:00Z,2019-07-08,23,438
+Flinders Street Station Underpass,2019-07-08T13:00:00Z,2019-07-08,23,360
+Melbourne Central,2019-07-08T14:00:00Z,2019-07-09,0,188
+Flinders Street Station Underpass,2019-07-08T14:00:00Z,2019-07-09,0,157
+Melbourne Central,2019-07-08T15:00:00Z,2019-07-09,1,70
+Flinders Street Station Underpass,2019-07-08T15:00:00Z,2019-07-09,1,58
+Melbourne Central,2019-07-08T16:00:00Z,2019-07-09,2,44
+Flinders Street Station Underpass,2019-07-08T16:00:00Z,2019-07-09,2,25
+Melbourne Central,2019-07-08T17:00:00Z,2019-07-09,3,35
+Flinders Street Station Underpass,2019-07-08T17:00:00Z,2019-07-09,3,32
+Melbourne Central,2019-07-08T18:00:00Z,2019-07-09,4,43
+Flinders Street Station Underpass,2019-07-08T18:00:00Z,2019-07-09,4,47
+Melbourne Central,2019-07-08T19:00:00Z,2019-07-09,5,73
+Flinders Street Station Underpass,2019-07-08T19:00:00Z,2019-07-09,5,238
+Melbourne Central,2019-07-08T20:00:00Z,2019-07-09,6,201
+Flinders Street Station Underpass,2019-07-08T20:00:00Z,2019-07-09,6,908
+Melbourne Central,2019-07-08T21:00:00Z,2019-07-09,7,324
+Flinders Street Station Underpass,2019-07-08T21:00:00Z,2019-07-09,7,1690
+Melbourne Central,2019-07-08T22:00:00Z,2019-07-09,8,593
+Flinders Street Station Underpass,2019-07-08T22:00:00Z,2019-07-09,8,3708
+Melbourne Central,2019-07-08T23:00:00Z,2019-07-09,9,640
+Flinders Street Station Underpass,2019-07-08T23:00:00Z,2019-07-09,9,2143
+Melbourne Central,2019-07-09T00:00:00Z,2019-07-09,10,798
+Flinders Street Station Underpass,2019-07-09T00:00:00Z,2019-07-09,10,1189
+Melbourne Central,2019-07-09T01:00:00Z,2019-07-09,11,1322
+Flinders Street Station Underpass,2019-07-09T01:00:00Z,2019-07-09,11,1358
+Melbourne Central,2019-07-09T02:00:00Z,2019-07-09,12,2157
+Flinders Street Station Underpass,2019-07-09T02:00:00Z,2019-07-09,12,2231
+Melbourne Central,2019-07-09T03:00:00Z,2019-07-09,13,2489
+Flinders Street Station Underpass,2019-07-09T03:00:00Z,2019-07-09,13,2121
+Melbourne Central,2019-07-09T04:00:00Z,2019-07-09,14,2253
+Flinders Street Station Underpass,2019-07-09T04:00:00Z,2019-07-09,14,1828
+Melbourne Central,2019-07-09T05:00:00Z,2019-07-09,15,2352
+Flinders Street Station Underpass,2019-07-09T05:00:00Z,2019-07-09,15,2240
+Melbourne Central,2019-07-09T06:00:00Z,2019-07-09,16,2291
+Flinders Street Station Underpass,2019-07-09T06:00:00Z,2019-07-09,16,2732
+Melbourne Central,2019-07-09T07:00:00Z,2019-07-09,17,2661
+Flinders Street Station Underpass,2019-07-09T07:00:00Z,2019-07-09,17,4674
+Melbourne Central,2019-07-09T08:00:00Z,2019-07-09,18,2442
+Flinders Street Station Underpass,2019-07-09T08:00:00Z,2019-07-09,18,2731
+Melbourne Central,2019-07-09T09:00:00Z,2019-07-09,19,2416
+Flinders Street Station Underpass,2019-07-09T09:00:00Z,2019-07-09,19,1698
+Melbourne Central,2019-07-09T10:00:00Z,2019-07-09,20,1825
+Flinders Street Station Underpass,2019-07-09T10:00:00Z,2019-07-09,20,1145
+Melbourne Central,2019-07-09T11:00:00Z,2019-07-09,21,1493
+Flinders Street Station Underpass,2019-07-09T11:00:00Z,2019-07-09,21,895
+Melbourne Central,2019-07-09T12:00:00Z,2019-07-09,22,789
+Flinders Street Station Underpass,2019-07-09T12:00:00Z,2019-07-09,22,719
+Melbourne Central,2019-07-09T13:00:00Z,2019-07-09,23,488
+Flinders Street Station Underpass,2019-07-09T13:00:00Z,2019-07-09,23,419
+Melbourne Central,2019-07-09T14:00:00Z,2019-07-10,0,187
+Flinders Street Station Underpass,2019-07-09T14:00:00Z,2019-07-10,0,163
+Melbourne Central,2019-07-09T15:00:00Z,2019-07-10,1,105
+Flinders Street Station Underpass,2019-07-09T15:00:00Z,2019-07-10,1,52
+Melbourne Central,2019-07-09T16:00:00Z,2019-07-10,2,69
+Flinders Street Station Underpass,2019-07-09T16:00:00Z,2019-07-10,2,15
+Melbourne Central,2019-07-09T17:00:00Z,2019-07-10,3,64
+Flinders Street Station Underpass,2019-07-09T17:00:00Z,2019-07-10,3,21
+Melbourne Central,2019-07-09T18:00:00Z,2019-07-10,4,33
+Flinders Street Station Underpass,2019-07-09T18:00:00Z,2019-07-10,4,19
+Melbourne Central,2019-07-09T19:00:00Z,2019-07-10,5,81
+Flinders Street Station Underpass,2019-07-09T19:00:00Z,2019-07-10,5,210
+Melbourne Central,2019-07-09T20:00:00Z,2019-07-10,6,230
+Flinders Street Station Underpass,2019-07-09T20:00:00Z,2019-07-10,6,984
+Melbourne Central,2019-07-09T21:00:00Z,2019-07-10,7,245
+Flinders Street Station Underpass,2019-07-09T21:00:00Z,2019-07-10,7,1659
+Melbourne Central,2019-07-09T22:00:00Z,2019-07-10,8,600
+Flinders Street Station Underpass,2019-07-09T22:00:00Z,2019-07-10,8,3722
+Melbourne Central,2019-07-09T23:00:00Z,2019-07-10,9,655
+Flinders Street Station Underpass,2019-07-09T23:00:00Z,2019-07-10,9,1964
+Melbourne Central,2019-07-10T00:00:00Z,2019-07-10,10,851
+Flinders Street Station Underpass,2019-07-10T00:00:00Z,2019-07-10,10,1297
+Melbourne Central,2019-07-10T01:00:00Z,2019-07-10,11,1349
+Flinders Street Station Underpass,2019-07-10T01:00:00Z,2019-07-10,11,1532
+Melbourne Central,2019-07-10T02:00:00Z,2019-07-10,12,2159
+Flinders Street Station Underpass,2019-07-10T02:00:00Z,2019-07-10,12,2234
+Melbourne Central,2019-07-10T03:00:00Z,2019-07-10,13,2403
+Flinders Street Station Underpass,2019-07-10T03:00:00Z,2019-07-10,13,2275
+Melbourne Central,2019-07-10T04:00:00Z,2019-07-10,14,2298
+Flinders Street Station Underpass,2019-07-10T04:00:00Z,2019-07-10,14,2026
+Melbourne Central,2019-07-10T05:00:00Z,2019-07-10,15,2166
+Flinders Street Station Underpass,2019-07-10T05:00:00Z,2019-07-10,15,2257
+Melbourne Central,2019-07-10T06:00:00Z,2019-07-10,16,2142
+Flinders Street Station Underpass,2019-07-10T06:00:00Z,2019-07-10,16,2827
+Melbourne Central,2019-07-10T07:00:00Z,2019-07-10,17,2716
+Flinders Street Station Underpass,2019-07-10T07:00:00Z,2019-07-10,17,4487
+Melbourne Central,2019-07-10T08:00:00Z,2019-07-10,18,2414
+Flinders Street Station Underpass,2019-07-10T08:00:00Z,2019-07-10,18,2596
+Melbourne Central,2019-07-10T09:00:00Z,2019-07-10,19,2150
+Flinders Street Station Underpass,2019-07-10T09:00:00Z,2019-07-10,19,1580
+Melbourne Central,2019-07-10T10:00:00Z,2019-07-10,20,1829
+Flinders Street Station Underpass,2019-07-10T10:00:00Z,2019-07-10,20,1017
+Melbourne Central,2019-07-10T11:00:00Z,2019-07-10,21,1197
+Flinders Street Station Underpass,2019-07-10T11:00:00Z,2019-07-10,21,738
+Melbourne Central,2019-07-10T12:00:00Z,2019-07-10,22,599
+Flinders Street Station Underpass,2019-07-10T12:00:00Z,2019-07-10,22,546
+Melbourne Central,2019-07-10T13:00:00Z,2019-07-10,23,398
+Flinders Street Station Underpass,2019-07-10T13:00:00Z,2019-07-10,23,377
+Melbourne Central,2019-07-10T14:00:00Z,2019-07-11,0,188
+Flinders Street Station Underpass,2019-07-10T14:00:00Z,2019-07-11,0,117
+Melbourne Central,2019-07-10T15:00:00Z,2019-07-11,1,93
+Flinders Street Station Underpass,2019-07-10T15:00:00Z,2019-07-11,1,53
+Melbourne Central,2019-07-10T16:00:00Z,2019-07-11,2,58
+Flinders Street Station Underpass,2019-07-10T16:00:00Z,2019-07-11,2,29
+Melbourne Central,2019-07-10T17:00:00Z,2019-07-11,3,37
+Flinders Street Station Underpass,2019-07-10T17:00:00Z,2019-07-11,3,14
+Melbourne Central,2019-07-10T18:00:00Z,2019-07-11,4,35
+Flinders Street Station Underpass,2019-07-10T18:00:00Z,2019-07-11,4,30
+Melbourne Central,2019-07-10T19:00:00Z,2019-07-11,5,94
+Flinders Street Station Underpass,2019-07-10T19:00:00Z,2019-07-11,5,198
+Melbourne Central,2019-07-10T20:00:00Z,2019-07-11,6,192
+Flinders Street Station Underpass,2019-07-10T20:00:00Z,2019-07-11,6,896
+Melbourne Central,2019-07-10T21:00:00Z,2019-07-11,7,292
+Flinders Street Station Underpass,2019-07-10T21:00:00Z,2019-07-11,7,1592
+Melbourne Central,2019-07-10T22:00:00Z,2019-07-11,8,534
+Flinders Street Station Underpass,2019-07-10T22:00:00Z,2019-07-11,8,3617
+Melbourne Central,2019-07-10T23:00:00Z,2019-07-11,9,551
+Flinders Street Station Underpass,2019-07-10T23:00:00Z,2019-07-11,9,2026
+Melbourne Central,2019-07-11T00:00:00Z,2019-07-11,10,755
+Flinders Street Station Underpass,2019-07-11T00:00:00Z,2019-07-11,10,1258
+Melbourne Central,2019-07-11T01:00:00Z,2019-07-11,11,1204
+Flinders Street Station Underpass,2019-07-11T01:00:00Z,2019-07-11,11,1272
+Melbourne Central,2019-07-11T02:00:00Z,2019-07-11,12,2041
+Flinders Street Station Underpass,2019-07-11T02:00:00Z,2019-07-11,12,1963
+Melbourne Central,2019-07-11T03:00:00Z,2019-07-11,13,2309
+Flinders Street Station Underpass,2019-07-11T03:00:00Z,2019-07-11,13,1992
+Melbourne Central,2019-07-11T04:00:00Z,2019-07-11,14,1987
+Flinders Street Station Underpass,2019-07-11T04:00:00Z,2019-07-11,14,1818
+Melbourne Central,2019-07-11T05:00:00Z,2019-07-11,15,1853
+Flinders Street Station Underpass,2019-07-11T05:00:00Z,2019-07-11,15,2033
+Melbourne Central,2019-07-11T06:00:00Z,2019-07-11,16,2156
+Flinders Street Station Underpass,2019-07-11T06:00:00Z,2019-07-11,16,2751
+Melbourne Central,2019-07-11T07:00:00Z,2019-07-11,17,2473
+Flinders Street Station Underpass,2019-07-11T07:00:00Z,2019-07-11,17,4395
+Melbourne Central,2019-07-11T08:00:00Z,2019-07-11,18,2284
+Flinders Street Station Underpass,2019-07-11T08:00:00Z,2019-07-11,18,2566
+Melbourne Central,2019-07-11T09:00:00Z,2019-07-11,19,2051
+Flinders Street Station Underpass,2019-07-11T09:00:00Z,2019-07-11,19,1452
+Melbourne Central,2019-07-11T10:00:00Z,2019-07-11,20,1769
+Flinders Street Station Underpass,2019-07-11T10:00:00Z,2019-07-11,20,1132
+Melbourne Central,2019-07-11T11:00:00Z,2019-07-11,21,1674
+Flinders Street Station Underpass,2019-07-11T11:00:00Z,2019-07-11,21,908
+Melbourne Central,2019-07-11T12:00:00Z,2019-07-11,22,1127
+Flinders Street Station Underpass,2019-07-11T12:00:00Z,2019-07-11,22,815
+Melbourne Central,2019-07-11T13:00:00Z,2019-07-11,23,552
+Flinders Street Station Underpass,2019-07-11T13:00:00Z,2019-07-11,23,412
+Melbourne Central,2019-07-11T14:00:00Z,2019-07-12,0,302
+Flinders Street Station Underpass,2019-07-11T14:00:00Z,2019-07-12,0,185
+Melbourne Central,2019-07-11T15:00:00Z,2019-07-12,1,163
+Flinders Street Station Underpass,2019-07-11T15:00:00Z,2019-07-12,1,41
+Melbourne Central,2019-07-11T16:00:00Z,2019-07-12,2,127
+Flinders Street Station Underpass,2019-07-11T16:00:00Z,2019-07-12,2,47
+Melbourne Central,2019-07-11T17:00:00Z,2019-07-12,3,88
+Flinders Street Station Underpass,2019-07-11T17:00:00Z,2019-07-12,3,32
+Melbourne Central,2019-07-11T18:00:00Z,2019-07-12,4,57
+Flinders Street Station Underpass,2019-07-11T18:00:00Z,2019-07-12,4,59
+Melbourne Central,2019-07-11T19:00:00Z,2019-07-12,5,96
+Flinders Street Station Underpass,2019-07-11T19:00:00Z,2019-07-12,5,197
+Melbourne Central,2019-07-11T20:00:00Z,2019-07-12,6,174
+Flinders Street Station Underpass,2019-07-11T20:00:00Z,2019-07-12,6,832
+Melbourne Central,2019-07-11T21:00:00Z,2019-07-12,7,264
+Flinders Street Station Underpass,2019-07-11T21:00:00Z,2019-07-12,7,1513
+Melbourne Central,2019-07-11T22:00:00Z,2019-07-12,8,545
+Flinders Street Station Underpass,2019-07-11T22:00:00Z,2019-07-12,8,3360
+Melbourne Central,2019-07-11T23:00:00Z,2019-07-12,9,570
+Flinders Street Station Underpass,2019-07-11T23:00:00Z,2019-07-12,9,1874
+Melbourne Central,2019-07-12T00:00:00Z,2019-07-12,10,785
+Flinders Street Station Underpass,2019-07-12T00:00:00Z,2019-07-12,10,1188
+Melbourne Central,2019-07-12T01:00:00Z,2019-07-12,11,1132
+Flinders Street Station Underpass,2019-07-12T01:00:00Z,2019-07-12,11,1475
+Melbourne Central,2019-07-12T02:00:00Z,2019-07-12,12,1974
+Flinders Street Station Underpass,2019-07-12T02:00:00Z,2019-07-12,12,1979
+Melbourne Central,2019-07-12T03:00:00Z,2019-07-12,13,2293
+Flinders Street Station Underpass,2019-07-12T03:00:00Z,2019-07-12,13,2124
+Melbourne Central,2019-07-12T04:00:00Z,2019-07-12,14,2262
+Flinders Street Station Underpass,2019-07-12T04:00:00Z,2019-07-12,14,2063
+Melbourne Central,2019-07-12T05:00:00Z,2019-07-12,15,2269
+Flinders Street Station Underpass,2019-07-12T05:00:00Z,2019-07-12,15,2479
+Melbourne Central,2019-07-12T06:00:00Z,2019-07-12,16,2285
+Flinders Street Station Underpass,2019-07-12T06:00:00Z,2019-07-12,16,3237
+Melbourne Central,2019-07-12T07:00:00Z,2019-07-12,17,2164
+Flinders Street Station Underpass,2019-07-12T07:00:00Z,2019-07-12,17,4458
+Melbourne Central,2019-07-12T08:00:00Z,2019-07-12,18,2500
+Flinders Street Station Underpass,2019-07-12T08:00:00Z,2019-07-12,18,2712
+Melbourne Central,2019-07-12T09:00:00Z,2019-07-12,19,2357
+Flinders Street Station Underpass,2019-07-12T09:00:00Z,2019-07-12,19,1768
+Melbourne Central,2019-07-12T10:00:00Z,2019-07-12,20,2008
+Flinders Street Station Underpass,2019-07-12T10:00:00Z,2019-07-12,20,1409
+Melbourne Central,2019-07-12T11:00:00Z,2019-07-12,21,2111
+Flinders Street Station Underpass,2019-07-12T11:00:00Z,2019-07-12,21,1335
+Melbourne Central,2019-07-12T12:00:00Z,2019-07-12,22,1804
+Flinders Street Station Underpass,2019-07-12T12:00:00Z,2019-07-12,22,1161
+Melbourne Central,2019-07-12T13:00:00Z,2019-07-12,23,1163
+Flinders Street Station Underpass,2019-07-12T13:00:00Z,2019-07-12,23,738
+Melbourne Central,2019-07-12T14:00:00Z,2019-07-13,0,699
+Flinders Street Station Underpass,2019-07-12T14:00:00Z,2019-07-13,0,478
+Melbourne Central,2019-07-12T15:00:00Z,2019-07-13,1,450
+Flinders Street Station Underpass,2019-07-12T15:00:00Z,2019-07-13,1,321
+Melbourne Central,2019-07-12T16:00:00Z,2019-07-13,2,241
+Flinders Street Station Underpass,2019-07-12T16:00:00Z,2019-07-13,2,195
+Melbourne Central,2019-07-12T17:00:00Z,2019-07-13,3,146
+Flinders Street Station Underpass,2019-07-12T17:00:00Z,2019-07-13,3,115
+Melbourne Central,2019-07-12T18:00:00Z,2019-07-13,4,88
+Flinders Street Station Underpass,2019-07-12T18:00:00Z,2019-07-13,4,111
+Melbourne Central,2019-07-12T19:00:00Z,2019-07-13,5,208
+Flinders Street Station Underpass,2019-07-12T19:00:00Z,2019-07-13,5,114
+Melbourne Central,2019-07-12T20:00:00Z,2019-07-13,6,160
+Flinders Street Station Underpass,2019-07-12T20:00:00Z,2019-07-13,6,201
+Melbourne Central,2019-07-12T21:00:00Z,2019-07-13,7,121
+Flinders Street Station Underpass,2019-07-12T21:00:00Z,2019-07-13,7,395
+Melbourne Central,2019-07-12T22:00:00Z,2019-07-13,8,235
+Flinders Street Station Underpass,2019-07-12T22:00:00Z,2019-07-13,8,528
+Melbourne Central,2019-07-12T23:00:00Z,2019-07-13,9,382
+Flinders Street Station Underpass,2019-07-12T23:00:00Z,2019-07-13,9,843
+Melbourne Central,2019-07-13T00:00:00Z,2019-07-13,10,746
+Flinders Street Station Underpass,2019-07-13T00:00:00Z,2019-07-13,10,1192
+Melbourne Central,2019-07-13T01:00:00Z,2019-07-13,11,1126
+Flinders Street Station Underpass,2019-07-13T01:00:00Z,2019-07-13,11,1431
+Melbourne Central,2019-07-13T02:00:00Z,2019-07-13,12,1700
+Flinders Street Station Underpass,2019-07-13T02:00:00Z,2019-07-13,12,1553
+Melbourne Central,2019-07-13T03:00:00Z,2019-07-13,13,2017
+Flinders Street Station Underpass,2019-07-13T03:00:00Z,2019-07-13,13,1642
+Melbourne Central,2019-07-13T04:00:00Z,2019-07-13,14,2194
+Flinders Street Station Underpass,2019-07-13T04:00:00Z,2019-07-13,14,1952
+Melbourne Central,2019-07-13T05:00:00Z,2019-07-13,15,1989
+Flinders Street Station Underpass,2019-07-13T05:00:00Z,2019-07-13,15,2058
+Melbourne Central,2019-07-13T06:00:00Z,2019-07-13,16,2095
+Flinders Street Station Underpass,2019-07-13T06:00:00Z,2019-07-13,16,1887
+Melbourne Central,2019-07-13T07:00:00Z,2019-07-13,17,2183
+Flinders Street Station Underpass,2019-07-13T07:00:00Z,2019-07-13,17,1713
+Melbourne Central,2019-07-13T08:00:00Z,2019-07-13,18,2141
+Flinders Street Station Underpass,2019-07-13T08:00:00Z,2019-07-13,18,1538
+Melbourne Central,2019-07-13T09:00:00Z,2019-07-13,19,2310
+Flinders Street Station Underpass,2019-07-13T09:00:00Z,2019-07-13,19,1307
+Melbourne Central,2019-07-13T10:00:00Z,2019-07-13,20,1971
+Flinders Street Station Underpass,2019-07-13T10:00:00Z,2019-07-13,20,1060
+Melbourne Central,2019-07-13T11:00:00Z,2019-07-13,21,1719
+Flinders Street Station Underpass,2019-07-13T11:00:00Z,2019-07-13,21,1090
+Melbourne Central,2019-07-13T12:00:00Z,2019-07-13,22,1563
+Flinders Street Station Underpass,2019-07-13T12:00:00Z,2019-07-13,22,996
+Melbourne Central,2019-07-13T13:00:00Z,2019-07-13,23,1214
+Flinders Street Station Underpass,2019-07-13T13:00:00Z,2019-07-13,23,734
+Melbourne Central,2019-07-13T14:00:00Z,2019-07-14,0,687
+Flinders Street Station Underpass,2019-07-13T14:00:00Z,2019-07-14,0,438
+Melbourne Central,2019-07-13T15:00:00Z,2019-07-14,1,537
+Flinders Street Station Underpass,2019-07-13T15:00:00Z,2019-07-14,1,361
+Melbourne Central,2019-07-13T16:00:00Z,2019-07-14,2,269
+Flinders Street Station Underpass,2019-07-13T16:00:00Z,2019-07-14,2,215
+Melbourne Central,2019-07-13T17:00:00Z,2019-07-14,3,303
+Flinders Street Station Underpass,2019-07-13T17:00:00Z,2019-07-14,3,128
+Melbourne Central,2019-07-13T18:00:00Z,2019-07-14,4,170
+Flinders Street Station Underpass,2019-07-13T18:00:00Z,2019-07-14,4,112
+Melbourne Central,2019-07-13T19:00:00Z,2019-07-14,5,89
+Flinders Street Station Underpass,2019-07-13T19:00:00Z,2019-07-14,5,131
+Melbourne Central,2019-07-13T20:00:00Z,2019-07-14,6,62
+Flinders Street Station Underpass,2019-07-13T20:00:00Z,2019-07-14,6,182
+Melbourne Central,2019-07-13T21:00:00Z,2019-07-14,7,115
+Flinders Street Station Underpass,2019-07-13T21:00:00Z,2019-07-14,7,216
+Melbourne Central,2019-07-13T22:00:00Z,2019-07-14,8,210
+Flinders Street Station Underpass,2019-07-13T22:00:00Z,2019-07-14,8,428
+Melbourne Central,2019-07-13T23:00:00Z,2019-07-14,9,370
+Flinders Street Station Underpass,2019-07-13T23:00:00Z,2019-07-14,9,637
+Melbourne Central,2019-07-14T00:00:00Z,2019-07-14,10,633
+Flinders Street Station Underpass,2019-07-14T00:00:00Z,2019-07-14,10,949
+Melbourne Central,2019-07-14T01:00:00Z,2019-07-14,11,933
+Flinders Street Station Underpass,2019-07-14T01:00:00Z,2019-07-14,11,1265
+Melbourne Central,2019-07-14T02:00:00Z,2019-07-14,12,1447
+Flinders Street Station Underpass,2019-07-14T02:00:00Z,2019-07-14,12,1247
+Melbourne Central,2019-07-14T03:00:00Z,2019-07-14,13,1770
+Flinders Street Station Underpass,2019-07-14T03:00:00Z,2019-07-14,13,1290
+Melbourne Central,2019-07-14T04:00:00Z,2019-07-14,14,1825
+Flinders Street Station Underpass,2019-07-14T04:00:00Z,2019-07-14,14,1348
+Melbourne Central,2019-07-14T05:00:00Z,2019-07-14,15,1635
+Flinders Street Station Underpass,2019-07-14T05:00:00Z,2019-07-14,15,1269
+Melbourne Central,2019-07-14T06:00:00Z,2019-07-14,16,1633
+Flinders Street Station Underpass,2019-07-14T06:00:00Z,2019-07-14,16,1397
+Melbourne Central,2019-07-14T07:00:00Z,2019-07-14,17,1778
+Flinders Street Station Underpass,2019-07-14T07:00:00Z,2019-07-14,17,1290
+Melbourne Central,2019-07-14T08:00:00Z,2019-07-14,18,1604
+Flinders Street Station Underpass,2019-07-14T08:00:00Z,2019-07-14,18,1146
+Melbourne Central,2019-07-14T09:00:00Z,2019-07-14,19,1571
+Flinders Street Station Underpass,2019-07-14T09:00:00Z,2019-07-14,19,779
+Melbourne Central,2019-07-14T10:00:00Z,2019-07-14,20,1261
+Flinders Street Station Underpass,2019-07-14T10:00:00Z,2019-07-14,20,686
+Melbourne Central,2019-07-14T11:00:00Z,2019-07-14,21,965
+Flinders Street Station Underpass,2019-07-14T11:00:00Z,2019-07-14,21,618
+Melbourne Central,2019-07-14T12:00:00Z,2019-07-14,22,563
+Flinders Street Station Underpass,2019-07-14T12:00:00Z,2019-07-14,22,408
+Melbourne Central,2019-07-14T13:00:00Z,2019-07-14,23,343
+Flinders Street Station Underpass,2019-07-14T13:00:00Z,2019-07-14,23,252
+Melbourne Central,2019-07-14T14:00:00Z,2019-07-15,0,177
+Flinders Street Station Underpass,2019-07-14T14:00:00Z,2019-07-15,0,94
+Melbourne Central,2019-07-14T15:00:00Z,2019-07-15,1,100
+Flinders Street Station Underpass,2019-07-14T15:00:00Z,2019-07-15,1,57
+Melbourne Central,2019-07-14T16:00:00Z,2019-07-15,2,64
+Flinders Street Station Underpass,2019-07-14T16:00:00Z,2019-07-15,2,41
+Melbourne Central,2019-07-14T17:00:00Z,2019-07-15,3,52
+Flinders Street Station Underpass,2019-07-14T17:00:00Z,2019-07-15,3,16
+Melbourne Central,2019-07-14T18:00:00Z,2019-07-15,4,35
+Flinders Street Station Underpass,2019-07-14T18:00:00Z,2019-07-15,4,51
+Melbourne Central,2019-07-14T19:00:00Z,2019-07-15,5,90
+Flinders Street Station Underpass,2019-07-14T19:00:00Z,2019-07-15,5,239
+Melbourne Central,2019-07-14T20:00:00Z,2019-07-15,6,167
+Flinders Street Station Underpass,2019-07-14T20:00:00Z,2019-07-15,6,991
+Melbourne Central,2019-07-14T21:00:00Z,2019-07-15,7,296
+Flinders Street Station Underpass,2019-07-14T21:00:00Z,2019-07-15,7,1756
+Melbourne Central,2019-07-14T22:00:00Z,2019-07-15,8,570
+Flinders Street Station Underpass,2019-07-14T22:00:00Z,2019-07-15,8,3951
+Melbourne Central,2019-07-14T23:00:00Z,2019-07-15,9,649
+Flinders Street Station Underpass,2019-07-14T23:00:00Z,2019-07-15,9,2215
+Melbourne Central,2019-07-15T00:00:00Z,2019-07-15,10,806
+Flinders Street Station Underpass,2019-07-15T00:00:00Z,2019-07-15,10,1304
+Melbourne Central,2019-07-15T01:00:00Z,2019-07-15,11,1154
+Flinders Street Station Underpass,2019-07-15T01:00:00Z,2019-07-15,11,1255
+Melbourne Central,2019-07-15T02:00:00Z,2019-07-15,12,1963
+Flinders Street Station Underpass,2019-07-15T02:00:00Z,2019-07-15,12,2108
+Melbourne Central,2019-07-15T03:00:00Z,2019-07-15,13,2085
+Flinders Street Station Underpass,2019-07-15T03:00:00Z,2019-07-15,13,2005
+Melbourne Central,2019-07-15T04:00:00Z,2019-07-15,14,2130
+Flinders Street Station Underpass,2019-07-15T04:00:00Z,2019-07-15,14,1601
+Melbourne Central,2019-07-15T05:00:00Z,2019-07-15,15,1982
+Flinders Street Station Underpass,2019-07-15T05:00:00Z,2019-07-15,15,2037
+Melbourne Central,2019-07-15T06:00:00Z,2019-07-15,16,2151
+Flinders Street Station Underpass,2019-07-15T06:00:00Z,2019-07-15,16,3378
+Melbourne Central,2019-07-15T07:00:00Z,2019-07-15,17,2231
+Flinders Street Station Underpass,2019-07-15T07:00:00Z,2019-07-15,17,5000
+Melbourne Central,2019-07-15T08:00:00Z,2019-07-15,18,2129
+Flinders Street Station Underpass,2019-07-15T08:00:00Z,2019-07-15,18,2650
+Melbourne Central,2019-07-15T09:00:00Z,2019-07-15,19,1873
+Flinders Street Station Underpass,2019-07-15T09:00:00Z,2019-07-15,19,1359
+Melbourne Central,2019-07-15T10:00:00Z,2019-07-15,20,1331
+Flinders Street Station Underpass,2019-07-15T10:00:00Z,2019-07-15,20,891
+Melbourne Central,2019-07-15T11:00:00Z,2019-07-15,21,893
+Flinders Street Station Underpass,2019-07-15T11:00:00Z,2019-07-15,21,604
+Melbourne Central,2019-07-15T12:00:00Z,2019-07-15,22,681
+Flinders Street Station Underpass,2019-07-15T12:00:00Z,2019-07-15,22,455
+Melbourne Central,2019-07-15T13:00:00Z,2019-07-15,23,395
+Flinders Street Station Underpass,2019-07-15T13:00:00Z,2019-07-15,23,303
+Melbourne Central,2019-07-15T14:00:00Z,2019-07-16,0,184
+Flinders Street Station Underpass,2019-07-15T14:00:00Z,2019-07-16,0,119
+Melbourne Central,2019-07-15T15:00:00Z,2019-07-16,1,102
+Flinders Street Station Underpass,2019-07-15T15:00:00Z,2019-07-16,1,42
+Melbourne Central,2019-07-15T16:00:00Z,2019-07-16,2,52
+Flinders Street Station Underpass,2019-07-15T16:00:00Z,2019-07-16,2,38
+Melbourne Central,2019-07-15T17:00:00Z,2019-07-16,3,56
+Flinders Street Station Underpass,2019-07-15T17:00:00Z,2019-07-16,3,30
+Melbourne Central,2019-07-15T18:00:00Z,2019-07-16,4,30
+Flinders Street Station Underpass,2019-07-15T18:00:00Z,2019-07-16,4,70
+Melbourne Central,2019-07-15T19:00:00Z,2019-07-16,5,81
+Flinders Street Station Underpass,2019-07-15T19:00:00Z,2019-07-16,5,234
+Melbourne Central,2019-07-15T20:00:00Z,2019-07-16,6,174
+Flinders Street Station Underpass,2019-07-15T20:00:00Z,2019-07-16,6,1034
+Melbourne Central,2019-07-15T21:00:00Z,2019-07-16,7,303
+Flinders Street Station Underpass,2019-07-15T21:00:00Z,2019-07-16,7,1922
+Melbourne Central,2019-07-15T22:00:00Z,2019-07-16,8,561
+Flinders Street Station Underpass,2019-07-15T22:00:00Z,2019-07-16,8,4154
+Melbourne Central,2019-07-15T23:00:00Z,2019-07-16,9,624
+Flinders Street Station Underpass,2019-07-15T23:00:00Z,2019-07-16,9,2278
+Melbourne Central,2019-07-16T00:00:00Z,2019-07-16,10,775
+Flinders Street Station Underpass,2019-07-16T00:00:00Z,2019-07-16,10,1300
+Melbourne Central,2019-07-16T01:00:00Z,2019-07-16,11,1080
+Flinders Street Station Underpass,2019-07-16T01:00:00Z,2019-07-16,11,1319
+Melbourne Central,2019-07-16T02:00:00Z,2019-07-16,12,1852
+Flinders Street Station Underpass,2019-07-16T02:00:00Z,2019-07-16,12,2025
+Melbourne Central,2019-07-16T03:00:00Z,2019-07-16,13,1951
+Flinders Street Station Underpass,2019-07-16T03:00:00Z,2019-07-16,13,2230
+Melbourne Central,2019-07-16T04:00:00Z,2019-07-16,14,1812
+Flinders Street Station Underpass,2019-07-16T04:00:00Z,2019-07-16,14,1789
+Melbourne Central,2019-07-16T05:00:00Z,2019-07-16,15,1905
+Flinders Street Station Underpass,2019-07-16T05:00:00Z,2019-07-16,15,2257
+Melbourne Central,2019-07-16T06:00:00Z,2019-07-16,16,2203
+Flinders Street Station Underpass,2019-07-16T06:00:00Z,2019-07-16,16,3001
+Melbourne Central,2019-07-16T07:00:00Z,2019-07-16,17,2484
+Flinders Street Station Underpass,2019-07-16T07:00:00Z,2019-07-16,17,4952
+Melbourne Central,2019-07-16T08:00:00Z,2019-07-16,18,2186
+Flinders Street Station Underpass,2019-07-16T08:00:00Z,2019-07-16,18,2759
+Melbourne Central,2019-07-16T09:00:00Z,2019-07-16,19,1887
+Flinders Street Station Underpass,2019-07-16T09:00:00Z,2019-07-16,19,1384
+Melbourne Central,2019-07-16T10:00:00Z,2019-07-16,20,1615
+Flinders Street Station Underpass,2019-07-16T10:00:00Z,2019-07-16,20,939
+Melbourne Central,2019-07-16T11:00:00Z,2019-07-16,21,1261
+Flinders Street Station Underpass,2019-07-16T11:00:00Z,2019-07-16,21,830
+Melbourne Central,2019-07-16T12:00:00Z,2019-07-16,22,816
+Flinders Street Station Underpass,2019-07-16T12:00:00Z,2019-07-16,22,632
+Melbourne Central,2019-07-16T13:00:00Z,2019-07-16,23,415
+Flinders Street Station Underpass,2019-07-16T13:00:00Z,2019-07-16,23,409
+Melbourne Central,2019-07-16T14:00:00Z,2019-07-17,0,202
+Flinders Street Station Underpass,2019-07-16T14:00:00Z,2019-07-17,0,137
+Melbourne Central,2019-07-16T15:00:00Z,2019-07-17,1,96
+Flinders Street Station Underpass,2019-07-16T15:00:00Z,2019-07-17,1,49
+Melbourne Central,2019-07-16T16:00:00Z,2019-07-17,2,65
+Flinders Street Station Underpass,2019-07-16T16:00:00Z,2019-07-17,2,20
+Melbourne Central,2019-07-16T17:00:00Z,2019-07-17,3,48
+Flinders Street Station Underpass,2019-07-16T17:00:00Z,2019-07-17,3,34
+Melbourne Central,2019-07-16T18:00:00Z,2019-07-17,4,23
+Flinders Street Station Underpass,2019-07-16T18:00:00Z,2019-07-17,4,64
+Melbourne Central,2019-07-16T19:00:00Z,2019-07-17,5,82
+Flinders Street Station Underpass,2019-07-16T19:00:00Z,2019-07-17,5,232
+Melbourne Central,2019-07-16T20:00:00Z,2019-07-17,6,156
+Flinders Street Station Underpass,2019-07-16T20:00:00Z,2019-07-17,6,924
+Melbourne Central,2019-07-16T21:00:00Z,2019-07-17,7,298
+Flinders Street Station Underpass,2019-07-16T21:00:00Z,2019-07-17,7,1928
+Melbourne Central,2019-07-16T22:00:00Z,2019-07-17,8,603
+Flinders Street Station Underpass,2019-07-16T22:00:00Z,2019-07-17,8,3894
+Melbourne Central,2019-07-16T23:00:00Z,2019-07-17,9,654
+Flinders Street Station Underpass,2019-07-16T23:00:00Z,2019-07-17,9,2134
+Melbourne Central,2019-07-17T00:00:00Z,2019-07-17,10,824
+Flinders Street Station Underpass,2019-07-17T00:00:00Z,2019-07-17,10,1227
+Melbourne Central,2019-07-17T01:00:00Z,2019-07-17,11,1088
+Flinders Street Station Underpass,2019-07-17T01:00:00Z,2019-07-17,11,1233
+Melbourne Central,2019-07-17T02:00:00Z,2019-07-17,12,1893
+Flinders Street Station Underpass,2019-07-17T02:00:00Z,2019-07-17,12,1978
+Melbourne Central,2019-07-17T03:00:00Z,2019-07-17,13,1685
+Flinders Street Station Underpass,2019-07-17T03:00:00Z,2019-07-17,13,1753
+Melbourne Central,2019-07-17T04:00:00Z,2019-07-17,14,1731
+Flinders Street Station Underpass,2019-07-17T04:00:00Z,2019-07-17,14,1626
+Melbourne Central,2019-07-17T05:00:00Z,2019-07-17,15,2020
+Flinders Street Station Underpass,2019-07-17T05:00:00Z,2019-07-17,15,2121
+Melbourne Central,2019-07-17T06:00:00Z,2019-07-17,16,1956
+Flinders Street Station Underpass,2019-07-17T06:00:00Z,2019-07-17,16,2972
+Melbourne Central,2019-07-17T07:00:00Z,2019-07-17,17,2360
+Flinders Street Station Underpass,2019-07-17T07:00:00Z,2019-07-17,17,4854
+Melbourne Central,2019-07-17T08:00:00Z,2019-07-17,18,2370
+Flinders Street Station Underpass,2019-07-17T08:00:00Z,2019-07-17,18,2735
+Melbourne Central,2019-07-17T09:00:00Z,2019-07-17,19,2155
+Flinders Street Station Underpass,2019-07-17T09:00:00Z,2019-07-17,19,1449
+Melbourne Central,2019-07-17T10:00:00Z,2019-07-17,20,1950
+Flinders Street Station Underpass,2019-07-17T10:00:00Z,2019-07-17,20,1249
+Melbourne Central,2019-07-17T11:00:00Z,2019-07-17,21,1425
+Flinders Street Station Underpass,2019-07-17T11:00:00Z,2019-07-17,21,928
+Melbourne Central,2019-07-17T12:00:00Z,2019-07-17,22,1001
+Flinders Street Station Underpass,2019-07-17T12:00:00Z,2019-07-17,22,762
+Melbourne Central,2019-07-17T13:00:00Z,2019-07-17,23,504
+Flinders Street Station Underpass,2019-07-17T13:00:00Z,2019-07-17,23,430
+Melbourne Central,2019-07-17T14:00:00Z,2019-07-18,0,237
+Flinders Street Station Underpass,2019-07-17T14:00:00Z,2019-07-18,0,140
+Melbourne Central,2019-07-17T15:00:00Z,2019-07-18,1,140
+Flinders Street Station Underpass,2019-07-17T15:00:00Z,2019-07-18,1,166
+Melbourne Central,2019-07-17T16:00:00Z,2019-07-18,2,77
+Flinders Street Station Underpass,2019-07-17T16:00:00Z,2019-07-18,2,54
+Melbourne Central,2019-07-17T17:00:00Z,2019-07-18,3,66
+Flinders Street Station Underpass,2019-07-17T17:00:00Z,2019-07-18,3,40
+Melbourne Central,2019-07-17T18:00:00Z,2019-07-18,4,47
+Flinders Street Station Underpass,2019-07-17T18:00:00Z,2019-07-18,4,62
+Melbourne Central,2019-07-17T19:00:00Z,2019-07-18,5,86
+Flinders Street Station Underpass,2019-07-17T19:00:00Z,2019-07-18,5,245
+Melbourne Central,2019-07-17T20:00:00Z,2019-07-18,6,182
+Flinders Street Station Underpass,2019-07-17T20:00:00Z,2019-07-18,6,1058
+Melbourne Central,2019-07-17T21:00:00Z,2019-07-18,7,346
+Flinders Street Station Underpass,2019-07-17T21:00:00Z,2019-07-18,7,1951
+Melbourne Central,2019-07-17T22:00:00Z,2019-07-18,8,668
+Flinders Street Station Underpass,2019-07-17T22:00:00Z,2019-07-18,8,4099
+Melbourne Central,2019-07-17T23:00:00Z,2019-07-18,9,693
+Flinders Street Station Underpass,2019-07-17T23:00:00Z,2019-07-18,9,2285
+Melbourne Central,2019-07-18T00:00:00Z,2019-07-18,10,897
+Flinders Street Station Underpass,2019-07-18T00:00:00Z,2019-07-18,10,1232
+Melbourne Central,2019-07-18T01:00:00Z,2019-07-18,11,1311
+Flinders Street Station Underpass,2019-07-18T01:00:00Z,2019-07-18,11,1428
+Melbourne Central,2019-07-18T02:00:00Z,2019-07-18,12,2138
+Flinders Street Station Underpass,2019-07-18T02:00:00Z,2019-07-18,12,2147
+Melbourne Central,2019-07-18T03:00:00Z,2019-07-18,13,2181
+Flinders Street Station Underpass,2019-07-18T03:00:00Z,2019-07-18,13,2350
+Melbourne Central,2019-07-18T04:00:00Z,2019-07-18,14,2036
+Flinders Street Station Underpass,2019-07-18T04:00:00Z,2019-07-18,14,1967
+Melbourne Central,2019-07-18T05:00:00Z,2019-07-18,15,2123
+Flinders Street Station Underpass,2019-07-18T05:00:00Z,2019-07-18,15,2195
+Melbourne Central,2019-07-18T06:00:00Z,2019-07-18,16,2261
+Flinders Street Station Underpass,2019-07-18T06:00:00Z,2019-07-18,16,3061
+Melbourne Central,2019-07-18T07:00:00Z,2019-07-18,17,2809
+Flinders Street Station Underpass,2019-07-18T07:00:00Z,2019-07-18,17,5119
+Melbourne Central,2019-07-18T08:00:00Z,2019-07-18,18,2552
+Flinders Street Station Underpass,2019-07-18T08:00:00Z,2019-07-18,18,2959
+Melbourne Central,2019-07-18T09:00:00Z,2019-07-18,19,1953
+Flinders Street Station Underpass,2019-07-18T09:00:00Z,2019-07-18,19,1740
+Melbourne Central,2019-07-18T10:00:00Z,2019-07-18,20,1978
+Flinders Street Station Underpass,2019-07-18T10:00:00Z,2019-07-18,20,1286
+Melbourne Central,2019-07-18T11:00:00Z,2019-07-18,21,1706
+Flinders Street Station Underpass,2019-07-18T11:00:00Z,2019-07-18,21,1022
+Melbourne Central,2019-07-18T12:00:00Z,2019-07-18,22,1013
+Flinders Street Station Underpass,2019-07-18T12:00:00Z,2019-07-18,22,833
+Melbourne Central,2019-07-18T13:00:00Z,2019-07-18,23,545
+Flinders Street Station Underpass,2019-07-18T13:00:00Z,2019-07-18,23,507
+Melbourne Central,2019-07-18T14:00:00Z,2019-07-19,0,319
+Flinders Street Station Underpass,2019-07-18T14:00:00Z,2019-07-19,0,175
+Melbourne Central,2019-07-18T15:00:00Z,2019-07-19,1,164
+Flinders Street Station Underpass,2019-07-18T15:00:00Z,2019-07-19,1,69
+Melbourne Central,2019-07-18T16:00:00Z,2019-07-19,2,130
+Flinders Street Station Underpass,2019-07-18T16:00:00Z,2019-07-19,2,31
+Melbourne Central,2019-07-18T17:00:00Z,2019-07-19,3,66
+Flinders Street Station Underpass,2019-07-18T17:00:00Z,2019-07-19,3,42
+Melbourne Central,2019-07-18T18:00:00Z,2019-07-19,4,57
+Flinders Street Station Underpass,2019-07-18T18:00:00Z,2019-07-19,4,74
+Melbourne Central,2019-07-18T19:00:00Z,2019-07-19,5,111
+Flinders Street Station Underpass,2019-07-18T19:00:00Z,2019-07-19,5,241
+Melbourne Central,2019-07-18T20:00:00Z,2019-07-19,6,178
+Flinders Street Station Underpass,2019-07-18T20:00:00Z,2019-07-19,6,1024
+Melbourne Central,2019-07-18T21:00:00Z,2019-07-19,7,329
+Flinders Street Station Underpass,2019-07-18T21:00:00Z,2019-07-19,7,1918
+Melbourne Central,2019-07-18T22:00:00Z,2019-07-19,8,566
+Flinders Street Station Underpass,2019-07-18T22:00:00Z,2019-07-19,8,3883
+Melbourne Central,2019-07-18T23:00:00Z,2019-07-19,9,635
+Flinders Street Station Underpass,2019-07-18T23:00:00Z,2019-07-19,9,2171
+Melbourne Central,2019-07-19T00:00:00Z,2019-07-19,10,946
+Flinders Street Station Underpass,2019-07-19T00:00:00Z,2019-07-19,10,1259
+Melbourne Central,2019-07-19T01:00:00Z,2019-07-19,11,1328
+Flinders Street Station Underpass,2019-07-19T01:00:00Z,2019-07-19,11,1479
+Melbourne Central,2019-07-19T02:00:00Z,2019-07-19,12,2146
+Flinders Street Station Underpass,2019-07-19T02:00:00Z,2019-07-19,12,2436
+Melbourne Central,2019-07-19T03:00:00Z,2019-07-19,13,2953
+Flinders Street Station Underpass,2019-07-19T03:00:00Z,2019-07-19,13,2522
+Melbourne Central,2019-07-19T04:00:00Z,2019-07-19,14,2442
+Flinders Street Station Underpass,2019-07-19T04:00:00Z,2019-07-19,14,2402
+Melbourne Central,2019-07-19T05:00:00Z,2019-07-19,15,2274
+Flinders Street Station Underpass,2019-07-19T05:00:00Z,2019-07-19,15,2895
+Melbourne Central,2019-07-19T06:00:00Z,2019-07-19,16,2507
+Flinders Street Station Underpass,2019-07-19T06:00:00Z,2019-07-19,16,3474
+Melbourne Central,2019-07-19T07:00:00Z,2019-07-19,17,2948
+Flinders Street Station Underpass,2019-07-19T07:00:00Z,2019-07-19,17,4949
+Melbourne Central,2019-07-19T08:00:00Z,2019-07-19,18,3314
+Flinders Street Station Underpass,2019-07-19T08:00:00Z,2019-07-19,18,3321
+Melbourne Central,2019-07-19T09:00:00Z,2019-07-19,19,2841
+Flinders Street Station Underpass,2019-07-19T09:00:00Z,2019-07-19,19,2162
+Melbourne Central,2019-07-19T10:00:00Z,2019-07-19,20,2528
+Flinders Street Station Underpass,2019-07-19T10:00:00Z,2019-07-19,20,1701
+Melbourne Central,2019-07-19T11:00:00Z,2019-07-19,21,2635
+Flinders Street Station Underpass,2019-07-19T11:00:00Z,2019-07-19,21,1473
+Melbourne Central,2019-07-19T12:00:00Z,2019-07-19,22,1830
+Flinders Street Station Underpass,2019-07-19T12:00:00Z,2019-07-19,22,1365
+Melbourne Central,2019-07-19T13:00:00Z,2019-07-19,23,1372
+Flinders Street Station Underpass,2019-07-19T13:00:00Z,2019-07-19,23,932
+Melbourne Central,2019-07-19T14:00:00Z,2019-07-20,0,874
+Flinders Street Station Underpass,2019-07-19T14:00:00Z,2019-07-20,0,645
+Melbourne Central,2019-07-19T15:00:00Z,2019-07-20,1,584
+Flinders Street Station Underpass,2019-07-19T15:00:00Z,2019-07-20,1,331
+Melbourne Central,2019-07-19T16:00:00Z,2019-07-20,2,313
+Flinders Street Station Underpass,2019-07-19T16:00:00Z,2019-07-20,2,192
+Melbourne Central,2019-07-19T17:00:00Z,2019-07-20,3,215
+Flinders Street Station Underpass,2019-07-19T17:00:00Z,2019-07-20,3,167
+Melbourne Central,2019-07-19T18:00:00Z,2019-07-20,4,84
+Flinders Street Station Underpass,2019-07-19T18:00:00Z,2019-07-20,4,132
+Melbourne Central,2019-07-19T19:00:00Z,2019-07-20,5,160
+Flinders Street Station Underpass,2019-07-19T19:00:00Z,2019-07-20,5,116
+Melbourne Central,2019-07-19T20:00:00Z,2019-07-20,6,97
+Flinders Street Station Underpass,2019-07-19T20:00:00Z,2019-07-20,6,201
+Melbourne Central,2019-07-19T21:00:00Z,2019-07-20,7,225
+Flinders Street Station Underpass,2019-07-19T21:00:00Z,2019-07-20,7,458
+Melbourne Central,2019-07-19T22:00:00Z,2019-07-20,8,301
+Flinders Street Station Underpass,2019-07-19T22:00:00Z,2019-07-20,8,602
+Melbourne Central,2019-07-19T23:00:00Z,2019-07-20,9,515
+Flinders Street Station Underpass,2019-07-19T23:00:00Z,2019-07-20,9,829
+Melbourne Central,2019-07-20T00:00:00Z,2019-07-20,10,825
+Flinders Street Station Underpass,2019-07-20T00:00:00Z,2019-07-20,10,1235
+Melbourne Central,2019-07-20T01:00:00Z,2019-07-20,11,1568
+Flinders Street Station Underpass,2019-07-20T01:00:00Z,2019-07-20,11,1702
+Melbourne Central,2019-07-20T02:00:00Z,2019-07-20,12,2194
+Flinders Street Station Underpass,2019-07-20T02:00:00Z,2019-07-20,12,1816
+Melbourne Central,2019-07-20T03:00:00Z,2019-07-20,13,2434
+Flinders Street Station Underpass,2019-07-20T03:00:00Z,2019-07-20,13,1909
+Melbourne Central,2019-07-20T04:00:00Z,2019-07-20,14,2837
+Flinders Street Station Underpass,2019-07-20T04:00:00Z,2019-07-20,14,2142
+Melbourne Central,2019-07-20T05:00:00Z,2019-07-20,15,3280
+Flinders Street Station Underpass,2019-07-20T05:00:00Z,2019-07-20,15,2119
+Melbourne Central,2019-07-20T06:00:00Z,2019-07-20,16,2884
+Flinders Street Station Underpass,2019-07-20T06:00:00Z,2019-07-20,16,2436
+Melbourne Central,2019-07-20T07:00:00Z,2019-07-20,17,2748
+Flinders Street Station Underpass,2019-07-20T07:00:00Z,2019-07-20,17,2197
+Melbourne Central,2019-07-20T08:00:00Z,2019-07-20,18,2692
+Flinders Street Station Underpass,2019-07-20T08:00:00Z,2019-07-20,18,2029
+Melbourne Central,2019-07-20T09:00:00Z,2019-07-20,19,3264
+Flinders Street Station Underpass,2019-07-20T09:00:00Z,2019-07-20,19,1669
+Melbourne Central,2019-07-20T10:00:00Z,2019-07-20,20,2690
+Flinders Street Station Underpass,2019-07-20T10:00:00Z,2019-07-20,20,1384
+Melbourne Central,2019-07-20T11:00:00Z,2019-07-20,21,2151
+Flinders Street Station Underpass,2019-07-20T11:00:00Z,2019-07-20,21,1248
+Melbourne Central,2019-07-20T12:00:00Z,2019-07-20,22,1664
+Flinders Street Station Underpass,2019-07-20T12:00:00Z,2019-07-20,22,1198
+Melbourne Central,2019-07-20T13:00:00Z,2019-07-20,23,1427
+Flinders Street Station Underpass,2019-07-20T13:00:00Z,2019-07-20,23,870
+Melbourne Central,2019-07-20T14:00:00Z,2019-07-21,0,939
+Flinders Street Station Underpass,2019-07-20T14:00:00Z,2019-07-21,0,674
+Melbourne Central,2019-07-20T15:00:00Z,2019-07-21,1,635
+Flinders Street Station Underpass,2019-07-20T15:00:00Z,2019-07-21,1,514
+Melbourne Central,2019-07-20T16:00:00Z,2019-07-21,2,387
+Flinders Street Station Underpass,2019-07-20T16:00:00Z,2019-07-21,2,248
+Melbourne Central,2019-07-20T17:00:00Z,2019-07-21,3,324
+Flinders Street Station Underpass,2019-07-20T17:00:00Z,2019-07-21,3,201
+Melbourne Central,2019-07-20T18:00:00Z,2019-07-21,4,134
+Flinders Street Station Underpass,2019-07-20T18:00:00Z,2019-07-21,4,158
+Melbourne Central,2019-07-20T19:00:00Z,2019-07-21,5,150
+Flinders Street Station Underpass,2019-07-20T19:00:00Z,2019-07-21,5,134
+Melbourne Central,2019-07-20T20:00:00Z,2019-07-21,6,72
+Flinders Street Station Underpass,2019-07-20T20:00:00Z,2019-07-21,6,187
+Melbourne Central,2019-07-20T21:00:00Z,2019-07-21,7,133
+Flinders Street Station Underpass,2019-07-20T21:00:00Z,2019-07-21,7,266
+Melbourne Central,2019-07-20T22:00:00Z,2019-07-21,8,268
+Flinders Street Station Underpass,2019-07-20T22:00:00Z,2019-07-21,8,451
+Melbourne Central,2019-07-20T23:00:00Z,2019-07-21,9,436
+Flinders Street Station Underpass,2019-07-20T23:00:00Z,2019-07-21,9,753
+Melbourne Central,2019-07-21T00:00:00Z,2019-07-21,10,810
+Flinders Street Station Underpass,2019-07-21T00:00:00Z,2019-07-21,10,1079
+Melbourne Central,2019-07-21T01:00:00Z,2019-07-21,11,1131
+Flinders Street Station Underpass,2019-07-21T01:00:00Z,2019-07-21,11,1472
+Melbourne Central,2019-07-21T02:00:00Z,2019-07-21,12,1820
+Flinders Street Station Underpass,2019-07-21T02:00:00Z,2019-07-21,12,1617
+Melbourne Central,2019-07-21T03:00:00Z,2019-07-21,13,2289
+Flinders Street Station Underpass,2019-07-21T03:00:00Z,2019-07-21,13,1556
+Melbourne Central,2019-07-21T04:00:00Z,2019-07-21,14,2319
+Flinders Street Station Underpass,2019-07-21T04:00:00Z,2019-07-21,14,1801
+Melbourne Central,2019-07-21T05:00:00Z,2019-07-21,15,2435
+Flinders Street Station Underpass,2019-07-21T05:00:00Z,2019-07-21,15,1937
+Melbourne Central,2019-07-21T06:00:00Z,2019-07-21,16,2469
+Flinders Street Station Underpass,2019-07-21T06:00:00Z,2019-07-21,16,2301
+Melbourne Central,2019-07-21T07:00:00Z,2019-07-21,17,2461
+Flinders Street Station Underpass,2019-07-21T07:00:00Z,2019-07-21,17,1879
+Melbourne Central,2019-07-21T08:00:00Z,2019-07-21,18,2272
+Flinders Street Station Underpass,2019-07-21T08:00:00Z,2019-07-21,18,1550
+Melbourne Central,2019-07-21T09:00:00Z,2019-07-21,19,2292
+Flinders Street Station Underpass,2019-07-21T09:00:00Z,2019-07-21,19,1266
+Melbourne Central,2019-07-21T10:00:00Z,2019-07-21,20,1741
+Flinders Street Station Underpass,2019-07-21T10:00:00Z,2019-07-21,20,998
+Melbourne Central,2019-07-21T11:00:00Z,2019-07-21,21,1303
+Flinders Street Station Underpass,2019-07-21T11:00:00Z,2019-07-21,21,842
+Melbourne Central,2019-07-21T12:00:00Z,2019-07-21,22,828
+Flinders Street Station Underpass,2019-07-21T12:00:00Z,2019-07-21,22,612
+Melbourne Central,2019-07-21T13:00:00Z,2019-07-21,23,375
+Flinders Street Station Underpass,2019-07-21T13:00:00Z,2019-07-21,23,382
+Melbourne Central,2019-07-21T14:00:00Z,2019-07-22,0,207
+Flinders Street Station Underpass,2019-07-21T14:00:00Z,2019-07-22,0,165
+Melbourne Central,2019-07-21T15:00:00Z,2019-07-22,1,116
+Flinders Street Station Underpass,2019-07-21T15:00:00Z,2019-07-22,1,71
+Melbourne Central,2019-07-21T16:00:00Z,2019-07-22,2,51
+Flinders Street Station Underpass,2019-07-21T16:00:00Z,2019-07-22,2,32
+Melbourne Central,2019-07-21T17:00:00Z,2019-07-22,3,55
+Flinders Street Station Underpass,2019-07-21T17:00:00Z,2019-07-22,3,58
+Melbourne Central,2019-07-21T18:00:00Z,2019-07-22,4,47
+Flinders Street Station Underpass,2019-07-21T18:00:00Z,2019-07-22,4,70
+Melbourne Central,2019-07-21T19:00:00Z,2019-07-22,5,95
+Flinders Street Station Underpass,2019-07-21T19:00:00Z,2019-07-22,5,185
+Melbourne Central,2019-07-21T20:00:00Z,2019-07-22,6,162
+Flinders Street Station Underpass,2019-07-21T20:00:00Z,2019-07-22,6,646
+Melbourne Central,2019-07-21T21:00:00Z,2019-07-22,7,370
+Flinders Street Station Underpass,2019-07-21T21:00:00Z,2019-07-22,7,1823
+Melbourne Central,2019-07-21T22:00:00Z,2019-07-22,8,711
+Flinders Street Station Underpass,2019-07-21T22:00:00Z,2019-07-22,8,4193
+Melbourne Central,2019-07-21T23:00:00Z,2019-07-22,9,797
+Flinders Street Station Underpass,2019-07-21T23:00:00Z,2019-07-22,9,2160
+Melbourne Central,2019-07-22T00:00:00Z,2019-07-22,10,1036
+Flinders Street Station Underpass,2019-07-22T00:00:00Z,2019-07-22,10,1179
+Melbourne Central,2019-07-22T01:00:00Z,2019-07-22,11,1416
+Flinders Street Station Underpass,2019-07-22T01:00:00Z,2019-07-22,11,1361
+Melbourne Central,2019-07-22T02:00:00Z,2019-07-22,12,2343
+Flinders Street Station Underpass,2019-07-22T02:00:00Z,2019-07-22,12,2295
+Melbourne Central,2019-07-22T03:00:00Z,2019-07-22,13,2293
+Flinders Street Station Underpass,2019-07-22T03:00:00Z,2019-07-22,13,2251
+Melbourne Central,2019-07-22T04:00:00Z,2019-07-22,14,2051
+Flinders Street Station Underpass,2019-07-22T04:00:00Z,2019-07-22,14,1699
+Melbourne Central,2019-07-22T05:00:00Z,2019-07-22,15,2111
+Flinders Street Station Underpass,2019-07-22T05:00:00Z,2019-07-22,15,1899
+Melbourne Central,2019-07-22T06:00:00Z,2019-07-22,16,2390
+Flinders Street Station Underpass,2019-07-22T06:00:00Z,2019-07-22,16,3046
+Melbourne Central,2019-07-22T07:00:00Z,2019-07-22,17,2579
+Flinders Street Station Underpass,2019-07-22T07:00:00Z,2019-07-22,17,5079
+Melbourne Central,2019-07-22T08:00:00Z,2019-07-22,18,2382
+Flinders Street Station Underpass,2019-07-22T08:00:00Z,2019-07-22,18,2723
+Melbourne Central,2019-07-22T09:00:00Z,2019-07-22,19,2119
+Flinders Street Station Underpass,2019-07-22T09:00:00Z,2019-07-22,19,1429
+Melbourne Central,2019-07-22T10:00:00Z,2019-07-22,20,1746
+Flinders Street Station Underpass,2019-07-22T10:00:00Z,2019-07-22,20,980
+Melbourne Central,2019-07-22T11:00:00Z,2019-07-22,21,1200
+Flinders Street Station Underpass,2019-07-22T11:00:00Z,2019-07-22,21,718
+Melbourne Central,2019-07-22T12:00:00Z,2019-07-22,22,675
+Flinders Street Station Underpass,2019-07-22T12:00:00Z,2019-07-22,22,521
+Melbourne Central,2019-07-22T13:00:00Z,2019-07-22,23,371
+Flinders Street Station Underpass,2019-07-22T13:00:00Z,2019-07-22,23,304
+Melbourne Central,2019-07-22T14:00:00Z,2019-07-23,0,180
+Flinders Street Station Underpass,2019-07-22T14:00:00Z,2019-07-23,0,105
+Melbourne Central,2019-07-22T15:00:00Z,2019-07-23,1,121
+Flinders Street Station Underpass,2019-07-22T15:00:00Z,2019-07-23,1,34
+Melbourne Central,2019-07-22T16:00:00Z,2019-07-23,2,53
+Flinders Street Station Underpass,2019-07-22T16:00:00Z,2019-07-23,2,41
+Melbourne Central,2019-07-22T17:00:00Z,2019-07-23,3,32
+Flinders Street Station Underpass,2019-07-22T17:00:00Z,2019-07-23,3,63
+Melbourne Central,2019-07-22T18:00:00Z,2019-07-23,4,30
+Flinders Street Station Underpass,2019-07-22T18:00:00Z,2019-07-23,4,61
+Melbourne Central,2019-07-22T19:00:00Z,2019-07-23,5,93
+Flinders Street Station Underpass,2019-07-22T19:00:00Z,2019-07-23,5,248
+Melbourne Central,2019-07-22T20:00:00Z,2019-07-23,6,153
+Flinders Street Station Underpass,2019-07-22T20:00:00Z,2019-07-23,6,987
+Melbourne Central,2019-07-22T21:00:00Z,2019-07-23,7,354
+Flinders Street Station Underpass,2019-07-22T21:00:00Z,2019-07-23,7,1922
+Melbourne Central,2019-07-22T22:00:00Z,2019-07-23,8,640
+Flinders Street Station Underpass,2019-07-22T22:00:00Z,2019-07-23,8,3905
+Melbourne Central,2019-07-22T23:00:00Z,2019-07-23,9,716
+Flinders Street Station Underpass,2019-07-22T23:00:00Z,2019-07-23,9,2282
+Melbourne Central,2019-07-23T00:00:00Z,2019-07-23,10,1047
+Flinders Street Station Underpass,2019-07-23T00:00:00Z,2019-07-23,10,1088
+Melbourne Central,2019-07-23T01:00:00Z,2019-07-23,11,1439
+Flinders Street Station Underpass,2019-07-23T01:00:00Z,2019-07-23,11,1090
+Melbourne Central,2019-07-23T02:00:00Z,2019-07-23,12,2325
+Flinders Street Station Underpass,2019-07-23T02:00:00Z,2019-07-23,12,1977
+Melbourne Central,2019-07-23T03:00:00Z,2019-07-23,13,2361
+Flinders Street Station Underpass,2019-07-23T03:00:00Z,2019-07-23,13,2103
+Melbourne Central,2019-07-23T04:00:00Z,2019-07-23,14,2204
+Flinders Street Station Underpass,2019-07-23T04:00:00Z,2019-07-23,14,1762
+Melbourne Central,2019-07-23T05:00:00Z,2019-07-23,15,2161
+Flinders Street Station Underpass,2019-07-23T05:00:00Z,2019-07-23,15,2095
+Melbourne Central,2019-07-23T06:00:00Z,2019-07-23,16,2470
+Flinders Street Station Underpass,2019-07-23T06:00:00Z,2019-07-23,16,3136
+Melbourne Central,2019-07-23T07:00:00Z,2019-07-23,17,2473
+Flinders Street Station Underpass,2019-07-23T07:00:00Z,2019-07-23,17,5052
+Melbourne Central,2019-07-23T08:00:00Z,2019-07-23,18,1559
+Flinders Street Station Underpass,2019-07-23T08:00:00Z,2019-07-23,18,2395
+Melbourne Central,2019-07-23T09:00:00Z,2019-07-23,19,1377
+Flinders Street Station Underpass,2019-07-23T09:00:00Z,2019-07-23,19,1089
+Melbourne Central,2019-07-23T10:00:00Z,2019-07-23,20,1510
+Flinders Street Station Underpass,2019-07-23T10:00:00Z,2019-07-23,20,771
+Melbourne Central,2019-07-23T11:00:00Z,2019-07-23,21,1068
+Flinders Street Station Underpass,2019-07-23T11:00:00Z,2019-07-23,21,645
+Melbourne Central,2019-07-23T12:00:00Z,2019-07-23,22,770
+Flinders Street Station Underpass,2019-07-23T12:00:00Z,2019-07-23,22,621
+Melbourne Central,2019-07-23T13:00:00Z,2019-07-23,23,367
+Flinders Street Station Underpass,2019-07-23T13:00:00Z,2019-07-23,23,366
+Melbourne Central,2019-07-23T14:00:00Z,2019-07-24,0,174
+Flinders Street Station Underpass,2019-07-23T14:00:00Z,2019-07-24,0,141
+Melbourne Central,2019-07-23T15:00:00Z,2019-07-24,1,99
+Flinders Street Station Underpass,2019-07-23T15:00:00Z,2019-07-24,1,42
+Melbourne Central,2019-07-23T16:00:00Z,2019-07-24,2,48
+Flinders Street Station Underpass,2019-07-23T16:00:00Z,2019-07-24,2,18
+Melbourne Central,2019-07-23T17:00:00Z,2019-07-24,3,25
+Flinders Street Station Underpass,2019-07-23T17:00:00Z,2019-07-24,3,39
+Melbourne Central,2019-07-23T18:00:00Z,2019-07-24,4,30
+Flinders Street Station Underpass,2019-07-23T18:00:00Z,2019-07-24,4,45
+Melbourne Central,2019-07-23T19:00:00Z,2019-07-24,5,90
+Flinders Street Station Underpass,2019-07-23T19:00:00Z,2019-07-24,5,233
+Melbourne Central,2019-07-23T20:00:00Z,2019-07-24,6,171
+Flinders Street Station Underpass,2019-07-23T20:00:00Z,2019-07-24,6,1055
+Melbourne Central,2019-07-23T21:00:00Z,2019-07-24,7,369
+Flinders Street Station Underpass,2019-07-23T21:00:00Z,2019-07-24,7,1922
+Melbourne Central,2019-07-23T22:00:00Z,2019-07-24,8,650
+Flinders Street Station Underpass,2019-07-23T22:00:00Z,2019-07-24,8,4042
+Melbourne Central,2019-07-23T23:00:00Z,2019-07-24,9,732
+Flinders Street Station Underpass,2019-07-23T23:00:00Z,2019-07-24,9,2175
+Melbourne Central,2019-07-24T00:00:00Z,2019-07-24,10,1027
+Flinders Street Station Underpass,2019-07-24T00:00:00Z,2019-07-24,10,1112
+Melbourne Central,2019-07-24T01:00:00Z,2019-07-24,11,1447
+Flinders Street Station Underpass,2019-07-24T01:00:00Z,2019-07-24,11,1247
+Melbourne Central,2019-07-24T02:00:00Z,2019-07-24,12,2331
+Flinders Street Station Underpass,2019-07-24T02:00:00Z,2019-07-24,12,2013
+Melbourne Central,2019-07-24T03:00:00Z,2019-07-24,13,2546
+Flinders Street Station Underpass,2019-07-24T03:00:00Z,2019-07-24,13,2231
+Melbourne Central,2019-07-24T04:00:00Z,2019-07-24,14,2501
+Flinders Street Station Underpass,2019-07-24T04:00:00Z,2019-07-24,14,1807
+Melbourne Central,2019-07-24T05:00:00Z,2019-07-24,15,2273
+Flinders Street Station Underpass,2019-07-24T05:00:00Z,2019-07-24,15,2146
+Melbourne Central,2019-07-24T06:00:00Z,2019-07-24,16,2611
+Flinders Street Station Underpass,2019-07-24T06:00:00Z,2019-07-24,16,3026
+Melbourne Central,2019-07-24T07:00:00Z,2019-07-24,17,3053
+Flinders Street Station Underpass,2019-07-24T07:00:00Z,2019-07-24,17,4966
+Melbourne Central,2019-07-24T08:00:00Z,2019-07-24,18,2788
+Flinders Street Station Underpass,2019-07-24T08:00:00Z,2019-07-24,18,2697
+Melbourne Central,2019-07-24T09:00:00Z,2019-07-24,19,2336
+Flinders Street Station Underpass,2019-07-24T09:00:00Z,2019-07-24,19,1588
+Melbourne Central,2019-07-24T10:00:00Z,2019-07-24,20,2092
+Flinders Street Station Underpass,2019-07-24T10:00:00Z,2019-07-24,20,1288
+Melbourne Central,2019-07-24T11:00:00Z,2019-07-24,21,1629
+Flinders Street Station Underpass,2019-07-24T11:00:00Z,2019-07-24,21,984
+Melbourne Central,2019-07-24T12:00:00Z,2019-07-24,22,995
+Flinders Street Station Underpass,2019-07-24T12:00:00Z,2019-07-24,22,805
+Melbourne Central,2019-07-24T13:00:00Z,2019-07-24,23,461
+Flinders Street Station Underpass,2019-07-24T13:00:00Z,2019-07-24,23,406
+Melbourne Central,2019-07-24T14:00:00Z,2019-07-25,0,208
+Flinders Street Station Underpass,2019-07-24T14:00:00Z,2019-07-25,0,160
+Melbourne Central,2019-07-24T15:00:00Z,2019-07-25,1,105
+Flinders Street Station Underpass,2019-07-24T15:00:00Z,2019-07-25,1,62
+Melbourne Central,2019-07-24T16:00:00Z,2019-07-25,2,54
+Flinders Street Station Underpass,2019-07-24T16:00:00Z,2019-07-25,2,39
+Melbourne Central,2019-07-24T17:00:00Z,2019-07-25,3,43
+Flinders Street Station Underpass,2019-07-24T17:00:00Z,2019-07-25,3,29
+Melbourne Central,2019-07-24T18:00:00Z,2019-07-25,4,32
+Flinders Street Station Underpass,2019-07-24T18:00:00Z,2019-07-25,4,58
+Melbourne Central,2019-07-24T19:00:00Z,2019-07-25,5,110
+Flinders Street Station Underpass,2019-07-24T19:00:00Z,2019-07-25,5,226
+Melbourne Central,2019-07-24T20:00:00Z,2019-07-25,6,192
+Flinders Street Station Underpass,2019-07-24T20:00:00Z,2019-07-25,6,1035
+Melbourne Central,2019-07-24T21:00:00Z,2019-07-25,7,352
+Flinders Street Station Underpass,2019-07-24T21:00:00Z,2019-07-25,7,1918
+Melbourne Central,2019-07-24T22:00:00Z,2019-07-25,8,685
+Flinders Street Station Underpass,2019-07-24T22:00:00Z,2019-07-25,8,4039
+Melbourne Central,2019-07-24T23:00:00Z,2019-07-25,9,677
+Flinders Street Station Underpass,2019-07-24T23:00:00Z,2019-07-25,9,2291
+Melbourne Central,2019-07-25T00:00:00Z,2019-07-25,10,928
+Flinders Street Station Underpass,2019-07-25T00:00:00Z,2019-07-25,10,1229
+Melbourne Central,2019-07-25T01:00:00Z,2019-07-25,11,1429
+Flinders Street Station Underpass,2019-07-25T01:00:00Z,2019-07-25,11,1225
+Melbourne Central,2019-07-25T02:00:00Z,2019-07-25,12,2492
+Flinders Street Station Underpass,2019-07-25T02:00:00Z,2019-07-25,12,1985
+Melbourne Central,2019-07-25T03:00:00Z,2019-07-25,13,2487
+Flinders Street Station Underpass,2019-07-25T03:00:00Z,2019-07-25,13,2031
+Melbourne Central,2019-07-25T04:00:00Z,2019-07-25,14,2360
+Flinders Street Station Underpass,2019-07-25T04:00:00Z,2019-07-25,14,1890
+Melbourne Central,2019-07-25T05:00:00Z,2019-07-25,15,2390
+Flinders Street Station Underpass,2019-07-25T05:00:00Z,2019-07-25,15,2192
+Melbourne Central,2019-07-25T06:00:00Z,2019-07-25,16,2640
+Flinders Street Station Underpass,2019-07-25T06:00:00Z,2019-07-25,16,3276
+Melbourne Central,2019-07-25T07:00:00Z,2019-07-25,17,2925
+Flinders Street Station Underpass,2019-07-25T07:00:00Z,2019-07-25,17,5156
+Melbourne Central,2019-07-25T08:00:00Z,2019-07-25,18,2859
+Flinders Street Station Underpass,2019-07-25T08:00:00Z,2019-07-25,18,2898
+Melbourne Central,2019-07-25T09:00:00Z,2019-07-25,19,2247
+Flinders Street Station Underpass,2019-07-25T09:00:00Z,2019-07-25,19,1570
+Melbourne Central,2019-07-25T10:00:00Z,2019-07-25,20,2086
+Flinders Street Station Underpass,2019-07-25T10:00:00Z,2019-07-25,20,1302
+Melbourne Central,2019-07-25T11:00:00Z,2019-07-25,21,1738
+Flinders Street Station Underpass,2019-07-25T11:00:00Z,2019-07-25,21,1139
+Melbourne Central,2019-07-25T12:00:00Z,2019-07-25,22,1172
+Flinders Street Station Underpass,2019-07-25T12:00:00Z,2019-07-25,22,959
+Melbourne Central,2019-07-25T13:00:00Z,2019-07-25,23,618
+Flinders Street Station Underpass,2019-07-25T13:00:00Z,2019-07-25,23,550
+Melbourne Central,2019-07-25T14:00:00Z,2019-07-26,0,327
+Flinders Street Station Underpass,2019-07-25T14:00:00Z,2019-07-26,0,199
+Melbourne Central,2019-07-25T15:00:00Z,2019-07-26,1,161
+Flinders Street Station Underpass,2019-07-25T15:00:00Z,2019-07-26,1,61
+Melbourne Central,2019-07-25T16:00:00Z,2019-07-26,2,103
+Flinders Street Station Underpass,2019-07-25T16:00:00Z,2019-07-26,2,66
+Melbourne Central,2019-07-25T17:00:00Z,2019-07-26,3,100
+Flinders Street Station Underpass,2019-07-25T17:00:00Z,2019-07-26,3,48
+Melbourne Central,2019-07-25T18:00:00Z,2019-07-26,4,49
+Flinders Street Station Underpass,2019-07-25T18:00:00Z,2019-07-26,4,73
+Melbourne Central,2019-07-25T19:00:00Z,2019-07-26,5,106
+Flinders Street Station Underpass,2019-07-25T19:00:00Z,2019-07-26,5,244
+Melbourne Central,2019-07-25T20:00:00Z,2019-07-26,6,170
+Flinders Street Station Underpass,2019-07-25T20:00:00Z,2019-07-26,6,958
+Melbourne Central,2019-07-25T21:00:00Z,2019-07-26,7,366
+Flinders Street Station Underpass,2019-07-25T21:00:00Z,2019-07-26,7,1823
+Melbourne Central,2019-07-25T22:00:00Z,2019-07-26,8,708
+Flinders Street Station Underpass,2019-07-25T22:00:00Z,2019-07-26,8,3900
+Melbourne Central,2019-07-25T23:00:00Z,2019-07-26,9,768
+Flinders Street Station Underpass,2019-07-25T23:00:00Z,2019-07-26,9,2430
+Melbourne Central,2019-07-26T00:00:00Z,2019-07-26,10,1102
+Flinders Street Station Underpass,2019-07-26T00:00:00Z,2019-07-26,10,1374
+Melbourne Central,2019-07-26T01:00:00Z,2019-07-26,11,1521
+Flinders Street Station Underpass,2019-07-26T01:00:00Z,2019-07-26,11,1365
+Melbourne Central,2019-07-26T02:00:00Z,2019-07-26,12,2307
+Flinders Street Station Underpass,2019-07-26T02:00:00Z,2019-07-26,12,2437
+Melbourne Central,2019-07-26T03:00:00Z,2019-07-26,13,2268
+Flinders Street Station Underpass,2019-07-26T03:00:00Z,2019-07-26,13,2246
+Melbourne Central,2019-07-26T04:00:00Z,2019-07-26,14,2445
+Flinders Street Station Underpass,2019-07-26T04:00:00Z,2019-07-26,14,2157
+Melbourne Central,2019-07-26T05:00:00Z,2019-07-26,15,2298
+Flinders Street Station Underpass,2019-07-26T05:00:00Z,2019-07-26,15,2751
+Melbourne Central,2019-07-26T06:00:00Z,2019-07-26,16,2395
+Flinders Street Station Underpass,2019-07-26T06:00:00Z,2019-07-26,16,3248
+Melbourne Central,2019-07-26T07:00:00Z,2019-07-26,17,2013
+Flinders Street Station Underpass,2019-07-26T07:00:00Z,2019-07-26,17,4413
+Melbourne Central,2019-07-26T08:00:00Z,2019-07-26,18,2427
+Flinders Street Station Underpass,2019-07-26T08:00:00Z,2019-07-26,18,2762
+Melbourne Central,2019-07-26T09:00:00Z,2019-07-26,19,1725
+Flinders Street Station Underpass,2019-07-26T09:00:00Z,2019-07-26,19,1585
+Melbourne Central,2019-07-26T10:00:00Z,2019-07-26,20,1628
+Flinders Street Station Underpass,2019-07-26T10:00:00Z,2019-07-26,20,1191
+Melbourne Central,2019-07-26T11:00:00Z,2019-07-26,21,2049
+Flinders Street Station Underpass,2019-07-26T11:00:00Z,2019-07-26,21,1037
+Melbourne Central,2019-07-26T12:00:00Z,2019-07-26,22,1619
+Flinders Street Station Underpass,2019-07-26T12:00:00Z,2019-07-26,22,1154
+Melbourne Central,2019-07-26T13:00:00Z,2019-07-26,23,1375
+Flinders Street Station Underpass,2019-07-26T13:00:00Z,2019-07-26,23,876
+Melbourne Central,2019-07-26T14:00:00Z,2019-07-27,0,847
+Flinders Street Station Underpass,2019-07-26T14:00:00Z,2019-07-27,0,573
+Melbourne Central,2019-07-26T15:00:00Z,2019-07-27,1,440
+Flinders Street Station Underpass,2019-07-26T15:00:00Z,2019-07-27,1,331
+Melbourne Central,2019-07-26T16:00:00Z,2019-07-27,2,359
+Flinders Street Station Underpass,2019-07-26T16:00:00Z,2019-07-27,2,194
+Melbourne Central,2019-07-26T17:00:00Z,2019-07-27,3,215
+Flinders Street Station Underpass,2019-07-26T17:00:00Z,2019-07-27,3,152
+Melbourne Central,2019-07-26T18:00:00Z,2019-07-27,4,129
+Flinders Street Station Underpass,2019-07-26T18:00:00Z,2019-07-27,4,123
+Melbourne Central,2019-07-26T19:00:00Z,2019-07-27,5,144
+Flinders Street Station Underpass,2019-07-26T19:00:00Z,2019-07-27,5,148
+Melbourne Central,2019-07-26T20:00:00Z,2019-07-27,6,134
+Flinders Street Station Underpass,2019-07-26T20:00:00Z,2019-07-27,6,270
+Melbourne Central,2019-07-26T21:00:00Z,2019-07-27,7,234
+Flinders Street Station Underpass,2019-07-26T21:00:00Z,2019-07-27,7,508
+Melbourne Central,2019-07-26T22:00:00Z,2019-07-27,8,361
+Flinders Street Station Underpass,2019-07-26T22:00:00Z,2019-07-27,8,585
+Melbourne Central,2019-07-26T23:00:00Z,2019-07-27,9,536
+Flinders Street Station Underpass,2019-07-26T23:00:00Z,2019-07-27,9,1023
+Melbourne Central,2019-07-27T00:00:00Z,2019-07-27,10,995
+Flinders Street Station Underpass,2019-07-27T00:00:00Z,2019-07-27,10,1447
+Melbourne Central,2019-07-27T01:00:00Z,2019-07-27,11,1535
+Flinders Street Station Underpass,2019-07-27T01:00:00Z,2019-07-27,11,1776
+Melbourne Central,2019-07-27T02:00:00Z,2019-07-27,12,2318
+Flinders Street Station Underpass,2019-07-27T02:00:00Z,2019-07-27,12,1879
+Melbourne Central,2019-07-27T03:00:00Z,2019-07-27,13,2796
+Flinders Street Station Underpass,2019-07-27T03:00:00Z,2019-07-27,13,1954
+Melbourne Central,2019-07-27T04:00:00Z,2019-07-27,14,2769
+Flinders Street Station Underpass,2019-07-27T04:00:00Z,2019-07-27,14,2429
+Melbourne Central,2019-07-27T05:00:00Z,2019-07-27,15,2989
+Flinders Street Station Underpass,2019-07-27T05:00:00Z,2019-07-27,15,2180
+Melbourne Central,2019-07-27T06:00:00Z,2019-07-27,16,3052
+Flinders Street Station Underpass,2019-07-27T06:00:00Z,2019-07-27,16,2298
+Melbourne Central,2019-07-27T07:00:00Z,2019-07-27,17,2999
+Flinders Street Station Underpass,2019-07-27T07:00:00Z,2019-07-27,17,2298
+Melbourne Central,2019-07-27T08:00:00Z,2019-07-27,18,2936
+Flinders Street Station Underpass,2019-07-27T08:00:00Z,2019-07-27,18,2046
+Melbourne Central,2019-07-27T09:00:00Z,2019-07-27,19,3361
+Flinders Street Station Underpass,2019-07-27T09:00:00Z,2019-07-27,19,1841
+Melbourne Central,2019-07-27T10:00:00Z,2019-07-27,20,2701
+Flinders Street Station Underpass,2019-07-27T10:00:00Z,2019-07-27,20,1512
+Melbourne Central,2019-07-27T11:00:00Z,2019-07-27,21,2245
+Flinders Street Station Underpass,2019-07-27T11:00:00Z,2019-07-27,21,1294
+Melbourne Central,2019-07-27T12:00:00Z,2019-07-27,22,2007
+Flinders Street Station Underpass,2019-07-27T12:00:00Z,2019-07-27,22,1155
+Melbourne Central,2019-07-27T13:00:00Z,2019-07-27,23,1521
+Flinders Street Station Underpass,2019-07-27T13:00:00Z,2019-07-27,23,1056
+Melbourne Central,2019-07-27T14:00:00Z,2019-07-28,0,1014
+Flinders Street Station Underpass,2019-07-27T14:00:00Z,2019-07-28,0,811
+Melbourne Central,2019-07-27T15:00:00Z,2019-07-28,1,623
+Flinders Street Station Underpass,2019-07-27T15:00:00Z,2019-07-28,1,457
+Melbourne Central,2019-07-27T16:00:00Z,2019-07-28,2,426
+Flinders Street Station Underpass,2019-07-27T16:00:00Z,2019-07-28,2,309
+Melbourne Central,2019-07-27T17:00:00Z,2019-07-28,3,362
+Flinders Street Station Underpass,2019-07-27T17:00:00Z,2019-07-28,3,238
+Melbourne Central,2019-07-27T18:00:00Z,2019-07-28,4,185
+Flinders Street Station Underpass,2019-07-27T18:00:00Z,2019-07-28,4,167
+Melbourne Central,2019-07-27T19:00:00Z,2019-07-28,5,193
+Flinders Street Station Underpass,2019-07-27T19:00:00Z,2019-07-28,5,220
+Melbourne Central,2019-07-27T20:00:00Z,2019-07-28,6,101
+Flinders Street Station Underpass,2019-07-27T20:00:00Z,2019-07-28,6,499
+Melbourne Central,2019-07-27T21:00:00Z,2019-07-28,7,184
+Flinders Street Station Underpass,2019-07-27T21:00:00Z,2019-07-28,7,449
+Melbourne Central,2019-07-27T22:00:00Z,2019-07-28,8,231
+Flinders Street Station Underpass,2019-07-27T22:00:00Z,2019-07-28,8,542
+Melbourne Central,2019-07-27T23:00:00Z,2019-07-28,9,485
+Flinders Street Station Underpass,2019-07-27T23:00:00Z,2019-07-28,9,811
+Melbourne Central,2019-07-28T00:00:00Z,2019-07-28,10,891
+Flinders Street Station Underpass,2019-07-28T00:00:00Z,2019-07-28,10,1225
+Melbourne Central,2019-07-28T01:00:00Z,2019-07-28,11,1355
+Flinders Street Station Underpass,2019-07-28T01:00:00Z,2019-07-28,11,1665
+Melbourne Central,2019-07-28T02:00:00Z,2019-07-28,12,2097
+Flinders Street Station Underpass,2019-07-28T02:00:00Z,2019-07-28,12,1973
+Melbourne Central,2019-07-28T03:00:00Z,2019-07-28,13,2496
+Flinders Street Station Underpass,2019-07-28T03:00:00Z,2019-07-28,13,1916
+Melbourne Central,2019-07-28T04:00:00Z,2019-07-28,14,2520
+Flinders Street Station Underpass,2019-07-28T04:00:00Z,2019-07-28,14,2124
+Melbourne Central,2019-07-28T05:00:00Z,2019-07-28,15,2591
+Flinders Street Station Underpass,2019-07-28T05:00:00Z,2019-07-28,15,2180
+Melbourne Central,2019-07-28T06:00:00Z,2019-07-28,16,2595
+Flinders Street Station Underpass,2019-07-28T06:00:00Z,2019-07-28,16,1973
+Melbourne Central,2019-07-28T07:00:00Z,2019-07-28,17,2620
+Flinders Street Station Underpass,2019-07-28T07:00:00Z,2019-07-28,17,1834
+Melbourne Central,2019-07-28T08:00:00Z,2019-07-28,18,2527
+Flinders Street Station Underpass,2019-07-28T08:00:00Z,2019-07-28,18,1385
+Melbourne Central,2019-07-28T09:00:00Z,2019-07-28,19,2434
+Flinders Street Station Underpass,2019-07-28T09:00:00Z,2019-07-28,19,1059
+Melbourne Central,2019-07-28T10:00:00Z,2019-07-28,20,1895
+Flinders Street Station Underpass,2019-07-28T10:00:00Z,2019-07-28,20,949
+Melbourne Central,2019-07-28T11:00:00Z,2019-07-28,21,1361
+Flinders Street Station Underpass,2019-07-28T11:00:00Z,2019-07-28,21,789
+Melbourne Central,2019-07-28T12:00:00Z,2019-07-28,22,890
+Flinders Street Station Underpass,2019-07-28T12:00:00Z,2019-07-28,22,573
+Melbourne Central,2019-07-28T13:00:00Z,2019-07-28,23,436
+Flinders Street Station Underpass,2019-07-28T13:00:00Z,2019-07-28,23,349
+Melbourne Central,2019-07-28T14:00:00Z,2019-07-29,0,210
+Flinders Street Station Underpass,2019-07-28T14:00:00Z,2019-07-29,0,187
+Melbourne Central,2019-07-28T15:00:00Z,2019-07-29,1,120
+Flinders Street Station Underpass,2019-07-28T15:00:00Z,2019-07-29,1,72
+Melbourne Central,2019-07-28T16:00:00Z,2019-07-29,2,56
+Flinders Street Station Underpass,2019-07-28T16:00:00Z,2019-07-29,2,42
+Melbourne Central,2019-07-28T17:00:00Z,2019-07-29,3,54
+Flinders Street Station Underpass,2019-07-28T17:00:00Z,2019-07-29,3,26
+Melbourne Central,2019-07-28T18:00:00Z,2019-07-29,4,41
+Flinders Street Station Underpass,2019-07-28T18:00:00Z,2019-07-29,4,53
+Melbourne Central,2019-07-28T19:00:00Z,2019-07-29,5,83
+Flinders Street Station Underpass,2019-07-28T19:00:00Z,2019-07-29,5,222
+Melbourne Central,2019-07-28T20:00:00Z,2019-07-29,6,157
+Flinders Street Station Underpass,2019-07-28T20:00:00Z,2019-07-29,6,1065
+Melbourne Central,2019-07-28T21:00:00Z,2019-07-29,7,342
+Flinders Street Station Underpass,2019-07-28T21:00:00Z,2019-07-29,7,1828
+Melbourne Central,2019-07-28T22:00:00Z,2019-07-29,8,726
+Flinders Street Station Underpass,2019-07-28T22:00:00Z,2019-07-29,8,4241
+Melbourne Central,2019-07-28T23:00:00Z,2019-07-29,9,712
+Flinders Street Station Underpass,2019-07-28T23:00:00Z,2019-07-29,9,2340
+Melbourne Central,2019-07-29T00:00:00Z,2019-07-29,10,1062
+Flinders Street Station Underpass,2019-07-29T00:00:00Z,2019-07-29,10,1134
+Melbourne Central,2019-07-29T01:00:00Z,2019-07-29,11,1416
+Flinders Street Station Underpass,2019-07-29T01:00:00Z,2019-07-29,11,1307
+Melbourne Central,2019-07-29T02:00:00Z,2019-07-29,12,2469
+Flinders Street Station Underpass,2019-07-29T02:00:00Z,2019-07-29,12,2092
+Melbourne Central,2019-07-29T03:00:00Z,2019-07-29,13,2550
+Flinders Street Station Underpass,2019-07-29T03:00:00Z,2019-07-29,13,2149
+Melbourne Central,2019-07-29T04:00:00Z,2019-07-29,14,2255
+Flinders Street Station Underpass,2019-07-29T04:00:00Z,2019-07-29,14,1939
+Melbourne Central,2019-07-29T05:00:00Z,2019-07-29,15,2276
+Flinders Street Station Underpass,2019-07-29T05:00:00Z,2019-07-29,15,2213
+Melbourne Central,2019-07-29T06:00:00Z,2019-07-29,16,2354
+Flinders Street Station Underpass,2019-07-29T06:00:00Z,2019-07-29,16,3072
+Melbourne Central,2019-07-29T07:00:00Z,2019-07-29,17,2663
+Flinders Street Station Underpass,2019-07-29T07:00:00Z,2019-07-29,17,5187
+Melbourne Central,2019-07-29T08:00:00Z,2019-07-29,18,1967
+Flinders Street Station Underpass,2019-07-29T08:00:00Z,2019-07-29,18,2640
+Melbourne Central,2019-07-29T09:00:00Z,2019-07-29,19,1863
+Flinders Street Station Underpass,2019-07-29T09:00:00Z,2019-07-29,19,1235
+Melbourne Central,2019-07-29T10:00:00Z,2019-07-29,20,1791
+Flinders Street Station Underpass,2019-07-29T10:00:00Z,2019-07-29,20,925
+Melbourne Central,2019-07-29T11:00:00Z,2019-07-29,21,1344
+Flinders Street Station Underpass,2019-07-29T11:00:00Z,2019-07-29,21,794
+Melbourne Central,2019-07-29T12:00:00Z,2019-07-29,22,755
+Flinders Street Station Underpass,2019-07-29T12:00:00Z,2019-07-29,22,616
+Melbourne Central,2019-07-29T13:00:00Z,2019-07-29,23,391
+Flinders Street Station Underpass,2019-07-29T13:00:00Z,2019-07-29,23,382
+Melbourne Central,2019-07-29T14:00:00Z,2019-07-30,0,176
+Flinders Street Station Underpass,2019-07-29T14:00:00Z,2019-07-30,0,105
+Melbourne Central,2019-07-29T15:00:00Z,2019-07-30,1,80
+Flinders Street Station Underpass,2019-07-29T15:00:00Z,2019-07-30,1,27
+Melbourne Central,2019-07-29T16:00:00Z,2019-07-30,2,50
+Flinders Street Station Underpass,2019-07-29T16:00:00Z,2019-07-30,2,39
+Melbourne Central,2019-07-29T17:00:00Z,2019-07-30,3,40
+Flinders Street Station Underpass,2019-07-29T17:00:00Z,2019-07-30,3,56
+Melbourne Central,2019-07-29T18:00:00Z,2019-07-30,4,23
+Flinders Street Station Underpass,2019-07-29T18:00:00Z,2019-07-30,4,85
+Melbourne Central,2019-07-29T19:00:00Z,2019-07-30,5,74
+Flinders Street Station Underpass,2019-07-29T19:00:00Z,2019-07-30,5,240
+Melbourne Central,2019-07-29T20:00:00Z,2019-07-30,6,173
+Flinders Street Station Underpass,2019-07-29T20:00:00Z,2019-07-30,6,1094
+Melbourne Central,2019-07-29T21:00:00Z,2019-07-30,7,380
+Flinders Street Station Underpass,2019-07-29T21:00:00Z,2019-07-30,7,2056
+Melbourne Central,2019-07-29T22:00:00Z,2019-07-30,8,821
+Flinders Street Station Underpass,2019-07-29T22:00:00Z,2019-07-30,8,4264
+Melbourne Central,2019-07-29T23:00:00Z,2019-07-30,9,780
+Flinders Street Station Underpass,2019-07-29T23:00:00Z,2019-07-30,9,2293
+Melbourne Central,2019-07-30T00:00:00Z,2019-07-30,10,1054
+Flinders Street Station Underpass,2019-07-30T00:00:00Z,2019-07-30,10,1157
+Melbourne Central,2019-07-30T01:00:00Z,2019-07-30,11,1488
+Flinders Street Station Underpass,2019-07-30T01:00:00Z,2019-07-30,11,1171
+Melbourne Central,2019-07-30T02:00:00Z,2019-07-30,12,2333
+Flinders Street Station Underpass,2019-07-30T02:00:00Z,2019-07-30,12,1935
+Melbourne Central,2019-07-30T03:00:00Z,2019-07-30,13,2337
+Flinders Street Station Underpass,2019-07-30T03:00:00Z,2019-07-30,13,2124
+Melbourne Central,2019-07-30T04:00:00Z,2019-07-30,14,2310
+Flinders Street Station Underpass,2019-07-30T04:00:00Z,2019-07-30,14,1730
+Melbourne Central,2019-07-30T05:00:00Z,2019-07-30,15,2130
+Flinders Street Station Underpass,2019-07-30T05:00:00Z,2019-07-30,15,2202
+Melbourne Central,2019-07-30T06:00:00Z,2019-07-30,16,2440
+Flinders Street Station Underpass,2019-07-30T06:00:00Z,2019-07-30,16,3073
+Melbourne Central,2019-07-30T07:00:00Z,2019-07-30,17,2738
+Flinders Street Station Underpass,2019-07-30T07:00:00Z,2019-07-30,17,5165
+Melbourne Central,2019-07-30T08:00:00Z,2019-07-30,18,2592
+Flinders Street Station Underpass,2019-07-30T08:00:00Z,2019-07-30,18,2959
+Melbourne Central,2019-07-30T09:00:00Z,2019-07-30,19,2334
+Flinders Street Station Underpass,2019-07-30T09:00:00Z,2019-07-30,19,1590
+Melbourne Central,2019-07-30T10:00:00Z,2019-07-30,20,1942
+Flinders Street Station Underpass,2019-07-30T10:00:00Z,2019-07-30,20,1171
+Melbourne Central,2019-07-30T11:00:00Z,2019-07-30,21,1463
+Flinders Street Station Underpass,2019-07-30T11:00:00Z,2019-07-30,21,871
+Melbourne Central,2019-07-30T12:00:00Z,2019-07-30,22,801
+Flinders Street Station Underpass,2019-07-30T12:00:00Z,2019-07-30,22,657
+Melbourne Central,2019-07-30T13:00:00Z,2019-07-30,23,404
+Flinders Street Station Underpass,2019-07-30T13:00:00Z,2019-07-30,23,407
+Melbourne Central,2019-07-30T14:00:00Z,2019-07-31,0,188
+Flinders Street Station Underpass,2019-07-30T14:00:00Z,2019-07-31,0,138
+Melbourne Central,2019-07-30T15:00:00Z,2019-07-31,1,94
+Flinders Street Station Underpass,2019-07-30T15:00:00Z,2019-07-31,1,87
+Melbourne Central,2019-07-30T16:00:00Z,2019-07-31,2,66
+Flinders Street Station Underpass,2019-07-30T16:00:00Z,2019-07-31,2,35
+Melbourne Central,2019-07-30T17:00:00Z,2019-07-31,3,37
+Flinders Street Station Underpass,2019-07-30T17:00:00Z,2019-07-31,3,25
+Melbourne Central,2019-07-30T18:00:00Z,2019-07-31,4,18
+Flinders Street Station Underpass,2019-07-30T18:00:00Z,2019-07-31,4,46
+Melbourne Central,2019-07-30T19:00:00Z,2019-07-31,5,64
+Flinders Street Station Underpass,2019-07-30T19:00:00Z,2019-07-31,5,211
+Melbourne Central,2019-07-30T20:00:00Z,2019-07-31,6,173
+Flinders Street Station Underpass,2019-07-30T20:00:00Z,2019-07-31,6,1111
+Melbourne Central,2019-07-30T21:00:00Z,2019-07-31,7,327
+Flinders Street Station Underpass,2019-07-30T21:00:00Z,2019-07-31,7,1884
+Melbourne Central,2019-07-30T22:00:00Z,2019-07-31,8,728
+Flinders Street Station Underpass,2019-07-30T22:00:00Z,2019-07-31,8,4251
+Melbourne Central,2019-07-30T23:00:00Z,2019-07-31,9,762
+Flinders Street Station Underpass,2019-07-30T23:00:00Z,2019-07-31,9,2393
+Melbourne Central,2019-07-31T00:00:00Z,2019-07-31,10,1098
+Flinders Street Station Underpass,2019-07-31T00:00:00Z,2019-07-31,10,1322
+Melbourne Central,2019-07-31T01:00:00Z,2019-07-31,11,1532
+Flinders Street Station Underpass,2019-07-31T01:00:00Z,2019-07-31,11,1257
+Melbourne Central,2019-07-31T02:00:00Z,2019-07-31,12,2385
+Flinders Street Station Underpass,2019-07-31T02:00:00Z,2019-07-31,12,2142
+Melbourne Central,2019-07-31T03:00:00Z,2019-07-31,13,2575
+Flinders Street Station Underpass,2019-07-31T03:00:00Z,2019-07-31,13,2194
+Melbourne Central,2019-07-31T04:00:00Z,2019-07-31,14,2197
+Flinders Street Station Underpass,2019-07-31T04:00:00Z,2019-07-31,14,1853
+Melbourne Central,2019-07-31T05:00:00Z,2019-07-31,15,2279
+Flinders Street Station Underpass,2019-07-31T05:00:00Z,2019-07-31,15,2308
+Melbourne Central,2019-07-31T06:00:00Z,2019-07-31,16,2360
+Flinders Street Station Underpass,2019-07-31T06:00:00Z,2019-07-31,16,3107
+Melbourne Central,2019-07-31T07:00:00Z,2019-07-31,17,2697
+Flinders Street Station Underpass,2019-07-31T07:00:00Z,2019-07-31,17,5002
+Melbourne Central,2019-07-31T08:00:00Z,2019-07-31,18,2686
+Flinders Street Station Underpass,2019-07-31T08:00:00Z,2019-07-31,18,2900
+Melbourne Central,2019-07-31T09:00:00Z,2019-07-31,19,2539
+Flinders Street Station Underpass,2019-07-31T09:00:00Z,2019-07-31,19,1672
+Melbourne Central,2019-07-31T10:00:00Z,2019-07-31,20,2085
+Flinders Street Station Underpass,2019-07-31T10:00:00Z,2019-07-31,20,1256
+Melbourne Central,2019-07-31T11:00:00Z,2019-07-31,21,1474
+Flinders Street Station Underpass,2019-07-31T11:00:00Z,2019-07-31,21,914
+Melbourne Central,2019-07-31T12:00:00Z,2019-07-31,22,1011
+Flinders Street Station Underpass,2019-07-31T12:00:00Z,2019-07-31,22,689
+Melbourne Central,2019-07-31T13:00:00Z,2019-07-31,23,457
+Flinders Street Station Underpass,2019-07-31T13:00:00Z,2019-07-31,23,466

@@ -1,0 +1,84 @@
+---
+title: "Automating scraping with functions"
+author: "YOUR NAME"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+library(polite)
+library(rvest)
+```
+
+# Scrape the list of most popular TV shows on IMDB: http://www.imdb.com/chart/tvmeter
+
+```{r}
+url <- "http://www.imdb.com/chart/tvmeter"
+check_url <- bow(url)
+
+tv_data <- scrape(check_url)
+
+scrape_show_info <- function(x){
+  title <- x %>%
+    html_node("#title-overview-widget h1") %>%
+    html_text() %>%
+    str_trim()
+  runtime <- x %>%
+    html_node("time") %>%
+    html_text() %>%
+    str_replace("\\n", "") %>%
+    str_trim()
+  genres <- x %>%
+    html_nodes(".txt-block~ .canwrap a") %>%
+    html_text() %>%
+    str_trim() %>%
+    paste(collapse = ", ")
+  tibble(title = title, runtime = runtime, genres = genres)
+}
+
+
+st %>%
+  html_nodes("#title-overview-widget .subtext") %>%
+  html_text() %>%
+  str_trim() %>%
+  str_remove_all("\\n") %>%
+  str_split("\\|") %>%
+  map(str_trim)
+
+```
+
+
+```{r}
+tv_html <- bow("http://www.imdb.com/chart/tvmeter") %>% scrape()
+
+library(glue)
+
+web_stubs <- tv_html %>%
+  html_nodes(".titleColumn a") %>%
+  html_attr("href") %>%
+  paste("http://www.imdb.com/", ., sep = " ")
+```
+
+## Examine each of the *first three* (or however many you can get through) tv show subpage to also obtain genre and runtime.
+
+
+## Time permitting, also try to get the following:
+
+  - How many episodes so far
+  - First five plot keywords
+  - Country
+  - Language
+  
+Add this information to the data frame you created in step 1.
+
+
+# Other fun functions
+
+## Calculate the difference between the minimum and maximum value
+
+```{r}
+my_range <- function(x){}
+
+```
+
+## 

@@ -1,0 +1,133 @@
+---
+title: "Lecture 3A Exercise on data visualisation"
+author: "YOUR NAME"
+output: html_output
+---
+
+# Reading in the data
+
+Pull a copy of the Melbourne pedestrian sensor data for July, 2019, using the `rwalkr` package, filter to keep two sensors "Melbourne Central", "Flinders Street Station Underpass". You can use the code below, or read in the data from the "data" folder (it might take a few minutes to download the data - it took me about 1 minute on a 2016 Macbook Pro with 16Gb RAM). 
+
+**(Note that the code chunk below is set to `eval = FALSE`, which means that it will not run when you knit the document.)**
+
+### Explanation of reading / tidying code
+
+* First we use `library(rwalkr)` to load up the libraries that are needed to download the pedestrian tracking data - this is the `rwalkr` R package
+* Then we load the `lubridate` R package with `library(lubridate)`. Lubridate is an R package that we will cover in more detail in the next lecture. For the moment all you need to know about is the `dmy()` function, which takes a character input and converts it into a special date format.
+* You can explore what this format is by looking at the `start_date` and `end_date` objects. 
+* Here we are using the foramt: "ddmmyyy", where there are two digits for the day, two digits for the month and four for the year.
+* So, "01012000" would be the First of January, 2000.
+
+```{r read-data, eval = FALSE}
+library(rwalkr)
+library(lubridate)
+
+start_date <- dmy("01072019")
+end_date <- dmy("31072019")
+
+walk_raw <- melb_walk(from = start_date,
+                      to = end_date)
+```
+
+There are many sensors that are measured by the pedestrian tracking syste. You can find out more information about the data by looking up the helpfil for the `melb_walk` function by typing `?melb_walk`.
+
+We want to `filter` the data based on the sensor, and only look at two: Melbourne Central, and the Flinders Street Station Underpass.
+
+```{r filter-data, eval = FALSE}
+walk_tidy <- walk_raw %>% 
+  filter(Sensor %in% c("Melbourne Central", 
+                       "Flinders Street Station Underpass"))
+```
+
+Next we save the data into a CSV format.
+
+```{r read-data, eval = FALSE}
+library(readr)
+write_csv(walk_tidy, 
+          path = "data/walk_July19.csv")
+
+write_csv(walk_raw, 
+          path = "data/walk_raw.csv")
+
+```
+
+You can run this code chunk if you want to read the data from the "data" folder. **Remember that if you knit this document, you will need to set the code chunk from `eval = FALSE` to `eval = TRUE`.**
+
+```{r read-data-in}
+library(readr)
+walk_tidy <- read_csv(file = "data/walk_July19.csv")
+```
+
+# Make a side-by-side boxplot of pedestrian counts by sensor. 
+
+```{r gg-walk-point}
+ggplot(walk_tidy, 
+       aes(x = Sensor, 
+           y = Count)) + 
+  geom____
+```
+
+There are many observations presented with `geom_point()`! - try using `geom_boxplot()` instead to summarise this information.
+
+```{r gg-walk-boxplot}
+ggplot(___, 
+       aes(x = ___, 
+           y = ___)) + 
+  geom_***
+```
+
+## Describe what you learn from the boxplot.
+
+# Subset to Monday of the first week of Monash classes using `filter`
+
+Hint - read the previous description of the `dmy` function to work out how to choose the date.
+
+```{r create-first-week}
+walk_first_week <- walk_tidy %>%
+  filter(Date == dmy(___))
+```
+
+# Using the first week data, make line plots of Count by Time, separately for each sensor. 
+
+```{r gg-rirst-week}
+ggplot(walk_first_week,
+       aes(x = ___, 
+           y = ___)) + 
+  geom_line() +
+  facet_wrap(~Sensor, 
+             ncol = 1)
+```
+
+## What do you learn?
+
+# Before class, make sure you finish the quiz, and have talked with your group
+
+# Extension exercises: 
+
+1. Use the full TB incidence data (in the 'data' folder), and explore TB incidence from Australia against other places in the world. Data tidying code is provided below
+
+```{r tb-extension}
+tb <- read_csv("data/TB_notifications_2018-03-18.csv") %>% 
+  select(country, 
+         iso3, 
+         year, 
+         new_sp_m04:new_sp_fu) %>%
+  gather(key = stuff, 
+         value = count, 
+         new_sp_m04:new_sp_fu) %>%
+  separate(col = stuff, 
+           into = c("stuff1", 
+                    "stuff2", 
+                    "genderage")) %>%
+  select(-stuff1, 
+         -stuff2) %>%
+  mutate(gender = str_sub(genderage, 1, 1), 
+         age = str_sub(genderage, 2, length(genderage))) %>%
+  select(-genderage) %>%
+  filter(!(age %in% c("04", "014", "514", "u"))) %>%
+  filter(year > 1996, 
+         year < 2013)
+```
+
+
+2. Use the full pedestrian walking data for July 2019, (either using the code above to download  or from the "data" folder) and explore some of the other patterns in other stations.
