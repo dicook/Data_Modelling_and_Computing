@@ -1,27 +1,66 @@
 ---
 title: "ETC1010: Data Modelling and Computing"
-author: "Professor Di Cook, EBS, Monash U."
-output: 
-  learnr::tutorial:
-    css: "css/logo.css"
-runtime: shiny_prerendered
+subtitle: "Lecture 7B: Linear Models part II"
+author: "Dr. Nicholas Tierney & Professor Di Cook"
+institute: "EBS, Monash U."
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["shinobi", "ninjutsu", "slides.css"]
+    seal: true
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
 ---
 
 ```{r setup, include=FALSE}
-library(learnr)
-knitr::opts_chunk$set(echo = TRUE,   
-                      message = FALSE,
-                      warning = FALSE,
-                      collapse = TRUE,
-                      fig.height = 6,
-                      fig.width = 6,
-                      fig.align = "center",
-                      cache = FALSE)
-tutorial_html_dependency()
+library(emo)
 library(tidyverse)
-library(plotly)
-library(tidytext)
+library(polite)
+library(rvest)
+library(countdown)
+library(knitr)
 library(lubridate)
+library(tuneR)
+library(gridExtra)
+library(plotly)
+library(broom)
+knitr::opts_chunk$set(
+  fig.width = 8,
+  fig.height = 4.5,
+  fig.retina = 3,
+  fig.align = "center",
+  out.width = "90%",
+  message = FALSE,
+  warning = FALSE,
+  cache = TRUE,
+  autodep = TRUE,
+  hiline = TRUE
+)
+
+knitr::opts_hooks$set(fig.callout = function(options) {
+  if (options$fig.callout) {
+    options$echo <- FALSE
+    options$out.height <- "99%"
+    options$fig.width <- 16
+    options$fig.height <- 8
+  }
+  options
+})
+
+options(
+  htmltools.dir.version = FALSE,
+  width = 90,
+  max.print = 9999,
+  knitr.table.format = "html"
+)
+
+as_table <- function(...) knitr::kable(..., format = "html", digits = 3)
+
 ```
 
 # Sentiment analysis

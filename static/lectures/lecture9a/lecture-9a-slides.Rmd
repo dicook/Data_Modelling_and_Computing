@@ -218,7 +218,7 @@ library(ggraph)
 madmen_graph <-  tbl_graph(
   nodes = madmen$vertices,
   edges = madmen$edges,
-  directed = FALSE
+  directed = TRUE
   )
 ```
 ]

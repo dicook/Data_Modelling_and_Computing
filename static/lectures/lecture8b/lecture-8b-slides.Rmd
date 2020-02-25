@@ -702,6 +702,7 @@ ggplot(sc_top_20,
 ```  
 ]
 
+
 .right-plot[
 ```{r process-simpsons-s5-out, ref.label = 'process-simpsons-s5', echo = FALSE, out.width = "100%"}
 

@@ -4,3 +4,8 @@
 .Ruserdata
 public/assignments/
 .DS_Store
+*cache
+*cache/*
+.httr-oauth
+package-lock.json
+cache/*

@@ -177,7 +177,8 @@ head(hp.edges)
 hp.all <- hp.edges %>%
   group_by(book) %>%
   group_map(~ full_join(.x, hp.chars, by = c("name1" = "name"))) %>%
-  ungroup() %>%
+  set_names(1:6) %>%
+  bind_rows(.id = "book") %>% 
   rename(from_id = name1, to_id = name2)
   
   
@@ -189,7 +190,10 @@ ggplot(data=hp.all, aes(from_id = from_id, to_id = to_id)) +
   scale_colour_manual(values = c("#941B08","#F1F31C", 
                                  "#071A80", "#154C07")) + 
   facet_wrap(~book, labeller = "label_both", ncol=3) + 
-  theme_net() + theme(panel.background = element_rect(colour = 'black'), legend.position="bottom")
+  theme_net() + 
+  theme(panel.background = element_rect(colour = 'black'), 
+        legend.position="bottom")
+
 ```
 
 ## Your turn

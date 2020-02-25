@@ -635,6 +635,16 @@ ggplot(data = d_zero_tbl,
 ---
 class: bg-main1
 
+# Adding the network vis
+
+```{r}
+dates_dist
+```
+
+
+---
+class: bg-main1
+
 # Your turn
 
 .huge[

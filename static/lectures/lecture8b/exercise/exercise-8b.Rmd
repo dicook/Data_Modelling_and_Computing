@@ -91,14 +91,20 @@ ggplot(pisa_au_science,
 sci_lm1 <- lm(science ~  +  ,
               data = pisa_au_science, 
               weights=stuweight)
-tidy(???)
-glance(???)
+
+# look at the model coefficients
+tidy()
+
+# look at the model diagnostics
+glance()
 ```
 
 - Try an interaction between gender and anxtest. 
 
 ```{r}
-sci_lm2 <- lm(science ~ ??? * ???, data=pisa_au_science, weights=stuweight)
+sci_lm2 <- lm(science ~ ??? * ???, 
+              data = pisa_au_science, 
+              weights = stuweight)
 ```
 
 
@@ -117,7 +123,7 @@ Build the best model you can for science scoreby exploring  these variables:
 Feel free to choose others. (Code provided in exercise is just a sample, and needs to be modified.)
 
 ```{r echo=FALSE, eval=FALSE}
-
+# clean up the pisa science data
 pisa_au_science <- pisa_au %>% 
   filter(science_fun < 5) %>%
   filter(!is.na(science_time)) %>%
@@ -127,13 +133,18 @@ pisa_au_science <- pisa_au %>%
   filter(science_time>0) %>%
   mutate(log_science_time = log10(science_time)) %>%
   mutate(science_fun_c = factor(science_fun, ordered=FALSE))
-sci_lm <- lm(science ~ math + read + science_fun_c + science_time + gender*anxtest, data=pisa_au_science, weights=stuweight)
+```
+
+
+```{r echo=FALSE, eval=FALSE}
+sci_lm <- lm(science ~ math + read + ..., 
+             data = pisa_au_science, 
+             weights = stuweight)
 tidy(sci_lm)
 glance(sci_lm)
 ```
 
 # back to tidy text
-
 
 ```{r get-sentiment-afinn}
 get_sentiments("afinn")
@@ -171,12 +182,17 @@ tidy_books <- austen_books() %>%
 # Count joyful words in "Emma"
 
 ```{r count-joy}
-nrc_joy <- get_sentiments("nrc") %>% 
-  filter(sentiment == "joy")
+nrc_sent <- get_sentiments("nrc")
+
+nrc_joy <- nrc_sent %>% 
+  # filter where sentiment is "joy"
+  filter(sentiment == ___)
 
 tidy_books %>%
-  filter(book == "Emma") %>%
-  inner_join(nrc_joy) %>%
+  # look at only the book, "Emma"
+  filter(book == ___) %>%
+  # join to the nrc_joy data
+  inner_join(___) %>%
   count(word, sort = TRUE)
 ```
 
@@ -186,21 +202,22 @@ tidy_books %>%
 - What are the most common "surprise" words used in Emma?
 
 ```{r show-anger-surprise}
-nrc_anger <- get_sentiments("nrc") %>% 
-  filter(sentiment == "anger")
+# only select words that are "anger"
+nrc_anger <- nrc_sent %>% 
+  filter(___)
 
-nrc_surprise <- get_sentiments("nrc") %>% 
-  filter(sentiment == "surprise")
+nrc_surprise <- nrc_sent %>% 
+  filter(___)
 
+#see wha thte nrc_sentiment for anger is for emma
 tidy_books %>%
-  filter(book == "Emma") %>%
-  inner_join(nrc_anger) %>%
+  filter() %>%
+  inner_join() %>%
+  # count the number of words
   count(word, sort = TRUE)
 
-tidy_books %>%
-  filter(book == "Emma") %>%
-  inner_join(nrc_surprise) %>%
-  count(word, sort = TRUE)
+# do the same thing but for surprise
+
 ```
 
 Comparing lexicons
@@ -237,10 +254,10 @@ nrc <- get_sentiments("nrc")
 bing <- get_sentiments("bing")
 
 tidy_books_sent <- tidy_books %>%
-  inner_join(bing) %>%
-  group_by(book) %>%
-  count(sentiment, sort = TRUE) %>%
-  mutate(prop = n / sum(n))
+  # join the sentiment data to the tidy_books
+  # then group by book
+  # count the sentiments
+  # add a new variable that computes the proportion of seniments
 
 tidy_books_sent
 ```
@@ -248,8 +265,8 @@ tidy_books_sent
 - Which book is the most positive? negative?
 
 ```{r arrange}
-tidy_books_sent %>% 
-  arrange(-n)
+# arrange the data in descending order
+tidy_books_sent %>%  ___
 ```
 
 
@@ -287,19 +304,19 @@ sc %>% count(name, sort = TRUE) %>%
 bart_names <- c("Bart Simpson", "Baby Bart", 
                 "1-Year-Old Bart", "2-Year-Old Bart", 
                 "5-Year-Old Bart", "80-Year-Old Bart")
+
 bart <- sc %>% filter(name %in% bart_names)
 
-
-
-sc_bart <- sc %>%
-  filter(str_detect(name, "Bart")) %>%
-  # find non exact matches for "bart simpson"
-  filter(name != "Bart Simpson") %>%
-  unnest_tokens(output = word,
-                input = spoken_words) %>%
-  anti_join(stop_words) 
-
-sc_bart
+# another approach
+# sc_bart <- sc %>%
+#   filter(str_detect(name, "Bart")) %>%
+#   # find non exact matches for "bart simpson"
+#   filter(name != "Bart Simpson") %>%
+#   unnest_tokens(output = word,
+#                 input = spoken_words) %>%
+#   anti_join(stop_words) 
+# 
+# sc_bart
 ```
 
 
@@ -311,8 +328,6 @@ sc_word %>%
   count(name, sentiment) %>%
   arrange(-n)
 ```
-
-
 
 # Your Turn: Sentiment analysis
 
@@ -329,7 +344,7 @@ We need to break the text of each tweet into words, tag the words with sentiment
 
 ```{r eval=FALSE, echo=FALSE}
 afl_sentiment <- afl %>% 
-  # group by something
+  # group by something - the tweeter?
   group_by() %>%
   # unnest the tokens
   unnest_tokens() %>%

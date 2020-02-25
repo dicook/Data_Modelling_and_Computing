@@ -62,15 +62,15 @@ tb_sep_step1
 ```{r tb-sep2}
 tb_sep_step2 <- tb_sep_step1 %>%
   separate(col = genderage, 
-           into = c(__, ___), 
+           into = c("gender", "age"), 
            sep = 1)
 ```
 
 Drop the columns named stuff1 and stuff2
 
 ```{r tb-tidy}
-tb_tidy <- tb_step2 %>%
-  select(- ___, - ___) # drop stuff1 and stuff2
+tb_tidy <- tb_sep_step2 %>%
+  select(- stuff1, 
+         - stuff2) # drop stuff1 and stuff2
 
-tb_tidy
 ```
