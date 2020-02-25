@@ -1,0 +1,112 @@
+
+???
+
+# Morgue
+
+## Course web site
+
+This is a link to the course web site, in case you need to go back and forth between tutorial and web materials: http://dmac.dicook.org
+
+# Tidying Melbourne weather
+
+This is seriously messy!
+
+Read the data first, just the columns that we need. The data is in fixed column width format, which means a certain number of columns are designated for the particular records, eg columns 1-11 contains the station id, columns 12-15 contain the year, ...
+
+```{r tidy-melb-weather-scary}
+melbtemp <- read_fwf("data/ASN00086282.dly", 
+   col_positions=fwf_widths(c(11, 4, 2, 4, 
+        rep(c(5, 1, 1, 1), 31)), 
+        col_names = c("station", "year", "month",
+              "variable", paste0("X", 5:128))))
+melbtemp
+```
+
+X5, X9, ... contain the temperature and precipitation records. The remaining columns have data quality flags. We want to ignore the data quality flags for now, and select every fourth variable.
+
+---
+
+### Sometime easier to index select
+
+- `[...]` allows indexing of elements of a vector, or collection of numbers
+- `c(1:4, seq(5,128,4))` means collect items 1 through 4, and then every 4th item until the 128'th
+
+```{r weather-index}
+melbtemp <- melbtemp[,c(1:4, seq(5, 128, 4))] 
+melbtemp
+```
+
+---
+
+### Make long form
+
+```{r weather-long}
+melbtemp_long <- melbtemp %>% 
+  gather(day, value, X5:X125)
+melbtemp_long
+```
+
+This is basically what we need. The day variable doesn't have the right values in it, but we can fix this later.
+
+### Use spread to look at different things
+
+But there are a couple of things that I need to fix to make it possible to do these plots. We will discuss these operations next week.
+
+```{r}
+melbtemp_long <- melbtemp_long %>% 
+  filter(variable %in% c("TMIN", "TMAX", "PRCP")) %>%
+  mutate(value = ifelse(value == -9999, NA, value))
+```
+
+### What are the numbers?
+
+- What is the range of temperature and precipitation?
+- What units could this be in?
+- Why are some values -9999?
+
+
+### Now use spread
+
+#### Max vs Min
+
+```{r}
+melbtemp_long %>% spread(variable, value) %>%
+  ggplot(aes(x=TMIN, y=TMAX)) + geom_point() + 
+  coord_equal() + geom_abline(slope=1, intercept=0)
+```
+
+Oh, TMAX is always higher than TMIN. This is a good thing.
+
+#### Winter vs Summer
+
+```{r}
+melbtemp_long %>% 
+  filter(variable == "TMAX") %>%
+  spread(month, value) %>%
+  ggplot(aes(x=`07`, y=`01`)) + geom_point() + 
+  xlab("July") + ylab("Jan") +
+  coord_equal() + geom_abline(slope=1, intercept=0)
+```
+
+Same day of the month, same year, January has higher maximum temperatures than July. Except two days, the July max exceeded the January max. (This comparison is a bit whacky, though right?)
+
+
+1. Googling things is normal - here's  things effectively
+---
+
+# How to google a thing
+
+Let's say we are presented with some new idea, we need to know how to explore it efficiently.
+
+(from http://datacarpentry.org/semester-biology/materials/googling-for-help/)
+
+It can also be useful - for the process of data analysis - to arrange data into **long** tidy form, where each value is uniquely identified.
+
+```{r grad-gather}
+grad %>% gather(variable, value, -subject, -Inst)
+```
+
+
+There’s a general advantage to picking one consistent way of storing data. If you have a consistent data structure, it’s easier to learn the tools that work with it because they have an underlying uniformity.
+
+There’s a specific advantage to placing variables in columns because it allows R’s vectorised nature to shine. As you learned in mutate and summary functions, most built-in R functions work with vectors of values. That makes transforming tidy data feel particularly natural.

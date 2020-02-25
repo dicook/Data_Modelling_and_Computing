@@ -1,0 +1,586 @@
+---
+class: bg-main1
+
+# Scraping cricket data
+
+.huge[
+- Extract cricket statistics, from ESPN CricInfo web site. 
+- Point your web browser to this [site](http://stats.espncricinfo.com/ci/engine/stats/index.html?class=10;page=1;team=289;template=results;type=batting;wrappertype=print) (or http://bit.ly/etc1010-espn-cricket)
+]
+
+---
+class: bg-main1
+
+# All the information
+
+`paths_allowed` to safely check if it is legal to scrape the data
+
+```{r bow-data}
+library(rvest)
+library(robotstxt)
+site <- "http://stats.espncricinfo.com/ci/engine/stats/index.html?class=10;page=1;team=289;template=results;type=batting;wrappertype=print"
+check_site <- paths_allowed(site)
+check_site
+```
+
+---
+class: bg-main1
+
+# scrape the data with `scrape`
+
+```{r polite-scrape}
+raw_html <- scrape(check_site)
+raw_html
+```
+
+---
+class: bg-main1
+
+# Extract the tables
+
+`html_table` extracts all tables from the sourced html into a `list` of data frames:
+
+```{r extract-raw-tables}
+tables <- read_html(site) %>% html_table(fill = TRUE)
+length(tables)
+str(tables)
+```
+
+---
+class: bg-black
+
+.white[
+# Hol up. What is `[[]]`?
+]
+
+.white.huge[
+- `tables` is a list. 
+- access each element of a list with `[[1]]`, `[[2]]`, ... `[[n]]`.
+]
+
+---
+class: bg-black
+
+.white[
+# Hol up. What is `[[]]`?
+]
+
+```{r show-tables-1}
+tables[[1]]
+```
+
+---
+class: bg-black
+
+.white[
+# Hol up. What is `[[]]`?
+]
+
+```{r show-tables-2}
+tables[[2]]
+```
+
+---
+class: bg-black
+
+.white[
+# Hol up. What is `[[]]`?
+]
+
+```{r show-tables-3}
+tables[[3]]
+```
+
+
+---
+class: bg-main1
+
+# Cleanup
+
+Tables need a bit of cleanup. 
+
+```{r}
+library(janitor)
+library(visdat)
+# nicer formatting for the table
+ausw_t20 <- as_tibble(tables[[3]],
+                      # this makes the variable names nice
+                      .name_repair = make_clean_names)
+
+# Let's get a quick look at the data
+# what do you see?
+vis_dat(ausw_t20)
+```
+
+- All the columns of the Australian women's T20 data are character variables. Why? (Except for the `Mat` column.)
+- The table has "*" indicating not out, and "-" indicating missing information
+
+---
+class: bg-main1
+
+# Clean the data
+
+```{r}
+ausw_t20_tidy <- ausw_t20 %>%
+  # extract the number out of the string
+  mutate(hs = parse_number(hs)) %>% 
+  # replace with NA if there is a "-"
+  na_if("-") %>%
+  # convert these data to numeric
+  mutate(inns = as.numeric(inns),
+         no = as.numeric(no),
+         runs = as.numeric(runs),
+         ave = as.numeric(ave),
+         bf = as.numeric(bf),
+         sr = as.numeric(sr),
+         x100 = as.numeric(x100),
+         x50 = as.numeric(x50),
+         x0 = as.numeric(x50),
+         x4s = as.numeric(x4s),
+         x6s = as.numeric(x6s))
+
+```
+
+---
+class: bg-main1
+
+# That's a lot of mutates! Is there a better way?
+
+--
+
+# Yes, Yes there is
+
+--
+
+```{r oz-tidy-data}
+ausw_t20_tidy <- ausw_t20 %>%
+  # extract the number out of the string
+  mutate(hs = parse_number(hs)) %>% 
+  # replace with NA if there is a "-"
+  na_if("-") %>%
+  # do this thing to these variables
+  mutate_at(.vars = vars(inns:x6s), #<<
+            .funs = as.numeric) #<<
+```
+
+---
+class: bg-main1
+
+# `mutate_at()`
+
+.huge[
+`data %>% mutate_at(.vars = vars(list, your, vars, here),`
+                   `.funs = do_this_thing_to_vars)`
+]
+
+---
+class: bg-main1
+
+# One minute: explain lists and mutate_at to your table
+
+```{r cd-one}
+library(countdown)
+countdown(minute = 1)
+```
+
+---
+
+# All done
+
+---
+
+# Let's make a graph!
+
+```{r}
+p <- ggplot(ausw_t20, aes(x = Ave, y = SR, label = Player)) + geom_point()
+ggplotly(p)
+```
+
+---
+class: bg-main1
+
+# `cricketdata` package
+
+The `cricketdata` package makes this all a lot easier!
+
+```{r use-cricketdata}
+# remotes::install_github("ropenscilabs/cricketdata")
+library(cricketdata)
+aus_womens_t20 <- fetch_cricinfo(matchtype = "T20", 
+                                 sex = "Women", 
+                                 country = "Aust") %>%
+  clean_names()
+
+aus_womens_t20
+```
+
+---
+class: bg-main1
+
+# plot cricketdata
+
+```{r}
+p <- ggplot(aus_womens_t20, aes(x = average, 
+                                y = strike_rate, 
+                                label = player)) + 
+  geom_point()
+
+ggplotly(p)
+```
+
+---
+class: bg-main1
+
+# Look at ODI for India
+
+```{r oid-india}
+india_mens_odi_bowling <- fetch_cricinfo(matchtype = "ODI", 
+                                  sex = "men", 
+                                  activity = "bowling", 
+                                  country = "india")
+
+india_mens_odi_bowling
+```
+
+---
+class: bg-main1
+
+# Look at ODI for India
+
+```{r gg-oid-india}
+p <- ggplot(india_mens_odi_bowling,
+  aes(x = Matches,
+      y = Average,
+      label = Player)) + 
+  geom_point(alpha = 0.5)
+
+ggplotly(p)
+
+```
+
+---
+class: bg-main1
+
+# Ethics and legality
+
+The cricket data falls under copyright of ESPN Sports. The policy of use is detailed on the [web site](http://www.espncricinfo.com/ci/content/site/company/terms_use.html). 
+
+Make sure to use `bow` and `scrape` from the polite package if you are scraping data.
+
+---
+class: bg-main1
+
+# Scraping basketball salary data
+
+ ESPN provides basketball players' salaries for the 2017-2018 season at [http://espn.go.com/nba/salaries](http://espn.go.com/nba/salaries)
+ 
+---
+class: bg-main1
+
+# One page from NBA: bow
+
+```{r nba-site}
+nba_site <- "http://espn.go.com/nba/salaries"
+check_nba_site <- bow(nba_site)
+check_nba_site
+```
+
+---
+class: bg-main1
+
+# One page from NBA: scrape
+
+```{r nba-site-scrape}
+nba_scraped <- scrape(check_nba_site)
+
+nba_scraped
+```
+
+---
+class: bg-main1
+
+# One page from NBA: extract table
+
+```{r nba-site-scrape}
+nba_tables <- nba_scraped %>% 
+  html_table(fill = TRUE, 
+             header = TRUE)
+
+nba_tables
+```
+
+---
+class: bg-main1
+
+# Multiple pages from the NBA?
+
+.huge[
+- The practice is:
+  - Go to the website, look at the URL.
+  - Move pages (go to page, say, 3) - look at the URL - what has changed?
+  - The actual URL for the full set of data is basically the same from page to page, with the exception of a page number. We can use this, and a loop to pull all the data
+
+]
+
+---
+class: bg-main1
+
+# Step 1 - glue together the URLs with `glue()`
+
+```{r glue}
+library(glue)
+
+name <- "Nick"
+age <- 29
+glue("My name is {name}, and I am {age} years old. Soon I will be {age + 1}")
+
+glue("file_{1:3}.csv")
+```
+
+---
+class: bg-main1
+
+# Let's create the URL
+
+- http://espn.go.com/nba/salaries/_/page/1/seasontype/4
+- http://espn.go.com/nba/salaries/_/page/2/seasontype/4
+- ....
+
+```{r create-nba-sites}
+nba_sites <- glue("http://espn.go.com/nba/salaries/_/page/{1:3}/seasontype/4")
+nba_sites
+```
+
+
+---
+class: bg-main1
+
+# Repeat ourselves?
+
+```{r}
+bow("http://www.espn.com/nba/salaries/_/year/2019/seasontype/4")
+
+
+check_nba_site_1 <- bow(nba_sites[1])
+check_nba_site_2 <- bow(nba_sites[2])
+check_nba_site_3 <- bow(nba_sites[3])
+
+check_nba_site_1
+check_nba_site_2
+check_nba_site_3
+```
+
+---
+class: bg-main1
+
+```{r}
+checked_nba_sites <- map(nba_sites, bow)
+checked_nba_sites
+```
+
+---
+class: bg-main1
+
+# map is magic! And amazing.
+
+.huge[
+- `map(object, function)`
+
+> Repeat this same function on each element of the object
+
+- Take one minute to discuss this with your table
+]
+
+---
+class: bg-main1
+
+```{r scrape-nba-many}
+raw_nba_sites <- map(checked_nba_sites, scrape)
+
+```
+
+
+
+---
+class: bg-main1
+
+
+```{r echo=TRUE}
+nba <- NULL
+for (i in 1:10) {
+  site <- paste0("http://espn.go.com/nba/salaries/_/page/", i, "/seasontype/4")
+  raw_html <- read_html(site)
+  temp <- raw_html %>% html_table(fill = TRUE, header = TRUE)
+  nba <- bind_rows(nba, temp)
+}
+```
+
+### Cleaning
+
+```{r warning=TRUE}
+head(nba$SALARY)
+
+# get rid of $ and , in salaries and convert to numeric:
+gsub("[$,]", "", head(nba$SALARY))
+nba <- nba %>%
+  mutate(SALARY = as.numeric(gsub("[$,]", "", SALARY)))
+```
+
+- Where does the warning come from?
+
+```{r}
+nba %>%
+  filter(is.na(SALARY)) %>%
+  head()
+```
+
+- We don't want these lines
+
+```{r}
+nba <- nba %>% filter(!is.na(SALARY))
+```
+
+### Working with text
+
+```{r}
+nba <- nba %>%
+  mutate(NAME = as.character(NAME)) %>%
+  separate(NAME, c("full_name", "position"), ",") %>%
+  separate(full_name, c("first", "last"), " ")
+head(nba)
+```
+
+### Make some pictures
+
+Are NBA players rich?
+
+```{r}
+ggplot(data = nba, aes(x = SALARY)) + geom_histogram()
+```
+
+```{r nba, echo=FALSE}
+quiz(
+  question(
+    "What was the lowest salary for an NBA player?",
+    answer("$0k"),
+    answer("$15k", correct = TRUE),
+    answer("$100k")
+  ),
+  question(
+    "What percentage of players earned less than $100k?",
+    answer("None"),
+    answer("1%"),
+    answer("4%", correct = TRUE)
+  ),
+  question(
+    "What position tends to earn the lowest salary?",
+    answer("PG"),
+    answer("SG"),
+    answer("G", correct = TRUE)
+  ),
+  question(
+    "Which of these teams tends to have the higher salary payout?",
+    answer("Cleveland Cavaliers", correct = TRUE),
+    answer("Miami Heat"),
+    answer("New York Knicks")
+  )
+)
+```
+
+```{r echo=FALSE, eval=FALSE}
+nba %>% summarise(ms = min(SALARY))
+nba %>%
+  filter(SALARY < 100000) %>%
+  tally()
+ggplot(data = nba, aes(x = position, y = SALARY)) + geom_boxplot()
+library(forcats)
+ggplot(data = nba, aes(x = fct_reorder(TEAM, SALARY), y = SALARY)) +
+  geom_boxplot() + coord_flip()
+```
+
+
+---
+class: bg-main1
+
+# Detecting and reading multiple files from a site
+
+.huge[
+- Often data comes in multiple excel format files
+- It it tedious, and inefficient to manually convert each to csv and read
+- Easier to automate reading multiple files, in the original format
+- Example: Rental market in Tasmania from [data.gov.au](http://data.gov.au/dataset/rental-bond-and-rental-data-tasmania-2016-to-2017)
+]
+
+
+---
+class: bg-main1
+
+# `sawfish` package
+
+```{r}
+library(readxl)
+# devtools::install_github("AnthonyEbert/sawfish")
+library(sawfish)
+url <- "http://data.gov.au/data/dataset/rental-bond-and-rental-data-tasmania-2016-to-2017"
+fls <- find_files(url, "xlsx")
+f1 <- tempfile()
+download.file(fls[1], f1, mode = "wb")
+t1 <- read_xlsx(path = f1, 
+                sheet = 1,
+                .name_repair = make_clean_names)
+t1
+```
+
+```{r cache=TRUE}
+rentals <- NULL
+for (i in 1:length(fls)) {
+  download.file(fls[i], f1, mode = "wb")
+  t1 <- read_xlsx(path = f1, sheet = 1)
+  rentals <- bind_rows(rentals, t1)
+}
+dim(rentals)
+```
+
+# Make some pictures
+
+How have rents changed over time?
+
+```{r}
+library(lubridate)
+rentals %>%
+  mutate(
+    month = month(`Bond Lodgement date (DD/MM/YYYY)`),
+    year = year(`Bond Lodgement date (DD/MM/YYYY)`)
+  ) %>%
+  group_by(Postcode, month, year, `No of Bedrooms`) %>%
+  summarise(rent = mean(`Weekly Rent`, na.rm = TRUE)) %>%
+  mutate(time = dmy(paste("01", month, year, sep = "-"))) %>%
+  ggplot(aes(x = time, y = rent)) +
+  geom_line(aes(group = Postcode)) +
+  facet_wrap(~`No of Bedrooms`, ncol = 3) +
+  ylab("Weekly rent")
+```
+
+---
+class: bg-main1
+
+# Clean data and re-plot
+
+```{r echo=TRUE, fig.show='hide'}
+rentals %>%
+  mutate(month = month(`Bond Lodgement date (DD/MM/YYYY)`),
+         year = year(`Bond Lodgement date (DD/MM/YYYY)`)) %>%
+  group_by(Postcode, 
+           month, 
+           year, 
+           `No of Bedrooms`) %>%
+  summarise(rent = mean(`Weekly Rent`, na.rm = TRUE)) %>%
+  mutate(time = dmy(paste("01", month, year, sep = "-"))) %>%
+  filter(!is.na(`No of Bedrooms`)) %>%
+  filter(`No of Bedrooms` < 6, `No of Bedrooms` > 0) %>%
+  ggplot(aes(x = time, y = rent)) +
+  geom_line(aes(group = Postcode), alpha = 0.5) +
+  facet_wrap(~`No of Bedrooms`, ncol = 3) +
+  ylab("Weekly rent") + ylim(c(0, 1000)) +
+  geom_smooth(se = FALSE)
+```
